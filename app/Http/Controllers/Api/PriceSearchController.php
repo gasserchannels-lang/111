@@ -83,7 +83,7 @@ class PriceSearchController extends Controller
             }
 
             return response()->json([
-                'message' => 'No offers found for this product in the specified country.'
+                'message' => 'No offers found for this product in the specified country.',
             ], 404);
 
         } catch (\Exception $e) {
@@ -131,7 +131,7 @@ class PriceSearchController extends Controller
         }
 
         try {
-            $response = Http::get("https://ipapi.co/{$ip}/country_code/" );
+            $response = Http::get("https://ipapi.co/{$ip}/country_code/");
             if ($response->successful() && ! empty($response->body())) {
                 return trim($response->body());
             }

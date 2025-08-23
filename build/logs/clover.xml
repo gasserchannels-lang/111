@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1755955938">
-  <project timestamp="1755955938">
+<coverage generated="1755972672">
+  <project timestamp="1755972672">
     <file name="/home/runner/work/coprra-project/coprra-project/app/Console/Kernel.php">
       <class name="App\Console\Kernel" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
@@ -9,88 +9,90 @@
       <line num="16" type="stmt" count="0"/>
       <line num="21" type="method" name="commands" visibility="protected" complexity="1" crap="1" count="1"/>
       <line num="23" type="stmt" count="1"/>
-      <line num="25" type="stmt" count="1"/>
-      <metrics loc="28" ncloc="21" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
+      <line num="26" type="stmt" count="1"/>
+      <metrics loc="29" ncloc="21" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Exceptions/Handler.php">
       <class name="App\Exceptions\Handler" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
       </class>
       <line num="24" type="method" name="register" visibility="public" complexity="1" crap="1" count="1"/>
-      <line num="26" type="stmt" count="1"/>
-      <line num="28" type="stmt" count="1"/>
-      <metrics loc="31" ncloc="22" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      <line num="27" type="stmt" count="1"/>
+      <line num="29" type="stmt" count="1"/>
+      <metrics loc="32" ncloc="22" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Controllers/Api/PriceSearchController.php">
       <class name="App\Http\Controllers\Api\PriceSearchController" namespace="global">
-        <metrics complexity="16" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="61" coveredstatements="0" elements="65" coveredelements="0"/>
+        <metrics complexity="16" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="63" coveredstatements="0" elements="67" coveredelements="0"/>
       </class>
-      <line num="23" type="method" name="search" visibility="public" complexity="3" crap="12" count="0"/>
+      <line num="22" type="method" name="search" visibility="public" complexity="3" crap="12" count="0"/>
+      <line num="24" type="stmt" count="0"/>
       <line num="25" type="stmt" count="0"/>
       <line num="26" type="stmt" count="0"/>
       <line num="27" type="stmt" count="0"/>
       <line num="28" type="stmt" count="0"/>
-      <line num="29" type="stmt" count="0"/>
+      <line num="30" type="stmt" count="0"/>
       <line num="31" type="stmt" count="0"/>
-      <line num="32" type="stmt" count="0"/>
+      <line num="34" type="stmt" count="0"/>
       <line num="35" type="stmt" count="0"/>
       <line num="36" type="stmt" count="0"/>
-      <line num="37" type="stmt" count="0"/>
+      <line num="39" type="stmt" count="0"/>
+      <line num="40" type="stmt" count="0"/>
       <line num="41" type="stmt" count="0"/>
       <line num="42" type="stmt" count="0"/>
       <line num="43" type="stmt" count="0"/>
       <line num="44" type="stmt" count="0"/>
       <line num="45" type="stmt" count="0"/>
       <line num="46" type="stmt" count="0"/>
-      <line num="47" type="stmt" count="0"/>
       <line num="48" type="stmt" count="0"/>
+      <line num="49" type="stmt" count="0"/>
       <line num="50" type="stmt" count="0"/>
-      <line num="51" type="stmt" count="0"/>
       <line num="52" type="stmt" count="0"/>
-      <line num="54" type="stmt" count="0"/>
-      <line num="61" type="method" name="bestOffer" visibility="public" complexity="4" crap="20" count="0"/>
+      <line num="59" type="method" name="bestOffer" visibility="public" complexity="4" crap="20" count="0"/>
+      <line num="61" type="stmt" count="0"/>
+      <line num="62" type="stmt" count="0"/>
       <line num="63" type="stmt" count="0"/>
       <line num="64" type="stmt" count="0"/>
-      <line num="65" type="stmt" count="0"/>
       <line num="66" type="stmt" count="0"/>
-      <line num="68" type="stmt" count="0"/>
-      <line num="69" type="stmt" count="0"/>
+      <line num="67" type="stmt" count="0"/>
+      <line num="71" type="stmt" count="0"/>
       <line num="72" type="stmt" count="0"/>
-      <line num="73" type="stmt" count="0"/>
+      <line num="74" type="stmt" count="0"/>
+      <line num="75" type="stmt" count="0"/>
       <line num="76" type="stmt" count="0"/>
       <line num="77" type="stmt" count="0"/>
       <line num="78" type="stmt" count="0"/>
-      <line num="79" type="stmt" count="0"/>
-      <line num="80" type="stmt" count="0"/>
+      <line num="81" type="stmt" count="0"/>
       <line num="82" type="stmt" count="0"/>
-      <line num="83" type="stmt" count="0"/>
+      <line num="85" type="stmt" count="0"/>
       <line num="86" type="stmt" count="0"/>
       <line num="87" type="stmt" count="0"/>
-      <line num="88" type="stmt" count="0"/>
+      <line num="89" type="stmt" count="0"/>
       <line num="90" type="stmt" count="0"/>
-      <line num="97" type="method" name="supportedStores" visibility="public" complexity="3" crap="12" count="0"/>
-      <line num="99" type="stmt" count="0"/>
-      <line num="100" type="stmt" count="0"/>
+      <line num="92" type="stmt" count="0"/>
+      <line num="99" type="method" name="supportedStores" visibility="public" complexity="3" crap="12" count="0"/>
       <line num="101" type="stmt" count="0"/>
+      <line num="102" type="stmt" count="0"/>
       <line num="103" type="stmt" count="0"/>
-      <line num="104" type="stmt" count="0"/>
-      <line num="107" type="stmt" count="0"/>
-      <line num="110" type="stmt" count="0"/>
+      <line num="105" type="stmt" count="0"/>
+      <line num="106" type="stmt" count="0"/>
+      <line num="109" type="stmt" count="0"/>
       <line num="112" type="stmt" count="0"/>
-      <line num="113" type="stmt" count="0"/>
       <line num="114" type="stmt" count="0"/>
+      <line num="115" type="stmt" count="0"/>
       <line num="116" type="stmt" count="0"/>
-      <line num="123" type="method" name="detectUserCountry" visibility="private" complexity="6" crap="42" count="0"/>
-      <line num="125" type="stmt" count="0"/>
+      <line num="118" type="stmt" count="0"/>
+      <line num="125" type="method" name="detectUserCountry" visibility="private" complexity="6" crap="42" count="0"/>
       <line num="127" type="stmt" count="0"/>
-      <line num="128" type="stmt" count="0"/>
-      <line num="132" type="stmt" count="0"/>
-      <line num="133" type="stmt" count="0"/>
+      <line num="129" type="stmt" count="0"/>
+      <line num="130" type="stmt" count="0"/>
       <line num="134" type="stmt" count="0"/>
+      <line num="135" type="stmt" count="0"/>
       <line num="136" type="stmt" count="0"/>
-      <line num="137" type="stmt" count="0"/>
-      <line num="140" type="stmt" count="0"/>
-      <metrics loc="143" ncloc="125" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="61" coveredstatements="0" elements="65" coveredelements="0"/>
+      <line num="138" type="stmt" count="0"/>
+      <line num="139" type="stmt" count="0"/>
+      <line num="142" type="stmt" count="0"/>
+      <metrics loc="145" ncloc="129" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="63" coveredstatements="0" elements="67" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Controllers/CartController.php">
       <class name="App\Http\Controllers\CartController" namespace="global">
@@ -184,10 +186,10 @@
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Controllers/LocaleController.php">
       <class name="App\Http\Controllers\LocaleController" namespace="global">
-        <metrics complexity="6" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="0" elements="21" coveredelements="0"/>
+        <metrics complexity="10" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="32" coveredelements="0"/>
       </class>
-      <line num="14" type="method" name="changeLanguage" visibility="public" complexity="3" crap="12" count="0"/>
-      <line num="16" type="stmt" count="0"/>
+      <line num="13" type="method" name="changeLanguage" visibility="public" complexity="5" crap="30" count="0"/>
+      <line num="15" type="stmt" count="0"/>
       <line num="17" type="stmt" count="0"/>
       <line num="18" type="stmt" count="0"/>
       <line num="19" type="stmt" count="0"/>
@@ -195,19 +197,30 @@
       <line num="22" type="stmt" count="0"/>
       <line num="23" type="stmt" count="0"/>
       <line num="24" type="stmt" count="0"/>
-      <line num="25" type="stmt" count="0"/>
+      <line num="26" type="stmt" count="0"/>
+      <line num="27" type="stmt" count="0"/>
+      <line num="28" type="stmt" count="0"/>
       <line num="29" type="stmt" count="0"/>
-      <line num="32" type="method" name="changeCurrency" visibility="public" complexity="3" crap="12" count="0"/>
-      <line num="34" type="stmt" count="0"/>
-      <line num="35" type="stmt" count="0"/>
-      <line num="36" type="stmt" count="0"/>
-      <line num="38" type="stmt" count="0"/>
-      <line num="39" type="stmt" count="0"/>
-      <line num="40" type="stmt" count="0"/>
-      <line num="41" type="stmt" count="0"/>
-      <line num="42" type="stmt" count="0"/>
+      <line num="30" type="stmt" count="0"/>
+      <line num="33" type="stmt" count="0"/>
+      <line num="37" type="stmt" count="0"/>
+      <line num="41" type="method" name="changeCurrency" visibility="public" complexity="5" crap="30" count="0"/>
+      <line num="43" type="stmt" count="0"/>
+      <line num="45" type="stmt" count="0"/>
       <line num="46" type="stmt" count="0"/>
-      <metrics loc="49" ncloc="49" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="0" elements="21" coveredelements="0"/>
+      <line num="48" type="stmt" count="0"/>
+      <line num="49" type="stmt" count="0"/>
+      <line num="50" type="stmt" count="0"/>
+      <line num="51" type="stmt" count="0"/>
+      <line num="53" type="stmt" count="0"/>
+      <line num="54" type="stmt" count="0"/>
+      <line num="55" type="stmt" count="0"/>
+      <line num="56" type="stmt" count="0"/>
+      <line num="57" type="stmt" count="0"/>
+      <line num="58" type="stmt" count="0"/>
+      <line num="61" type="stmt" count="0"/>
+      <line num="65" type="stmt" count="0"/>
+      <metrics loc="68" ncloc="65" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="32" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Controllers/PriceAlertController.php">
       <class name="App\Http\Controllers\PriceAlertController" namespace="global">
@@ -870,6 +883,6 @@
       <line num="38" type="stmt" count="1"/>
       <metrics loc="41" ncloc="31" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="9" elements="11" coveredelements="9"/>
     </file>
-    <metrics files="40" loc="2315" ncloc="1839" classes="32" methods="113" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="516" coveredstatements="42" elements="629" coveredelements="54"/>
+    <metrics files="40" loc="2338" ncloc="1859" classes="32" methods="113" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="529" coveredstatements="42" elements="642" coveredelements="54"/>
   </project>
 </coverage>

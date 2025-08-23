@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Currency;
 use App\Models\Language;
 use App\Models\UserLocaleSetting;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
@@ -24,7 +23,7 @@ class LocaleController extends Controller
                 $userLocale = UserLocaleSetting::firstOrNew(['user_id' => $user->id]);
                 $userLocale->language_id = $language->id;
                 // إذا لم يكن هناك عملة محددة، استخدم العملة الافتراضية للغة الجديدة
-                if (!$userLocale->currency_id) {
+                if (! $userLocale->currency_id) {
                     $defaultCurrency = $language->currencies()->wherePivot('is_default', true)->first();
                     if ($defaultCurrency) {
                         $userLocale->currency_id = $defaultCurrency->id;
@@ -51,7 +50,7 @@ class LocaleController extends Controller
                 $userLocale = UserLocaleSetting::firstOrNew(['user_id' => $user->id]);
                 $userLocale->currency_id = $currency->id;
                 // إذا لم تكن هناك لغة محددة، استخدم اللغة الافتراضية
-                if (!$userLocale->language_id) {
+                if (! $userLocale->language_id) {
                     $defaultLanguage = Language::where('is_default', true)->first();
                     if ($defaultLanguage) {
                         $userLocale->language_id = $defaultLanguage->id;
