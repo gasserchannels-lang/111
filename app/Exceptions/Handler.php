@@ -23,7 +23,7 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        // تم تعديل هذا السطر ليحتوي على النوع الصحيح
+        // تم تعديل هذا السطر ليحتوي على النوع الصحيح وإزالة المتغير غير المستخدم
         $this->reportable(function (Throwable $e) {
             //
         });
