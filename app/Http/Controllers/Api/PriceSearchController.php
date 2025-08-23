@@ -14,7 +14,6 @@ use App\Models\Store;
 
 class PriceSearchController extends Controller
 {
-    // تم إضافة هذا الثابت لتقليل التكرار
     private const VALIDATION_RULE_COUNTRY = 'nullable|string|size:2';
 
     /**
@@ -24,7 +23,7 @@ class PriceSearchController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'query' => 'required|string|min:2|max:255',
-            'country' => self::VALIDATION_RULE_COUNTRY, // تم استخدام الثابت هنا
+            'country' => self::VALIDATION_RULE_COUNTRY,
             'limit' => 'nullable|integer|min:1|max:50',
         ]);
 
@@ -37,7 +36,6 @@ class PriceSearchController extends Controller
         $limit = $request->input('limit', 20);
 
         try {
-            // البحث عن المنتجات
             $products = Product::where('name', 'like', "%{$query}%")
                 ->with(['priceOffers' => function ($query) use ($country) {
                     $query->whereHas('store', function ($q) use ($country) {
@@ -61,28 +59,32 @@ class PriceSearchController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product' => 'required|string|min:2|max:255',
-            'country' => self::VALIDATION_RULE_COUNTRY, // تم استخدام الثابت هنا
+            'country' => self::VALIDATION_RULE_COUNTRY,
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $productName = $request->input('product');
-        $country = $request->input('country', $this->detectUserCountry($request));
-
         try {
+            $productName = $request->input('product');
+            $country = $request->input('country', $this->detectUserCountry($request));
+
             $bestOffer = PriceOffer::whereHas('product', function ($query) use ($productName) {
                 $query->where('name', 'like', "%{$productName}%");
             })->whereHas('store', function ($query) use ($country) {
                 $query->where('country_code', $country);
             })->orderBy('price', 'asc')->first();
 
-            if (!$bestOffer) {
-                return response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
+            if ($bestOffer) {
+                return response()->json($bestOffer);
             }
 
-            return response()->json($bestOffer);
+            // تم تقسيم هذا السطر الطويل
+            return response()->json([
+                'message' => 'No offers found for this product in the specified country.'
+            ], 404);
+
         } catch (\Exception $e) {
             Log::error('Best offer search failed: ' . $e->getMessage());
             return response()->json(['message' => 'An error occurred.'], 500);
@@ -95,7 +97,7 @@ class PriceSearchController extends Controller
     public function supportedStores(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country' => self::VALIDATION_RULE_COUNTRY, // تم استخدام الثابت هنا
+            'country' => self::VALIDATION_RULE_COUNTRY,
         ]);
 
         if ($validator->fails()) {

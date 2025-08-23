@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        //
     }
 
     /**
@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
     {
         $this->load(__DIR__.'/Commands');
 
-        require_once base_path('routes/console.php');
+        // تم تعديل هذا السطر ليتبع الطريقة القياسية في Laravel
+        require base_path('routes/console.php');
     }
 }
