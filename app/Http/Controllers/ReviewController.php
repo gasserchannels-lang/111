@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Review;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,6 +19,7 @@ class ReviewController extends Controller
     {
         // عرض المراجعات الخاصة بالمستخدم الحالي
         $reviews = Auth::user()->reviews()->with('product')->latest()->paginate(10);
+
         return view('reviews.index', compact('reviews'));
     }
 
@@ -30,8 +31,8 @@ class ReviewController extends Controller
         $product = Product::findOrFail($request->product_id);
         // التحقق مما إذا كان المستخدم قد قام بمراجعة هذا المنتج بالفعل
         $existingReview = Review::where('user_id', Auth::id())
-                                ->where('product_id', $product->id)
-                                ->exists();
+            ->where('product_id', $product->id)
+            ->exists();
 
         if ($existingReview) {
             return redirect()->route('products.show', $product->id)
@@ -55,8 +56,8 @@ class ReviewController extends Controller
 
         // التحقق مرة أخرى من عدم وجود مراجعة مسبقة
         $existingReview = Review::where('user_id', Auth::id())
-                                ->where('product_id', $request->product_id)
-                                ->exists();
+            ->where('product_id', $request->product_id)
+            ->exists();
 
         if ($existingReview) {
             return redirect()->route('products.show', $request->product_id)
@@ -76,7 +77,6 @@ class ReviewController extends Controller
             ->with('success', 'Thank you for your review!');
     }
 
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -86,6 +86,7 @@ class ReviewController extends Controller
         if ($review->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
+
         return view('reviews.edit', compact('review'));
     }
 
@@ -117,7 +118,7 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         // التحقق من أن المستخدم هو صاحب المراجعة أو مدير
-        if ($review->user_id !== Auth::id() && !Auth::user()->is_admin) {
+        if ($review->user_id !== Auth::id() && ! Auth::user()->is_admin) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 

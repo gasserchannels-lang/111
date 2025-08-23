@@ -16,7 +16,6 @@ class LocaleMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
@@ -61,6 +60,7 @@ class LocaleMiddleware
 
         // 4. Default language
         $defaultLanguage = Language::where('is_default', true)->first();
+
         return $defaultLanguage ? $defaultLanguage->code : 'en'; // Fallback
     }
 
@@ -81,6 +81,7 @@ class LocaleMiddleware
 
         // 3. Default currency
         $defaultCurrency = Currency::where('is_default', true)->first();
+
         return $defaultCurrency ? $defaultCurrency->code : 'USD'; // Fallback
     }
 

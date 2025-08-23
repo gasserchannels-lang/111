@@ -17,6 +17,7 @@ class WishlistController extends Controller
     public function index()
     {
         $wishlistItems = Auth::user()->wishlist()->with('product')->get();
+
         return view('wishlist.index', compact('wishlistItems'));
     }
 
@@ -37,7 +38,7 @@ class WishlistController extends Controller
         if ($existingWishlist) {
             return response()->json([
                 'status' => 'exists',
-                'message' => 'Product is already in your wishlist.'
+                'message' => 'Product is already in your wishlist.',
             ]);
         }
 
@@ -48,7 +49,7 @@ class WishlistController extends Controller
 
         return response()->json([
             'status' => 'added',
-            'message' => 'Product added to wishlist successfully!'
+            'message' => 'Product added to wishlist successfully!',
         ]);
     }
 
@@ -67,15 +68,16 @@ class WishlistController extends Controller
 
         if ($wishlist) {
             $wishlist->delete();
+
             return response()->json([
                 'status' => 'removed',
-                'message' => 'Product removed from wishlist.'
+                'message' => 'Product removed from wishlist.',
             ]);
         }
 
         return response()->json([
             'status' => 'not_found',
-            'message' => 'Product not found in wishlist.'
+            'message' => 'Product not found in wishlist.',
         ], 404);
     }
 
@@ -95,6 +97,7 @@ class WishlistController extends Controller
         if ($wishlist) {
             // إذا كان موجودًا، قم بحذفه
             $wishlist->delete();
+
             return response()->json(['status' => 'removed', 'in_wishlist' => false]);
         } else {
             // إذا لم يكن موجودًا، قم بإضافته
@@ -102,6 +105,7 @@ class WishlistController extends Controller
                 'user_id' => Auth::id(),
                 'product_id' => $request->product_id,
             ]);
+
             return response()->json(['status' => 'added', 'in_wishlist' => true]);
         }
     }
