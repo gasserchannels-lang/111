@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
+    // تم إضافة هذا الثابت لتقليل التكرار
+    private const VALIDATION_RULE_PRODUCT_ID = 'required|exists:products,id';
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $wishlists = Wishlist::where('user_id', Auth::id())
-            ->with('product')
-            ->latest()
-            ->paginate(12);
-
-        return view('wishlist.index', compact('wishlists'));
+        $wishlistItems = Auth::user()->wishlist()->with('product')->get();
+        return view('wishlist.index', compact('wishlistItems'));
     }
 
     /**
@@ -28,7 +26,7 @@ class WishlistController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
         // التحقق من أن المنتج ليس في المفضلة بالفعل
@@ -38,9 +36,9 @@ class WishlistController extends Controller
 
         if ($existingWishlist) {
             return response()->json([
-                'success' => false,
-                'message' => 'Product is already in your wishlist.',
-            ], 400);
+                'status' => 'exists',
+                'message' => 'Product is already in your wishlist.'
+            ]);
         }
 
         Wishlist::create([
@@ -49,8 +47,8 @@ class WishlistController extends Controller
         ]);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Product added to wishlist successfully!',
+            'status' => 'added',
+            'message' => 'Product added to wishlist successfully!'
         ]);
     }
 
@@ -60,26 +58,25 @@ class WishlistController extends Controller
     public function destroy(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
         $wishlist = Wishlist::where('user_id', Auth::id())
             ->where('product_id', $request->product_id)
             ->first();
 
-        if (! $wishlist) {
+        if ($wishlist) {
+            $wishlist->delete();
             return response()->json([
-                'success' => false,
-                'message' => 'Product not found in your wishlist.',
-            ], 404);
+                'status' => 'removed',
+                'message' => 'Product removed from wishlist.'
+            ]);
         }
 
-        $wishlist->delete();
-
         return response()->json([
-            'success' => true,
-            'message' => 'Product removed from wishlist successfully!',
-        ]);
+            'status' => 'not_found',
+            'message' => 'Product not found in wishlist.'
+        ], 404);
     }
 
     /**
@@ -88,7 +85,7 @@ class WishlistController extends Controller
     public function toggle(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
         $wishlist = Wishlist::where('user_id', Auth::id())
@@ -96,52 +93,16 @@ class WishlistController extends Controller
             ->first();
 
         if ($wishlist) {
-            // إزالة من المفضلة
+            // إذا كان موجودًا، قم بحذفه
             $wishlist->delete();
-
-            return response()->json([
-                'success' => true,
-                'action' => 'removed',
-                'message' => 'Product removed from wishlist!',
-            ]);
+            return response()->json(['status' => 'removed', 'in_wishlist' => false]);
         } else {
-            // إضافة إلى المفضلة
+            // إذا لم يكن موجودًا، قم بإضافته
             Wishlist::create([
                 'user_id' => Auth::id(),
                 'product_id' => $request->product_id,
             ]);
-
-            return response()->json([
-                'success' => true,
-                'action' => 'added',
-                'message' => 'Product added to wishlist!',
-            ]);
+            return response()->json(['status' => 'added', 'in_wishlist' => true]);
         }
-    }
-
-    /**
-     * Check if product is in wishlist
-     */
-    public function check(Product $product)
-    {
-        $inWishlist = Wishlist::where('user_id', Auth::id())
-            ->where('product_id', $product->id)
-            ->exists();
-
-        return response()->json([
-            'in_wishlist' => $inWishlist,
-        ]);
-    }
-
-    /**
-     * Get wishlist count for user
-     */
-    public function count()
-    {
-        $count = Wishlist::where('user_id', Auth::id())->count();
-
-        return response()->json([
-            'count' => $count,
-        ]);
     }
 }

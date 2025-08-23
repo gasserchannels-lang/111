@@ -9,17 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class PriceAlertController extends Controller
 {
+    // تم إضافة هذا الثابت لتقليل التكرار
+    private const UNAUTHORIZED_MESSAGE = 'Unauthorized action.';
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $alerts = PriceAlert::where('user_id', Auth::id())
-            ->with(['product'])
-            ->latest()
-            ->paginate(10);
-
-        return view('price-alerts.index', compact('alerts'));
+        $priceAlerts = Auth::user()->priceAlerts()->with('product')->latest()->paginate(10);
+        return view('price-alerts.index', compact('priceAlerts'));
     }
 
     /**
@@ -31,7 +30,6 @@ class PriceAlertController extends Controller
         if ($request->has('product_id')) {
             $product = Product::findOrFail($request->product_id);
         }
-
         return view('price-alerts.create', compact('product'));
     }
 
@@ -46,21 +44,10 @@ class PriceAlertController extends Controller
             'repeat_alert' => 'boolean',
         ]);
 
-        // التحقق من عدم وجود تنبيه نشط للمنتج نفسه
-        $existingAlert = PriceAlert::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
-            ->where('is_active', true)
-            ->first();
-
-        if ($existingAlert) {
-            return back()->withErrors(['product_id' => 'You already have an active alert for this product.']);
-        }
-
-        PriceAlert::create([
-            'user_id' => Auth::id(),
+        Auth::user()->priceAlerts()->create([
             'product_id' => $request->product_id,
             'target_price' => $request->target_price,
-            'repeat_alert' => $request->boolean('repeat_alert', false),
+            'repeat_alert' => $request->input('repeat_alert', false),
             'is_active' => true,
         ]);
 
@@ -75,7 +62,7 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
         $priceAlert->load(['product', 'product.priceOffers' => function ($query) {
@@ -92,9 +79,8 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
-
         return view('price-alerts.edit', compact('priceAlert'));
     }
 
@@ -105,19 +91,17 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
         $request->validate([
             'target_price' => 'required|numeric|min:0.01',
             'repeat_alert' => 'boolean',
-            'is_active' => 'boolean',
         ]);
 
         $priceAlert->update([
             'target_price' => $request->target_price,
-            'repeat_alert' => $request->boolean('repeat_alert'),
-            'is_active' => $request->boolean('is_active', true),
+            'repeat_alert' => $request->input('repeat_alert', false),
         ]);
 
         return redirect()->route('price-alerts.index')
@@ -131,7 +115,7 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
         $priceAlert->delete();
@@ -147,33 +131,13 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
         $priceAlert->update([
             'is_active' => ! $priceAlert->is_active,
         ]);
 
-        $status = $priceAlert->is_active ? 'activated' : 'deactivated';
-
-        return response()->json([
-            'success' => true,
-            'message' => "Price alert {$status} successfully!",
-            'is_active' => $priceAlert->is_active,
-        ]);
-    }
-
-    /**
-     * Get user's alerts count
-     */
-    public function count()
-    {
-        $count = PriceAlert::where('user_id', Auth::id())
-            ->where('is_active', true)
-            ->count();
-
-        return response()->json([
-            'count' => $count,
-        ]);
+        return back()->with('success', 'Alert status updated!');
     }
 }

@@ -8,6 +8,7 @@ use App\Models\UserLocaleSetting;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class LocaleMiddleware
@@ -15,74 +16,91 @@ class LocaleMiddleware
     /**
      * Handle an incoming request.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
     {
-        $languageCode = null;
-        $currencyCode = null;
+        $languageCode = $this->determineLanguageCode($request);
+        $currencyCode = $this->determineCurrencyCode();
 
-        // 1. User preferences (if logged in)
-        if (auth()->check()) {
-            $userLocale = auth()->user()->localeSetting;
-            if ($userLocale) {
-                $languageCode = $userLocale->language ? $userLocale->language->code : null;
-                $currencyCode = $userLocale->currency ? $userLocale->currency->code : null;
-            }
-        }
-
-        // 2. Session preferences (for guests or if user preferences are not set)
-        if (! $languageCode && Session::has('locale_language')) {
-            $languageCode = Session::get('locale_language');
-        }
-        if (! $currencyCode && Session::has('locale_currency')) {
-            $currencyCode = Session::get('locale_currency');
-        }
-
-        // 3. Detect from browser (Accept-Language header) - simplified for example
-        if (! $languageCode) {
-            $browserLang = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
-            $language = Language::where('code', $browserLang)->first();
-            if ($language) {
-                $languageCode = $language->code;
-            }
-        }
-
-        // 4. Default if nothing found
-        if (! $languageCode) {
-            $defaultLanguage = Language::where('is_default', true)->first();
-            $languageCode = $defaultLanguage ? $defaultLanguage->code : 'en'; // Fallback to 'en'
-        }
-        if (! $currencyCode) {
-            $defaultCurrency = Currency::where('is_default', true)->first();
-            $currencyCode = $defaultCurrency ? $defaultCurrency->code : 'USD'; // Fallback to 'USD'
-        }
-
-        // Set locale and currency in session for consistency
+        // Set locale and currency for the current request
         Session::put('locale_language', $languageCode);
         Session::put('locale_currency', $currencyCode);
-
-        // Set Laravel App locale
         App::setLocale($languageCode);
 
-        // Store/Update user locale settings if logged in
-        if (auth()->check()) {
-            $user = auth()->user();
-            $language = Language::where('code', $languageCode)->first();
-            $currency = Currency::where('code', $currencyCode)->first();
-
-            if ($language && $currency) {
-                UserLocaleSetting::updateOrCreate(
-                    ['user_id' => $user->id],
-                    [
-                        'language_id' => $language->id,
-                        'currency_id' => $currency->id,
-                    ]
-                );
-            }
+        // Store/Update user settings if logged in
+        if (Auth::check()) {
+            $this->updateUserLocaleSettings($languageCode, $currencyCode);
         }
 
         return $next($request);
+    }
+
+    /**
+     * Determine the language code from various sources.
+     */
+    private function determineLanguageCode(Request $request): string
+    {
+        // 1. User preferences (if logged in)
+        if (Auth::check() && ($setting = Auth::user()->localeSetting) && ($language = $setting->language)) {
+            return $language->code;
+        }
+
+        // 2. Session preferences
+        if (Session::has('locale_language')) {
+            return Session::get('locale_language');
+        }
+
+        // 3. Browser's Accept-Language header
+        $browserLangCode = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
+        if ($language = Language::where('code', $browserLangCode)->first()) {
+            return $language->code;
+        }
+
+        // 4. Default language
+        $defaultLanguage = Language::where('is_default', true)->first();
+        return $defaultLanguage ? $defaultLanguage->code : 'en'; // Fallback
+    }
+
+    /**
+     * Determine the currency code from various sources.
+     */
+    private function determineCurrencyCode(): string
+    {
+        // 1. User preferences (if logged in)
+        if (Auth::check() && ($setting = Auth::user()->localeSetting) && ($currency = $setting->currency)) {
+            return $currency->code;
+        }
+
+        // 2. Session preferences
+        if (Session::has('locale_currency')) {
+            return Session::get('locale_currency');
+        }
+
+        // 3. Default currency
+        $defaultCurrency = Currency::where('is_default', true)->first();
+        return $defaultCurrency ? $defaultCurrency->code : 'USD'; // Fallback
+    }
+
+    /**
+     * Update the user's locale settings in the database.
+     */
+    private function updateUserLocaleSettings(string $languageCode, string $currencyCode): void
+    {
+        $user = Auth::user();
+        $language = Language::where('code', $languageCode)->first();
+        $currency = Currency::where('code', $currencyCode)->first();
+
+        if ($language && $currency) {
+            UserLocaleSetting::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'language_id' => $language->id,
+                    'currency_id' => $currency->id,
+                ]
+            );
+        }
     }
 }

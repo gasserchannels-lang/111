@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Review;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    // تم إضافة هذا الثابت لتقليل التكرار
+    private const UNAUTHORIZED_MESSAGE = 'Unauthorized action.';
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $reviews = Review::with(['user', 'product'])
-            ->latest()
-            ->paginate(10);
-
+        // عرض المراجعات الخاصة بالمستخدم الحالي
+        $reviews = Auth::user()->reviews()->with('product')->latest()->paginate(10);
         return view('reviews.index', compact('reviews'));
     }
 
@@ -26,9 +27,15 @@ class ReviewController extends Controller
      */
     public function create(Request $request)
     {
-        $product = null;
-        if ($request->has('product_id')) {
-            $product = Product::findOrFail($request->product_id);
+        $product = Product::findOrFail($request->product_id);
+        // التحقق مما إذا كان المستخدم قد قام بمراجعة هذا المنتج بالفعل
+        $existingReview = Review::where('user_id', Auth::id())
+                                ->where('product_id', $product->id)
+                                ->exists();
+
+        if ($existingReview) {
+            return redirect()->route('products.show', $product->id)
+                ->with('error', 'You have already reviewed this product.');
         }
 
         return view('reviews.create', compact('product'));
@@ -43,16 +50,17 @@ class ReviewController extends Controller
             'product_id' => 'required|exists:products,id',
             'rating' => 'required|integer|min:1|max:5',
             'title' => 'required|string|max:255',
-            'comment' => 'required|string|max:1000',
+            'content' => 'required|string',
         ]);
 
-        // التحقق من أن المستخدم لم يقم بمراجعة هذا المنتج من قبل
+        // التحقق مرة أخرى من عدم وجود مراجعة مسبقة
         $existingReview = Review::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
-            ->first();
+                                ->where('product_id', $request->product_id)
+                                ->exists();
 
         if ($existingReview) {
-            return back()->withErrors(['product_id' => 'You have already reviewed this product.']);
+            return redirect()->route('products.show', $request->product_id)
+                ->with('error', 'You have already reviewed this product.');
         }
 
         Review::create([
@@ -60,22 +68,14 @@ class ReviewController extends Controller
             'product_id' => $request->product_id,
             'rating' => $request->rating,
             'title' => $request->title,
-            'comment' => $request->comment,
+            'content' => $request->content,
+            'is_approved' => true, // الموافقة التلقائية أو يمكن تغييرها لتتطلب مراجعة
         ]);
 
         return redirect()->route('products.show', $request->product_id)
-            ->with('success', 'Review added successfully!');
+            ->with('success', 'Thank you for your review!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Review $review)
-    {
-        $review->load(['user', 'product']);
-
-        return view('reviews.show', compact('review'));
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -84,9 +84,8 @@ class ReviewController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
         if ($review->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
-
         return view('reviews.edit', compact('review'));
     }
 
@@ -97,20 +96,16 @@ class ReviewController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
         if ($review->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'title' => 'required|string|max:255',
-            'comment' => 'required|string|max:1000',
+            'content' => 'required|string',
         ]);
 
-        $review->update([
-            'rating' => $request->rating,
-            'title' => $request->title,
-            'comment' => $request->comment,
-        ]);
+        $review->update($request->only(['rating', 'title', 'content']));
 
         return redirect()->route('products.show', $review->product_id)
             ->with('success', 'Review updated successfully!');
@@ -122,27 +117,14 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         // التحقق من أن المستخدم هو صاحب المراجعة أو مدير
-        if ($review->user_id !== Auth::id() && ! Auth::user()->is_admin) {
-            abort(403, 'Unauthorized action.');
+        if ($review->user_id !== Auth::id() && !Auth::user()->is_admin) {
+            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
         $productId = $review->product_id;
         $review->delete();
 
         return redirect()->route('products.show', $productId)
-            ->with('success', 'Review deleted successfully!');
-    }
-
-    /**
-     * Get reviews for a specific product (API endpoint)
-     */
-    public function getProductReviews(Product $product)
-    {
-        $reviews = $product->reviews()
-            ->with('user:id,name')
-            ->latest()
-            ->paginate(10);
-
-        return response()->json($reviews);
+            ->with('success', 'Review deleted successfully.');
     }
 }

@@ -3,23 +3,34 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\PriceOffer;
-use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Product;
+use App\Models\PriceOffer;
+use App\Models\Store;
 
 class PriceSearchController extends Controller
 {
+    // تم إضافة هذا الثابت لتقليل التكرار
+    private const VALIDATION_RULE_COUNTRY = 'nullable|string|size:2';
+
     /**
-     * البحث الذكي عن المنتجات مع ترتيب الأسعار
+     * البحث عن أسعار المنتجات بناءً على استعلام.
      */
     public function search(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'query' => 'required|string|min:2|max:255',
-            'country' => 'nullable|string|size:2',
+            'country' => self::VALIDATION_RULE_COUNTRY, // تم استخدام الثابت هنا
             'limit' => 'nullable|integer|min:1|max:50',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $query = $request->input('query');
         $country = $request->input('country', $this->detectUserCountry($request));
@@ -27,69 +38,54 @@ class PriceSearchController extends Controller
 
         try {
             // البحث عن المنتجات
-            $offers = PriceOffer::searchProductOffers($query, $country, $limit);
+            $products = Product::where('name', 'like', "%{$query}%")
+                ->with(['priceOffers' => function ($query) use ($country) {
+                    $query->whereHas('store', function ($q) use ($country) {
+                        $q->where('country_code', $country);
+                    })->orderBy('price', 'asc');
+                }])
+                ->take($limit)
+                ->get();
 
-            // تجميع النتائج حسب اسم المنتج
-            $groupedOffers = $this->groupOffersByProduct($offers);
-
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'query' => $query,
-                    'country' => $country,
-                    'total_products' => count($groupedOffers),
-                    'total_offers' => $offers->count(),
-                    'products' => $groupedOffers,
-                ],
-                'message' => 'Search completed successfully',
-            ]);
-
+            return response()->json($products);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Search failed: '.$e->getMessage(),
-            ], 500);
+            Log::error('Price search failed: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred during the search.'], 500);
         }
     }
 
     /**
-     * الحصول على أفضل عرض سعر لمنتج معين
+     * الحصول على أفضل عرض لمنتج معين.
      */
     public function bestOffer(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'product' => 'required|string|min:2|max:255',
-            'country' => 'nullable|string|size:2',
+            'country' => self::VALIDATION_RULE_COUNTRY, // تم استخدام الثابت هنا
         ]);
 
-        $product = $request->input('product');
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $productName = $request->input('product');
         $country = $request->input('country', $this->detectUserCountry($request));
 
         try {
-            $bestOffer = PriceOffer::getBestOffer($product, $country);
+            $bestOffer = PriceOffer::whereHas('product', function ($query) use ($productName) {
+                $query->where('name', 'like', "%{$productName}%");
+            })->whereHas('store', function ($query) use ($country) {
+                $query->where('country_code', $country);
+            })->orderBy('price', 'asc')->first();
 
-            if (! $bestOffer) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No offers found for this product',
-                ], 404);
+            if (!$bestOffer) {
+                return response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
             }
 
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'product' => $product,
-                    'country' => $country,
-                    'best_offer' => $this->formatOffer($bestOffer),
-                ],
-                'message' => 'Best offer found successfully',
-            ]);
-
+            return response()->json($bestOffer);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Search failed: '.$e->getMessage(),
-            ], 500);
+            Log::error('Best offer search failed: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred.'], 500);
         }
     }
 
@@ -98,125 +94,45 @@ class PriceSearchController extends Controller
      */
     public function supportedStores(Request $request): JsonResponse
     {
-        $request->validate([
-            'country' => 'nullable|string|size:2',
+        $validator = Validator::make($request->all(), [
+            'country' => self::VALIDATION_RULE_COUNTRY, // تم استخدام الثابت هنا
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $country = $request->input('country', $this->detectUserCountry($request));
 
         try {
-            $stores = Store::getActiveForCountry($country);
-
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'country' => $country,
-                    'stores' => $stores->map(function ($store) {
-                        return [
-                            'id' => $store->id,
-                            'name' => $store->name,
-                            'slug' => $store->slug,
-                            'logo' => $store->logo,
-                            'website_url' => $store->website_url,
-                            'priority' => $store->priority,
-                        ];
-                    }),
-                ],
-                'message' => 'Supported stores retrieved successfully',
-            ]);
-
+            $stores = Store::where('country_code', $country)->get();
+            return response()->json($stores);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve stores: '.$e->getMessage(),
-            ], 500);
+            Log::error('Failed to fetch supported stores: ' . $e->getMessage());
+            return response()->json(['message' => 'Could not retrieve supported stores.'], 500);
         }
     }
 
     /**
-     * تجميع العروض حسب اسم المنتج
-     */
-    private function groupOffersByProduct($offers): array
-    {
-        $grouped = [];
-
-        foreach ($offers as $offer) {
-            $productKey = $this->normalizeProductName($offer->product_name);
-
-            if (! isset($grouped[$productKey])) {
-                $grouped[$productKey] = [
-                    'product_name' => $offer->product_name,
-                    'product_code' => $offer->product_code,
-                    'image_url' => $offer->image_url,
-                    'offers' => [],
-                ];
-            }
-
-            $grouped[$productKey]['offers'][] = $this->formatOffer($offer);
-        }
-
-        // ترتيب المنتجات حسب أقل سعر
-        uasort($grouped, function ($a, $b) {
-            $minPriceA = min(array_column($a['offers'], 'price'));
-            $minPriceB = min(array_column($b['offers'], 'price'));
-
-            return $minPriceA <=> $minPriceB;
-        });
-
-        return array_values($grouped);
-    }
-
-    /**
-     * تنسيق بيانات العرض
-     */
-    private function formatOffer($offer): array
-    {
-        return [
-            'id' => $offer->id,
-            'price' => (float) $offer->price,
-            'currency' => $offer->currency,
-            'product_url' => $offer->product_url,
-            'affiliate_url' => $offer->affiliate_url ?: $offer->product_url,
-            'in_stock' => $offer->in_stock,
-            'stock_quantity' => $offer->stock_quantity,
-            'condition' => $offer->condition,
-            'rating' => $offer->rating ? (float) $offer->rating : null,
-            'reviews_count' => $offer->reviews_count,
-            'store' => [
-                'id' => $offer->store->id,
-                'name' => $offer->store->name,
-                'slug' => $offer->store->slug,
-                'logo' => $offer->store->logo,
-                'website_url' => $offer->store->website_url,
-            ],
-            'last_updated_at' => $offer->last_updated_at->toISOString(),
-        ];
-    }
-
-    /**
-     * تطبيع اسم المنتج للتجميع
-     */
-    private function normalizeProductName(string $name): string
-    {
-        // إزالة الأحرف الخاصة والمسافات الزائدة
-        $normalized = preg_replace('/[^\w\s-]/u', '', $name);
-        $normalized = preg_replace('/\s+/', ' ', $normalized);
-
-        return strtolower(trim($normalized));
-    }
-
-    /**
-     * اكتشاف دولة المستخدم من IP أو Headers
+     * محاولة تحديد دولة المستخدم من خلال IP.
      */
     private function detectUserCountry(Request $request): string
     {
-        // يمكن استخدام خدمة GeoIP أو CloudFlare headers
-        $cloudflareCountry = $request->header('CF-IPCountry');
-        if ($cloudflareCountry && strlen($cloudflareCountry) === 2) {
-            return strtoupper($cloudflareCountry);
+        $ip = $request->ip();
+        // في بيئة الإنتاج، استخدم خدمة GeoIP حقيقية
+        if (app()->environment('local') && $ip === '127.0.0.1') {
+            return 'US'; // قيمة افتراضية للتطوير المحلي
         }
 
-        // افتراضي
-        return 'US';
+        try {
+            $response = Http::get("https://ipapi.co/{$ip}/country_code/" );
+            if ($response->successful() && !empty($response->body())) {
+                return trim($response->body());
+            }
+        } catch (\Exception $e) {
+            Log::warning("Could not detect country for IP {$ip}: " . $e->getMessage());
+        }
+
+        return 'US'; // قيمة افتراضية عالمية
     }
 }
