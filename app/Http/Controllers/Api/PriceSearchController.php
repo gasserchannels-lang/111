@@ -33,6 +33,7 @@ class PriceSearchController extends Controller
         } catch (\Exception $e) {
             Log::warning("Could not detect country for IP {$ip}: ".$e->getMessage());
         }
+
         return $country ?? 'US';
     }
 

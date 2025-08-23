@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1755981041">
-  <project timestamp="1755981041">
+<coverage generated="1755983547">
+  <project timestamp="1755983547">
     <file name="/home/runner/work/coprra-project/coprra-project/app/Console/Kernel.php">
       <class name="App\Console\Kernel" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
@@ -25,46 +25,46 @@
       <class name="App\Http\Controllers\Api\PriceSearchController" namespace="global">
         <metrics complexity="13" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="36" coveredstatements="0" elements="39" coveredelements="0"/>
       </class>
-      <line num="21" type="method" name="detectUserCountry" visibility="private" complexity="8" crap="72" count="0"/>
-      <line num="23" type="stmt" count="0"/>
+      <line num="18" type="method" name="detectUserCountry" visibility="private" complexity="8" crap="72" count="0"/>
+      <line num="20" type="stmt" count="0"/>
+      <line num="21" type="stmt" count="0"/>
+      <line num="22" type="stmt" count="0"/>
+      <line num="24" type="stmt" count="0"/>
       <line num="25" type="stmt" count="0"/>
       <line num="26" type="stmt" count="0"/>
       <line num="29" type="stmt" count="0"/>
       <line num="30" type="stmt" count="0"/>
       <line num="31" type="stmt" count="0"/>
-      <line num="35" type="stmt" count="0"/>
-      <line num="36" type="stmt" count="0"/>
+      <line num="33" type="stmt" count="0"/>
+      <line num="34" type="stmt" count="0"/>
       <line num="37" type="stmt" count="0"/>
-      <line num="39" type="stmt" count="0"/>
-      <line num="40" type="stmt" count="0"/>
+      <line num="40" type="method" name="bestOffer" visibility="public" complexity="4" crap="20" count="0"/>
+      <line num="42" type="stmt" count="0"/>
       <line num="43" type="stmt" count="0"/>
-      <line num="49" type="method" name="bestOffer" visibility="public" complexity="4" crap="20" count="0"/>
+      <line num="44" type="stmt" count="0"/>
+      <line num="45" type="stmt" count="0"/>
+      <line num="47" type="stmt" count="0"/>
+      <line num="48" type="stmt" count="0"/>
       <line num="51" type="stmt" count="0"/>
-      <line num="52" type="stmt" count="0"/>
       <line num="53" type="stmt" count="0"/>
       <line num="54" type="stmt" count="0"/>
+      <line num="55" type="stmt" count="0"/>
       <line num="56" type="stmt" count="0"/>
       <line num="57" type="stmt" count="0"/>
+      <line num="58" type="stmt" count="0"/>
+      <line num="59" type="stmt" count="0"/>
       <line num="61" type="stmt" count="0"/>
       <line num="62" type="stmt" count="0"/>
       <line num="64" type="stmt" count="0"/>
-      <line num="65" type="stmt" count="0"/>
       <line num="66" type="stmt" count="0"/>
       <line num="67" type="stmt" count="0"/>
       <line num="68" type="stmt" count="0"/>
-      <line num="70" type="stmt" count="0"/>
       <line num="71" type="stmt" count="0"/>
-      <line num="74" type="stmt" count="0"/>
-      <line num="75" type="stmt" count="0"/>
+      <line num="74" type="method" name="supportedStores" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="76" type="stmt" count="0"/>
-      <line num="78" type="stmt" count="0"/>
+      <line num="77" type="stmt" count="0"/>
       <line num="79" type="stmt" count="0"/>
-      <line num="82" type="stmt" count="0"/>
-      <line num="88" type="method" name="supportedStores" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="90" type="stmt" count="0"/>
-      <line num="91" type="stmt" count="0"/>
-      <line num="93" type="stmt" count="0"/>
-      <metrics loc="96" ncloc="87" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="36" coveredstatements="0" elements="39" coveredelements="0"/>
+      <metrics loc="82" ncloc="82" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="36" coveredstatements="0" elements="39" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Controllers/CartController.php">
       <class name="App\Http\Controllers\CartController" namespace="global">
@@ -835,6 +835,6 @@
       <line num="38" type="stmt" count="1"/>
       <metrics loc="41" ncloc="31" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="9" elements="11" coveredelements="9"/>
     </file>
-    <metrics files="40" loc="2247" ncloc="1789" classes="32" methods="111" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="483" coveredstatements="29" elements="594" coveredelements="37"/>
+    <metrics files="40" loc="2233" ncloc="1784" classes="32" methods="111" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="483" coveredstatements="29" elements="594" coveredelements="37"/>
   </project>
 </coverage>
