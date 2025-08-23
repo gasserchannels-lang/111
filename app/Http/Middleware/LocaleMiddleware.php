@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-// ... other use statements ...
 use App\Models\Language;
 use Closure;
 use Illuminate\Http\Request;
@@ -13,7 +12,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LocaleMiddleware
 {
-    // ... handle method ...
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        $languageCode = $this->determineLanguageCode($request);
+        App::setLocale($languageCode);
+
+        $response = $next($request);
+
+        // Set content language header
+        $response->headers->set('Content-Language', $languageCode);
+
+        return $response;
+    }
 
     /**
      * Determine the language code from various sources.
@@ -41,6 +56,4 @@ class LocaleMiddleware
         // 4. Default language or fallback
         return $langCode ?? Language::where('is_default', true)->first()?->code ?? 'en';
     }
-
-    // ... other methods ...
 }
