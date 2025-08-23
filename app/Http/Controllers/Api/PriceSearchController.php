@@ -32,7 +32,7 @@ class PriceSearchController extends Controller
         }
 
         try {
-            $response = Http::get("https://ipapi.co/{$ip}/country_code/" );
+            $response = Http::get("https://ipapi.co/{$ip}/country_code/");
             if ($response->successful() && ! empty(trim($response->body()))) {
                 $country = trim($response->body());
             }
