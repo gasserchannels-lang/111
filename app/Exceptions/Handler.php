@@ -24,7 +24,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            // This space is intentionally left blank for now.
+            //
         });
     }
 }

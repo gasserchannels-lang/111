@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const themeToggle = document.getElementById("theme-toggle");
-    const currentTheme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const currentTheme = localStorage.getItem("theme") || "light";
 
     if (currentTheme === "dark") {
         document.documentElement.classList.add("dark-mode");
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (themeToggle) {
         themeToggle.addEventListener("click", function() {
-            let theme = "light";
+            let theme;
             if (document.documentElement.classList.contains("dark-mode")) {
                 document.documentElement.classList.remove("dark-mode");
                 theme = "light";
@@ -20,5 +20,3 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-
-
