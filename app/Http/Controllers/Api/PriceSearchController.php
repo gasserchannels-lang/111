@@ -15,22 +15,16 @@ class PriceSearchController extends Controller
 {
     private const VALIDATION_RULE_COUNTRY = 'sometimes|string|size:2';
 
-    /**
-     * محاولة تحديد دولة المستخدم من خلال IP أو الهيدر.
-     */
     private function detectUserCountry(Request $request): string
     {
         $country = $request->header('CF-IPCountry');
-
         if ($country && $country !== 'XX') {
             return $country;
         }
-
         $ip = $request->ip();
         if (app()->environment('local') && in_array($ip, ['127.0.0.1', '::1'])) {
             return 'US';
         }
-
         try {
             $response = Http::get("https://ipapi.co/{$ip}/country_code/" );
             if ($response->successful() && ! empty(trim($response->body()))) {
@@ -39,13 +33,9 @@ class PriceSearchController extends Controller
         } catch (\Exception $e) {
             Log::warning("Could not detect country for IP {$ip}: ".$e->getMessage());
         }
-
         return $country ?? 'US';
     }
 
-    /**
-     * الحصول على أفضل عرض لمنتج معين.
-     */
     public function bestOffer(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -57,10 +47,10 @@ class PriceSearchController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        $response = null;
         try {
             $productName = $request->input('product');
             $country = $request->input('country', $this->detectUserCountry($request));
-
             $bestOffer = PriceOffer::whereHas('product', function ($query) use ($productName) {
                 $query->where('name', 'like', "%{$productName}%");
             })->whereHas('store', function ($query) use ($country) {
@@ -68,23 +58,18 @@ class PriceSearchController extends Controller
             })->with(['product', 'store.currency'])->orderBy('price', 'asc')->first();
 
             if ($bestOffer) {
-                return response()->json($bestOffer);
+                $response = response()->json($bestOffer);
+            } else {
+                $response = response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
             }
-
-            return response()->json([
-                'message' => 'No offers found for this product in the specified country.',
-            ], 404);
-
         } catch (\Exception $e) {
             Log::error('Best offer search failed: '.$e->getMessage());
+            $response = response()->json(['message' => 'An error occurred.'], 500);
         }
 
-        return response()->json(['message' => 'An error occurred.'], 500);
+        return $response;
     }
 
-    /**
-     * الحصول على قائمة المتاجر المدعومة لدولة معينة.
-     */
     public function supportedStores(Request $request): JsonResponse
     {
         $country = $request->input('country', $this->detectUserCountry($request));
