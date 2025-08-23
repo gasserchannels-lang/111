@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # هذه هي الخدمة الجديدة التي تستخدم بيئة Laravel Sail المتكاملة
+  laravel.test:
+    build:
+      context: ./vendor/laravel/sail/runtimes/8.1 # <-- يشير إلى Dockerfile الصحيح
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP:-1000}'
+    image: sail-8.1/app
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${APP_PORT:-8080}:80'
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+    environment:
+      WWWUSER: '${WWWUSER:-1000}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      - coprra_network
+    depends_on:
+      - db
+      - sonarqube
+
+  db:
+    image: mysql:8.0
+    container_name: coprra_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: '${DB_DATABASE:-coprra}'
+      MYSQL_USER: '${DB_USERNAME:-coprra}'
+      MYSQL_PASSWORD: '${DB_PASSWORD:-secret}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - '${FORWARD_DB_PORT:-3307}:3306'
+    volumes:
+      - 'db_data:/var/lib/mysql'
+    networks:
+      - coprra_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD:-secret}"]
+      retries: 3
+      timeout: 5s
+
+  sonarqube:
+    image: sonarqube:9.9-community
+    container_name: coprra_sonarqube
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db_sonar:5432/sonarqube
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db_sonar
+    networks:
+      - coprra_network
+
+  db_sonar:
+    image: postgres:13
+    container_name: coprra_sonar_db
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonarqube
+    volumes:
+      - 'sonar_db_data:/var/lib/postgresql/data'
+    networks:
+      - coprra_network
+
+volumes:
+  db_data:
+  sonar_db_data:
+
+networks:
+  coprra_network:
+    driver: bridge
