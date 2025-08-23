@@ -50,7 +50,7 @@ class StoreSeeder extends Seeder
             ],
         ];
 
-        foreach ($stores as $storeData ) {
+        foreach ($stores as $storeData) {
             Store::create($storeData);
         }
     }

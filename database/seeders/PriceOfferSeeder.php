@@ -31,7 +31,7 @@ class PriceOfferSeeder extends Seeder
                     'condition' => 'new',
                     'rating' => rand(35, 50) / 10,
                     'reviews_count' => rand(10, 1000),
-                    'image_url' => 'https://via.placeholder.com/300x300?text='.urlencode($product['name'] ),
+                    'image_url' => 'https://via.placeholder.com/300x300?text='.urlencode($product['name']),
                     'specifications' => [
                         'brand' => explode(' ', $product['name'])[0],
                         'model' => $product['name'],
