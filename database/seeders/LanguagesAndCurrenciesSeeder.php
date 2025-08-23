@@ -39,7 +39,6 @@ class LanguagesAndCurrenciesSeeder extends Seeder
             ['code' => 'vi', 'name' => 'Vietnamese', 'native_name' => 'Tiếng Việt', 'direction' => 'ltr', 'is_active' => true, 'sort_order' => 19],
             ['code' => 'ur', 'name' => 'Urdu', 'native_name' => 'اردو', 'direction' => 'rtl', 'is_active' => true, 'sort_order' => 20],
         ];
-
         DB::table('languages')->insert($languages);
 
         $currencies = [
@@ -64,7 +63,6 @@ class LanguagesAndCurrenciesSeeder extends Seeder
             ['code' => 'KWD', 'name' => 'Kuwaiti Dinar', 'symbol' => 'د.ك', 'is_active' => true, 'sort_order' => 19],
             ['code' => 'QAR', 'name' => 'Qatari Riyal', 'symbol' => 'ر.ق', 'is_active' => true, 'sort_order' => 20],
         ];
-
         DB::table('currencies')->insert($currencies);
     }
 }

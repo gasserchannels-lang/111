@@ -20,15 +20,13 @@ class PriceSearchController extends Controller
      */
     private function detectUserCountry(Request $request): string
     {
-        // 1. الأولوية لهيدر Cloudflare لأنه أكثر دقة في بيئة الإنتاج
-        $cfCountry = $request->header('CF-IPCountry');
-        if ($cfCountry && $cfCountry !== 'XX') {
-            return $cfCountry;
+        $country = $request->header('CF-IPCountry');
+
+        if ($country && $country !== 'XX') {
+            return $country;
         }
 
-        // 2. إذا لم يتوفر الهيدر، استخدم خدمة GeoIP كخيار بديل
         $ip = $request->ip();
-        // في بيئة التطوير المحلي، استخدم قيمة افتراضية لتجنب استدعاءات API غير ضرورية
         if (app()->environment('local') && in_array($ip, ['127.0.0.1', '::1'])) {
             return 'US';
         }
@@ -36,14 +34,13 @@ class PriceSearchController extends Controller
         try {
             $response = Http::get("https://ipapi.co/{$ip}/country_code/" );
             if ($response->successful() && ! empty(trim($response->body()))) {
-                return trim($response->body());
+                $country = trim($response->body());
             }
         } catch (\Exception $e) {
             Log::warning("Could not detect country for IP {$ip}: ".$e->getMessage());
         }
 
-        // 3. القيمة الافتراضية النهائية
-        return 'US';
+        return $country ?? 'US';
     }
 
     /**
@@ -80,9 +77,9 @@ class PriceSearchController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Best offer search failed: '.$e->getMessage());
-
-            return response()->json(['message' => 'An error occurred.'], 500);
         }
+
+        return response()->json(['message' => 'An error occurred.'], 500);
     }
 
     /**

@@ -24,7 +24,6 @@ class LocaleMiddleware
 
         $response = $next($request);
 
-        // Set content language header
         $response->headers->set('Content-Language', $languageCode);
 
         return $response;
@@ -37,23 +36,17 @@ class LocaleMiddleware
     {
         $langCode = null;
 
-        // 1. User preferences (if logged in)
         if (Auth::check() && ($setting = Auth::user()->localeSetting) && ($language = $setting->language)) {
             $langCode = $language->code;
-        }
-        // 2. Session preferences
-        elseif (Session::has('locale_language')) {
+        } elseif (Session::has('locale_language')) {
             $langCode = Session::get('locale_language');
-        }
-        // 3. Browser's Accept-Language header
-        else {
+        } else {
             $browserLangCode = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
             if ($language = Language::where('code', $browserLangCode)->first()) {
                 $langCode = $language->code;
             }
         }
 
-        // 4. Default language or fallback
         return $langCode ?? Language::where('is_default', true)->first()?->code ?? 'en';
     }
 }
