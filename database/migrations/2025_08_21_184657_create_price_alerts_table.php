@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamp('last_triggered_at')->nullable();
             $table->integer('trigger_count')->default(0);
             $table->timestamps();
-            
+
             // Indexes
             $table->index(['user_id', 'is_active']);
             $table->index(['product_id', 'is_active']);

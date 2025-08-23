@@ -7,14 +7,12 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-	public function show(string $slug): View
-	{
-		$product = Product::query()->where('slug', $slug)->firstOrFail();
+    public function show(string $slug): View
+    {
+        $product = Product::query()->where('slug', $slug)->firstOrFail();
 
-		return view('product-show', [
-			'product' => $product,
-		]);
-	}
+        return view('product-show', [
+            'product' => $product,
+        ]);
+    }
 }
-
-

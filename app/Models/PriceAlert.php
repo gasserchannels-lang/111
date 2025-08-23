@@ -71,7 +71,7 @@ class PriceAlert extends Model
         return $query->active()
             ->where(function ($q) {
                 $q->whereNull('last_checked_at')
-                  ->orWhere('last_checked_at', '<', now()->subMinutes(5));
+                    ->orWhere('last_checked_at', '<', now()->subMinutes(5));
             });
     }
 
@@ -117,6 +117,7 @@ class PriceAlert extends Model
         // Check if alert should be triggered
         if ($this->shouldTrigger($currentPrice)) {
             $this->trigger();
+
             return true;
         }
 

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PriceOfferSeeder extends Seeder
@@ -46,14 +45,14 @@ class PriceOfferSeeder extends Seeder
                     'store_id' => $store->id,
                     'price' => rand(500, 1500) + (rand(0, 99) / 100), // سعر عشوائي
                     'currency' => 'USD',
-                    'product_url' => $store->website_url . '/product/' . strtolower($product['code']),
-                    'affiliate_url' => $store->generateAffiliateUrl($store->website_url . '/product/' . strtolower($product['code'])),
+                    'product_url' => $store->website_url.'/product/'.strtolower($product['code']),
+                    'affiliate_url' => $store->generateAffiliateUrl($store->website_url.'/product/'.strtolower($product['code'])),
                     'in_stock' => rand(0, 1) == 1,
                     'stock_quantity' => rand(0, 100),
                     'condition' => 'new',
                     'rating' => rand(35, 50) / 10, // تقييم من 3.5 إلى 5.0
                     'reviews_count' => rand(10, 1000),
-                    'image_url' => 'https://via.placeholder.com/300x300?text=' . urlencode($product['name']),
+                    'image_url' => 'https://via.placeholder.com/300x300?text='.urlencode($product['name']),
                     'specifications' => [
                         'brand' => explode(' ', $product['name'])[0],
                         'model' => $product['name'],

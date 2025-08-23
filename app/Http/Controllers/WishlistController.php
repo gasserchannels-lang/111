@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wishlist;
 use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,7 @@ class WishlistController extends Controller
             ->with('product')
             ->latest()
             ->paginate(12);
-            
+
         return view('wishlist.index', compact('wishlists'));
     }
 
@@ -39,7 +39,7 @@ class WishlistController extends Controller
         if ($existingWishlist) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product is already in your wishlist.'
+                'message' => 'Product is already in your wishlist.',
             ], 400);
         }
 
@@ -50,7 +50,7 @@ class WishlistController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Product added to wishlist successfully!'
+            'message' => 'Product added to wishlist successfully!',
         ]);
     }
 
@@ -67,10 +67,10 @@ class WishlistController extends Controller
             ->where('product_id', $request->product_id)
             ->first();
 
-        if (!$wishlist) {
+        if (! $wishlist) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product not found in your wishlist.'
+                'message' => 'Product not found in your wishlist.',
             ], 404);
         }
 
@@ -78,7 +78,7 @@ class WishlistController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Product removed from wishlist successfully!'
+            'message' => 'Product removed from wishlist successfully!',
         ]);
     }
 
@@ -98,10 +98,11 @@ class WishlistController extends Controller
         if ($wishlist) {
             // إزالة من المفضلة
             $wishlist->delete();
+
             return response()->json([
                 'success' => true,
                 'action' => 'removed',
-                'message' => 'Product removed from wishlist!'
+                'message' => 'Product removed from wishlist!',
             ]);
         } else {
             // إضافة إلى المفضلة
@@ -109,10 +110,11 @@ class WishlistController extends Controller
                 'user_id' => Auth::id(),
                 'product_id' => $request->product_id,
             ]);
+
             return response()->json([
                 'success' => true,
                 'action' => 'added',
-                'message' => 'Product added to wishlist!'
+                'message' => 'Product added to wishlist!',
             ]);
         }
     }
@@ -127,7 +129,7 @@ class WishlistController extends Controller
             ->exists();
 
         return response()->json([
-            'in_wishlist' => $inWishlist
+            'in_wishlist' => $inWishlist,
         ]);
     }
 
@@ -137,10 +139,9 @@ class WishlistController extends Controller
     public function count()
     {
         $count = Wishlist::where('user_id', Auth::id())->count();
-        
+
         return response()->json([
-            'count' => $count
+            'count' => $count,
         ]);
     }
 }
-

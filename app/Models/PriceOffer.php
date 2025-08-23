@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Builder;
 
 class PriceOffer extends Model
 {
@@ -62,8 +62,8 @@ class PriceOffer extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('product_name', 'LIKE', "%{$search}%")
-              ->orWhere('product_code', 'LIKE', "%{$search}%")
-              ->orWhere('product_sku', 'LIKE', "%{$search}%");
+                ->orWhere('product_code', 'LIKE', "%{$search}%")
+                ->orWhere('product_sku', 'LIKE', "%{$search}%");
         });
     }
 
@@ -82,7 +82,7 @@ class PriceOffer extends Model
     {
         return $query->whereHas('store', function ($q) use ($countryCode) {
             $q->where('is_active', true)
-              ->whereJsonContains('supported_countries', $countryCode);
+                ->whereJsonContains('supported_countries', $countryCode);
         });
     }
 

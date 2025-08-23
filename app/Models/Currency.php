@@ -32,8 +32,8 @@ class Currency extends Model
     public function languages(): BelongsToMany
     {
         return $this->belongsToMany(Language::class, 'language_currency')
-                    ->withPivot('is_default')
-                    ->withTimestamps();
+            ->withPivot('is_default')
+            ->withTimestamps();
     }
 
     /**
@@ -81,7 +81,7 @@ class Currency extends Model
      */
     public function format(float $amount): string
     {
-        return $this->symbol . ' ' . number_format($amount, 2);
+        return $this->symbol.' '.number_format($amount, 2);
     }
 
     /**

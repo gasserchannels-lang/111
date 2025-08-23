@@ -30,7 +30,7 @@ return new class extends Migration
             $table->json('specifications')->nullable(); // مواصفات المنتج
             $table->timestamp('last_updated_at')->useCurrent(); // آخر تحديث للسعر
             $table->timestamps();
-            
+
             // فهارس للبحث السريع
             $table->index(['product_name', 'product_code']);
             $table->index(['store_id', 'in_stock']);

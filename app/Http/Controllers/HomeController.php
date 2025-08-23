@@ -7,18 +7,16 @@ use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-	public function index(): View
-	{
-		$latestProducts = Product::query()
-			->where('is_active', true)
-			->latest()
-			->take(8)
-			->get();
+    public function index(): View
+    {
+        $latestProducts = Product::query()
+            ->where('is_active', true)
+            ->latest()
+            ->take(8)
+            ->get();
 
-		return view('home', [
-			'latestProducts' => $latestProducts,
-		]);
-	}
+        return view('home', [
+            'latestProducts' => $latestProducts,
+        ]);
+    }
 }
-
-

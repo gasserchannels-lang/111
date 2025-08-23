@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('native_name'); // العربية, English, Français
             $table->enum('direction', ['ltr', 'rtl'])->default('ltr');
             $table->boolean('is_active')->default(true);
-            
+
             // هذا هو السطر الذي أضفناه
             $table->boolean('is_default')->default(false);
 
@@ -50,7 +50,7 @@ return new class extends Migration
             $table->foreignId('currency_id')->constrained()->onDelete('cascade');
             $table->boolean('is_default')->default(false); // العملة الافتراضية لهذه اللغة
             $table->timestamps();
-            
+
             $table->unique(['language_id', 'currency_id']);
         });
 
@@ -64,7 +64,7 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable();
             $table->string('country_code', 2)->nullable();
             $table->timestamps();
-            
+
             $table->index(['user_id', 'session_id']);
         });
     }

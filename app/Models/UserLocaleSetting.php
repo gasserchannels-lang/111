@@ -55,7 +55,7 @@ class UserLocaleSetting extends Model
     public static function findForUser(?int $userId, ?string $sessionId): ?self
     {
         $query = static::query();
-        
+
         if ($userId) {
             $query->where('user_id', $userId);
         } elseif ($sessionId) {
@@ -63,7 +63,7 @@ class UserLocaleSetting extends Model
         } else {
             return null;
         }
-        
+
         return $query->latest()->first();
     }
 

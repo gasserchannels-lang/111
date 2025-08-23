@@ -31,8 +31,8 @@ class Language extends Model
     public function currencies(): BelongsToMany
     {
         return $this->belongsToMany(Currency::class, 'language_currency')
-                    ->withPivot('is_default')
-                    ->withTimestamps();
+            ->withPivot('is_default')
+            ->withTimestamps();
     }
 
     /**

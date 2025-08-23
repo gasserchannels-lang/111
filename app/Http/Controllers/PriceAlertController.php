@@ -18,7 +18,7 @@ class PriceAlertController extends Controller
             ->with(['product'])
             ->latest()
             ->paginate(10);
-            
+
         return view('price-alerts.index', compact('alerts'));
     }
 
@@ -31,7 +31,7 @@ class PriceAlertController extends Controller
         if ($request->has('product_id')) {
             $product = Product::findOrFail($request->product_id);
         }
-        
+
         return view('price-alerts.create', compact('product'));
     }
 
@@ -77,11 +77,11 @@ class PriceAlertController extends Controller
         if ($priceAlert->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-        
-        $priceAlert->load(['product', 'product.priceOffers' => function($query) {
+
+        $priceAlert->load(['product', 'product.priceOffers' => function ($query) {
             $query->where('in_stock', true)->orderBy('price', 'asc')->limit(5);
         }]);
-        
+
         return view('price-alerts.show', compact('priceAlert'));
     }
 
@@ -94,7 +94,7 @@ class PriceAlertController extends Controller
         if ($priceAlert->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         return view('price-alerts.edit', compact('priceAlert'));
     }
 
@@ -151,15 +151,15 @@ class PriceAlertController extends Controller
         }
 
         $priceAlert->update([
-            'is_active' => !$priceAlert->is_active
+            'is_active' => ! $priceAlert->is_active,
         ]);
 
         $status = $priceAlert->is_active ? 'activated' : 'deactivated';
-        
+
         return response()->json([
             'success' => true,
             'message' => "Price alert {$status} successfully!",
-            'is_active' => $priceAlert->is_active
+            'is_active' => $priceAlert->is_active,
         ]);
     }
 
@@ -171,9 +171,9 @@ class PriceAlertController extends Controller
         $count = PriceAlert::where('user_id', Auth::id())
             ->where('is_active', true)
             ->count();
-        
+
         return response()->json([
-            'count' => $count
+            'count' => $count,
         ]);
     }
 }

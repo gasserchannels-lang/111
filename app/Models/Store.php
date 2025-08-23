@@ -60,11 +60,11 @@ class Store extends Model
      */
     public function generateAffiliateUrl(string $productUrl): string
     {
-        if (!$this->affiliate_base_url) {
+        if (! $this->affiliate_base_url) {
             return $productUrl;
         }
 
         // يمكن تخصيص هذه الدالة حسب نظام الأفلييت لكل متجر
-        return $this->affiliate_base_url . '?url=' . urlencode($productUrl);
+        return $this->affiliate_base_url.'?url='.urlencode($productUrl);
     }
 }

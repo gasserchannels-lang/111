@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PriceOffer;
 use App\Models\Store;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PriceSearchController extends Controller
 {
@@ -47,7 +47,7 @@ class PriceSearchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Search failed: ' . $e->getMessage(),
+                'message' => 'Search failed: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -68,7 +68,7 @@ class PriceSearchController extends Controller
         try {
             $bestOffer = PriceOffer::getBestOffer($product, $country);
 
-            if (!$bestOffer) {
+            if (! $bestOffer) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No offers found for this product',
@@ -88,7 +88,7 @@ class PriceSearchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Search failed: ' . $e->getMessage(),
+                'message' => 'Search failed: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -128,7 +128,7 @@ class PriceSearchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve stores: ' . $e->getMessage(),
+                'message' => 'Failed to retrieve stores: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -142,8 +142,8 @@ class PriceSearchController extends Controller
 
         foreach ($offers as $offer) {
             $productKey = $this->normalizeProductName($offer->product_name);
-            
-            if (!isset($grouped[$productKey])) {
+
+            if (! isset($grouped[$productKey])) {
                 $grouped[$productKey] = [
                     'product_name' => $offer->product_name,
                     'product_code' => $offer->product_code,
@@ -159,6 +159,7 @@ class PriceSearchController extends Controller
         uasort($grouped, function ($a, $b) {
             $minPriceA = min(array_column($a['offers'], 'price'));
             $minPriceB = min(array_column($b['offers'], 'price'));
+
             return $minPriceA <=> $minPriceB;
         });
 
@@ -200,6 +201,7 @@ class PriceSearchController extends Controller
         // إزالة الأحرف الخاصة والمسافات الزائدة
         $normalized = preg_replace('/[^\w\s-]/u', '', $name);
         $normalized = preg_replace('/\s+/', ' ', $normalized);
+
         return strtolower(trim($normalized));
     }
 

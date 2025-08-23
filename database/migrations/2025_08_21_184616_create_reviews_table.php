@@ -23,7 +23,7 @@ return new class extends Migration
             $table->json('helpful_votes')->nullable()->comment('Array of user IDs who found this helpful');
             $table->integer('helpful_count')->default(0);
             $table->timestamps();
-            
+
             // Indexes
             $table->index(['product_id', 'is_approved']);
             $table->index(['user_id', 'created_at']);

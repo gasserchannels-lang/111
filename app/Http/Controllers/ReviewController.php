@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Review;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +17,7 @@ class ReviewController extends Controller
         $reviews = Review::with(['user', 'product'])
             ->latest()
             ->paginate(10);
-            
+
         return view('reviews.index', compact('reviews'));
     }
 
@@ -30,7 +30,7 @@ class ReviewController extends Controller
         if ($request->has('product_id')) {
             $product = Product::findOrFail($request->product_id);
         }
-        
+
         return view('reviews.create', compact('product'));
     }
 
@@ -73,6 +73,7 @@ class ReviewController extends Controller
     public function show(Review $review)
     {
         $review->load(['user', 'product']);
+
         return view('reviews.show', compact('review'));
     }
 
@@ -85,7 +86,7 @@ class ReviewController extends Controller
         if ($review->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         return view('reviews.edit', compact('review'));
     }
 
@@ -121,7 +122,7 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         // التحقق من أن المستخدم هو صاحب المراجعة أو مدير
-        if ($review->user_id !== Auth::id() && !Auth::user()->is_admin) {
+        if ($review->user_id !== Auth::id() && ! Auth::user()->is_admin) {
             abort(403, 'Unauthorized action.');
         }
 
