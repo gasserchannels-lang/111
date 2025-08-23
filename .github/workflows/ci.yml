@@ -10,6 +10,18 @@ jobs:
   test-analyze-and-fix:
     runs-on: ubuntu-latest
 
+    # هذا هو الجزء المهم الذي يضيف قاعدة بيانات مؤقتة
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: coprra_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306
+        options: >-
+          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -31,7 +43,7 @@ jobs:
         cache: 'npm'
 
     - name: Copy .env
-      run: php -r "file_exists('.env' ) || copy('.env.example', '.env');"
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
     - name: Install Composer Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -48,7 +60,25 @@ jobs:
     - name: Run Laravel Pint (Auto-fix)
       run: ./vendor/bin/pint
 
+    # هذا هو الجزء الذي يقوم بتشغيل المايجريشن على قاعدة البيانات المؤقتة
+    - name: Run Migrations
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        DB_DATABASE: coprra_test
+        DB_USERNAME: root
+        DB_PASSWORD: root
+      run: php artisan migrate
+
     - name: Run Tests and Generate Coverage
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        DB_DATABASE: coprra_test
+        DB_USERNAME: root
+        DB_PASSWORD: root
       run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
     - name: SonarQube Scan
