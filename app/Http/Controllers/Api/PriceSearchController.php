@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\PriceOffer;
+use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Product;
-use App\Models\PriceOffer;
-use App\Models\Store;
 
 class PriceSearchController extends Controller
 {
@@ -49,7 +49,8 @@ class PriceSearchController extends Controller
 
             return response()->json($products);
         } catch (\Exception $e) {
-            Log::error('Price search failed: ' . $e->getMessage());
+            Log::error('Price search failed: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the search.'], 500);
         }
     }
@@ -78,13 +79,14 @@ class PriceSearchController extends Controller
                 $query->where('country_code', $country);
             })->orderBy('price', 'asc')->first();
 
-            if (!$bestOffer) {
+            if (! $bestOffer) {
                 return response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
             }
 
             return response()->json($bestOffer);
         } catch (\Exception $e) {
-            Log::error('Best offer search failed: ' . $e->getMessage());
+            Log::error('Best offer search failed: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred.'], 500);
         }
     }
@@ -106,9 +108,11 @@ class PriceSearchController extends Controller
 
         try {
             $stores = Store::where('country_code', $country)->get();
+
             return response()->json($stores);
         } catch (\Exception $e) {
-            Log::error('Failed to fetch supported stores: ' . $e->getMessage());
+            Log::error('Failed to fetch supported stores: '.$e->getMessage());
+
             return response()->json(['message' => 'Could not retrieve supported stores.'], 500);
         }
     }
@@ -125,12 +129,12 @@ class PriceSearchController extends Controller
         }
 
         try {
-            $response = Http::get("https://ipapi.co/{$ip}/country_code/" );
-            if ($response->successful() && !empty($response->body())) {
+            $response = Http::get("https://ipapi.co/{$ip}/country_code/");
+            if ($response->successful() && ! empty($response->body())) {
                 return trim($response->body());
             }
         } catch (\Exception $e) {
-            Log::warning("Could not detect country for IP {$ip}: " . $e->getMessage());
+            Log::warning("Could not detect country for IP {$ip}: ".$e->getMessage());
         }
 
         return 'US'; // قيمة افتراضية عالمية
