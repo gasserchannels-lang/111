@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -48,21 +46,23 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    /**
-     * Define the relationship with LocaleSetting.
-     */
-    public function localeSetting(): HasOne
+    public function reviews(): HasMany
     {
-        return $this->hasOne(LocaleSetting::class);
+        return $this->hasMany(Review::class);
     }
 
-    /**
-     * Required by Filament.
-     */
-    public function canAccessPanel(Panel $panel): bool
+    public function wishlists(): HasMany
     {
-        // For now, allow all users to access the panel.
-        // You can add more specific logic here later.
-        return true;
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function priceAlerts(): HasMany
+    {
+        return $this->hasMany(PriceAlert::class);
+    }
+
+    public function localeSetting(): HasOne
+    {
+        return $this->hasOne(UserLocaleSetting::class);
     }
 }
