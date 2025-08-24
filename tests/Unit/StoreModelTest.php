@@ -11,7 +11,7 @@ class StoreModelTest extends TestCase
     {
         $store = new Store(['affiliate_base_url' => null, 'api_config' => null]);
         $productUrl = 'http://example.com/product/123';
-        $this->assertEquals($productUrl, $store->generateAffiliateUrl($productUrl ));
+        $this->assertEquals($productUrl, $store->generateAffiliateUrl($productUrl));
     }
 
     public function test_generate_affiliate_url_appends_affiliate_code()
@@ -19,10 +19,10 @@ class StoreModelTest extends TestCase
         $store = new Store([
             'affiliate_base_url' => 'http://aff.example.com?ref={AFFILIATE_CODE}&product_url={URL}',
             'api_config' => ['affiliate_code' => 'MY-CODE-123'],
-        ] );
+        ]);
 
         $productUrl = 'http://original-site.com/product/abc';
-        $expectedUrl = 'http://aff.example.com?ref=MY-CODE-123&product_url='.urlencode($productUrl );
+        $expectedUrl = 'http://aff.example.com?ref=MY-CODE-123&product_url='.urlencode($productUrl);
 
         $this->assertEquals($expectedUrl, $store->generateAffiliateUrl($productUrl));
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use App\Models\Language;
@@ -44,6 +45,7 @@ class LocaleMiddleware
         }
 
         App::setLocale($languageCode);
+
         return $next($request);
     }
 }
