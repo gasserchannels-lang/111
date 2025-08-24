@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Middleware;
 
-use App\Models\Currency; // ✅ تم إضافة هذا السطر
+use App\Models\Currency;
 use App\Models\Language;
 use App\Models\User;
 use App\Models\UserLocaleSetting;
@@ -18,10 +18,6 @@ class LocaleMiddlewareTest extends TestCase
     {
         parent::setUp();
 
-        // Create a default language for fallback
-        Language::factory()->create(['code' => 'en', 'is_default' => true]);
-        Currency::factory()->create(['code' => 'USD']); // ✅ تم إضافة هذا السطر لضمان وجود عملة
-
         // Define a dummy route for testing middleware
         Route::get('/test-locale', function () {
             return response()->json(['locale' => app()->getLocale()]);
@@ -30,6 +26,9 @@ class LocaleMiddlewareTest extends TestCase
 
     public function test_middleware_sets_default_locale_if_nothing_is_provided()
     {
+        // Create a default language for fallback
+        Language::factory()->create(['code' => 'en', 'is_default' => true]);
+
         $this->getJson('/test-locale')
             ->assertStatus(200)
             ->assertJson(['locale' => 'en']);
@@ -37,7 +36,8 @@ class LocaleMiddlewareTest extends TestCase
 
     public function test_middleware_uses_session_values()
     {
-        Language::factory()->create(['code' => 'ar']);
+        Language::factory()->create(['code' => 'en', 'is_default' => true]);
+        Language::factory()->create(['code' => 'ar', 'native_name' => 'العربية', 'is_default' => false]);
 
         $this->withSession(['locale_language' => 'ar'])
             ->getJson('/test-locale')
@@ -48,10 +48,13 @@ class LocaleMiddlewareTest extends TestCase
     public function test_middleware_uses_authenticated_user_settings()
     {
         $user = User::factory()->create();
-        $language = Language::factory()->create(['code' => 'fr']);
+        $language = Language::factory()->create(['code' => 'fr', 'native_name' => 'Français', 'is_default' => false]);
+        $currency = Currency::factory()->create(); // Create a currency for the setting
+
         UserLocaleSetting::factory()->create([
             'user_id' => $user->id,
             'language_id' => $language->id,
+            'currency_id' => $currency->id,
         ]);
 
         $this->actingAs($user)
