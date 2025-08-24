@@ -25,7 +25,7 @@ class ModelRelationsTest extends TestCase
     /**
      * @dataProvider modelRelationsProvider
      */
-    public function test_model_relations_exist(Model $model, array $relations)
+    public function test_model_relations_exist(Model $model, array $relations): void
     {
         foreach ($relations as $relation) {
             $this->assertTrue(
@@ -37,8 +37,6 @@ class ModelRelationsTest extends TestCase
 
     public static function modelRelationsProvider(): array
     {
-        // This provider lists all models and their expected relationships.
-        // This is the single source of truth for all model relationships.
         return [
             'Brand' => [new Brand(), ['products']],
             'Category' => [new Category(), ['products']],
