@@ -25,13 +25,9 @@ class LanguageFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->country,
+            'name' => $this->faker->country, // ✅ أبسط وأكثر موثوقية
             'code' => $this->faker->unique()->languageCode,
-            'native_name' => $this->faker->word,
-            'direction' => 'ltr',
-            'is_active' => true,
             'is_default' => false,
-            'sort_order' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

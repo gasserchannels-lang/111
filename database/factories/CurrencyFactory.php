@@ -25,12 +25,9 @@ class CurrencyFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->currencyCode.' Dollar',
-            'code' => $this->faker->unique()->currencyCode,
+            'name' => 'US Dollar', // ✅ قيمة ثابتة وموثوقة للاختبارات
+            'code' => 'USD',
             'symbol' => '$',
-            'is_active' => true,
-            'is_default' => false,
-            'sort_order' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

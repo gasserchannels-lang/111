@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Middleware;
 
+use App\Models\Currency; // ✅ تم إضافة هذا السطر
 use App\Models\Language;
 use App\Models\User;
 use App\Models\UserLocaleSetting;
@@ -19,6 +20,7 @@ class LocaleMiddlewareTest extends TestCase
 
         // Create a default language for fallback
         Language::factory()->create(['code' => 'en', 'is_default' => true]);
+        Currency::factory()->create(['code' => 'USD']); // ✅ تم إضافة هذا السطر لضمان وجود عملة
 
         // Define a dummy route for testing middleware
         Route::get('/test-locale', function () {
