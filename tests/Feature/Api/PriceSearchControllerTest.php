@@ -12,10 +12,16 @@ class PriceSearchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_best_offer_returns_422_for_invalid_validation()
+    public function test_best_offer_returns_422_for_missing_product()
     {
-        $response = $this->getJson('/api/v1/best-offer');
+        $response = $this->getJson('/api/v1/best-offer?country=US');
         $response->assertStatus(422);
+    }
+
+    public function test_best_offer_returns_404_for_product_not_found()
+    {
+        $response = $this->getJson('/api/v1/best-offer?product=Unknown Product&country=US');
+        $response->assertStatus(404);
     }
 
     public function test_best_offer_returns_best_offer_successfully()
