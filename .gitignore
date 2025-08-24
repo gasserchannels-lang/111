@@ -7,3 +7,4 @@ venv/
 /storage/framework/views/*
 /storage/framework/cache/data/*
 /storage/logs/*.log
+.phpunit.result.cache
