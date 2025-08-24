@@ -7,24 +7,23 @@ use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class PriceSearchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    //region Best Offer Tests
+    // region Best Offer Tests
 
     /**
      * @dataProvider validationProvider
      */
     public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField)
     {
-        $response = $this->getJson('/api/v1/best-offer?' . http_build_query($payload ));
+        $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload));
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors($expectedErrorField);
+            ->assertJsonValidationErrors($expectedErrorField);
     }
 
     public static function validationProvider(): array
@@ -50,7 +49,7 @@ class PriceSearchControllerTest extends TestCase
         $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
 
         $response->assertStatus(404)
-                 ->assertJson(['message' => 'No offers found for this product in the specified country.']);
+            ->assertJson(['message' => 'No offers found for this product in the specified country.']);
     }
 
     public function test_best_offer_returns_the_cheapest_offer_successfully()
@@ -72,8 +71,8 @@ class PriceSearchControllerTest extends TestCase
         $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
 
         $response->assertStatus(200)
-                 ->assertJsonFragment(['price' => '99.99'])
-                 ->assertJsonPath('id', $bestOffer->id);
+            ->assertJsonFragment(['price' => '99.99'])
+            ->assertJsonPath('id', $bestOffer->id);
     }
 
     public function test_best_offer_returns_correct_status_on_database_error()
@@ -88,9 +87,9 @@ class PriceSearchControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    //endregion
+    // endregion
 
-    //region Supported Stores Tests
+    // region Supported Stores Tests
 
     public function test_supported_stores_returns_stores_for_a_given_country()
     {
@@ -101,7 +100,7 @@ class PriceSearchControllerTest extends TestCase
         $response = $this->getJson('/api/v1/supported-stores?country=US');
 
         $response->assertStatus(200)
-                 ->assertJsonCount(3);
+            ->assertJsonCount(3);
     }
 
     public function test_supported_stores_returns_empty_array_for_country_with_no_stores()
@@ -111,13 +110,13 @@ class PriceSearchControllerTest extends TestCase
         $response = $this->getJson('/api/v1/supported-stores?country=US');
 
         $response->assertStatus(200)
-                 ->assertJsonCount(0)
-                 ->assertJson([]);
+            ->assertJsonCount(0)
+            ->assertJson([]);
     }
 
-    //endregion
+    // endregion
 
-    //region Country Detection Tests
+    // region Country Detection Tests
 
     public function test_it_uses_country_from_request_when_provided()
     {
@@ -158,5 +157,5 @@ class PriceSearchControllerTest extends TestCase
         $response->assertStatus(200)->assertJsonCount(5);
     }
 
-    //endregion
+    // endregion
 }
