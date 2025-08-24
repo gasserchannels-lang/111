@@ -11,12 +11,27 @@ class LanguageFactory extends Factory
 
     public function definition(): array
     {
-        // A basic, default definition
         return [
-            'name' => 'English',
-            'code' => 'en',
-            'native_name' => 'English',
-            'is_default' => true,
+            'code' => $this->faker->unique()->languageCode,
+            'name' => $this->faker->word,
+            'native_name' => $this->faker->word,
+            'is_default' => false,
         ];
+    }
+
+    public function english(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'code' => 'en',
+            'name' => 'English',
+            'native_name' => 'English',
+        ]);
+    }
+
+    public function default(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_default' => true,
+        ]);
     }
 }

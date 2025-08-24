@@ -12,9 +12,17 @@ class CurrencyFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'US Dollar',
-            'code' => 'USD',
+            'name' => $this->faker->unique()->currencyCode . ' Dollar',
+            'code' => $this->faker->unique()->currencyCode,
             'symbol' => '$',
         ];
+    }
+
+    public function usd(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'code' => 'USD',
+            'name' => 'US Dollar',
+        ]);
     }
 }
