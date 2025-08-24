@@ -12,41 +12,36 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LocaleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $languageCode = $this->determineLanguageCode($request);
         App::setLocale($languageCode);
 
         $response = $next($request);
-
         $response->headers->set('Content-Language', $languageCode);
 
         return $response;
     }
 
-    /**
-     * Determine the language code from various sources.
-     */
     private function determineLanguageCode(Request $request): string
     {
-        $langCode = null;
-
-        if (Auth::check() && ($setting = Auth::user()->localeSetting) && ($language = $setting->language)) {
-            $langCode = $language->code;
-        } elseif (Session::has('locale_language')) {
-            $langCode = Session::get('locale_language');
-        } else {
-            $browserLangCode = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
-            if ($language = Language::where('code', $browserLangCode)->first()) {
-                $langCode = $language->code;
-            }
+        // 1. User preference (if logged in and setting exists)
+        if (Auth::check() && optional(Auth::user()->localeSetting)->language) {
+            return Auth::user()->localeSetting->language->code;
         }
 
-        return $langCode ?? Language::where('is_default', true)->first()?->code ?? 'en';
+        // 2. Session preference
+        if (Session::has('locale_language')) {
+            return Session::get('locale_language');
+        }
+
+        // 3. Browser's Accept-Language header
+        $browserLangCode = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
+        if ($language = Language::where('code', $browserLangCode)->first()) {
+            return $language->code;
+        }
+
+        // 4. Fallback to default language in DB or 'en'
+        return Language::where('is_default', true)->value('code') ?? 'en';
     }
 }
