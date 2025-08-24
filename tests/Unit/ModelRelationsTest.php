@@ -38,18 +38,18 @@ class ModelRelationsTest extends TestCase
     public static function modelRelationsProvider(): array
     {
         return [
-            'Brand' => [new Brand(), ['products']],
-            'Category' => [new Category(), ['products']],
-            'Currency' => [new Currency(), ['stores', 'languages']],
-            'Language' => [new Language(), ['userLocaleSettings', 'currencies']],
-            'PriceAlert' => [new PriceAlert(), ['user', 'product']],
-            'PriceOffer' => [new PriceOffer(), ['product', 'store']],
-            'Product' => [new Product(), ['brand', 'category', 'priceOffers', 'reviews', 'wishlists', 'priceAlerts']],
-            'Review' => [new Review(), ['user', 'product']],
-            'Store' => [new Store(), ['priceOffers', 'currency']],
-            'User' => [new User(), ['reviews', 'wishlists', 'priceAlerts', 'localeSetting']],
-            'UserLocaleSetting' => [new UserLocaleSetting(), ['user', 'language', 'currency']],
-            'Wishlist' => [new Wishlist(), ['user', 'product']],
+            'Brand' => [new Brand, ['products']],
+            'Category' => [new Category, ['products']],
+            'Currency' => [new Currency, ['stores', 'languages']],
+            'Language' => [new Language, ['userLocaleSettings', 'currencies']],
+            'PriceAlert' => [new PriceAlert, ['user', 'product']],
+            'PriceOffer' => [new PriceOffer, ['product', 'store']],
+            'Product' => [new Product, ['brand', 'category', 'priceOffers', 'reviews', 'wishlists', 'priceAlerts']],
+            'Review' => [new Review, ['user', 'product']],
+            'Store' => [new Store, ['priceOffers', 'currency']],
+            'User' => [new User, ['reviews', 'wishlists', 'priceAlerts', 'localeSetting']],
+            'UserLocaleSetting' => [new UserLocaleSetting, ['user', 'language', 'currency']],
+            'Wishlist' => [new Wishlist, ['user', 'product']],
         ];
     }
 }

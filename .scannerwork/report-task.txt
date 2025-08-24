@@ -2,5 +2,5 @@ projectKey=coprra_project
 serverUrl=https://04c7a33e1369.ngrok-free.app
 serverVersion=9.9.8.100196
 dashboardUrl=https://04c7a33e1369.ngrok-free.app/dashboard?id=coprra_project
-ceTaskId=AZjZCSMLGvjxQjDVSDb1
-ceTaskUrl=https://04c7a33e1369.ngrok-free.app/api/ce/task?id=AZjZCSMLGvjxQjDVSDb1
+ceTaskId=AZjacaJ4GvjxQjDVSDb2
+ceTaskUrl=https://04c7a33e1369.ngrok-free.app/api/ce/task?id=AZjacaJ4GvjxQjDVSDb2
