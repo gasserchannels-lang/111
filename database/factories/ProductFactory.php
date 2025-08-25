@@ -12,12 +12,9 @@ class ProductFactory extends Factory
     {
         return [
             'name' => $this->faker->words(3, true),
-            'slug' => $this->faker->unique()->slug(),
-            'description' => $this->faker->paragraph(),
-            'price' => $this->faker->randomFloat(2, 10, 1000),
-            'is_active' => true,
             'category_id' => Category::factory(),
             'brand_id' => Brand::factory(),
+            // تم إزالة الحقول غير المؤكدة مؤقتاً
         ];
     }
 }
