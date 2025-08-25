@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PriceAlert extends Model
 {
@@ -14,22 +13,10 @@ class PriceAlert extends Model
         'user_id',
         'product_id',
         'target_price',
+        'repeat_alert',
         'is_active',
-        'repeat_alert', // ✅ الإصلاح الإلزامي
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'repeat_alert' => 'boolean', // ✅ أفضل ممارسة
-    ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
+    public function user() { return $this->belongsTo(User::class); }
+    public function product() { return $this->belongsTo(Product::class); }
 }

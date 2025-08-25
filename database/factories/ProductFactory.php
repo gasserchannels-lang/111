@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -18,10 +18,7 @@ class ProductFactory extends Factory
             'brand_id' => Brand::factory(),
             'image_url' => $this->faker->imageUrl(400, 400, 'products'),
             'model_number' => $this->faker->bothify('##??###'),
-            'specifications' => json_encode([
-                'color' => $this->faker->colorName,
-                'weight' => $this->faker->numberBetween(100, 5000) . 'g',
-            ]),
+            'specifications' => json_encode(['color' => $this->faker->colorName]),
             'is_active' => true,
         ];
     }
