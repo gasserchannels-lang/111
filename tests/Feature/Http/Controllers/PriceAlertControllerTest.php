@@ -23,7 +23,6 @@ class PriceAlertControllerTest extends TestCase
     }
 
     // region -------------------- 1. View Lifecycle (Index & Show) --------------------
-    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function index_displays_only_user_price_alerts()
     {
@@ -34,9 +33,17 @@ class PriceAlertControllerTest extends TestCase
             ->get(route('price-alerts.index'))
             ->assertOk()
             ->assertViewIs('price-alerts.index')
-            ->assertViewHas('priceAlerts', function ($priceAlerts) {
-                return $priceAlerts->count() === 3;
-            });
+            ->assertViewHas('priceAlerts', fn($alerts) => $alerts->count() === 3);
+    }
+
+    /** @test */
+    public function index_displays_empty_list_when_no_alerts_exist()
+    {
+        $this->actingAs($this->user)
+            ->get(route('price-alerts.index'))
+            ->assertOk()
+            ->assertViewIs('price-alerts.index')
+            ->assertSee('No price alerts found');
     }
 
     /** @test */
@@ -63,7 +70,6 @@ class PriceAlertControllerTest extends TestCase
     // endregion
 
     // region -------------------- 2. Create Lifecycle (Create & Store) --------------------
-    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function an_authenticated_user_can_create_a_price_alert()
     {
@@ -92,19 +98,26 @@ class PriceAlertControllerTest extends TestCase
             ->post(route('price-alerts.store'), ['product_id' => 999])
             ->assertSessionHasErrors(['product_id', 'target_price']);
     }
+
+    /** @test */
+    public function creating_a_price_alert_fails_with_non_numeric_price()
+    {
+        $product = Product::factory()->create();
+
+        $this->actingAs($this->user)
+            ->post(route('price-alerts.store'), [
+                'product_id' => $product->id,
+                'target_price' => 'invalid-price',
+            ])
+            ->assertSessionHasErrors(['target_price']);
+    }
     // endregion
 
     // region -------------------- 3. Update Lifecycle (Edit & Update) --------------------
-    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function an_authenticated_user_can_update_their_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
-
-        $this->actingAs($this->user)
-            ->get(route('price-alerts.edit', $priceAlert))
-            ->assertOk()
-            ->assertSee($priceAlert->target_price);
 
         $this->actingAs($this->user)
             ->put(route('price-alerts.update', $priceAlert), [
@@ -122,6 +135,18 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
+    public function update_fails_with_invalid_target_price()
+    {
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+
+        $this->actingAs($this->user)
+            ->put(route('price-alerts.update', $priceAlert), [
+                'target_price' => 'not-a-number',
+            ])
+            ->assertSessionHasErrors(['target_price']);
+    }
+
+    /** @test */
     public function a_user_cannot_update_another_users_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
@@ -133,7 +158,6 @@ class PriceAlertControllerTest extends TestCase
     // endregion
 
     // region -------------------- 4. Management Lifecycle (Toggle & Destroy) --------------------
-    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function a_user_can_toggle_their_price_alert_status()
     {
@@ -148,6 +172,16 @@ class PriceAlertControllerTest extends TestCase
             'id' => $priceAlert->id,
             'is_active' => false,
         ]);
+    }
+
+    /** @test */
+    public function a_user_cannot_toggle_another_users_price_alert_status()
+    {
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+
+        $this->actingAs($this->anotherUser)
+            ->patch(route('price-alerts.toggle', $priceAlert))
+            ->assertForbidden();
     }
 
     /** @test */
@@ -175,7 +209,6 @@ class PriceAlertControllerTest extends TestCase
     // endregion
 
     // region -------------------- 5. Guest Security Tests --------------------
-
     /**
      * @test
      * @dataProvider guestRoutesProvider
@@ -183,20 +216,15 @@ class PriceAlertControllerTest extends TestCase
      */
     public function a_guest_is_redirected_to_login_from_all_protected_routes($method, $routeName)
     {
-        // هذا الاختبار الشامل يختبر كل المسارات المحمية مرة واحدة
-        // نستخدم createQuietly لتجنب تشغيل أي أحداث (events) إذا كانت موجودة
         $priceAlert = PriceAlert::factory()->createQuietly();
 
-        // بناء المسار الديناميكي
         $route = route($routeName, $priceAlert);
 
-        // تنفيذ الطلب (get, post, put, patch, delete) والتأكد من إعادة التوجيه
         $this->{$method}($route)->assertRedirect(route('login'));
     }
 
     public static function guestRoutesProvider(): array
     {
-        // هذه القائمة تغطي كل المسارات التي يجب أن تكون محمية للزوار
         return [
             'Guest cannot view index'   => ['get',    'price-alerts.index'],
             'Guest cannot view create'  => ['get',    'price-alerts.create'],
@@ -208,6 +236,5 @@ class PriceAlertControllerTest extends TestCase
             'Guest cannot destroy'      => ['delete', 'price-alerts.destroy'],
         ];
     }
-
     // endregion
 }
