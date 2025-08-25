@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\PriceAlert;
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -22,10 +21,9 @@ class PriceAlertControllerTest extends TestCase
         $this->anotherUser = User::factory()->create();
     }
 
-    // ... (يمكنك إبقاء الاختبارات الأخرى هنا كما هي) ...
-
     public function test_index_displays_only_user_price_alerts()
     {
+        // المصنع سيقوم تلقائيًا بإنشاء منتجات لهذه التنبيهات
         PriceAlert::factory()->count(3)->create(['user_id' => $this->user->id]);
         PriceAlert::factory()->count(2)->create(['user_id' => $this->anotherUser->id]);
 
@@ -38,27 +36,20 @@ class PriceAlertControllerTest extends TestCase
             });
     }
 
-    // ... (يمكنك إبقاء الاختبارات الأخرى هنا كما هي) ...
-
     // region Show
     public function test_show_displays_correct_price_alert()
     {
-        // الإعداد: إنشاء تنبيه سعر مرتبط بالمستخدم
+        // الإعداد: المصنع سينشئ تلقائيًا منتجًا مرتبطًا بهذا التنبيه
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
-        // التنفيذ: تسجيل الدخول كمستخدم وطلب صفحة عرض التنبيه
-        $response = $this->actingAs($this->user)
-            ->get(route('price-alerts.show', $priceAlert));
-
-        // ✅✅ التشخيص: طباعة تفاصيل الاستجابة في سجلات CI/CD
-        $response->dump();
-
-        // التأكيد: التحقق من أن الاستجابة ناجحة وأن الواجهة والبيانات صحيحة
-        $response->assertOk()
-            ->assertViewIs('price-alerts.show')
-            ->assertViewHas('priceAlert', $priceAlert);
+        // التنفيذ والتأكيد
+        $this->actingAs($this->user) // سجل الدخول كمستخدم للتنبيه
+            ->get(route('price-alerts.show', $priceAlert))
+            ->assertStatus(200) // تحقق من أن الصفحة تعمل بنجاح
+            ->assertViewIs('price-alerts.show') // تحقق من عرض الواجهة الصحيحة
+            ->assertSee($priceAlert->product->name); // تحقق من ظهور اسم المنتج في الصفحة
     }
     // endregion
 
-    // ... (يمكنك إبقاء باقي الاختبارات هنا كما هي) ...
+    // ... (باقي الاختبارات تبقى كما هي) ...
 }
