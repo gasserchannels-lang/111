@@ -30,6 +30,6 @@ Route::middleware('auth')->group(function () {
 
     // ✅✅✅ التعديل: استخدام 'price_alert' لتوحيد الأسماء ✅✅✅
     Route::resource('price-alerts', PriceAlertController::class)->parameters([
-        'price-alerts' => 'price_alert'
+        'price-alerts' => 'price_alert',
     ]);
 });
