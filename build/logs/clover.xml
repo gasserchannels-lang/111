@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1756116422">
-  <project timestamp="1756116422">
+<coverage generated="1756117677">
+  <project timestamp="1756117677">
     <file name="/home/runner/work/coprra-project/coprra-project/app/Console/Kernel.php">
       <class name="App\Console\Kernel" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
       </class>
       <line num="13" type="method" name="schedule" visibility="protected" complexity="1" crap="2" count="0"/>
       <line num="16" type="stmt" count="0"/>
-      <line num="21" type="method" name="commands" visibility="protected" complexity="1" crap="1" count="53"/>
-      <line num="23" type="stmt" count="53"/>
-      <line num="25" type="stmt" count="53"/>
+      <line num="21" type="method" name="commands" visibility="protected" complexity="1" crap="1" count="57"/>
+      <line num="23" type="stmt" count="57"/>
+      <line num="25" type="stmt" count="57"/>
       <metrics loc="28" ncloc="21" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Exceptions/Handler.php">
       <class name="App\Exceptions\Handler" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
       </class>
-      <line num="24" type="method" name="register" visibility="public" complexity="1" crap="1" count="53"/>
-      <line num="26" type="stmt" count="53"/>
-      <line num="28" type="stmt" count="53"/>
+      <line num="24" type="method" name="register" visibility="public" complexity="1" crap="1" count="57"/>
+      <line num="26" type="stmt" count="57"/>
+      <line num="28" type="stmt" count="57"/>
       <metrics loc="31" ncloc="22" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Controllers/Api/PriceSearchController.php">
@@ -206,12 +206,12 @@
       <line num="24" type="stmt" count="0"/>
       <line num="25" type="stmt" count="0"/>
       <line num="28" type="stmt" count="0"/>
-      <line num="31" type="method" name="store" visibility="public" complexity="1" crap="1" count="3"/>
-      <line num="33" type="stmt" count="3"/>
-      <line num="34" type="stmt" count="3"/>
-      <line num="35" type="stmt" count="3"/>
-      <line num="36" type="stmt" count="3"/>
-      <line num="37" type="stmt" count="3"/>
+      <line num="31" type="method" name="store" visibility="public" complexity="1" crap="1" count="4"/>
+      <line num="33" type="stmt" count="4"/>
+      <line num="34" type="stmt" count="4"/>
+      <line num="35" type="stmt" count="4"/>
+      <line num="36" type="stmt" count="4"/>
+      <line num="37" type="stmt" count="4"/>
       <line num="39" type="stmt" count="1"/>
       <line num="40" type="stmt" count="1"/>
       <line num="41" type="stmt" count="1"/>
@@ -418,22 +418,22 @@
       <class name="App\Http\Middleware\LocaleMiddleware" namespace="global">
         <metrics complexity="7" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="14" elements="16" coveredelements="14"/>
       </class>
-      <line num="15" type="method" name="handle" visibility="public" complexity="7" crap="7.01" count="18"/>
-      <line num="17" type="stmt" count="18"/>
-      <line num="21" type="stmt" count="18"/>
+      <line num="15" type="method" name="handle" visibility="public" complexity="7" crap="7.01" count="19"/>
+      <line num="17" type="stmt" count="19"/>
+      <line num="21" type="stmt" count="19"/>
       <line num="22" type="stmt" count="1"/>
-      <line num="25" type="stmt" count="17"/>
+      <line num="25" type="stmt" count="18"/>
       <line num="26" type="stmt" count="1"/>
-      <line num="30" type="stmt" count="16"/>
-      <line num="31" type="stmt" count="16"/>
-      <line num="32" type="stmt" count="16"/>
+      <line num="30" type="stmt" count="17"/>
+      <line num="31" type="stmt" count="17"/>
+      <line num="32" type="stmt" count="17"/>
       <line num="33" type="stmt" count="1"/>
-      <line num="36" type="stmt" count="15"/>
-      <line num="37" type="stmt" count="15"/>
-      <line num="38" type="stmt" count="18"/>
+      <line num="36" type="stmt" count="16"/>
+      <line num="37" type="stmt" count="16"/>
+      <line num="38" type="stmt" count="19"/>
       <line num="42" type="stmt" count="0"/>
-      <line num="47" type="stmt" count="18"/>
-      <line num="49" type="stmt" count="18"/>
+      <line num="47" type="stmt" count="19"/>
+      <line num="49" type="stmt" count="19"/>
       <metrics loc="52" ncloc="45" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="14" elements="16" coveredelements="14"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Http/Middleware/PreventRequestsDuringMaintenance.php">
@@ -659,8 +659,8 @@
       <line num="56" type="stmt" count="0"/>
       <line num="59" type="method" name="priceAlerts" visibility="public" complexity="1" crap="1" count="3"/>
       <line num="61" type="stmt" count="3"/>
-      <line num="64" type="method" name="localeSetting" visibility="public" complexity="1" crap="1" count="15"/>
-      <line num="66" type="stmt" count="15"/>
+      <line num="64" type="method" name="localeSetting" visibility="public" complexity="1" crap="1" count="16"/>
+      <line num="66" type="stmt" count="16"/>
       <metrics loc="69" ncloc="54" classes="1" methods="5" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="13" coveredelements="4"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Models/UserLocaleSetting.php">
@@ -731,20 +731,20 @@
       <class name="App\Providers\AppServiceProvider" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
       </class>
-      <line num="13" type="method" name="register" visibility="public" complexity="1" crap="1" count="53"/>
-      <line num="16" type="stmt" count="53"/>
-      <line num="21" type="method" name="boot" visibility="public" complexity="1" crap="1" count="53"/>
-      <line num="23" type="stmt" count="53"/>
-      <line num="24" type="stmt" count="33"/>
-      <line num="25" type="stmt" count="53"/>
+      <line num="13" type="method" name="register" visibility="public" complexity="1" crap="1" count="57"/>
+      <line num="16" type="stmt" count="57"/>
+      <line num="21" type="method" name="boot" visibility="public" complexity="1" crap="1" count="57"/>
+      <line num="23" type="stmt" count="57"/>
+      <line num="24" type="stmt" count="37"/>
+      <line num="25" type="stmt" count="57"/>
       <metrics loc="28" ncloc="21" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Providers/AuthServiceProvider.php">
       <class name="App\Providers\AuthServiceProvider" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
       </class>
-      <line num="21" type="method" name="boot" visibility="public" complexity="1" crap="1" count="53"/>
-      <line num="23" type="stmt" count="53"/>
+      <line num="21" type="method" name="boot" visibility="public" complexity="1" crap="1" count="57"/>
+      <line num="23" type="stmt" count="57"/>
       <metrics loc="28" ncloc="19" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Providers/BroadcastServiceProvider.php">
@@ -760,27 +760,27 @@
       <class name="App\Providers\EventServiceProvider" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
       </class>
-      <line num="26" type="method" name="boot" visibility="public" complexity="1" crap="1" count="53"/>
-      <line num="29" type="stmt" count="53"/>
-      <line num="34" type="method" name="shouldDiscoverEvents" visibility="public" complexity="1" crap="1" count="53"/>
-      <line num="36" type="stmt" count="53"/>
+      <line num="26" type="method" name="boot" visibility="public" complexity="1" crap="1" count="57"/>
+      <line num="29" type="stmt" count="57"/>
+      <line num="34" type="method" name="shouldDiscoverEvents" visibility="public" complexity="1" crap="1" count="57"/>
+      <line num="36" type="stmt" count="57"/>
       <metrics loc="39" ncloc="27" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
     </file>
     <file name="/home/runner/work/coprra-project/coprra-project/app/Providers/RouteServiceProvider.php">
       <class name="App\Providers\RouteServiceProvider" namespace="global">
         <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="11" coveredelements="11"/>
       </class>
-      <line num="25" type="method" name="boot" visibility="public" complexity="2" crap="2" count="53"/>
-      <line num="27" type="stmt" count="53"/>
+      <line num="25" type="method" name="boot" visibility="public" complexity="2" crap="2" count="57"/>
+      <line num="27" type="stmt" count="57"/>
       <line num="28" type="stmt" count="13"/>
-      <line num="29" type="stmt" count="53"/>
-      <line num="31" type="stmt" count="53"/>
-      <line num="32" type="stmt" count="53"/>
-      <line num="33" type="stmt" count="53"/>
-      <line num="34" type="stmt" count="53"/>
-      <line num="36" type="stmt" count="53"/>
-      <line num="37" type="stmt" count="53"/>
-      <line num="38" type="stmt" count="53"/>
+      <line num="29" type="stmt" count="57"/>
+      <line num="31" type="stmt" count="57"/>
+      <line num="32" type="stmt" count="57"/>
+      <line num="33" type="stmt" count="57"/>
+      <line num="34" type="stmt" count="57"/>
+      <line num="36" type="stmt" count="57"/>
+      <line num="37" type="stmt" count="57"/>
+      <line num="38" type="stmt" count="57"/>
       <metrics loc="41" ncloc="31" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="11" coveredelements="11"/>
     </file>
     <metrics files="40" loc="2024" ncloc="1671" classes="32" methods="100" coveredmethods="25" conditionals="0" coveredconditionals="0" statements="442" coveredstatements="123" elements="542" coveredelements="148"/>
