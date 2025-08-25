@@ -21,9 +21,34 @@ class Product extends Model
         'is_active',
     ];
 
-    public function category() { return $this->belongsTo(Category::class); }
-    public function brand() { return $this->belongsTo(Brand::class); }
-    public function reviews() { return $this->hasMany(Review::class); }
-    public function wishlists() { return $this->hasMany(Wishlist::class); }
-    public function priceOffers() { return $this->hasMany(PriceOffer::class); }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+    
+    public function category() 
+    {
+        return $this->belongsTo(Category::class);
+    }
+    
+    public function priceOffers()
+    {
+        return $this->hasMany(PriceOffer::class);
+    }
+    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    // ✅✅ العلاقة المفقودة التي تم إضافتها ✅✅
+    public function priceAlerts()
+    {
+        return $this->hasMany(PriceAlert::class);
+    }
 }
