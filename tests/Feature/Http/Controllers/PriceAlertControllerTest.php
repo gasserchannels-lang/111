@@ -13,6 +13,7 @@ class PriceAlertControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private User $anotherUser;
 
     protected function setUp(): void

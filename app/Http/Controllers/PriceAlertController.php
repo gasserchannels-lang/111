@@ -14,6 +14,7 @@ class PriceAlertController extends Controller
     public function index()
     {
         $priceAlerts = Auth::user()->priceAlerts()->with('product')->latest()->paginate(10);
+
         return view('price-alerts.index', compact('priceAlerts'));
     }
 
@@ -23,6 +24,7 @@ class PriceAlertController extends Controller
         if ($request->has('product_id')) {
             $product = Product::findOrFail($request->product_id);
         }
+
         return view('price-alerts.create', compact('product'));
     }
 
@@ -76,6 +78,7 @@ class PriceAlertController extends Controller
         if ($price_alert->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
+
         // تم تمرير المتغير إلى الواجهة باسم "priceAlert" للحفاظ على التوافق.
         return view('price-alerts.edit', ['priceAlert' => $price_alert]);
     }
