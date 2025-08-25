@@ -9,37 +9,23 @@ use Illuminate\Support\Facades\Auth;
 
 class PriceAlertController extends Controller
 {
-    // ❌ تم حذف دالة __construct() بالكامل من هنا
-
-    // تم إضافة هذا الثابت لتقليل التكرار
     private const UNAUTHORIZED_MESSAGE = 'Unauthorized action.';
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $priceAlerts = Auth::user()->priceAlerts()->with('product')->latest()->paginate(10);
-
         return view('price-alerts.index', compact('priceAlerts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
         $product = null;
         if ($request->has('product_id')) {
             $product = Product::findOrFail($request->product_id);
         }
-
         return view('price-alerts.create', compact('product'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -61,41 +47,47 @@ class PriceAlertController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * ✅✅✅ التعديل الرئيسي هنا ✅✅✅
+     * تم تغيير اسم المتغير من $priceAlert إلى $price_alert ليتطابق مع Route Model Binding.
      */
-    public function show(PriceAlert $priceAlert)
+    public function show(PriceAlert $price_alert)
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
-        if ($priceAlert->user_id !== Auth::id()) {
+        if ($price_alert->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
-        $priceAlert->load(['product', 'product.priceOffers' => function ($query) {
+        $price_alert->load(['product', 'product.priceOffers' => function ($query) {
             $query->where('in_stock', true)->orderBy('price', 'asc')->limit(5);
         }]);
 
-        return view('price-alerts.show', compact('priceAlert'));
+        // تم تمرير المتغير إلى الواجهة باسم "priceAlert" للحفاظ على التوافق مع ملف الـ view.
+        return view('price-alerts.show', ['priceAlert' => $price_alert]);
     }
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * ✅✅✅ التعديل الرئيسي هنا أيضًا ✅✅✅
      */
-    public function edit(PriceAlert $priceAlert)
+    public function edit(PriceAlert $price_alert)
     {
-        // التحقق من أن المستخدم هو صاحب التنبيه
-        if ($priceAlert->user_id !== Auth::id()) {
+        if ($price_alert->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
-
-        return view('price-alerts.edit', compact('priceAlert'));
+        // تم تمرير المتغير إلى الواجهة باسم "priceAlert" للحفاظ على التوافق.
+        return view('price-alerts.edit', ['priceAlert' => $price_alert]);
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * ✅✅✅ التعديل الرئيسي هنا أيضًا ✅✅✅
      */
-    public function update(Request $request, PriceAlert $priceAlert)
+    public function update(Request $request, PriceAlert $price_alert)
     {
-        // التحقق من أن المستخدم هو صاحب التنبيه
-        if ($priceAlert->user_id !== Auth::id()) {
+        if ($price_alert->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
@@ -104,7 +96,7 @@ class PriceAlertController extends Controller
             'repeat_alert' => 'nullable|boolean',
         ]);
 
-        $priceAlert->update([
+        $price_alert->update([
             'target_price' => $request->target_price,
             'repeat_alert' => $request->boolean('repeat_alert'),
         ]);
@@ -115,15 +107,16 @@ class PriceAlertController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * ✅✅✅ التعديل الرئيسي هنا أيضًا ✅✅✅
      */
-    public function destroy(PriceAlert $priceAlert)
+    public function destroy(PriceAlert $price_alert)
     {
-        // التحقق من أن المستخدم هو صاحب التنبيه
-        if ($priceAlert->user_id !== Auth::id()) {
+        if ($price_alert->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
-        $priceAlert->delete();
+        $price_alert->delete();
 
         return redirect()->route('price-alerts.index')
             ->with('success', 'Price alert deleted successfully!');
@@ -131,16 +124,17 @@ class PriceAlertController extends Controller
 
     /**
      * Toggle alert status
+     *
+     * ✅✅✅ التعديل الرئيسي هنا أيضًا ✅✅✅
      */
-    public function toggle(PriceAlert $priceAlert)
+    public function toggle(PriceAlert $price_alert)
     {
-        // التحقق من أن المستخدم هو صاحب التنبيه
-        if ($priceAlert->user_id !== Auth::id()) {
+        if ($price_alert->user_id !== Auth::id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
-        $priceAlert->update([
-            'is_active' => ! $priceAlert->is_active,
+        $price_alert->update([
+            'is_active' => ! $price_alert->is_active,
         ]);
 
         return back()->with('success', 'Alert status updated!');
