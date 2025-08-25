@@ -22,7 +22,7 @@ class PriceAlertControllerTest extends TestCase
         $this->anotherUser = User::factory()->create();
     }
 
-    // ... (الاختبارات الأخرى تبقى كما هي) ...
+    // ... (يمكنك إبقاء الاختبارات الأخرى هنا كما هي) ...
 
     public function test_index_displays_only_user_price_alerts()
     {
@@ -38,23 +38,27 @@ class PriceAlertControllerTest extends TestCase
             });
     }
 
-    // ... (الاختبارات الأخرى تبقى كما هي) ...
+    // ... (يمكنك إبقاء الاختبارات الأخرى هنا كما هي) ...
 
     // region Show
     public function test_show_displays_correct_price_alert()
     {
+        // الإعداد: إنشاء تنبيه سعر مرتبط بالمستخدم
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->actingAs($this->user) // قمنا بتخزين الاستجابة في متغير
+        // التنفيذ: تسجيل الدخول كمستخدم وطلب صفحة عرض التنبيه
+        $response = $this->actingAs($this->user)
             ->get(route('price-alerts.show', $priceAlert));
 
-        $response->dump(); // ✅✅ هذا هو السطر التشخيصي في المكان الصحيح
+        // ✅✅ التشخيص: طباعة تفاصيل الاستجابة في سجلات CI/CD
+        $response->dump();
 
+        // التأكيد: التحقق من أن الاستجابة ناجحة وأن الواجهة والبيانات صحيحة
         $response->assertOk()
             ->assertViewIs('price-alerts.show')
             ->assertViewHas('priceAlert', $priceAlert);
     }
     // endregion
 
-    // ... (باقي الاختبارات تبقى كما هي) ...
+    // ... (يمكنك إبقاء باقي الاختبارات هنا كما هي) ...
 }
