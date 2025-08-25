@@ -11,6 +11,8 @@ class PriceAlertControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+
+
     private User $user;
     private User $anotherUser;
 
@@ -38,9 +40,7 @@ class PriceAlertControllerTest extends TestCase
     // region Show
     public function test_show_displays_correct_price_alert()
     {
-        // ✅✅✅ التعديل التشخيصي الحاسم ✅✅✅
-        // هذا السطر سيجبر Laravel على طباعة رسالة الخطأ الحقيقية بدلاً من 500.
-        $this->withoutExceptionHandling();
+        // تم حذف السطر التشخيصي من هنا، ليعود الاختبار إلى حالته الطبيعية
 
         // الإعداد: المصنع سينشئ تلقائيًا منتجًا مرتبطًا بهذا التنبيه
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
@@ -48,7 +48,7 @@ class PriceAlertControllerTest extends TestCase
         // التنفيذ والتأكيد
         $this->actingAs($this->user) // سجل الدخول كمستخدم للتنبيه
             ->get(route('price-alerts.show', $priceAlert))
-            ->assertStatus(200) // سيفشل الاختبار هنا، لكن الأهم هو رسالة الخطأ التي ستظهر
+            ->assertStatus(200) // ✅ هذا السطر يجب أن ينجح الآن
             ->assertViewIs('price-alerts.show')
             ->assertSee($priceAlert->product->name);
     }
