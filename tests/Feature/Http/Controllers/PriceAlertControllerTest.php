@@ -45,7 +45,7 @@ class PriceAlertControllerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('price-alerts.index'))
             ->assertOk()
-            ->assertSee('You have no active price alerts.');
+            ->assertSee('You have no active price alerts');
     }
 
     /** @test */
