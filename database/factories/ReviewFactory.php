@@ -15,7 +15,6 @@ class ReviewFactory extends Factory
             'product_id' => Product::factory(),
             'rating' => $this->faker->numberBetween(1, 5),
             'review_text' => $this->faker->sentence(),
-            'is_verified_purchase' => $this->faker->boolean(80),
         ];
     }
 }

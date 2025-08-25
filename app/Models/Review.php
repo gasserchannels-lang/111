@@ -14,7 +14,6 @@ class Review extends Model
         'product_id',
         'rating',
         'review_text',
-        'is_verified_purchase',
     ];
 
     public function user() { return $this->belongsTo(User::class); }
