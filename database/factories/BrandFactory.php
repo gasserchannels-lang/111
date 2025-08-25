@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Brand;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BrandFactory extends Factory
 {
-    protected $model = Brand::class;
-
     public function definition(): array
     {
         return [
             'name' => $this->faker->company,
             'slug' => $this->faker->slug,
+            'logo_url' => $this->faker->imageUrl(200, 200, 'brands'),
+            'website_url' => $this->faker->url,
+            'is_active' => true,
         ];
     }
 }

@@ -2,15 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PriceOfferFactory extends Factory
 {
-    protected $model = PriceOffer::class;
-
     public function definition(): array
     {
         return [
@@ -18,6 +15,7 @@ class PriceOfferFactory extends Factory
             'store_id' => Store::factory(),
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'url' => $this->faker->url,
+            'in_stock' => $this->faker->boolean(80),
         ];
     }
 }

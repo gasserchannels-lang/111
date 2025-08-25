@@ -2,25 +2,27 @@
 
 namespace Database\Factories;
 
-use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Product;
+use App\Models\Brand;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
 {
-    protected $model = Product::class;
-
     public function definition(): array
     {
         return [
             'name' => $this->faker->words(3, true),
             'slug' => $this->faker->slug,
             'description' => $this->faker->paragraph,
-            'price' => $this->faker->randomFloat(2, 10, 1000),
-            'is_active' => true,
+            'category_id' => Category::factory(),
             'brand_id' => Brand::factory(),
-            'category_id' => Category::factory(), // تم إصلاح Category، لذا يمكننا استدعاؤها الآن
+            'image_url' => $this->faker->imageUrl(400, 400, 'products'),
+            'model_number' => $this->faker->bothify('##??###'),
+            'specifications' => json_encode([
+                'color' => $this->faker->colorName,
+                'weight' => $this->faker->numberBetween(100, 5000) . 'g',
+            ]),
+            'is_active' => true,
         ];
     }
 }
