@@ -13,7 +13,6 @@ class PriceAlertControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
-
     private User $anotherUser;
 
     protected function setUp(): void
@@ -24,7 +23,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     // region -------------------- 1. View Lifecycle (Index & Show) --------------------
-
+    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function index_displays_only_user_price_alerts()
     {
@@ -61,18 +60,10 @@ class PriceAlertControllerTest extends TestCase
             ->get(route('price-alerts.show', $priceAlert))
             ->assertForbidden();
     }
-
     // endregion
 
     // region -------------------- 2. Create Lifecycle (Create & Store) --------------------
-
-    /** @test */
-    public function a_guest_is_redirected_from_create_page()
-    {
-        $this->get(route('price-alerts.create'))
-            ->assertRedirect(route('login'));
-    }
-
+    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function an_authenticated_user_can_create_a_price_alert()
     {
@@ -101,23 +92,20 @@ class PriceAlertControllerTest extends TestCase
             ->post(route('price-alerts.store'), ['product_id' => 999])
             ->assertSessionHasErrors(['product_id', 'target_price']);
     }
-
     // endregion
 
     // region -------------------- 3. Update Lifecycle (Edit & Update) --------------------
-
+    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function an_authenticated_user_can_update_their_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
-        // 1. الوصول إلى صفحة التعديل
         $this->actingAs($this->user)
             ->get(route('price-alerts.edit', $priceAlert))
             ->assertOk()
             ->assertSee($priceAlert->target_price);
 
-        // 2. إرسال بيانات التحديث
         $this->actingAs($this->user)
             ->put(route('price-alerts.update', $priceAlert), [
                 'target_price' => 350.75,
@@ -126,7 +114,6 @@ class PriceAlertControllerTest extends TestCase
             ->assertRedirect(route('price-alerts.index'))
             ->assertSessionHas('success');
 
-        // 3. التأكد من تحديث البيانات في قاعدة البيانات
         $this->assertDatabaseHas('price_alerts', [
             'id' => $priceAlert->id,
             'target_price' => 350.75,
@@ -143,11 +130,10 @@ class PriceAlertControllerTest extends TestCase
             ->put(route('price-alerts.update', $priceAlert), ['target_price' => 400])
             ->assertForbidden();
     }
-
     // endregion
 
     // region -------------------- 4. Management Lifecycle (Toggle & Destroy) --------------------
-
+    // ... (هذا القسم يبقى كما هو بدون تغيير) ...
     /** @test */
     public function a_user_can_toggle_their_price_alert_status()
     {
@@ -160,7 +146,7 @@ class PriceAlertControllerTest extends TestCase
 
         $this->assertDatabaseHas('price_alerts', [
             'id' => $priceAlert->id,
-            'is_active' => false, // ✅ تأكد من أن الحالة قد تغيرت
+            'is_active' => false,
         ]);
     }
 
@@ -174,7 +160,7 @@ class PriceAlertControllerTest extends TestCase
             ->assertRedirect(route('price-alerts.index'))
             ->assertSessionHas('success');
 
-        $this->assertDatabaseMissing('price_alerts', ['id' => $priceAlert->id]); // ✅ تأكد من أن السجل قد اختفى
+        $this->assertDatabaseMissing('price_alerts', ['id' => $priceAlert->id]);
     }
 
     /** @test */
@@ -185,6 +171,42 @@ class PriceAlertControllerTest extends TestCase
         $this->actingAs($this->anotherUser)
             ->delete(route('price-alerts.destroy', $priceAlert))
             ->assertForbidden();
+    }
+    // endregion
+
+    // region -------------------- 5. Guest Security Tests --------------------
+
+    /**
+     * @test
+     * @dataProvider guestRoutesProvider
+     * @group security
+     */
+    public function a_guest_is_redirected_to_login_from_all_protected_routes($method, $routeName)
+    {
+        // هذا الاختبار الشامل يختبر كل المسارات المحمية مرة واحدة
+        // نستخدم createQuietly لتجنب تشغيل أي أحداث (events) إذا كانت موجودة
+        $priceAlert = PriceAlert::factory()->createQuietly();
+
+        // بناء المسار الديناميكي
+        $route = route($routeName, $priceAlert);
+
+        // تنفيذ الطلب (get, post, put, patch, delete) والتأكد من إعادة التوجيه
+        $this->{$method}($route)->assertRedirect(route('login'));
+    }
+
+    public static function guestRoutesProvider(): array
+    {
+        // هذه القائمة تغطي كل المسارات التي يجب أن تكون محمية للزوار
+        return [
+            'Guest cannot view index'   => ['get',    'price-alerts.index'],
+            'Guest cannot view create'  => ['get',    'price-alerts.create'],
+            'Guest cannot view show'    => ['get',    'price-alerts.show'],
+            'Guest cannot view edit'    => ['get',    'price-alerts.edit'],
+            'Guest cannot store'        => ['post',   'price-alerts.store'],
+            'Guest cannot update'       => ['put',    'price-alerts.update'],
+            'Guest cannot toggle'       => ['patch',  'price-alerts.toggle'],
+            'Guest cannot destroy'      => ['delete', 'price-alerts.destroy'],
+        ];
     }
 
     // endregion
