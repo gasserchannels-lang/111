@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('current_price', 10, 2)->nullable();
             $table->string('currency', 3)->default('USD');
             $table->boolean('is_active')->default(true);
+            $table->boolean('repeat_alert')->default(false); // ✅ تم إضافة هذا السطر
             $table->timestamp('last_checked_at')->nullable();
             $table->timestamp('last_triggered_at')->nullable();
             $table->integer('trigger_count')->default(0);

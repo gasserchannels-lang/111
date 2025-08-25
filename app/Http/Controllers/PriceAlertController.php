@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class PriceAlertController extends Controller
 {
+    // ❌ تم حذف دالة __construct() بالكامل من هنا
+
     // تم إضافة هذا الثابت لتقليل التكرار
     private const UNAUTHORIZED_MESSAGE = 'Unauthorized action.';
 
@@ -43,13 +45,13 @@ class PriceAlertController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'target_price' => 'required|numeric|min:0.01',
-            'repeat_alert' => 'boolean',
+            'repeat_alert' => 'nullable|boolean',
         ]);
 
         Auth::user()->priceAlerts()->create([
             'product_id' => $request->product_id,
             'target_price' => $request->target_price,
-            'repeat_alert' => $request->input('repeat_alert', false),
+            'repeat_alert' => $request->boolean('repeat_alert'),
             'is_active' => true,
         ]);
 
@@ -64,7 +66,7 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
+            abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
         $priceAlert->load(['product', 'product.priceOffers' => function ($query) {
@@ -81,7 +83,7 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
+            abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
         return view('price-alerts.edit', compact('priceAlert'));
@@ -94,17 +96,17 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
+            abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
         $request->validate([
             'target_price' => 'required|numeric|min:0.01',
-            'repeat_alert' => 'boolean',
+            'repeat_alert' => 'nullable|boolean',
         ]);
 
         $priceAlert->update([
             'target_price' => $request->target_price,
-            'repeat_alert' => $request->input('repeat_alert', false),
+            'repeat_alert' => $request->boolean('repeat_alert'),
         ]);
 
         return redirect()->route('price-alerts.index')
@@ -118,7 +120,7 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
+            abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
         $priceAlert->delete();
@@ -134,7 +136,7 @@ class PriceAlertController extends Controller
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== Auth::id()) {
-            abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
+            abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
         $priceAlert->update([
