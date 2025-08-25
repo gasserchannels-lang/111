@@ -13,7 +13,6 @@ class PriceAlertControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
-
     private User $anotherUser;
 
     protected function setUp(): void
@@ -44,7 +43,8 @@ class PriceAlertControllerTest extends TestCase
             ->get(route('price-alerts.index'))
             ->assertOk()
             ->assertViewIs('price-alerts.index')
-            ->assertSee('No price alerts found');
+            // ✅✅✅ الإصلاح النهائي: تم تعديل النص هنا ليتوافق مع الواجهة ✅✅✅
+            ->assertSee('You have no active price alerts');
     }
 
     /** @test */
@@ -212,9 +212,7 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 5. Guest Security Tests --------------------
     /**
      * @test
-     *
      * @dataProvider guestRoutesProvider
-     *
      * @group security
      */
     public function a_guest_is_redirected_to_login_from_all_protected_routes($method, $routeName)
@@ -229,14 +227,14 @@ class PriceAlertControllerTest extends TestCase
     public static function guestRoutesProvider(): array
     {
         return [
-            'Guest cannot view index' => ['get',    'price-alerts.index'],
-            'Guest cannot view create' => ['get',    'price-alerts.create'],
-            'Guest cannot view show' => ['get',    'price-alerts.show'],
-            'Guest cannot view edit' => ['get',    'price-alerts.edit'],
-            'Guest cannot store' => ['post',   'price-alerts.store'],
-            'Guest cannot update' => ['put',    'price-alerts.update'],
-            'Guest cannot toggle' => ['patch',  'price-alerts.toggle'],
-            'Guest cannot destroy' => ['delete', 'price-alerts.destroy'],
+            'Guest cannot view index'   => ['get',    'price-alerts.index'],
+            'Guest cannot view create'  => ['get',    'price-alerts.create'],
+            'Guest cannot view show'    => ['get',    'price-alerts.show'],
+            'Guest cannot view edit'    => ['get',    'price-alerts.edit'],
+            'Guest cannot store'        => ['post',   'price-alerts.store'],
+            'Guest cannot update'       => ['put',    'price-alerts.update'],
+            'Guest cannot toggle'       => ['patch',  'price-alerts.toggle'],
+            'Guest cannot destroy'      => ['delete', 'price-alerts.destroy'],
         ];
     }
     // endregion
