@@ -11,9 +11,12 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'slug',
+        'description',
+        'price',
+        'is_active',
         'category_id',
         'brand_id',
-        // تم تعليق الحقول الأخرى مؤقتاً
     ];
 
     protected $casts = [
