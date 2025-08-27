@@ -46,5 +46,17 @@ class Handler extends ExceptionHandler
                 ], 500);
             }
         });
+
+        // ✅ *** وهذا الجزء أيضاً مهم جداً ***
+        // للتعامل مع الأخطاء العامة التي يحاكيها الاختبار
+        $this->renderable(function (\Exception $e, $request) {
+            if ($request->is('api/*')) {
+                // يمكنك إضافة تسجيل للخطأ هنا إذا أردت
+                // \Log::error($e->getMessage());
+                return response()->json([
+                    'message' => 'An unexpected error occurred.',
+                ], 500);
+            }
+        });
     }
 }
