@@ -20,7 +20,8 @@ class PriceSearchControllerTest extends TestCase
      */
     public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField)
     {
-        $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload ));
+        // بناءً على طلبك، تم تغيير الرابط هنا
+        $response = $this->getJson('/api/v1/search/best-offer?'.http_build_query($payload ));
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors($expectedErrorField);
@@ -46,7 +47,7 @@ class PriceSearchControllerTest extends TestCase
             'price' => 99.99,
         ]);
 
-        $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
+        $response = $this->getJson('/api/v1/search/best-offer?product=Test Product&country=US');
 
         $response->assertStatus(404)
             ->assertJson(['message' => 'No offers found for this product in the specified country.']);
@@ -68,8 +69,9 @@ class PriceSearchControllerTest extends TestCase
             'price' => 99.99,
         ]);
 
-        $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
+        $response = $this->getJson('/api/v1/search/best-offer?product=Test Product&country=US');
 
+        // ✅ *** هذا هو الجزء الذي تم تعديله ليكون أكثر مرونة ***
         $response->assertStatus(200)
             ->assertJsonFragment(['price' => '99.99'])
             ->assertJsonPath('id', $bestOffer->id);
@@ -81,7 +83,7 @@ class PriceSearchControllerTest extends TestCase
             $mock->shouldReceive('connection')->andThrow(new \Exception('Database connection failed'));
         }));
 
-        $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
+        $response = $this->getJson('/api/v1/search/best-offer?product=Test Product&country=US');
 
         $response->assertStatus(404);
     }
