@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade');
             $table->integer('level')->default(1);
-            
-            // ✅ *** هذا هو السطر الذي تمت إضافته ***
             $table->text('description')->nullable();
-            
+
+            // ✅ *** هذا هو السطر الذي تمت إضافته ***
+            $table->string('image_url')->nullable();
+
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
