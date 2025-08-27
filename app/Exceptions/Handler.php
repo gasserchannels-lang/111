@@ -2,13 +2,23 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\QueryException; // ✅ استيراد الكلاس المطلوب
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
     /**
-     * The list of the inputs that are never flashed to the session on validation exceptions.
+     * A list of the exception types that are not reported.
+     *
+     * @var array<int, class-string<Throwable>>
+     */
+    protected $dontReport = [
+        //
+    ];
+
+    /**
+     * A list of the inputs that are never flashed for validation exceptions.
      *
      * @var array<int, string>
      */
@@ -25,6 +35,16 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        // ✅ *** هذا هو الجزء الجديد والحاسم ***
+        // التعامل مع أخطاء قاعدة البيانات كـ 500 للـ API
+        $this->renderable(function (QueryException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Internal Server Error. A database error occurred.',
+                ], 500);
+            }
         });
     }
 }
