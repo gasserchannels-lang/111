@@ -14,6 +14,7 @@ class PriceSearchController extends Controller
 {
     public function bestOffer(Request $request)
     {
+        // ✅ *** هذا هو الجزء الذي تم إصلاحه ***
         $validator = Validator::make($request->all(), [
             'product' => 'required|string|min:2|max:255',
             'country' => 'required|string|size:2',
@@ -27,13 +28,11 @@ class PriceSearchController extends Controller
             $productName = $request->input('product');
             $countryCode = $request->input('country');
 
-            // ✅ *** هذا هو الجزء الذي تم إصلاحه ***
-            // البحث عن أفضل عرض مباشرة باستخدام Eloquent
             $bestOffer = PriceOffer::with(['product', 'store.currency'])
                 ->whereHas('product', fn ($q) => $q->where('name', $productName))
                 ->whereHas('store', fn ($q) => $q->where('country_code', $countryCode)->where('is_active', true))
                 ->orderBy('price', 'asc')
-                ->first(); // <-- استخدام first() للحصول على أفضل عرض واحد فقط
+                ->first();
 
             if (! $bestOffer) {
                 return response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
