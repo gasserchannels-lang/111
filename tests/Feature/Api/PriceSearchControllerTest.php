@@ -54,26 +54,32 @@ class PriceSearchControllerTest extends TestCase
 
     public function test_best_offer_returns_the_cheapest_offer_successfully()
     {
-        $product = Product::factory()->create(['name' => 'Test Product']);
+        // ✅ *** هذا هو الجزء الذي تم إصلاحه ***
+        // إنشاء بيانات محددة وواضحة للاختبار
+        $product = Product::factory()->create(['name' => 'iPhone 15 Pro']);
         $store = Store::factory()->create(['country_code' => 'US']);
 
+        // إنشاء عرض غالي
         PriceOffer::factory()->create([
             'product_id' => $product->id,
             'store_id' => $store->id,
             'price' => 120.00,
         ]);
+        
+        // إنشاء العرض الأرخص الذي نبحث عنه
         $bestOffer = PriceOffer::factory()->create([
             'product_id' => $product->id,
             'store_id' => $store->id,
             'price' => 99.99,
         ]);
 
-        $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
+        // استدعاء الـ API بنفس البيانات التي أنشأناها
+        $response = $this->getJson('/api/v1/best-offer?product=iPhone 15 Pro&country=US');
 
-        // ✅ *** هذا هو السطر الذي تم إصلاحه ليقبل السعر كرقم ***
+        // التأكد من أن الاستجابة ناجحة وتحتوي على البيانات الصحيحة
         $response->assertStatus(200)
-            ->assertJsonFragment(['price' => 99.99]) // تم إزالة علامات الاقتباس
-            ->assertJsonPath('id', $bestOffer->id);
+            ->assertJsonFragment(['price' => 99.99]) // التأكد من أن السعر هو 99.99 (كرقم)
+            ->assertJsonPath('id', $bestOffer->id); // التأكد من أن العرض المرجع هو العرض الصحيح
     }
 
     public function test_best_offer_returns_correct_status_on_database_error()
@@ -84,7 +90,8 @@ class PriceSearchControllerTest extends TestCase
 
         $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
 
-        $response->assertStatus(404);
+        $response->assertStatus(500) // نتوقع خطأ خادم داخلي
+            ->assertJson(['message' => 'An unexpected error occurred.']);
     }
 
     // endregion
