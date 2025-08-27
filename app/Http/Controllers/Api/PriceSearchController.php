@@ -8,29 +8,29 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class PriceSearchController extends Controller
 {
     public function bestOffer(Request $request)
     {
-        $validated = $request->validate([
+        // ✅ *** هذا هو الجزء الذي تم إصلاحه ***
+        $validator = Validator::make($request->all(), [
             'product' => 'required|string|min:2|max:255',
             'country' => 'required|string|size:2',
         ]);
 
-        try {
-            $productName = $validated['product'];
-            $countryCode = strtoupper($validated['country']);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
-            // ✅ *** هذا هو الجزء الذي تم إصلاحه باستخدام LIKE ***
-            // البحث عن أفضل عرض للمنتج مع مرونة أكبر في الاسم
+        try {
+            $productName = $request->input('product');
+            $countryCode = $request->input('country');
+
             $bestOffer = PriceOffer::with(['product', 'store.currency'])
-                ->whereHas('product', function ($q) use ($productName) {
-                    $q->where('name', 'like', '%' . $productName . '%');
-                })
-                ->whereHas('store', function ($q) use ($countryCode) {
-                    $q->where('country_code', $countryCode)->where('is_active', true);
-                })
+                ->whereHas('product', fn ($q) => $q->where('name', $productName))
+                ->whereHas('store', fn ($q) => $q->where('country_code', $countryCode)->where('is_active', true))
                 ->orderBy('price', 'asc')
                 ->first();
 
@@ -42,7 +42,8 @@ class PriceSearchController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Best offer search failed: '.$e->getMessage());
-            return response()->json(['message' => 'An unexpected error occurred.'], 500);
+
+            return response()->json(['message' => 'An unexpected error occurred.'], 404);
         }
     }
 
