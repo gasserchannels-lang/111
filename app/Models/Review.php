@@ -29,14 +29,14 @@ class Review extends Model
         'rating' => 'integer',
     ];
 
-    public function user() 
-    { 
-        return $this->belongsTo(User::class); 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
-    
-    public function product() 
-    { 
-        return $this->belongsTo(Product::class); 
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 
     // دالة مساعدة للتوافق مع الكود القديم

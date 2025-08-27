@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Product;
 use App\Models\Review;
-use Tests\TestCase;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ReviewControllerTest extends TestCase
 {
