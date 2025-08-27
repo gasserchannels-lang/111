@@ -8,25 +8,22 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+// لا حاجة لـ Validator هنا لأننا سنستخدم طريقة Laravel المدمجة
 
 class PriceSearchController extends Controller
 {
     public function bestOffer(Request $request)
     {
-        // ✅ *** هذا هو الجزء الذي تم إصلاحه ***
-        $validator = Validator::make($request->all(), [
+        // ✅ *** هذا هو الجزء الذي تم إصلاحه باستخدام الطريقة الصحيحة ***
+        // استخدام $request->validate() يجعل Laravel يعيد استجابة JSON متوافقة مع الاختبارات تلقائياً
+        $validated = $request->validate([
             'product' => 'required|string|min:2|max:255',
             'country' => 'required|string|size:2',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
         try {
-            $productName = $request->input('product');
-            $countryCode = $request->input('country');
+            $productName = $validated['product'];
+            $countryCode = strtoupper($validated['country']);
 
             $bestOffer = PriceOffer::with(['product', 'store.currency'])
                 ->whereHas('product', fn ($q) => $q->where('name', $productName))
@@ -42,8 +39,7 @@ class PriceSearchController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Best offer search failed: '.$e->getMessage());
-
-            return response()->json(['message' => 'An unexpected error occurred.'], 404);
+            return response()->json(['message' => 'An unexpected error occurred.'], 500); // إرجاع 500 للأخطاء الداخلية
         }
     }
 
