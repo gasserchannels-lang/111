@@ -8,14 +8,11 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-// لا حاجة لـ Validator هنا لأننا سنستخدم طريقة Laravel المدمجة
 
 class PriceSearchController extends Controller
 {
     public function bestOffer(Request $request)
     {
-        // ✅ *** هذا هو الجزء الذي تم إصلاحه باستخدام الطريقة الصحيحة ***
-        // استخدام $request->validate() يجعل Laravel يعيد استجابة JSON متوافقة مع الاختبارات تلقائياً
         $validated = $request->validate([
             'product' => 'required|string|min:2|max:255',
             'country' => 'required|string|size:2',
@@ -25,9 +22,15 @@ class PriceSearchController extends Controller
             $productName = $validated['product'];
             $countryCode = strtoupper($validated['country']);
 
+            // ✅ *** هذا هو الجزء الذي تم إصلاحه باستخدام LIKE ***
+            // البحث عن أفضل عرض للمنتج مع مرونة أكبر في الاسم
             $bestOffer = PriceOffer::with(['product', 'store.currency'])
-                ->whereHas('product', fn ($q) => $q->where('name', $productName))
-                ->whereHas('store', fn ($q) => $q->where('country_code', $countryCode)->where('is_active', true))
+                ->whereHas('product', function ($q) use ($productName) {
+                    $q->where('name', 'like', '%' . $productName . '%');
+                })
+                ->whereHas('store', function ($q) use ($countryCode) {
+                    $q->where('country_code', $countryCode)->where('is_active', true);
+                })
                 ->orderBy('price', 'asc')
                 ->first();
 
@@ -39,7 +42,7 @@ class PriceSearchController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Best offer search failed: '.$e->getMessage());
-            return response()->json(['message' => 'An unexpected error occurred.'], 500); // إرجاع 500 للأخطاء الداخلية
+            return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
     }
 
