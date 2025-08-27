@@ -23,8 +23,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // مسار وهمي لتسجيل الدخول (مهم للاختبارات)
 Route::get('/login', function () {
-    return 'This is a dummy login page to satisfy the test.';
-})->name('login');
+return 'This is a dummy login page to satisfy the test.';
+}
+)->name('login');
+
 
 // المنتجات والفئات
 Route::resource('products', ProductController::class)->only(['index', 'show']);
