@@ -13,7 +13,7 @@ class LocaleMiddlewareTest extends TestCase
     {
         $request = Request::create('/test');
         $request->setLaravelSession(app('session.store'));
-        $middleware = new LocaleMiddleware();
+        $middleware = new LocaleMiddleware;
         $response = $middleware->handle($request, function ($req) {
             return response('OK');
         });
