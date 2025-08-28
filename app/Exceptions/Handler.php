@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler
 
         // 4. التعامل مع أي خطأ عام آخر كآخر احتمال
         $this->renderable(function (Throwable $e, $request) {
-            if ($request->is('api/*') && !$this->isHttpException($e)) {
+            if ($request->is('api/*')) {
                 return response()->json(['message' => 'An unexpected server error occurred.'], 500);
             }
         });
