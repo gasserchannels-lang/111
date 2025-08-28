@@ -12,7 +12,6 @@ class PriceSearchController extends Controller
 {
     public function bestOffer(Request $request)
     {
-        // سيرمي ValidationException إذا فشل، وسيعالجه الـ Handler
         $validated = $request->validate([
             'product' => 'required|string|min:2|max:255',
             'country' => 'required|string|size:2',
@@ -21,7 +20,6 @@ class PriceSearchController extends Controller
         $productName = $validated['product'];
         $countryCode = strtoupper($validated['country']);
 
-        // أي خطأ قاعدة بيانات هنا سيلتقطه الـ Handler
         $bestOffer = PriceOffer::with(['product', 'store.currency'])
             ->whereHas('product', fn ($q) => $q->where('name', $productName))
             ->whereHas('store', fn ($q) => $q->where('country_code', $countryCode)->where('is_active', true))
