@@ -8,6 +8,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// ✅ *** هذه هي المسارات الصحيحة والنهائية ***
 Route::prefix('v1')->group(function () {
     Route::get('/best-offer', [PriceSearchController::class, 'bestOffer']);
     Route::get('/supported-stores', [PriceSearchController::class, 'supportedStores']);
