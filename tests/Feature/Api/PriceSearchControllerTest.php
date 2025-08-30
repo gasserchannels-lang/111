@@ -20,7 +20,7 @@ class PriceSearchControllerTest extends TestCase
      */
     public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField)
     {
-        $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload ));
+        $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload));
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors($expectedErrorField);

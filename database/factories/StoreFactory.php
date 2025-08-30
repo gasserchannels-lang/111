@@ -20,11 +20,11 @@ class StoreFactory extends Factory
             'is_active' => $this->faker->boolean(80),
             'priority' => $this->faker->numberBetween(0, 100),
             'affiliate_base_url' => $this->faker->optional()->url,
-            
+
             // ✅ *** هذا هو السطر الذي تم إصلاحه ***
             // تم استبدال ->json() الخاطئة بـ json_encode لإنشاء نص JSON صحيح
             'api_config' => $this->faker->optional()->passthrough(json_encode(['key' => $this->faker->uuid, 'secret' => $this->faker->sha256])),
-            
+
             'currency_id' => Currency::factory(),
         ];
     }
