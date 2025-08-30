@@ -55,7 +55,7 @@ class PriceSearchController extends Controller
         }
 
         try {
-            $response = Http::get('https://ipapi.co/country' );
+            $response = Http::get('https://ipapi.co/country');
             if ($response->successful() && strlen(trim($response->body())) === 2) {
                 return strtoupper(trim($response->body()));
             }
