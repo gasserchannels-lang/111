@@ -22,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Factory::guessFactoryNamesUsing(fn(string $modelName) => 'Database\\Factories\\'.class_basename($modelName).'Factory');
+        Factory::guessFactoryNamesUsing(fn (string $modelName) => 'Database\\Factories\\'.class_basename($modelName).'Factory');
     }
 }
