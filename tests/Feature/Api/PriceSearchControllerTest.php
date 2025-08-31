@@ -20,7 +20,7 @@ class PriceSearchControllerTest extends TestCase
     /**
      * @dataProvider validationProvider
      */
-    public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField)
+    public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField): void
     {
         $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload));
 
@@ -38,7 +38,7 @@ class PriceSearchControllerTest extends TestCase
         ];
     }
 
-    public function test_best_offer_returns_404_when_product_exists_but_has_no_offers_in_country()
+    public function test_best_offer_returns_404_when_product_exists_but_has_no_offers_in_country(): void
     {
         $product = Product::factory()->create(['name' => 'Test Product']);
         $foreignStore = Store::factory()->create(['country_code' => 'CA']);
@@ -54,7 +54,7 @@ class PriceSearchControllerTest extends TestCase
             ->assertJson(['message' => 'No offers found for this product in the specified country.']);
     }
 
-    public function test_best_offer_returns_the_cheapest_offer_successfully()
+    public function test_best_offer_returns_the_cheapest_offer_successfully(): void
     {
         $product = Product::factory()->create(['name' => 'Test Product']);
         $store = Store::factory()->create(['country_code' => 'US']);
@@ -78,9 +78,9 @@ class PriceSearchControllerTest extends TestCase
             ->assertJsonPath('id', $bestOffer->id);
     }
 
-    public function test_best_offer_returns_correct_status_on_database_error()
+    public function test_best_offer_returns_correct_status_on_database_error(): void
     {
-        $this->app->instance('db', \Mockery::mock(\Illuminate\Database\DatabaseManager::class, function ($mock) {
+        $this->app->instance('db', \Mockery::mock(\Illuminate\Database\DatabaseManager::class, function ($mock): void {
             $mock->shouldReceive('connection')->andThrow(new \Exception('Database connection failed'));
         }));
 
@@ -94,7 +94,7 @@ class PriceSearchControllerTest extends TestCase
 
     // region Supported Stores Tests
 
-    public function test_supported_stores_returns_stores_for_a_given_country()
+    public function test_supported_stores_returns_stores_for_a_given_country(): void
     {
         Store::factory()->count(3)->create(['country_code' => 'US', 'is_active' => true]);
         Store::factory()->count(2)->create(['country_code' => 'CA', 'is_active' => true]);
@@ -106,7 +106,7 @@ class PriceSearchControllerTest extends TestCase
             ->assertJsonCount(3);
     }
 
-    public function test_supported_stores_returns_empty_array_for_country_with_no_stores()
+    public function test_supported_stores_returns_empty_array_for_country_with_no_stores(): void
     {
         Store::factory()->count(2)->create(['country_code' => 'CA']);
 
@@ -121,7 +121,7 @@ class PriceSearchControllerTest extends TestCase
 
     // region Country Detection Tests
 
-    public function test_it_uses_country_from_request_when_provided()
+    public function test_it_uses_country_from_request_when_provided(): void
     {
         Store::factory()->count(2)->create(['country_code' => 'CA', 'is_active' => true]);
 
@@ -129,7 +129,7 @@ class PriceSearchControllerTest extends TestCase
         $response->assertStatus(200)->assertJsonCount(2);
     }
 
-    public function test_it_detects_country_from_cloudflare_header()
+    public function test_it_detects_country_from_cloudflare_header(): void
     {
         Store::factory()->count(3)->create(['country_code' => 'FR', 'is_active' => true]);
 
@@ -137,7 +137,7 @@ class PriceSearchControllerTest extends TestCase
         $response->assertStatus(200)->assertJsonCount(3);
     }
 
-    public function test_it_detects_country_from_ip_api_successfully()
+    public function test_it_detects_country_from_ip_api_successfully(): void
     {
         Http::fake([
             'ipapi.co/*' => Http::response('DE', 200),
@@ -148,7 +148,7 @@ class PriceSearchControllerTest extends TestCase
         $response->assertStatus(200)->assertJsonCount(4);
     }
 
-    public function test_it_falls_back_to_us_when_ip_api_fails()
+    public function test_it_falls_back_to_us_when_ip_api_fails(): void
     {
         Http::fake([
             'ipapi.co/*' => Http::response(null, 500),

@@ -23,7 +23,7 @@ class LanguageFactory extends Factory
 
     public function english(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'code' => 'en',
             'name' => 'English',
             'native_name' => 'English',
@@ -32,7 +32,7 @@ class LanguageFactory extends Factory
 
     public function default(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'is_default' => true,
         ]);
     }

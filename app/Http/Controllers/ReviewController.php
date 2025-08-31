@@ -22,7 +22,7 @@ class ReviewController extends Controller
         // عرض المراجعات الخاصة بالمستخدم الحالي
         $reviews = Auth::user()->reviews()->with('product')->latest()->paginate(10);
 
-        return view('reviews.index', compact('reviews'));
+        return view('reviews.index', ['reviews' => $reviews]);
     }
 
     /**
@@ -41,7 +41,7 @@ class ReviewController extends Controller
                 ->with('error', 'You have already reviewed this product.');
         }
 
-        return view('reviews.create', compact('product'));
+        return view('reviews.create', ['product' => $product]);
     }
 
     /**
@@ -89,7 +89,7 @@ class ReviewController extends Controller
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
-        return view('reviews.edit', compact('review'));
+        return view('reviews.edit', ['review' => $review]);
     }
 
     /**

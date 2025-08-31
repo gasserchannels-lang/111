@@ -26,14 +26,14 @@ class LocaleMiddlewareTest extends TestCase
         Route::get('/test-locale', fn () => response()->json(['locale' => app()->getLocale()]))->middleware('locale');
     }
 
-    public function test_middleware_sets_default_locale_if_nothing_is_provided()
+    public function test_middleware_sets_default_locale_if_nothing_is_provided(): void
     {
         $this->getJson('/test-locale')
             ->assertStatus(200)
             ->assertJson(['locale' => 'en']);
     }
 
-    public function test_middleware_uses_session_values()
+    public function test_middleware_uses_session_values(): void
     {
         $language = Language::factory()->create(['code' => 'ar', 'native_name' => 'العربية']);
 
@@ -43,7 +43,7 @@ class LocaleMiddlewareTest extends TestCase
             ->assertJson(['locale' => 'ar']);
     }
 
-    public function test_middleware_uses_authenticated_user_settings()
+    public function test_middleware_uses_authenticated_user_settings(): void
     {
         $user = User::factory()->create();
         $language = Language::factory()->create(['code' => 'fr', 'native_name' => 'Français']);

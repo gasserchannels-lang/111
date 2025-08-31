@@ -28,7 +28,7 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 1. View Lifecycle (Index & Show) --------------------
 
     /** @test */
-    public function index_displays_only_user_price_alerts()
+    public function index_displays_only_user_price_alerts(): void
     {
         PriceAlert::factory()->count(3)->create(['user_id' => $this->user->id]);
         PriceAlert::factory()->count(2)->create(['user_id' => $this->anotherUser->id]);
@@ -37,11 +37,11 @@ class PriceAlertControllerTest extends TestCase
             ->get(route('price-alerts.index'))
             ->assertOk()
             ->assertViewIs('price-alerts.index')
-            ->assertViewHas('priceAlerts', fn ($priceAlerts) => $priceAlerts->count() === 3);
+            ->assertViewHas('priceAlerts', fn ($priceAlerts): bool => $priceAlerts->count() === 3);
     }
 
     /** @test */
-    public function index_displays_empty_list_when_no_alerts_exist()
+    public function index_displays_empty_list_when_no_alerts_exist(): void
     {
         $this->actingAs($this->user)
             ->get(route('price-alerts.index'))
@@ -50,7 +50,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function show_displays_correct_price_alert_for_owner()
+    public function show_displays_correct_price_alert_for_owner(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -62,7 +62,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function show_returns_403_for_another_user()
+    public function show_returns_403_for_another_user(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -72,7 +72,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function show_returns_404_for_non_existing_alert()
+    public function show_returns_404_for_non_existing_alert(): void
     {
         $this->actingAs($this->user)
             ->get(route('price-alerts.show', 999))
@@ -84,7 +84,7 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 2. Create Lifecycle (Create & Store) --------------------
 
     /** @test */
-    public function an_authenticated_user_can_create_a_price_alert()
+    public function an_authenticated_user_can_create_a_price_alert(): void
     {
         $product = Product::factory()->create();
 
@@ -105,7 +105,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function creating_a_price_alert_fails_with_invalid_data()
+    public function creating_a_price_alert_fails_with_invalid_data(): void
     {
         $this->actingAs($this->user)
             ->post(route('price-alerts.store'), ['product_id' => 999])
@@ -113,7 +113,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_store_a_price_alert_with_non_numeric_target_price()
+    public function it_fails_to_store_a_price_alert_with_non_numeric_target_price(): void
     {
         $product = Product::factory()->create();
 
@@ -126,7 +126,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_store_a_price_alert_with_non_existing_product_id()
+    public function it_fails_to_store_a_price_alert_with_non_existing_product_id(): void
     {
         $this->actingAs($this->user)
             ->post(route('price-alerts.store'), [
@@ -141,7 +141,7 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 3. Update Lifecycle (Edit & Update) --------------------
 
     /** @test */
-    public function an_authenticated_user_can_update_their_price_alert()
+    public function an_authenticated_user_can_update_their_price_alert(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -161,7 +161,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function a_user_cannot_update_another_users_price_alert()
+    public function a_user_cannot_update_another_users_price_alert(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -171,7 +171,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function update_returns_404_for_non_existing_alert()
+    public function update_returns_404_for_non_existing_alert(): void
     {
         $this->actingAs($this->user)
             ->put(route('price-alerts.update', 999), ['target_price' => 400])
@@ -179,7 +179,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_update_a_price_alert_with_empty_target_price()
+    public function it_fails_to_update_a_price_alert_with_empty_target_price(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -193,7 +193,7 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 4. Management Lifecycle (Toggle & Destroy) --------------------
 
     /** @test */
-    public function a_user_can_toggle_their_price_alert_status()
+    public function a_user_can_toggle_their_price_alert_status(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'is_active' => true]);
 
@@ -209,7 +209,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_cannot_toggle_another_users_price_alert()
+    public function it_cannot_toggle_another_users_price_alert(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->anotherUser->id]);
 
@@ -219,7 +219,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_delete_their_price_alert()
+    public function a_user_can_delete_their_price_alert(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -232,7 +232,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function a_user_cannot_delete_another_users_price_alert()
+    public function a_user_cannot_delete_another_users_price_alert(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
 
@@ -242,7 +242,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     /** @test */
-    public function destroy_returns_404_for_non_existing_alert()
+    public function destroy_returns_404_for_non_existing_alert(): void
     {
         $this->actingAs($this->user)
             ->delete(route('price-alerts.destroy', 999))
@@ -260,7 +260,7 @@ class PriceAlertControllerTest extends TestCase
      *
      * @group security
      */
-    public function a_guest_is_redirected_to_login_from_all_protected_routes($method, $routeName)
+    public function a_guest_is_redirected_to_login_from_all_protected_routes(string $method, string $routeName): void
     {
         $priceAlert = PriceAlert::factory()->createQuietly();
 

@@ -15,14 +15,14 @@ class ProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function product_belongs_to_category()
+    public function product_belongs_to_category(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(Category::class, $product->category);
     }
 
     /** @test */
-    public function product_belongs_to_brand()
+    public function product_belongs_to_brand(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(Brand::class, $product->brand);

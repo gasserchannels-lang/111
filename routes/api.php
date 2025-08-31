@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', fn (Request $request) => $request->user());
 
 // ✅ *** هذه هي المسارات الصحيحة والنهائية ***
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->group(function (): void {
     Route::get('/best-offer', [PriceSearchController::class, 'bestOffer']);
     Route::get('/supported-stores', [PriceSearchController::class, 'supportedStores']);
 });

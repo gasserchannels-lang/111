@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('price_offers', function (Blueprint $table) {
+        Schema::table('price_offers', function (Blueprint $table): void {
             // ✅✅✅ هذا هو السطر الذي يضيف العمود المفقود 'in_stock' ✅✅✅
             // سيتم إضافته بعد عمود 'url' لترتيب الجدول
             $table->boolean('in_stock')->default(true)->after('url');
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('price_offers', function (Blueprint $table) {
+        Schema::table('price_offers', function (Blueprint $table): void {
             // هذا السطر يضمن أنه يمكنك التراجع عن الـ migration إذا احتجت لذلك
             $table->dropColumn('in_stock');
         });

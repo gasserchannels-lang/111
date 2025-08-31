@@ -23,7 +23,7 @@ class ReviewControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_creates_product_review()
+    public function store_creates_product_review(): void
     {
         $product = Product::factory()->create();
 
@@ -46,14 +46,14 @@ class ReviewControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_validates_required_fields()
+    public function store_validates_required_fields(): void
     {
         $response = $this->actingAs($this->user)->post(route('reviews.store'), []);
         $response->assertSessionHasErrors(['product_id', 'title', 'content', 'rating']);
     }
 
     /** @test */
-    public function store_validates_rating_range()
+    public function store_validates_rating_range(): void
     {
         $product = Product::factory()->create();
 
@@ -69,7 +69,7 @@ class ReviewControllerTest extends TestCase
     }
 
     /** @test */
-    public function destroy_deletes_user_review()
+    public function destroy_deletes_user_review(): void
     {
         $review = Review::factory()->create(['user_id' => $this->user->id]);
 
@@ -80,7 +80,7 @@ class ReviewControllerTest extends TestCase
     }
 
     /** @test */
-    public function user_cannot_delete_other_users_review()
+    public function user_cannot_delete_other_users_review(): void
     {
         $otherUser = User::factory()->create();
         $review = Review::factory()->create(['user_id' => $otherUser->id]);

@@ -13,14 +13,14 @@ class CategoryControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function can_create_category()
+    public function can_create_category(): void
     {
         $category = Category::factory()->create(['name' => 'Electronics']);
         $this->assertDatabaseHas('categories', ['name' => 'Electronics']);
     }
 
     /** @test */
-    public function index_route_exists()
+    public function index_route_exists(): void
     {
         try {
             $response = $this->get('/categories');

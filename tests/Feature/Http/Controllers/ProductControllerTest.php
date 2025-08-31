@@ -15,7 +15,7 @@ class ProductControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function index_can_be_accessed()
+    public function index_can_be_accessed(): void
     {
         try {
             $response = $this->get('/products');
@@ -26,7 +26,7 @@ class ProductControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_create_product_with_factory()
+    public function can_create_product_with_factory(): void
     {
         $category = Category::factory()->create();
         $brand = Brand::factory()->create();

@@ -22,7 +22,7 @@ class CurrencyFactory extends Factory
 
     public function usd(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'code' => 'USD',
             'name' => 'US Dollar',
         ]);
