@@ -12,7 +12,7 @@ class CartControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function cart_requires_authentication()
+    public function cart_requires_authentication(): void
     {
         $response = $this->get('/cart');
         $response->assertRedirect('/login');

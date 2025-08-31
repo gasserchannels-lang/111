@@ -20,7 +20,7 @@ class WishlistController extends Controller
     {
         $wishlistItems = Auth::user()->wishlist()->with('product')->get();
 
-        return view('wishlist.index', compact('wishlistItems'));
+        return view('wishlist.index', ['wishlistItems' => $wishlistItems]);
     }
 
     /**

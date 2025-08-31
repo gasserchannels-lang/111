@@ -12,7 +12,7 @@ class WishlistControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function wishlist_route_requires_authentication()
+    public function wishlist_route_requires_authentication(): void
     {
         $response = $this->get('/wishlist');
         $response->assertRedirect('/login');

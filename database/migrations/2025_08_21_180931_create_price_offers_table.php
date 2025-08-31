@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('price_offers', function (Blueprint $table) {
+        Schema::create('price_offers', function (Blueprint $table): void {
             $table->id();
             // ✅ إضافة الأعمدة المفقودة وربطها بالجداول الصحيحة
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');

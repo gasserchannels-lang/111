@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // مسار وهمي لتسجيل الدخول (مهم للاختبارات)
-Route::get('/login', fn () => 'This is a dummy login page to satisfy the test.'
+Route::get('/login', fn (): string => 'This is a dummy login page to satisfy the test.'
 )->name('login');
 
 // المنتجات والفئات
@@ -37,7 +37,7 @@ Route::get('currency/{currencyCode}', [LocaleController::class, 'changeCurrency'
 
 // --- المسارات المحمية التي تتطلب تسجيل الدخول ---
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function (): void {
 
     // Price Alert Routes (من الكود الخاص بك، وهو مثالي)
     Route::patch('price-alerts/{price_alert}/toggle', [PriceAlertController::class, 'toggle'])->name('price-alerts.toggle');

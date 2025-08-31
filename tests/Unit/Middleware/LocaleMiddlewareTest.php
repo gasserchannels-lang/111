@@ -11,7 +11,7 @@ use Tests\TestCase;
 class LocaleMiddlewareTest extends TestCase
 {
     /** @test */
-    public function middleware_handles_request_without_error()
+    public function middleware_handles_request_without_error(): void
     {
         $request = Request::create('/test');
         $request->setLaravelSession(app('session.store'));

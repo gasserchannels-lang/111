@@ -17,7 +17,7 @@ class PriceAlertController extends Controller
     {
         $priceAlerts = Auth::user()->priceAlerts()->with('product')->latest()->paginate(10);
 
-        return view('price-alerts.index', compact('priceAlerts'));
+        return view('price-alerts.index', ['priceAlerts' => $priceAlerts]);
     }
 
     public function create(Request $request)
@@ -27,7 +27,7 @@ class PriceAlertController extends Controller
             $product = Product::findOrFail($request->product_id);
         }
 
-        return view('price-alerts.create', compact('product'));
+        return view('price-alerts.create', ['product' => $product]);
     }
 
     public function store(Request $request)
@@ -62,7 +62,7 @@ class PriceAlertController extends Controller
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
 
-        $price_alert->load(['product', 'product.priceOffers' => function ($query) {
+        $price_alert->load(['product', 'product.priceOffers' => function ($query): void {
             $query->where('in_stock', true)->orderBy('price', 'asc')->limit(5);
         }]);
 

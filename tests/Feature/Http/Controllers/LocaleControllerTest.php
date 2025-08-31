@@ -9,7 +9,7 @@ use Tests\TestCase;
 class LocaleControllerTest extends TestCase
 {
     /** @test */
-    public function can_switch_language()
+    public function can_switch_language(): void
     {
         try {
             $response = $this->post('/locale/language', ['language' => 'ar']);

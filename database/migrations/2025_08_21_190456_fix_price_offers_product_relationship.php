@@ -33,7 +33,7 @@ return new class extends Migration
         }
 
         // الآن نجعل product_id مطلوب
-        Schema::table('price_offers', function (Blueprint $table) {
+        Schema::table('price_offers', function (Blueprint $table): void {
             $table->foreignId('product_id')->nullable(false)->change();
         });
     }
@@ -43,7 +43,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('price_offers', function (Blueprint $table) {
+        Schema::table('price_offers', function (Blueprint $table): void {
             $table->foreignId('product_id')->nullable()->change();
         });
     }
