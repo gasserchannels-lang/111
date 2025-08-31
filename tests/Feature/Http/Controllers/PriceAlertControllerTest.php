@@ -37,9 +37,7 @@ class PriceAlertControllerTest extends TestCase
             ->get(route('price-alerts.index'))
             ->assertOk()
             ->assertViewIs('price-alerts.index')
-            ->assertViewHas('priceAlerts', function ($priceAlerts) {
-                return $priceAlerts->count() === 3;
-            });
+            ->assertViewHas('priceAlerts', fn($priceAlerts) => $priceAlerts->count() === 3);
     }
 
     /** @test */

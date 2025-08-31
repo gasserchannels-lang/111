@@ -25,7 +25,7 @@ class CategoryControllerTest extends TestCase
         try {
             $response = $this->get('/categories');
             $response->assertSuccessful();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->markTestSkipped('Categories route not implemented');
         }
     }

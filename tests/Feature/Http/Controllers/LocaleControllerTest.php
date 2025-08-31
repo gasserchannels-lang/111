@@ -14,7 +14,7 @@ class LocaleControllerTest extends TestCase
         try {
             $response = $this->post('/locale/language', ['language' => 'ar']);
             $this->assertTrue($response->isRedirection() || $response->isSuccessful());
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->markTestSkipped('Locale switching not implemented');
         }
     }
