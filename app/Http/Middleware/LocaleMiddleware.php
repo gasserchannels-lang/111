@@ -41,7 +41,7 @@ class LocaleMiddleware
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // في حالة حدوث أي خطأ غير متوقع، اعتمد على القيمة الافتراضية الآمنة
             // هذا يمنع ظهور خطأ 500
         }

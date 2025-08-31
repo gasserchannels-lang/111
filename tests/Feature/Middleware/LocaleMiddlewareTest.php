@@ -23,9 +23,7 @@ class LocaleMiddlewareTest extends TestCase
         // Use the smart factory state to create a specific, default language
         Language::factory()->english()->default()->create();
 
-        Route::get('/test-locale', function () {
-            return response()->json(['locale' => app()->getLocale()]);
-        })->middleware('locale');
+        Route::get('/test-locale', fn() => response()->json(['locale' => app()->getLocale()]))->middleware('locale');
     }
 
     public function test_middleware_sets_default_locale_if_nothing_is_provided()

@@ -20,7 +20,7 @@ class PriceSearchController extends Controller
         ]);
 
         $productName = $validated['product'];
-        $countryCode = strtoupper($validated['country']);
+        $countryCode = strtoupper((string) $validated['country']);
 
         $bestOffer = PriceOffer::with(['product', 'store.currency'])
             ->whereHas('product', fn ($q) => $q->where('name', $productName))
@@ -48,8 +48,8 @@ class PriceSearchController extends Controller
 
     private function getCountryCode(Request $request): string
     {
-        if ($request->has('country') && strlen($request->input('country')) === 2) {
-            return strtoupper($request->input('country'));
+        if ($request->has('country') && strlen((string) $request->input('country')) === 2) {
+            return strtoupper((string) $request->input('country'));
         }
 
         if ($request->header('CF-IPCountry')) {
@@ -61,7 +61,7 @@ class PriceSearchController extends Controller
             if ($response->successful() && strlen(trim($response->body())) === 2) {
                 return strtoupper(trim($response->body()));
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Fallback to US
         }
 

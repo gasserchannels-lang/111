@@ -19,23 +19,23 @@ class PriceOfferSeeder extends Seeder
 
         foreach ($stores as $store) {
             foreach ($products as $product) {
-                $productUrl = $store->website_url.'/product/'.strtolower($product['code']);
+                $productUrl = $store->website_url.'/product/'.strtolower((string) $product['code']);
                 PriceOffer::create([
                     'product_id' => $product->id,
                     'product_sku' => $product['sku'],
                     'store_id' => $store->id,
-                    'price' => rand(500, 1500) + (rand(0, 99) / 100),
+                    'price' => random_int(500, 1500) + (random_int(0, 99) / 100),
                     'currency' => 'USD',
                     'product_url' => $productUrl,
                     'affiliate_url' => $store->generateAffiliateUrl($productUrl),
-                    'in_stock' => rand(0, 1) == 1,
-                    'stock_quantity' => rand(0, 100),
+                    'in_stock' => random_int(0, 1) == 1,
+                    'stock_quantity' => random_int(0, 100),
                     'condition' => 'new',
-                    'rating' => rand(35, 50) / 10,
-                    'reviews_count' => rand(10, 1000),
-                    'image_url' => 'https://via.placeholder.com/300x300?text='.urlencode($product['name']),
+                    'rating' => random_int(35, 50) / 10,
+                    'reviews_count' => random_int(10, 1000),
+                    'image_url' => 'https://via.placeholder.com/300x300?text='.urlencode((string) $product['name']),
                     'specifications' => [
-                        'brand' => explode(' ', $product['name'])[0],
+                        'brand' => explode(' ', (string) $product['name'])[0],
                         'model' => $product['name'],
                     ],
                 ]);

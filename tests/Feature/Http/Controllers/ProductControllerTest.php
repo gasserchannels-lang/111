@@ -20,7 +20,7 @@ class ProductControllerTest extends TestCase
         try {
             $response = $this->get('/products');
             $response->assertSuccessful();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->markTestSkipped('Products route not fully implemented');
         }
     }
