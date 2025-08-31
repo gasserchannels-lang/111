@@ -1,10 +1,10 @@
 includes:
-    - /tmp/sandbox_fix_1756602309/vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/nunomaduro/larastan/extension.neon
+
 parameters:
+    level: 5
     paths:
         - app
         - routes
-    level: 5
-    bootstrapFiles:
-        - /tmp/sandbox_fix_1756602309/bootstrap/app.php
+        - tests
 
