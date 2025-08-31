@@ -9,7 +9,6 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Livewire\Livewire;
 
 class CartController extends Controller
 {
