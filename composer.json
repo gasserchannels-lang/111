@@ -15,11 +15,11 @@
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "infection/infection": "^0.31.2",
+        "larastan/larastan": "^2.11",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
-        "nunomaduro/larastan": "^2.11",
         "nunomaduro/phpinsights": "^2.13",
         "pestphp/pest": "^2.36",
         "pestphp/pest-plugin-laravel": "^2.4",
