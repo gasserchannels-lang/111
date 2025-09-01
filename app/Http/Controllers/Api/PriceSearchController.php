@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PriceSearchController extends Controller
 {
-    public function bestOffer(Request $request)
+    public function bestOffer(Request $request )
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -47,5 +49,38 @@ class PriceSearchController extends Controller
             Log::error("PriceSearchController@bestOffer failed: " . $e->getMessage());
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
+    }
+
+    public function supportedStores(Request $request)
+    {
+        try {
+            $countryCode = $this->getCountryCode($request);
+            $stores = Store::where('country_code', $countryCode)
+                ->where('is_active', true)
+                ->get();
+            return response()->json($stores);
+        } catch (\Throwable $e) {
+            Log::error("PriceSearchController@supportedStores failed: " . $e->getMessage());
+            return response()->json(['message' => 'An unexpected error occurred.'], 500);
+        }
+    }
+
+    private function getCountryCode(Request $request): string
+    {
+        if ($request->has('country') && strlen((string) $request->input('country')) === 2) {
+            return strtoupper((string) $request->input('country'));
+        }
+        if ($request->header('CF-IPCountry')) {
+            return strtoupper($request->header('CF-IPCountry'));
+        }
+        try {
+            $response = Http::timeout(2)->get('https://ipapi.co/country' );
+            if ($response->successful() && strlen(trim($response->body())) === 2) {
+                return strtoupper(trim($response->body()));
+            }
+        } catch (\Exception $e) {
+            // Fallback to US
+        }
+        return 'US';
     }
 }
