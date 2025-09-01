@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PriceSearchController extends Controller
 {
-    public function bestOffer(Request $request )
+    public function bestOffer(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
