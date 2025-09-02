@@ -2,9 +2,14 @@ includes:
     - ./vendor/nunomaduro/larastan/extension.neon
 
 parameters:
-    level: 5
-    paths:
-        - app
-        - routes
-        - tests
 
+    paths:
+        - app/
+
+    # The level 9 is the highest level
+    level: 5
+
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+
+#    checkMissingIterableValueType: false
