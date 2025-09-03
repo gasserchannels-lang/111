@@ -40,9 +40,9 @@ Route::get('currency/{currencyCode}', [LocaleController::class, 'changeCurrency'
 Route::middleware('auth')->group(function (): void {
 
     // Price Alert Routes (من الكود الخاص بك، وهو مثالي)
-    Route::patch('price-alerts/{price_alert}/toggle', [PriceAlertController::class, 'toggle'])->name('price-alerts.toggle');
+    Route::patch('price-alerts/{priceAlert}/toggle', [PriceAlertController::class, 'toggle'])->name('price-alerts.toggle');
     Route::resource('price-alerts', PriceAlertController::class)->parameters([
-        'price-alerts' => 'price_alert',
+        'price-alerts' => 'priceAlert',
     ]);
 
     // Wishlist Routes

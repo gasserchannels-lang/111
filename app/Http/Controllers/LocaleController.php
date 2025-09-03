@@ -6,30 +6,43 @@ namespace App\Http\Controllers;
 
 use App\Models\Currency;
 use App\Models\Language;
-use App\Models\UserLocaleSetting;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Session\Session;
 
 class LocaleController extends Controller
 {
+    private Guard $auth;
+
+    private Session $session;
+
+    private Application $app;
+
+    public function __construct(Guard $auth, Session $session, Application $app)
+    {
+        $this->auth = $auth;
+        $this->session = $session;
+        $this->app = $app;
+    }
+
     public function changeLanguage($langCode)
     {
         $language = Language::where('code', $langCode)->first();
 
         if ($language) {
-            Session::put('locale_language', $langCode);
-            App::setLocale($langCode);
+            $this->session->put('locale_language', $langCode);
+            $this->app->setLocale($langCode);
 
-            if (auth()->check()) {
-                $user = auth()->user();
-                $userLocale = UserLocaleSetting::firstOrNew(['user_id' => $user->id]);
+            if ($this->auth->check()) {
+                $user = $this->auth->user();
+                $userLocale = $user->localeSetting()->firstOrNew();
                 $userLocale->language_id = $language->id;
                 // إذا لم يكن هناك عملة محددة، استخدم العملة الافتراضية للغة الجديدة
                 if (! $userLocale->currency_id) {
                     $defaultCurrency = $language->currencies()->wherePivot('is_default', true)->first();
                     if ($defaultCurrency) {
                         $userLocale->currency_id = $defaultCurrency->id;
-                        Session::put('locale_currency', $defaultCurrency->code);
+                        $this->session->put('locale_currency', $defaultCurrency->code);
                     }
                 }
                 $userLocale->save();
@@ -45,19 +58,19 @@ class LocaleController extends Controller
         $currency = Currency::where('code', $currencyCode)->first();
 
         if ($currency) {
-            Session::put('locale_currency', $currencyCode);
+            $this->session->put('locale_currency', $currencyCode);
 
-            if (auth()->check()) {
-                $user = auth()->user();
-                $userLocale = UserLocaleSetting::firstOrNew(['user_id' => $user->id]);
+            if ($this->auth->check()) {
+                $user = $this->auth->user();
+                $userLocale = $user->localeSetting()->firstOrNew();
                 $userLocale->currency_id = $currency->id;
                 // إذا لم تكن هناك لغة محددة، استخدم اللغة الافتراضية
                 if (! $userLocale->language_id) {
                     $defaultLanguage = Language::where('is_default', true)->first();
                     if ($defaultLanguage) {
                         $userLocale->language_id = $defaultLanguage->id;
-                        Session::put('locale_language', $defaultLanguage->code);
-                        App::setLocale($defaultLanguage->code);
+                        $this->session->put('locale_language', $defaultLanguage->code);
+                        $this->app->setLocale($defaultLanguage->code);
                     }
                 }
                 $userLocale->save();

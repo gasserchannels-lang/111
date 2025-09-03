@@ -6,8 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Review;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -17,10 +17,10 @@ class ReviewController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Guard $auth)
     {
         // عرض المراجعات الخاصة بالمستخدم الحالي
-        $reviews = Auth::user()->reviews()->with('product')->latest()->paginate(10);
+        $reviews = $auth->user()->reviews()->with('product')->latest()->paginate(10);
 
         return view('reviews.index', ['reviews' => $reviews]);
     }
@@ -28,13 +28,10 @@ class ReviewController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Product $product, Guard $auth)
     {
-        $product = Product::findOrFail($request->product_id);
         // التحقق مما إذا كان المستخدم قد قام بمراجعة هذا المنتج بالفعل
-        $existingReview = Review::where('user_id', Auth::id())
-            ->where('product_id', $product->id)
-            ->exists();
+        $existingReview = $product->reviews()->where('user_id', $auth->id())->exists();
 
         if ($existingReview) {
             return redirect()->route('products.show', $product->id)
@@ -47,7 +44,7 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Guard $auth)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -57,17 +54,14 @@ class ReviewController extends Controller
         ]);
 
         // التحقق مرة أخرى من عدم وجود مراجعة مسبقة
-        $existingReview = Review::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
-            ->exists();
+        $existingReview = $auth->user()->reviews()->where('product_id', $request->product_id)->exists();
 
         if ($existingReview) {
             return redirect()->route('products.show', $request->product_id)
                 ->with('error', 'You have already reviewed this product.');
         }
 
-        Review::create([
-            'user_id' => Auth::id(),
+        $auth->user()->reviews()->create([
             'product_id' => $request->product_id,
             'rating' => $request->rating,
             'title' => $request->title,
@@ -82,10 +76,10 @@ class ReviewController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Review $review)
+    public function edit(Review $review, Guard $auth)
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
-        if ($review->user_id !== Auth::id()) {
+        if ($review->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
@@ -95,10 +89,10 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Review $review)
+    public function update(Request $request, Review $review, Guard $auth)
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
-        if ($review->user_id !== Auth::id()) {
+        if ($review->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
@@ -117,10 +111,10 @@ class ReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Review $review)
+    public function destroy(Review $review, Guard $auth)
     {
         // التحقق من أن المستخدم هو صاحب المراجعة أو مدير
-        if ($review->user_id !== Auth::id() && ! Auth::user()->is_admin) {
+        if ($review->user_id !== $auth->id() && ! $auth->user()->is_admin) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 

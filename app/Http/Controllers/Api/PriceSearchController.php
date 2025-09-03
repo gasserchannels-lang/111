@@ -1,50 +1,73 @@
 <?php
+
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Store;
+use Exception;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Http\Request;
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Throwable;
+
 class PriceSearchController extends Controller
 {
-    public function bestOffer(Request $request )
+    private ValidationFactory $validationFactory;
+
+    private LogManager $log;
+
+    public function __construct(ValidationFactory $validationFactory, LogManager $log)
+    {
+        $this->validationFactory = $validationFactory;
+        $this->log = $log;
+    }
+
+    public function bestOffer(Request $request)
     {
         try {
             // The simple and guaranteed fix: a special test case
             if ($request->input('simulate_db_error') === 'true') {
-                throw new \Exception('Simulated database connection failed for testing.');
+                throw new Exception('Simulated database connection failed for testing.');
             }
 
-            $validator = Validator::make($request->all(), [
+            $validator = $this->validationFactory->make($request->all(), [
                 'product' => 'required|string|min:3|max:255',
                 'country' => 'required|string|size:2',
             ]);
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
+
             $productName = $request->input('product');
             $countryCode = $request->input('country');
-            $product = Product::where('name', 'like', '%' . $productName . '%')->first();
-            if (!$product) {
+            $product = Product::where('name', 'like', '%'.$productName.'%')->first();
+
+            if (! $product) {
                 return response()->json(['message' => 'Product not found.'], 404);
             }
+
             $cheapestOffer = $product->priceOffers()
                 ->join('stores', 'price_offers.store_id', '=', 'stores.id')
                 ->where('stores.country_code', $countryCode)
                 ->orderBy('price', 'asc')
                 ->select('price_offers.*', 'stores.name as store_name', 'stores.country_code')
                 ->first();
-            if (!$cheapestOffer) {
+
+            if (! $cheapestOffer) {
                 return response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
             }
+
             return response()->json($cheapestOffer);
-        } catch (\Throwable $e) {
-            Log::error("PriceSearchController@bestOffer failed: " . $e->getMessage());
+        } catch (Throwable $e) {
+            $this->log->error('PriceSearchController@bestOffer failed: '.$e->getMessage());
+
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
     }
+
     public function supportedStores(Request $request)
     {
         try {
@@ -52,28 +75,34 @@ class PriceSearchController extends Controller
             $stores = Store::where('country_code', $countryCode)
                 ->where('is_active', true)
                 ->get();
+
             return response()->json($stores);
-        } catch (\Throwable $e) {
-            Log::error("PriceSearchController@supportedStores failed: " . $e->getMessage());
+        } catch (Throwable $e) {
+            $this->log->error('PriceSearchController@supportedStores failed: '.$e->getMessage());
+
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
     }
+
     private function getCountryCode(Request $request): string
     {
         if ($request->has('country') && strlen((string) $request->input('country')) === 2) {
             return strtoupper((string) $request->input('country'));
         }
+
         if ($request->header('CF-IPCountry')) {
             return strtoupper($request->header('CF-IPCountry'));
         }
+
         try {
-            $response = Http::timeout(2)->get('https://ipapi.co/country'  );
+            $response = Http::timeout(2)->get('https://ipapi.co/country');
             if ($response->successful() && strlen(trim($response->body())) === 2) {
                 return strtoupper(trim($response->body()));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Fallback to US
         }
+
         return 'US';
     }
 }

@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        //
+        // يمكن إضافة المهام المجدولة هنا
+        // $schedule parameter is required by Laravel but not used in this implementation
     }
 
     /**

@@ -14,7 +14,7 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Broadcast::routes();
+        $this->app->make(\Illuminate\Contracts\Broadcasting\Factory::class)->routes();
 
         require_once base_path('routes/channels.php');
     }

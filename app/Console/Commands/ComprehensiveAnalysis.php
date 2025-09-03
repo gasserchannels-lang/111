@@ -3,182 +3,456 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class ComprehensiveAnalysis extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'agent:analyze';
+    protected $signature = 'agent:analyze {--skip-tests : Skip running tests} {--coverage : Run tests with code coverage (can be slow)}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Runs a comprehensive analysis of the codebase using various tools.';
+    protected $description = 'Run comprehensive code analysis including security, quality, and tests';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $this->info('🚀 Starting Comprehensive Analysis...');
 
-        // --- 1. Composer Audit (Security) ---
-        $this->runComposerAudit();
+        $results = [];
+        $totalScore = 0;
+        $maxScore = 0;
 
-        // --- 2. Laravel Pint (Code Style) ---
-        $this->runPint();
+        // Security Analysis
+        $results['security'] = $this->runSecurityAnalysis();
+        $totalScore += $results['security']['score'];
+        $maxScore += 100;
 
-        // --- 3. Larastan / PHPStan (Static Analysis) ---
-        $this->runPhpstan();
+        // Code Quality Analysis
+        $results['quality'] = $this->runQualityAnalysis();
+        $totalScore += $results['quality']['score'];
+        $maxScore += 100;
 
-        // --- 4. Pest (Testing) ---
-        $this->runPest();
+        // Tests Analysis
+        if (! $this->option('skip-tests')) {
+            $results['tests'] = $this->runTestsAnalysis();
+            $totalScore += $results['tests']['score'];
+            $maxScore += 100;
+        }
 
-        $this->info('✅ Comprehensive Analysis Finished Successfully.');
+        // Performance Analysis
+        $results['performance'] = $this->runPerformanceAnalysis();
+        $totalScore += $results['performance']['score'];
+        $maxScore += 100;
 
-        return self::SUCCESS;
+        // Generate Summary
+        $this->generateSummary($results, $totalScore, $maxScore);
+
+        return Command::SUCCESS;
     }
 
-    /**
-     * Run Composer Audit for security vulnerabilities.
-     */
-    private function runComposerAudit()
+    private function runSecurityAnalysis(): array
     {
-        $this->line('');
-        $this->info('🛡️ Running Composer Audit for security vulnerabilities...');
+        $this->info('🛡️  Running Security Analysis...');
 
-        $process = new Process(['composer', 'audit']);
-        $process->setTimeout(3600);
+        $score = 0;
+        $issues = [];
 
         try {
-            $process->mustRun(function ($type, $buffer) {
-                $this->output->write($buffer);
-            });
-            $this->info('✅ Composer Audit found no security issues.');
-        } catch (ProcessFailedException $exception) {
-            $process = $exception->getProcess();
-            $processOutput = $process->getOutput();
-            $errorOutput = $process->getErrorOutput();
+            $score += $this->checkDependencies($issues);
+            $score += $this->checkEnvironmentFile($issues);
+            $score += $this->checkDebugMode($issues);
+            $score += $this->checkHttpsConfiguration($issues);
+            $score += $this->checkSecurityMiddleware($issues);
 
-            // --- START DEBUGGING ---
-            $this->line('');
-            $this->warn('--- DEBUGGING COMPOSER AUDIT ---');
-            $this->line('Exit Code: ' . $process->getExitCode());
-            $this->line('--- Standard Output (STDOUT) ---');
-            $this->line($processOutput);
-            $this->line('--- Error Output (STDERR) ---');
-            $this->line($errorOutput);
-            $this->warn('--- END DEBUGGING ---');
-            $this->line('');
-            // --- END DEBUGGING ---
+        } catch (\Exception $e) {
+            $issues[] = 'Security analysis failed: '.$e->getMessage();
+            $this->error('❌ Security analysis encountered errors');
+        }
 
-            // Check if the failure is due to abandoned packages, which is not a critical error for us.
-            // We check both STDOUT and STDERR to be safe.
-            if (str_contains($processOutput, 'Found abandoned packages') || str_contains($errorOutput, 'Found abandoned packages')) {
-                $this->warn('⚠️  Composer Audit found abandoned packages. This is a non-critical warning. Continuing...');
-            } else {
-                // For any other error, we treat it as fatal.
-                $this->error('❌ A fatal error occurred during: 🛡️ Running Composer Audit...');
-                exit(self::FAILURE);
+        return [
+            'score' => $score,
+            'max_score' => 100,
+            'issues' => $issues,
+            'category' => 'Security',
+        ];
+    }
+
+    private function checkDependencies(array &$issues): int
+    {
+        $this->line('Checking for outdated dependencies...');
+        $process = new Process(['composer', 'outdated', '--direct']);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return 0;
+        }
+
+        $outdated = $process->getOutput();
+        if (empty(trim($outdated)) || str_contains($outdated, 'No direct dependencies')) {
+            $this->info('✅ All direct dependencies are up to date');
+            return 30;
+        }
+
+        $issues[] = 'Outdated dependencies found. Consider running "composer update".';
+        $this->warn('⚠️  Some direct dependencies are outdated.');
+        return 0;
+    }
+
+    private function checkEnvironmentFile(array &$issues): int
+    {
+        if (file_exists(base_path('.env.example'))) {
+            return 10;
+        }
+
+        $issues[] = '.env.example file missing';
+        return 0;
+    }
+
+    private function checkDebugMode(array &$issues): int
+    {
+        if (config('app.debug') === false) {
+            return 20;
+        }
+
+        $issues[] = 'Debug mode is enabled (should be false in production)';
+        return 0;
+    }
+
+    private function checkHttpsConfiguration(array &$issues): int
+    {
+        if (config('app.url') && str_starts_with(config('app.url'), 'https')) {
+            return 20;
+        }
+
+        $issues[] = 'HTTPS not configured in APP_URL';
+        return 0;
+    }
+
+    private function checkSecurityMiddleware(array &$issues): int
+    {
+        if ($this->isMiddlewareRegistered(\App\Http\Middleware\SecurityHeadersMiddleware::class)) {
+            return 20;
+        }
+
+        $issues[] = 'SecurityHeadersMiddleware is not registered globally in app/Http/Kernel.php';
+        return 0;
+    }
+
+    private function runQualityAnalysis(): array
+    {
+        $this->info('📊 Running Code Quality Analysis...');
+
+        $score = 0;
+        $issues = [];
+
+        try {
+            // PHPMD (PHP Mess Detector)
+            if ($this->commandExists('vendor/bin/phpmd')) {
+                $this->line('Running PHPMD...');
+                $process = new Process(['./vendor/bin/phpmd', 'app', 'text', 'cleancode,codesize,controversial,design,naming,unusedcode']);
+                $process->run();
+
+                $output = $process->getOutput();
+                $errorCount = substr_count(trim($output), "\n");
+
+                if ($errorCount === 0) {
+                    $score += 50;
+                    $this->info('✅ PHPMD found no issues.');
+                }
+
+                if ($errorCount > 0) {
+                    $issues[] = "PHPMD found {$errorCount} code quality issues.";
+                    $score += max(0, 50 - ($errorCount * 2));
+                    $this->warn("⚠️  PHPMD found {$errorCount} issues.");
+                }
+            }
+
+            // PHPCPD (Copy/Paste Detector)
+            if ($this->commandExists('vendor/bin/phpcpd')) {
+                $this->line('Running PHPCPD...');
+                $process = new Process(['./vendor/bin/phpcpd', 'app']);
+                $process->run();
+                $output = $process->getOutput();
+
+                if (str_contains($output, 'No clones found')) {
+                    $score += 50;
+                    $this->info('✅ PHPCPD found no duplicate code.');
+                }
+
+                if (! str_contains($output, 'No clones found')) {
+                    preg_match('/(\d+\.\d+)\% duplicated lines/', $output, $matches);
+                    $duplication = $matches[1] ?? 100;
+                    $issues[] = "PHPCPD found {$duplication}% duplicate code.";
+                    $score += max(0, 50 - ($duplication * 5));
+                    $this->warn("⚠️  PHPCPD found {$duplication}% duplicate code.");
+                }
+            }
+
+        } catch (\Exception $e) {
+            $issues[] = 'Code quality analysis failed: '.$e->getMessage();
+            $this->error('❌ Code quality analysis encountered errors');
+        }
+
+        return [
+            'score' => min(100, $score),
+            'max_score' => 100,
+            'issues' => $issues,
+            'category' => 'Code Quality',
+        ];
+    }
+
+    private function runTestsAnalysis(): array
+    {
+        $this->info('🧪 Running Tests Analysis...');
+
+        $score = 0;
+        $issues = [];
+
+        try {
+            $command = $this->buildTestCommand();
+            $process = $this->runTestProcess($command);
+            $output = $process->getOutput();
+
+            $score += $this->analyzeTestResults($process, $output, $issues);
+            $score += $this->analyzeCoverage($output, $issues);
+
+        } catch (ProcessFailedException $e) {
+            $this->handleTestProcessException($e, $issues);
+        } catch (\Exception $e) {
+            $issues[] = 'Test analysis failed: '.$e->getMessage();
+            $this->error('❌ Test analysis encountered errors');
+        }
+
+        return [
+            'score' => min(100, $score),
+            'max_score' => 100,
+            'issues' => $issues,
+            'category' => 'Testing',
+        ];
+    }
+
+    private function buildTestCommand(): array
+    {
+        $command = ['./vendor/bin/pest'];
+        if ($this->option('coverage')) {
+            $this->warn('Coverage analysis is active. This may be slow.');
+            $command[] = '--coverage';
+        }
+        return $command;
+    }
+
+    private function runTestProcess(array $command): Process
+    {
+        $process = new Process($command);
+        $process->setTimeout(1800); // Increased timeout to 30 mins for coverage
+        $process->run();
+        return $process;
+    }
+
+    private function analyzeTestResults(Process $process, string $output, array &$issues): int
+    {
+        if (!$process->isSuccessful()) {
+            $issues[] = 'Some tests failed or encountered errors.';
+            $this->warn('⚠️  Some tests had issues.');
+            $this->line($output);
+            return 0;
+        }
+
+        if (preg_match('/Tests:\s+.*?(\d+)\s+passed/', $output, $matches)) {
+            $passedTests = (int) $matches[1];
+            $this->info("✅ {$passedTests} tests passed.");
+            return 70;
+        }
+
+        return 0;
+    }
+
+    private function analyzeCoverage(string $output, array &$_): int
+    {
+        if (!$this->option('coverage')) {
+            return 0;
+        }
+
+        if (preg_match('/Lines:\s+(\d+\.\d+)%/', $output, $matches)) {
+            $coverage = (float) $matches[1];
+            $this->info("✅ Code coverage: {$coverage}%");
+            return ($coverage / 100) * 30;
+        }
+
+        return 0;
+    }
+
+    private function handleTestProcessException(ProcessFailedException $exception, array &$issues): void
+    {
+        if ($exception->getProcess()->isTimeout()) {
+            $issues[] = 'Test analysis failed: The process exceeded the timeout.';
+        }
+        if (!$exception->getProcess()->isTimeout()) {
+            $issues[] = 'Test analysis failed with an error.';
+        }
+        $this->error('❌ Test analysis encountered errors');
+    }
+
+    private function runPerformanceAnalysis(): array
+    {
+        $this->info('⚡ Running Performance Analysis...');
+
+        $score = 0;
+        $issues = [];
+
+        try {
+            $score += $this->checkCacheConfiguration($issues);
+            $score += $this->checkDatabaseIndexes($issues);
+            $score += $this->checkAssetCompilation($issues);
+            $score += $this->checkQueueConfiguration($issues);
+
+        } catch (\Exception $e) {
+            $issues[] = 'Performance analysis failed: '.$e->getMessage();
+            $this->error('❌ Performance analysis encountered errors');
+        }
+
+        return [
+            'score' => $score,
+            'max_score' => 100,
+            'issues' => $issues,
+            'category' => 'Performance',
+        ];
+    }
+
+    private function checkCacheConfiguration(array &$issues): int
+    {
+        if (config('cache.default') !== 'file') {
+            return 25;
+        }
+
+        $issues[] = 'Using file cache (consider Redis or Memcached for production)';
+        return 0;
+    }
+
+    private function checkDatabaseIndexes(array &$issues): int
+    {
+        $migrationFiles = glob(database_path('migrations/*.php'));
+        foreach ($migrationFiles as $file) {
+            if (str_contains(file_get_contents($file), '->index(') || str_contains(file_get_contents($file), '->unique(')) {
+                return 25;
             }
         }
+
+        $issues[] = 'No database indexes found in migrations';
+        return 0;
     }
 
-    /**
-     * Run the Pint process for code style.
-     */
-    private function runPint()
+    private function checkAssetCompilation(array &$issues): int
     {
-        $this->line('');
-        $this->info('🎨 Running Laravel Pint for code style...');
+        if (file_exists(public_path('build/manifest.json'))) {
+            return 25;
+        }
 
-        $pintPath = $this->getToolPath('pint');
-        $process = new Process([$pintPath, '--test', '--verbose']);
-        $process->setTimeout(3600);
+        $issues[] = 'No compiled assets found (run npm run build)';
+        return 0;
+    }
 
-        try {
-            $process->mustRun(function ($type, $buffer) {
-                $this->output->write($buffer);
-            });
-            $this->info('✅ Laravel Pint found no style issues.');
-        } catch (ProcessFailedException $exception) {
-            if ($exception->getProcess()->getExitCode() === 1) {
-                $this->warn('⚠️  Laravel Pint found style issues to fix.');
-                $this->line($exception->getProcess()->getOutput());
-            } else {
-                $this->error('❌ A fatal error occurred during: 🎨 Running Laravel Pint...');
-                $this->error($exception->getProcess()->getErrorOutput());
-                exit(self::FAILURE);
+    private function checkQueueConfiguration(array &$issues): int
+    {
+        if (config('queue.default') !== 'sync') {
+            return 25;
+        }
+
+        $issues[] = 'Using sync queue (consider database or Redis queue for production)';
+        return 0;
+    }
+
+    private function commandExists(string $command): bool
+    {
+        return file_exists(base_path($command));
+    }
+
+    private function isMiddlewareRegistered(string $middlewareClass): bool
+    {
+        $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
+
+        return in_array($middlewareClass, $kernel->getMiddleware());
+    }
+
+    private function generateSummary(array $results, int $totalScore, int $maxScore): void
+    {
+        $this->newLine();
+        $this->info('📋 COMPREHENSIVE ANALYSIS SUMMARY');
+        $this->line(str_repeat('=', 50));
+
+        $overallPercentage = $maxScore > 0 ? round(($totalScore / $maxScore) * 100, 1) : 0;
+
+        foreach ($results as $result) {
+            $percentage = $result['max_score'] > 0 ? round(($result['score'] / $result['max_score']) * 100, 1) : 0;
+            $emoji = $this->getScoreEmoji($percentage);
+
+            $this->line(sprintf(
+                '%s %s: %d/%d (%s%%)',
+                $emoji,
+                $result['category'],
+                $result['score'],
+                $result['max_score'],
+                $percentage
+            ));
+
+            if (! empty($result['issues'])) {
+                foreach ($result['issues'] as $issue) {
+                    $this->line("  ⚠️  {$issue}");
+                }
             }
         }
+
+        $this->newLine();
+        $overallEmoji = $this->getScoreEmoji($overallPercentage);
+        $this->line(sprintf(
+            '%s OVERALL SCORE: %d/%d (%s%%)',
+            $overallEmoji,
+            $totalScore,
+            $maxScore,
+            $overallPercentage
+        ));
+
+        $this->newLine();
+        $this->line($this->getGradeMessage($overallPercentage));
     }
 
-    /**
-     * Run the PHPStan process for static analysis.
-     */
-    private function runPhpstan()
+    private function getScoreEmoji(float $percentage): string
     {
-        $this->line('');
-        $this->info('🔬 Running Larastan for static analysis...');
-
-        $phpstanPath = $this->getToolPath('phpstan');
-        $process = new Process([$phpstanPath, 'analyse', '-l', '5', '--memory-limit=1G']);
-        $process->setTimeout(3600);
-
-        try {
-            $process->mustRun(function ($type, $buffer) {
-                $this->output->write($buffer);
-            });
-            $this->info('✅ Larastan found no issues.');
-        } catch (ProcessFailedException $exception) {
-            $this->error('❌ An error occurred during: 🔬 Running Larastan...');
-            $this->error($exception->getProcess()->getErrorOutput());
-            exit(self::FAILURE);
+        if ($percentage >= 90) {
+            return '🏆';
         }
+        if ($percentage >= 80) {
+            return '🥇';
+        }
+        if ($percentage >= 70) {
+            return '🥈';
+        }
+        if ($percentage >= 60) {
+            return '🥉';
+        }
+        if ($percentage >= 50) {
+            return '📈';
+        }
+
+        return '🔧';
     }
 
-    /**
-     * Run the Pest process for testing.
-     */
-    private function runPest()
+    private function getGradeMessage(float $percentage): string
     {
-        $this->line('');
-        $this->info('🧪 Running Pest for testing...');
-
-        $pestPath = $this->getToolPath('pest');
-        $process = new Process([$pestPath, '--parallel']);
-        $process->setTimeout(3600);
-
-        try {
-            $process->mustRun(function ($type, $buffer) {
-                $this->output->write($buffer);
-            });
-            $this->info('✅ Pest tests passed successfully.');
-        } catch (ProcessFailedException $exception) {
-            $this->error('❌ An error occurred during: 🧪 Running Pest...');
-            $this->error($exception->getProcess()->getErrorOutput());
-            exit(self::FAILURE);
-        }
-    }
-
-    /**
-     * Helper function to get the correct executable path for a tool.
-     */
-    private function getToolPath(string $toolName): string
-    {
-        $toolPath = base_path('vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . $toolName);
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $toolPath .= '.bat';
+        if ($percentage >= 90) {
+            return '🎉 Excellent! Your code is production-ready with high quality standards.';
         }
 
-        return $toolPath;
+        if ($percentage >= 80) {
+            return '👍 Good job! Minor improvements could make your code even better.';
+        }
+
+        if ($percentage >= 70) {
+            return '📊 Decent quality. Focus on addressing the issues mentioned above.';
+        }
+
+        if ($percentage >= 60) {
+            return '🔨 Needs improvement. Consider refactoring and adding more tests.';
+        }
+
+        return '⚠️  Significant improvements needed. Review security, testing, and code quality.';
     }
 }

@@ -60,9 +60,13 @@ class UserLocaleSetting extends Model
 
         if ($userId) {
             $query->where('user_id', $userId);
-        } elseif ($sessionId) {
+        }
+
+        if (! $userId && $sessionId) {
             $query->where('session_id', $sessionId);
-        } else {
+        }
+
+        if (! $userId && ! $sessionId) {
             return null;
         }
 
@@ -92,11 +96,19 @@ class UserLocaleSetting extends Model
                 ['user_id' => $userId],
                 $attributes
             );
-        } else {
+        }
+
+        if (! $userId && $sessionId) {
             return static::updateOrCreate(
                 ['session_id' => $sessionId],
                 $attributes
             );
         }
+
+        // Fallback case
+        return static::updateOrCreate(
+            ['session_id' => $sessionId],
+            $attributes
+        );
     }
 }

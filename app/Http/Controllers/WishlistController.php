@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Wishlist;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
+    private Guard $auth;
+
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
+
     // تم إضافة هذا الثابت لتقليل التكرار
     private const VALIDATION_RULE_PRODUCT_ID = 'required|exists:products,id';
 
@@ -18,7 +25,7 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        $wishlistItems = Auth::user()->wishlist()->with('product')->get();
+        $wishlistItems = $this->auth->user()->wishlist()->with('product')->get();
 
         return view('wishlist.index', ['wishlistItems' => $wishlistItems]);
     }
@@ -33,7 +40,7 @@ class WishlistController extends Controller
         ]);
 
         // التحقق من أن المنتج ليس في المفضلة بالفعل
-        $existingWishlist = Wishlist::where('user_id', Auth::id())
+        $existingWishlist = $this->auth->user()->wishlist()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -44,8 +51,7 @@ class WishlistController extends Controller
             ]);
         }
 
-        Wishlist::create([
-            'user_id' => Auth::id(),
+        $this->auth->user()->wishlist()->create([
             'product_id' => $request->product_id,
         ]);
 
@@ -64,7 +70,7 @@ class WishlistController extends Controller
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
-        $wishlist = Wishlist::where('user_id', Auth::id())
+        $wishlist = $this->auth->user()->wishlist()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -92,7 +98,7 @@ class WishlistController extends Controller
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
-        $wishlist = Wishlist::where('user_id', Auth::id())
+        $wishlist = $this->auth->user()->wishlist()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -101,14 +107,13 @@ class WishlistController extends Controller
             $wishlist->delete();
 
             return response()->json(['status' => 'removed', 'in_wishlist' => false]);
-        } else {
-            // إذا لم يكن موجودًا، قم بإضافته
-            Wishlist::create([
-                'user_id' => Auth::id(),
-                'product_id' => $request->product_id,
-            ]);
-
-            return response()->json(['status' => 'added', 'in_wishlist' => true]);
         }
+
+        // إذا لم يكن موجودًا، قم بإضافته
+        $this->auth->user()->wishlist()->create([
+            'product_id' => $request->product_id,
+        ]);
+
+        return response()->json(['status' => 'added', 'in_wishlist' => true]);
     }
 }

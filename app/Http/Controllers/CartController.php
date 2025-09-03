@@ -5,17 +5,28 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Darryldecode\Cart\Facades\CartFacade as Cart;
+use Darryldecode\Cart\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Livewire\LivewireManager;
 
 class CartController extends Controller
 {
+    private Cart $cart;
+
+    private LivewireManager $livewire;
+
+    public function __construct(Cart $cart, LivewireManager $livewire)
+    {
+        $this->cart = $cart;
+        $this->livewire = $livewire;
+    }
+
     public function index(): View
     {
-        $cartItems = Cart::getContent();
-        $total = Cart::getTotal();
+        $cartItems = $this->cart->getContent();
+        $total = $this->cart->getTotal();
 
         return view('cart-index', [
             'cartItems' => $cartItems,
@@ -23,16 +34,13 @@ class CartController extends Controller
         ]);
     }
 
-    public function add(Request $request): RedirectResponse
+    public function add(Request $request, Product $product): RedirectResponse
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $product = Product::findOrFail($request->product_id);
-
-        Cart::add([
+        $this->cart->add([
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
@@ -43,7 +51,7 @@ class CartController extends Controller
             ],
         ]);
 
-        Livewire::dispatch('cartUpdated');
+        $this->livewire->dispatch('cartUpdated');
 
         return redirect()->back()->with('success', 'Product added to cart!');
     }
@@ -55,32 +63,32 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        Cart::update($request->id, [
+        $this->cart->update($request->id, [
             'quantity' => [
                 'relative' => false,
                 'value' => $request->quantity,
             ],
         ]);
 
-        Livewire::dispatch('cartUpdated');
+        $this->livewire->dispatch('cartUpdated');
 
         return redirect()->back()->with('success', 'Cart updated!');
     }
 
-    public function remove(string $id): RedirectResponse
+    public function remove(string $itemId): RedirectResponse
     {
-        Cart::remove($id);
+        $this->cart->remove($itemId);
 
-        Livewire::dispatch('cartUpdated');
+        $this->livewire->dispatch('cartUpdated');
 
         return redirect()->back()->with('success', 'Item removed from cart!');
     }
 
     public function clear(): RedirectResponse
     {
-        Cart::clear();
+        $this->cart->clear();
 
-        Livewire::dispatch('cartUpdated');
+        $this->livewire->dispatch('cartUpdated');
 
         return redirect()->back()->with('success', 'Cart cleared!');
     }
