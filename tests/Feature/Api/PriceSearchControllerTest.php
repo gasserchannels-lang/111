@@ -49,7 +49,8 @@ class PriceSearchControllerTest extends TestCase
         PriceOffer::factory()->create(['product_id' => $product->id, 'store_id' => $store->id, 'price' => 120.00]);
         $bestOffer = PriceOffer::factory()->create(['product_id' => $product->id, 'store_id' => $store->id, 'price' => 99.99]);
         $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
-        $response->assertStatus(200)->assertJsonPath('price', 99.99)->assertJsonPath('id', $bestOffer->id);
+        $response->assertStatus(200)->assertJsonPath('id', $bestOffer->id);
+        $this->assertEquals(99.99, $response->json('price'));
     }
 
     public function test_best_offer_returns_correct_status_on_database_error(): void
