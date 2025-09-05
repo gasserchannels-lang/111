@@ -43,7 +43,7 @@ class SecurityAnalysisService
         $process = new Process(['composer', 'outdated', '--direct']);
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             return 0;
         }
 
@@ -53,6 +53,7 @@ class SecurityAnalysisService
         }
 
         $issues[] = 'Outdated dependencies found. Consider running "composer update".';
+
         return 0;
     }
 
@@ -66,6 +67,7 @@ class SecurityAnalysisService
         }
 
         $issues[] = '.env.example file missing';
+
         return 0;
     }
 
@@ -79,6 +81,7 @@ class SecurityAnalysisService
         }
 
         $issues[] = 'Debug mode is enabled (should be false in production)';
+
         return 0;
     }
 
@@ -92,6 +95,7 @@ class SecurityAnalysisService
         }
 
         $issues[] = 'HTTPS not configured in APP_URL';
+
         return 0;
     }
 
@@ -105,6 +109,7 @@ class SecurityAnalysisService
         }
 
         $issues[] = 'SecurityHeadersMiddleware is not registered globally in app/Http/Kernel.php';
+
         return 0;
     }
 
@@ -115,23 +120,23 @@ class SecurityAnalysisService
     {
         try {
             // Check if class exists first
-            if (!class_exists($middlewareClass)) {
+            if (! class_exists($middlewareClass)) {
                 return false;
             }
-            
+
             // For Laravel 10+, we need to check the kernel file directly
             $kernelFile = app_path('Http/Kernel.php');
-            if (!file_exists($kernelFile)) {
+            if (! file_exists($kernelFile)) {
                 return false;
             }
-            
+
             $kernelContent = file_get_contents($kernelFile);
             $shortClassName = class_basename($middlewareClass);
-            
+
             // Check if middleware is registered in any of the arrays
-            return str_contains($kernelContent, $middlewareClass) || 
+            return str_contains($kernelContent, $middlewareClass) ||
                    str_contains($kernelContent, $shortClassName);
-                   
+
         } catch (\Exception $e) {
             return false;
         }

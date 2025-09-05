@@ -29,4 +29,3 @@ class Kernel extends ConsoleKernel
         require_once base_path('routes/console.php');
     }
 }
-

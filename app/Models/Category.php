@@ -34,7 +34,7 @@ class Category extends Model
 
     /**
      * Parent category relationship.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Category>
      */
     public function parent(): BelongsTo
@@ -44,7 +44,7 @@ class Category extends Model
 
     /**
      * Children categories relationship.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Category, \App\Models\Category>
      */
     public function children(): HasMany
@@ -54,7 +54,7 @@ class Category extends Model
 
     /**
      * Products relationship.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, \App\Models\Category>
      */
     public function products(): HasMany

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ *
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\User $user
  */

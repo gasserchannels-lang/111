@@ -1,0 +1,151 @@
+
+.database\factories\categoryfactory::definitionX
+N/home/runner/work/my-website/my-website/database/factories/CategoryFactory.php ("1*î
+1 (
+
+ (	
+%1"$Arrayg
+e
+ ("
+%2"__id*M
+
+__unknown_file (1*/$
+"database\factories\categoryfactory"
+fakerÜÉ
+ (2
+%3*"
+
+__unknown_file (
+
+%2* 
+
+__unknown_file (2*$
+
+__unknown_file (
+true2wordsã
+à
+ (	
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%3g
+e
+ ("
+%5"__id*M
+
+__unknown_file (1*/$
+"database\factories\categoryfactory"
+fakerF
+D
+ ((
+%6"__id*,
+
+__unknown_file (*
+
+%5"
+slugã
+à
+ (	
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+slug*"
+
+__unknown_file (
+
+%6g
+e
+ ()
+%8"__id*M
+
+__unknown_file (1*/$
+"database\factories\categoryfactory"
+fakerJ
+H
+ (3
+%9"__id*0
+
+__unknown_file (*
+
+%8"
+
+sentenceì
+ê
+ (	
+%10"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+description*"
+
+__unknown_file (
+
+%9h
+f
+ ('
+%11"__id*M
+
+__unknown_file (1*/$
+"database\factories\categoryfactory"
+fakerµ≤
+ (I
+%12*#
+
+__unknown_file (
+
+%11*!
+
+__unknown_file (2¨*!
+
+__unknown_file (2¨**
+
+__unknown_file (
+
+categories2imageurlí
+è
+ (	
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	image_url*#
+
+__unknown_file (
+
+%12ì
+ê
+ (	
+%14"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	is_active*$
+
+__unknown_file (
+true"
+ (
+
+
+%1B&$
+"database\factories\categoryfactoryH

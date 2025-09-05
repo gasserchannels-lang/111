@@ -21,6 +21,7 @@ class TestAnalysisServiceFactory
     public function createWithCoverage(): TestAnalysisService
     {
         $this->testAnalysisService = new TestAnalysisService(true);
+
         return $this->testAnalysisService;
     }
 }

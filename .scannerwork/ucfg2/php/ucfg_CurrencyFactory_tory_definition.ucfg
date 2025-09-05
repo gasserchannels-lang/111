@@ -1,0 +1,104 @@
+
+.database\factories\currencyfactory::definitionX
+N/home/runner/work/my-website/my-website/database/factories/CurrencyFactory.php ("1*§
+1 (
+
+ (	
+%1"$Arrayg
+e
+ ("
+%2"__id*M
+
+__unknown_file (1*/$
+"database\factories\currencyfactory"
+faker><
+ (,
+%3*"
+
+__unknown_file (
+
+%22uniqueN
+L
+ (:
+%4"__id*4
+
+__unknown_file (*
+
+%3"
+currencyCodeI
+G
+ (D
+%5"__concat*
+ (:
+
+%4*
+; (D	
+ Dollar‹
+ˆ
+ (	
+%6"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%5g
+e
+ ("
+%7"__id*M
+
+__unknown_file (1*/$
+"database\factories\currencyfactory"
+faker><
+ (,
+%8*"
+
+__unknown_file (
+
+%72uniqueN
+L
+ (:
+%9"__id*4
+
+__unknown_file (*
+
+%8"
+currencyCodeŒ
+‰
+ (	
+%10"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+code*"
+
+__unknown_file (
+
+%9
+Š
+ (	
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+symbol*!
+
+__unknown_file (
+$"
+ (
+
+
+%1B&$
+"database\factories\currencyfactoryH

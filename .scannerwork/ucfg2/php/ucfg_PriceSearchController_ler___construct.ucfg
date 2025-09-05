@@ -1,0 +1,44 @@
+
+;app\http\controllers\api\pricesearchcontroller::__constructd
+Z/home/runner/work/my-website/my-website/app/Http/Controllers/Api/PriceSearchController.php ("1*A
+2
+PriceSearchController.php"
+ (
+implicit return*Ä
+1 (6Ü
+É
+ (
+$validationFactory"__id*[
+
+__unknown_file (?
+=
+$validationFactory'illuminate\contracts\validation\factory[
+Y
+ (
+$log"__id*?
+
+__unknown_file (#
+!
+$logilluminate\log\logmanagerê
+ç
+ (5G0
+.app\http\controllers\api\pricesearchcontroller"
+validationFactory"__id*2
+
+__unknown_file (
+
+$validationFactorys
+q
+ (90
+.app\http\controllers\api\pricesearchcontroller"
+log"__id*$
+
+__unknown_file (
+
+$log*
+2:I
+  (D=
+$validationFactory'illuminate\contracts\validation\factory:-
+F (U!
+$logilluminate\log\logmanagerB20
+.app\http\controllers\api\pricesearchcontrollerH

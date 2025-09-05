@@ -1,0 +1,119 @@
+
+.database\factories\languagefactory::definitionX
+N/home/runner/work/my-website/my-website/database/factories/LanguageFactory.php ("1*ä	
+1 (
+
+ (	
+%1"$Arrayg
+e
+ ("
+%2"__id*M
+
+__unknown_file (1*/$
+"database\factories\languagefactory"
+faker><
+ (,
+%3*"
+
+__unknown_file (
+
+%22uniqueN
+L
+ (:
+%4"__id*4
+
+__unknown_file (*
+
+%3"
+languageCode‹
+ˆ
+ (	
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+code*"
+
+__unknown_file (
+
+%4g
+e
+ ("
+%6"__id*M
+
+__unknown_file (1*/$
+"database\factories\languagefactory"
+fakerF
+D
+ ((
+%7"__id*,
+
+__unknown_file (*
+
+%6"
+word‹
+ˆ
+ (	
+%8"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%7g
+e
+ ()
+%9"__id*M
+
+__unknown_file (1*/$
+"database\factories\languagefactory"
+fakerG
+E
+ (/
+%10"__id*,
+
+__unknown_file (*
+
+%9"
+word”
+‘
+ (	
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+native_name*#
+
+__unknown_file (
+
+%10•
+’
+ (	
+%12"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+is_default*%
+
+__unknown_file (	
+false"
+ (
+
+
+%1B&$
+"database\factories\languagefactoryH

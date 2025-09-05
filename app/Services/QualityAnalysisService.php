@@ -37,7 +37,7 @@ class QualityAnalysisService
      */
     private function runPhpmdAnalysis(array &$issues): int
     {
-        if (!$this->commandExists('vendor/bin/phpmd')) {
+        if (! $this->commandExists('vendor/bin/phpmd')) {
             return 0;
         }
 
@@ -52,6 +52,7 @@ class QualityAnalysisService
         }
 
         $issues[] = "PHPMD found {$errorCount} code quality issues.";
+
         return max(0, 50 - ($errorCount * 2));
     }
 
@@ -60,7 +61,7 @@ class QualityAnalysisService
      */
     private function runPhpcpdAnalysis(array &$issues): int
     {
-        if (!$this->commandExists('vendor/bin/phpcpd')) {
+        if (! $this->commandExists('vendor/bin/phpcpd')) {
             return 0;
         }
 
@@ -75,6 +76,7 @@ class QualityAnalysisService
         preg_match('/(\d+\.\d+)\% duplicated lines/', $output, $matches);
         $duplication = $matches[1] ?? 100;
         $issues[] = "PHPCPD found {$duplication}% duplicate code.";
+
         return max(0, 50 - ($duplication * 5));
     }
 

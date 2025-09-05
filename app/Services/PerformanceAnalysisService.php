@@ -42,6 +42,7 @@ class PerformanceAnalysisService
         }
 
         $issues[] = 'Using file cache (consider Redis or Memcached for production)';
+
         return 0;
     }
 
@@ -58,6 +59,7 @@ class PerformanceAnalysisService
         }
 
         $issues[] = 'No database indexes found in migrations';
+
         return 0;
     }
 
@@ -71,6 +73,7 @@ class PerformanceAnalysisService
         }
 
         $issues[] = 'No compiled assets found (run npm run build)';
+
         return 0;
     }
 
@@ -84,6 +87,7 @@ class PerformanceAnalysisService
         }
 
         $issues[] = 'Using sync queue (consider database or Redis queue for production)';
+
         return 0;
     }
 }

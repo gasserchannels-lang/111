@@ -1,6 +1,7 @@
-projectKey=coprra_project
-serverUrl=https://04c7a33e1369.ngrok-free.app
-serverVersion=9.9.8.100196
-dashboardUrl=https://04c7a33e1369.ngrok-free.app/dashboard?id=coprra_project
-ceTaskId=AZjgxvaMGvjxQjDVSDb8
-ceTaskUrl=https://04c7a33e1369.ngrok-free.app/api/ce/task?id=AZjgxvaMGvjxQjDVSDb8
+organization=gasseraly
+projectKey=gasseraly_my-website
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.66870
+dashboardUrl=https://sonarcloud.io/dashboard?id=gasseraly_my-website&branch=main
+ceTaskId=AZkbsKoDevCajDlPx-Mh
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZkbsKoDevCajDlPx-Mh

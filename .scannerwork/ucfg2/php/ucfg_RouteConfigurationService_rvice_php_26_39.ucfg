@@ -1,0 +1,79 @@
+
+g__sonar_lambda_/home/runner/work/my-website/my-website/app/Services/RouteConfigurationService.php_26_39\
+R/home/runner/work/my-website/my-website/app/Services/RouteConfigurationService.php' (/"1*’
+3E (S@>
+E (S
+%6*(
+
+__unknown_file (
+
+
+$request2ip<
+:
+, (S
+%5"__id*"
+
+__unknown_file (
+
+%6*
+4*
+4S (S^\
+ (T
+%7*"
+
+__unknown_file (
+
+%2*"
+
+__unknown_file (
+
+%52by"
+ (U
+
+%7*
+1 (U 
+
+' (/
+%1"__entrypoint¼¹
+' (/#
+$requestilluminate\http\request".illuminate\http\request::__sonar_inject_symbol*A
+
+__unknown_file (%
+#
+$requestilluminate\http\request2__sonar_inject_symbola
+_
+' (/
+
+$request"__id*A
+
+__unknown_file (%
+#
+$requestilluminate\http\requestª
+§
+ ('
+%2".illuminate\cache\ratelimiting\limit::perminute*C
+
+__unknown_file ('"%
+#illuminate\cache\ratelimiting\limit* 
+
+__unknown_file (2<B@
+, (<
+%3*(
+
+__unknown_file (
+
+
+$request2userD
+B
+, (A
+%4"__id**
+
+__unknown_file (*
+
+%3"
+id*
+3
+4:/
+1 (A#
+$requestilluminate\http\requestB*(
+&app\services\routeconfigurationserviceH

@@ -1,0 +1,53 @@
+
+.database\factories\wishlistfactory::definitionX
+N/home/runner/work/my-website/my-website/database/factories/WishlistFactory.php ("1*¦
+1 (
+
+ (	
+%1"$Array]
+[
+ ((
+%2"app\models\user::factory*/
+
+__unknown_file ("
+app\models\userŽ
+‹
+ (	
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+user_id*"
+
+__unknown_file (
+
+%2c
+a
+ (.
+%4"app\models\product::factory*2
+
+__unknown_file ("
+app\models\product‘
+Ž
+ (	
+%5"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+product_id*"
+
+__unknown_file (
+
+%4"
+ (
+
+
+%1B&$
+"database\factories\wishlistfactoryH

@@ -55,14 +55,14 @@ class LocaleMiddleware
     {
         $browserLangCode = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
         $dbLangCode = Language::where('code', $browserLangCode)->value('code');
-        
+
         if ($dbLangCode) {
             return $dbLangCode;
         }
 
         // إذا لم تكن لغة المتصفح مدعومة، استخدم اللغة الافتراضية من قاعدة البيانات
         $defaultDbLang = Language::where('is_default', true)->value('code');
-        
+
         return $defaultDbLang ?: config('app.fallback_locale', 'en');
     }
 }

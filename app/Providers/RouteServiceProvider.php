@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Services\RouteConfigurationService;
@@ -23,10 +25,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         $rateLimiter = $this->app->make(\Illuminate\Cache\RateLimiter::class);
         $router = $this->app->make(\Illuminate\Contracts\Routing\Registrar::class);
-        
+
         $routeConfigService = new RouteConfigurationService($rateLimiter, $router);
         $routeConfigService->configureRateLimiting();
-        
+
         $this->routes(function () use ($routeConfigService): void {
             $routeConfigService->configureRoutes();
         });

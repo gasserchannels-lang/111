@@ -41,8 +41,8 @@ class Store extends Model
 
     public function generateAffiliateUrl(string $productUrl): string
     {
-        if (empty($this->affiliate_base_url) || 
-            empty($this->api_config) || 
+        if (empty($this->affiliate_base_url) ||
+            empty($this->api_config) ||
             empty($this->api_config['affiliate_code'])) {
             return $productUrl;
         }

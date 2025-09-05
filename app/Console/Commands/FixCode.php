@@ -57,6 +57,7 @@ class FixCode extends Command
                 }
             });
             $this->info('✅ Tool finished successfully.');
+
             return self::SUCCESS;
         } catch (ProcessFailedException $exception) {
             $this->error('❌ A fatal error occurred during: '.$message);

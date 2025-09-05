@@ -1,0 +1,63 @@
+
+2app\http\controllers\localecontroller::__construct[
+Q/home/runner/work/my-website/my-website/app/Http/Controllers/LocaleController.php ("1*<
+2
+LocaleController.php"
+ (
+implicit return*¤
+1 (c
+a
+ (
+$auth"__id*F
+
+__unknown_file (*
+(
+$authilluminate\contracts\auth\guardn
+l
+ (
+
+$session"__id*N
+
+__unknown_file (2
+0
+$session$illuminate\contracts\session\sessionm
+k
+ (
+$app"__id*Q
+
+__unknown_file (5
+3
+$app+illuminate\contracts\foundation\applicationl
+j
+ (1'
+%app\http\controllers\localecontroller"
+auth"__id*%
+
+__unknown_file (	
+
+$authr
+p
+ (!4'
+%app\http\controllers\localecontroller"	
+session"__id*(
+
+__unknown_file (
+
+
+$sessionj
+h
+ (0'
+%app\http\controllers\localecontroller"
+app"__id*$
+
+__unknown_file (
+
+$app*
+2:4
+  (+(
+$authilluminate\contracts\auth\guard:<
+- (=0
+$session$illuminate\contracts\session\session:?
+? (O3
+$app+illuminate\contracts\foundation\applicationB)'
+%app\http\controllers\localecontrollerH

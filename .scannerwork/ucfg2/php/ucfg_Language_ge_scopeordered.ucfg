@@ -1,0 +1,38 @@
+
+!app\models\language::scopeorderedI
+?/home/runner/work/my-website/my-website/app/Models/Language.phpP P( "1*4
+2
+Language.php"
+S S(
+implicit return*ë
+1R R(>x
+v
+P P( 
+$queryBuilder"__id*S
+
+__unknown_file (7
+5
+$queryBuilder$illuminate\database\eloquent\buildervt
+R R(,
+%1*-
+
+__unknown_file (
+
+$queryBuilder**
+
+__unknown_file (
+
+sort_order2orderbyec
+R R(=
+%2*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name2orderby*
+2:A
+P! P(T5
+$queryBuilder$illuminate\database\eloquent\builderB
+app\models\languageH

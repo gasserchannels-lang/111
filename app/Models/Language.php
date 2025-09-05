@@ -34,7 +34,7 @@ class Language extends Model
 
     /**
      * العملات المرتبطة بهذه اللغة
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Currency, \App\Models\Language, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
      */
     public function currencies(): BelongsToMany
@@ -46,8 +46,6 @@ class Language extends Model
 
     /**
      * العملة الافتراضية لهذه اللغة
-     * 
-     * @return \App\Models\Currency|null
      */
     public function defaultCurrency(): ?\App\Models\Currency
     {
@@ -56,7 +54,7 @@ class Language extends Model
 
     /**
      * إعدادات المستخدمين لهذه اللغة
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\UserLocaleSetting, \App\Models\Language>
      */
     public function userLocaleSettings(): HasMany
@@ -66,8 +64,8 @@ class Language extends Model
 
     /**
      * نطاق للغات النشطة فقط
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Language> $queryBuilder
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
      */
     public function scopeActive(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
     {
@@ -76,8 +74,8 @@ class Language extends Model
 
     /**
      * نطاق للغات مرتبة حسب الترتيب
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Language> $queryBuilder
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
      */
     public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
     {

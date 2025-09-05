@@ -29,10 +29,10 @@ class LocaleMiddlewareTest extends TestCase
 
         $request = Request::create('/test');
         $request->setLaravelSession(app('session.store'));
-        
+
         // Instantiate the middleware with the mock dependencies
         $middleware = new LocaleMiddleware($authMock, $sessionMock, $appMock);
-        
+
         $response = $middleware->handle($request, fn ($req) => response('OK'));
         $this->assertEquals('OK', $response->getContent());
     }

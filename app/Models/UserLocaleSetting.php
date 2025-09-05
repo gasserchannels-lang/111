@@ -34,7 +34,7 @@ class UserLocaleSetting extends Model
 
     /**
      * المستخدم المرتبط بهذا الإعداد
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\UserLocaleSetting>
      */
     public function user(): BelongsTo
@@ -44,7 +44,7 @@ class UserLocaleSetting extends Model
 
     /**
      * اللغة المحددة
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Language, \App\Models\UserLocaleSetting>
      */
     public function language(): BelongsTo
@@ -54,7 +54,7 @@ class UserLocaleSetting extends Model
 
     /**
      * العملة المحددة
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, \App\Models\UserLocaleSetting>
      */
     public function currency(): BelongsTo

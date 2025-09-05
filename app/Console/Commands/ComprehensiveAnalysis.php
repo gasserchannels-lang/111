@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\SecurityAnalysisService;
-use App\Services\QualityAnalysisService;
 use App\Services\PerformanceAnalysisService;
+use App\Services\QualityAnalysisService;
+use App\Services\SecurityAnalysisService;
 use App\Services\TestAnalysisServiceFactory;
 use Illuminate\Console\Command;
 
@@ -55,37 +55,38 @@ class ComprehensiveAnalysis extends Command
     private function runSecurityAnalysis(): array
     {
         $this->info('🛡️  Running Security Analysis...');
-        
-        $securityService = new SecurityAnalysisService();
+
+        $securityService = new SecurityAnalysisService;
         $result = $securityService->analyze();
-        
+
         // Display console output based on the results
         $this->line('Checking for outdated dependencies...');
-        if (!empty($result['issues'])) {
+        if (! empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 if (str_contains($issue, 'outdated dependencies')) {
                     $this->warn('⚠️  Some direct dependencies are outdated.');
                     break;
                 }
             }
+
             return $result;
         }
-        
+
         $this->info('✅ All direct dependencies are up to date');
-        
+
         return $result;
     }
 
     private function runQualityAnalysis(): array
     {
         $this->info('📊 Running Code Quality Analysis...');
-        
-        $qualityService = new QualityAnalysisService();
+
+        $qualityService = new QualityAnalysisService;
         $result = $qualityService->analyze();
-        
+
         // Display console output based on the results
         $this->line('Running PHPMD...');
-        if (!empty($result['issues'])) {
+        if (! empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 if (str_contains($issue, 'PHPMD found')) {
                     $this->warn("⚠️  {$issue}");
@@ -95,55 +96,59 @@ class ComprehensiveAnalysis extends Command
                     $this->warn("⚠️  {$issue}");
                 }
             }
+
             return $result;
         }
-        
+
         $this->info('✅ PHPMD found no issues.');
         $this->line('Running PHPCPD...');
         $this->info('✅ PHPCPD found no duplicate code.');
-        
+
         return $result;
     }
 
     private function runTestsAnalysis(): array
     {
         $this->info('🧪 Running Tests Analysis...');
-        
+
         if ($this->option('coverage')) {
             $this->warn('Coverage analysis is active. This may be slow.');
         }
-        
-        $testServiceFactory = new TestAnalysisServiceFactory();
-        $testService = $this->option('coverage') 
+
+        $testServiceFactory = new TestAnalysisServiceFactory;
+        $testService = $this->option('coverage')
             ? $testServiceFactory->createWithCoverage()
             : $testServiceFactory->createBasic();
         $result = $testService->analyze();
-        
+
         // Display console output based on the results
-        if (!empty($result['issues'])) {
+        if (! empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 if (str_contains($issue, 'tests failed')) {
                     $this->warn('⚠️  Some tests had issues.');
+
                     continue;
                 }
                 $this->error('❌ Test analysis encountered errors');
             }
+
             return $result;
         }
-        
-        $this->info("✅ Tests passed successfully.");
+
+        $this->info('✅ Tests passed successfully.');
         if ($this->option('coverage')) {
-            $this->info("✅ Code coverage analyzed.");
+            $this->info('✅ Code coverage analyzed.');
         }
-        
+
         return $result;
     }
 
     private function runPerformanceAnalysis(): array
     {
         $this->info('⚡ Running Performance Analysis...');
-        
-        $performanceService = new PerformanceAnalysisService();
+
+        $performanceService = new PerformanceAnalysisService;
+
         return $performanceService->analyze();
     }
 

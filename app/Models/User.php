@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ *
  * @property bool $is_admin
  */
 class User extends Authenticatable

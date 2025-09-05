@@ -1,0 +1,36 @@
+
+1app\http\middleware\localemiddleware::__constructZ
+P/home/runner/work/my-website/my-website/app/Http/Middleware/LocaleMiddleware.php ("1*€
+1
+LocaleMiddleware.phpc
+a
+ (
+$auth"__id*F
+
+__unknown_file (*
+(
+$authilluminate\contracts\auth\guardn
+l
+ (
+
+$session"__id*N
+
+__unknown_file (2
+0
+$session$illuminate\contracts\session\sessionm
+k
+ (
+$app"__id*Q
+
+__unknown_file (5
+3
+$app+illuminate\contracts\foundation\application"
+ (
+implicit return:4
+ ((
+$authilluminate\contracts\auth\guard:<
+ ( 0
+$session$illuminate\contracts\session\session:?
+ ( 3
+$app+illuminate\contracts\foundation\applicationB(&
+$app\http\middleware\localemiddlewareH

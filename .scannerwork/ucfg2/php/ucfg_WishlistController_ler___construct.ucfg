@@ -1,0 +1,27 @@
+
+4app\http\controllers\wishlistcontroller::__construct]
+S/home/runner/work/my-website/my-website/app/Http/Controllers/WishlistController.php ("1*>
+2
+WishlistController.php"
+ (
+implicit return*ç
+1 (c
+a
+ (
+$auth"__id*F
+
+__unknown_file (*
+(
+$authilluminate\contracts\auth\guardn
+l
+ (3)
+'app\http\controllers\wishlistcontroller"
+auth"__id*%
+
+__unknown_file (	
+
+$auth*
+2:4
+  (+(
+$authilluminate\contracts\auth\guardB+)
+'app\http\controllers\wishlistcontrollerH

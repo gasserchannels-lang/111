@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Routing\Registrar as Router;
 use Illuminate\Http\Request;
-use Illuminate\Cache\RateLimiter;
 
 class RouteConfigurationService
 {
     private RateLimiter $rateLimiter;
+
     private Router $router;
 
     public function __construct(RateLimiter $rateLimiter, Router $router)

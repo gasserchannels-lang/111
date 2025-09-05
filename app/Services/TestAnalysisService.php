@@ -65,6 +65,7 @@ class TestAnalysisService
         if ($this->coverageEnabled) {
             $command[] = '--coverage';
         }
+
         return $command;
     }
 
@@ -76,6 +77,7 @@ class TestAnalysisService
         $process = new Process($command);
         $process->setTimeout(1800); // Increased timeout to 30 mins for coverage
         $process->run();
+
         return $process;
     }
 
@@ -84,8 +86,9 @@ class TestAnalysisService
      */
     private function analyzeTestResults(Process $process, string $output, array &$issues): int
     {
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             $issues[] = 'Some tests failed or encountered errors.';
+
             return 0;
         }
 
@@ -101,16 +104,18 @@ class TestAnalysisService
      */
     private function analyzeCoverage(string $output, array &$issues): int
     {
-        if (!$this->coverageEnabled) {
+        if (! $this->coverageEnabled) {
             return 0;
         }
 
         if (preg_match('/Lines:\s+(\d+\.\d+)%/', $output, $matches)) {
             $coverage = (float) $matches[1];
+
             return ($coverage / 100) * 30;
         }
 
         $issues[] = 'Code coverage information not available';
+
         return 0;
     }
 
@@ -121,9 +126,10 @@ class TestAnalysisService
     {
         if ($exception->getProcess()->isTimeout()) {
             $issues[] = 'Test analysis failed: The process exceeded the timeout.';
+
             return;
         }
-        
+
         $issues[] = 'Test analysis failed with an error.';
     }
 }

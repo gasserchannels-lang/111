@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Providers;
@@ -29,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configureFactoryNaming(): void
     {
-        $factoryConfigService = new FactoryConfigurationService();
+        $factoryConfigService = new FactoryConfigurationService;
         $factoryConfigService->configureNaming();
     }
 }

@@ -31,7 +31,7 @@ class Brand extends Model
 
     /**
      * Products relationship.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, \App\Models\Brand>
      */
     public function products(): HasMany
