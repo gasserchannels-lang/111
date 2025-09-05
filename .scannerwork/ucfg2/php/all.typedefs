@@ -51,7 +51,11 @@ definition+database\factories\storefactory::definitionŒ
 definition+database\factories\brandfactory::definitionŽ
  database\factories\reviewfactory.illuminate\database\eloquent\factories\factory:
 
-definition,database\factories\reviewfactory::definitionƒ
+definition,database\factories\reviewfactory::definition¼
++app\console\commands\agentproposefixcommandilluminate\console\command=
+handle3app\console\commands\agentproposefixcommand::handle"description"	signature*
+description*
+	signatureƒ
 .app\http\controllers\api\pricesearchcontrollerapp\http\controllers\controllerJ
 __construct;app\http\controllers\api\pricesearchcontroller::__constructF
 	bestoffer9app\http\controllers\api\pricesearchcontroller::bestofferP
