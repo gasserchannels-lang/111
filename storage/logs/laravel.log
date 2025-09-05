@@ -7107,3 +7107,5 @@
 #79 C:\\Users\\Gaser\\Desktop\\coprra\\vendor\\bin\\pest(119): include('C:\\\\Users\\\\Gaser\\\\...')
 #80 {main}
 "} 
+[2025-09-05 20:03:11] testing.ERROR: PriceSearchController@bestOffer failed: Simulated database connection failed for testing.  
+[2025-09-05 20:03:22] testing.ERROR: PriceSearchController@bestOffer failed: Simulated database connection failed for testing.  
