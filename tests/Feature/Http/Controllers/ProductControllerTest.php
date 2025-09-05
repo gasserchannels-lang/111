@@ -8,24 +8,21 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function index_can_be_accessed(): void
     {
-        try {
-            $response = $this->get('/products');
-            $response->assertSuccessful();
-        } catch (\Exception) {
-            $this->markTestSkipped('Products route not fully implemented');
-        }
+        $response = $this->get('/products');
+        $response->assertSuccessful();
     }
 
-    /** @test */
+    #[Test]
     public function can_create_product_with_factory(): void
     {
         $category = Category::factory()->create();

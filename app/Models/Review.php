@@ -6,9 +6,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ * @property-read \App\Models\Product $product
+ * @property-read \App\Models\User $user
+ */
 class Review extends Model
 {
+    /** @use HasFactory<\App\Models\Review> */
     use HasFactory;
 
     protected $fillable = [
@@ -31,18 +38,24 @@ class Review extends Model
         'rating' => 'integer',
     ];
 
-    public function user()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Review>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function product()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, \App\Models\Review>
+     */
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
     // دالة مساعدة للتوافق مع الكود القديم
-    public function getReviewTextAttribute()
+    public function getReviewTextAttribute(): string
     {
         return $this->content;
     }

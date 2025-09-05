@@ -40,7 +40,7 @@ class FixCode extends Command
         return self::SUCCESS;
     }
 
-    private function runTool(string $message, array $command)
+    private function runTool(string $message, array $command): int
     {
         $this->line('');
         $this->info($message);
@@ -57,6 +57,7 @@ class FixCode extends Command
                 }
             });
             $this->info('✅ Tool finished successfully.');
+            return self::SUCCESS;
         } catch (ProcessFailedException $exception) {
             $this->error('❌ A fatal error occurred during: '.$message);
             $this->error($exception->getProcess()->getErrorOutput());

@@ -1,14 +1,11 @@
-version: '3.8'
-
 services:
-  # هذه هي الخدمة الجديدة التي تستخدم بيئة Laravel Sail المتكاملة
   laravel.test:
     build:
-      context: ./vendor/laravel/sail/runtimes/8.1 # <-- يشير إلى Dockerfile الصحيح
+      context: ./vendor/laravel/sail/runtimes/8.2
       dockerfile: Dockerfile
       args:
         WWWGROUP: '${WWWGROUP:-1000}'
-    image: sail-8.1/app
+    image: sail-8.2/app
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
@@ -27,7 +24,6 @@ services:
     depends_on:
       - db
       - sonarqube
-
   db:
     image: mysql:8.0
     container_name: coprra_db
@@ -47,7 +43,6 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD:-secret}"]
       retries: 3
       timeout: 5s
-
   sonarqube:
     image: sonarqube:9.9-community
     container_name: coprra_sonarqube
@@ -61,7 +56,6 @@ services:
       - db_sonar
     networks:
       - coprra_network
-
   db_sonar:
     image: postgres:13
     container_name: coprra_sonar_db
@@ -73,11 +67,9 @@ services:
       - 'sonar_db_data:/var/lib/postgresql/data'
     networks:
       - coprra_network
-
 volumes:
   db_data:
   sonar_db_data:
-
 networks:
   coprra_network:
     driver: bridge

@@ -1,14 +1,9 @@
 <?php
-
 declare(strict_types=1);
-
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Contracts\Cache\RateLimiter;
+use App\Services\RouteConfigurationService;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -24,17 +19,16 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
-    public function boot(RateLimiter $rateLimiter): void
+    public function boot(): void
     {
-        $rateLimiter->for('api', fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
-
-        $this->routes(function (): void {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+        $rateLimiter = $this->app->make(\Illuminate\Cache\RateLimiter::class);
+        $router = $this->app->make(\Illuminate\Contracts\Routing\Registrar::class);
+        
+        $routeConfigService = new RouteConfigurationService($rateLimiter, $router);
+        $routeConfigService->configureRateLimiting();
+        
+        $this->routes(function () use ($routeConfigService): void {
+            $routeConfigService->configureRoutes();
         });
     }
 }

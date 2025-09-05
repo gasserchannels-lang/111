@@ -9,10 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ */
 class Language extends Model
 {
+    /** @use HasFactory<\App\Models\Language> */
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'code',
         'name',
@@ -29,6 +34,8 @@ class Language extends Model
 
     /**
      * العملات المرتبطة بهذه اللغة
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Currency, \App\Models\Language, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
      */
     public function currencies(): BelongsToMany
     {
@@ -39,14 +46,18 @@ class Language extends Model
 
     /**
      * العملة الافتراضية لهذه اللغة
+     * 
+     * @return \App\Models\Currency|null
      */
-    public function defaultCurrency()
+    public function defaultCurrency(): ?\App\Models\Currency
     {
         return $this->currencies()->wherePivot('is_default', true)->first();
     }
 
     /**
      * إعدادات المستخدمين لهذه اللغة
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\UserLocaleSetting, \App\Models\Language>
      */
     public function userLocaleSettings(): HasMany
     {
@@ -55,18 +66,22 @@ class Language extends Model
 
     /**
      * نطاق للغات النشطة فقط
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Language> $queryBuilder
      */
-    public function scopeActive($query)
+    public function scopeActive(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
     {
-        return $query->where('is_active', true);
+        $queryBuilder->where('is_active', true);
     }
 
     /**
      * نطاق للغات مرتبة حسب الترتيب
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Language> $queryBuilder
      */
-    public function scopeOrdered($query)
+    public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
     {
-        return $query->orderBy('sort_order')->orderBy('name');
+        $queryBuilder->orderBy('sort_order')->orderBy('name');
     }
 
     /**

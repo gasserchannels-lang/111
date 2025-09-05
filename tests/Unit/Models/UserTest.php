@@ -6,20 +6,21 @@ namespace Tests\Unit\Models;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function user_can_be_created(): void
     {
         $user = User::factory()->create();
         $this->assertDatabaseHas('users', ['id' => $user->id]);
     }
 
-    /** @test */
+    #[Test]
     public function user_has_price_alerts_relationship(): void
     {
         $user = User::factory()->create();

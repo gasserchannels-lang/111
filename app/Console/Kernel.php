@@ -11,11 +11,12 @@ class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function schedule(Schedule $schedule): void
     {
         // يمكن إضافة المهام المجدولة هنا
-        // $schedule parameter is required by Laravel but not used in this implementation
     }
 
     /**
@@ -28,3 +29,4 @@ class Kernel extends ConsoleKernel
         require_once base_path('routes/console.php');
     }
 }
+

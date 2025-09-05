@@ -6,9 +6,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ */
 class Product extends Model
 {
+    /** @use HasFactory<\App\Models\Product> */
     use HasFactory;
 
     protected $fillable = [
@@ -27,32 +33,50 @@ class Product extends Model
     ];
 
     // --- العلاقات ---
-    public function brand()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Brand, \App\Models\Product>
+     */
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function category()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Product>
+     */
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function priceAlerts()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceAlert, \App\Models\Product>
+     */
+    public function priceAlerts(): HasMany
     {
         return $this->hasMany(PriceAlert::class);
     }
 
-    public function reviews()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Review, \App\Models\Product>
+     */
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
-    public function wishlists()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Wishlist, \App\Models\Product>
+     */
+    public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);
     }
 
-    public function priceOffers()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceOffer, \App\Models\Product>
+     */
+    public function priceOffers(): HasMany
     {
         return $this->hasMany(PriceOffer::class);
     }

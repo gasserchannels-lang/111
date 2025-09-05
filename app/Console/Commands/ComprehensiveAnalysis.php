@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Services\SecurityAnalysisService;
+use App\Services\QualityAnalysisService;
+use App\Services\PerformanceAnalysisService;
+use App\Services\TestAnalysisServiceFactory;
 use Illuminate\Console\Command;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class ComprehensiveAnalysis extends Command
 {
@@ -32,6 +34,8 @@ class ComprehensiveAnalysis extends Command
 
         // Tests Analysis
         if (! $this->option('skip-tests')) {
+            $this->info('Setting APP_ENV to testing for test analysis...');
+            putenv('APP_ENV=testing');
             $results['tests'] = $this->runTestsAnalysis();
             $totalScore += $results['tests']['score'];
             $maxScore += 100;
@@ -51,325 +55,96 @@ class ComprehensiveAnalysis extends Command
     private function runSecurityAnalysis(): array
     {
         $this->info('🛡️  Running Security Analysis...');
-
-        $score = 0;
-        $issues = [];
-
-        try {
-            $score += $this->checkDependencies($issues);
-            $score += $this->checkEnvironmentFile($issues);
-            $score += $this->checkDebugMode($issues);
-            $score += $this->checkHttpsConfiguration($issues);
-            $score += $this->checkSecurityMiddleware($issues);
-
-        } catch (\Exception $e) {
-            $issues[] = 'Security analysis failed: '.$e->getMessage();
-            $this->error('❌ Security analysis encountered errors');
-        }
-
-        return [
-            'score' => $score,
-            'max_score' => 100,
-            'issues' => $issues,
-            'category' => 'Security',
-        ];
-    }
-
-    private function checkDependencies(array &$issues): int
-    {
+        
+        $securityService = new SecurityAnalysisService();
+        $result = $securityService->analyze();
+        
+        // Display console output based on the results
         $this->line('Checking for outdated dependencies...');
-        $process = new Process(['composer', 'outdated', '--direct']);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            return 0;
+        if (!empty($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                if (str_contains($issue, 'outdated dependencies')) {
+                    $this->warn('⚠️  Some direct dependencies are outdated.');
+                    break;
+                }
+            }
+            return $result;
         }
-
-        $outdated = $process->getOutput();
-        if (empty(trim($outdated)) || str_contains($outdated, 'No direct dependencies')) {
-            $this->info('✅ All direct dependencies are up to date');
-            return 30;
-        }
-
-        $issues[] = 'Outdated dependencies found. Consider running "composer update".';
-        $this->warn('⚠️  Some direct dependencies are outdated.');
-        return 0;
-    }
-
-    private function checkEnvironmentFile(array &$issues): int
-    {
-        if (file_exists(base_path('.env.example'))) {
-            return 10;
-        }
-
-        $issues[] = '.env.example file missing';
-        return 0;
-    }
-
-    private function checkDebugMode(array &$issues): int
-    {
-        if (config('app.debug') === false) {
-            return 20;
-        }
-
-        $issues[] = 'Debug mode is enabled (should be false in production)';
-        return 0;
-    }
-
-    private function checkHttpsConfiguration(array &$issues): int
-    {
-        if (config('app.url') && str_starts_with(config('app.url'), 'https')) {
-            return 20;
-        }
-
-        $issues[] = 'HTTPS not configured in APP_URL';
-        return 0;
-    }
-
-    private function checkSecurityMiddleware(array &$issues): int
-    {
-        if ($this->isMiddlewareRegistered(\App\Http\Middleware\SecurityHeadersMiddleware::class)) {
-            return 20;
-        }
-
-        $issues[] = 'SecurityHeadersMiddleware is not registered globally in app/Http/Kernel.php';
-        return 0;
+        
+        $this->info('✅ All direct dependencies are up to date');
+        
+        return $result;
     }
 
     private function runQualityAnalysis(): array
     {
         $this->info('📊 Running Code Quality Analysis...');
-
-        $score = 0;
-        $issues = [];
-
-        try {
-            // PHPMD (PHP Mess Detector)
-            if ($this->commandExists('vendor/bin/phpmd')) {
-                $this->line('Running PHPMD...');
-                $process = new Process(['./vendor/bin/phpmd', 'app', 'text', 'cleancode,codesize,controversial,design,naming,unusedcode']);
-                $process->run();
-
-                $output = $process->getOutput();
-                $errorCount = substr_count(trim($output), "\n");
-
-                if ($errorCount === 0) {
-                    $score += 50;
-                    $this->info('✅ PHPMD found no issues.');
+        
+        $qualityService = new QualityAnalysisService();
+        $result = $qualityService->analyze();
+        
+        // Display console output based on the results
+        $this->line('Running PHPMD...');
+        if (!empty($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                if (str_contains($issue, 'PHPMD found')) {
+                    $this->warn("⚠️  {$issue}");
                 }
-
-                if ($errorCount > 0) {
-                    $issues[] = "PHPMD found {$errorCount} code quality issues.";
-                    $score += max(0, 50 - ($errorCount * 2));
-                    $this->warn("⚠️  PHPMD found {$errorCount} issues.");
+                if (str_contains($issue, 'PHPCPD found')) {
+                    $this->line('Running PHPCPD...');
+                    $this->warn("⚠️  {$issue}");
                 }
             }
-
-            // PHPCPD (Copy/Paste Detector)
-            if ($this->commandExists('vendor/bin/phpcpd')) {
-                $this->line('Running PHPCPD...');
-                $process = new Process(['./vendor/bin/phpcpd', 'app']);
-                $process->run();
-                $output = $process->getOutput();
-
-                if (str_contains($output, 'No clones found')) {
-                    $score += 50;
-                    $this->info('✅ PHPCPD found no duplicate code.');
-                }
-
-                if (! str_contains($output, 'No clones found')) {
-                    preg_match('/(\d+\.\d+)\% duplicated lines/', $output, $matches);
-                    $duplication = $matches[1] ?? 100;
-                    $issues[] = "PHPCPD found {$duplication}% duplicate code.";
-                    $score += max(0, 50 - ($duplication * 5));
-                    $this->warn("⚠️  PHPCPD found {$duplication}% duplicate code.");
-                }
-            }
-
-        } catch (\Exception $e) {
-            $issues[] = 'Code quality analysis failed: '.$e->getMessage();
-            $this->error('❌ Code quality analysis encountered errors');
+            return $result;
         }
-
-        return [
-            'score' => min(100, $score),
-            'max_score' => 100,
-            'issues' => $issues,
-            'category' => 'Code Quality',
-        ];
+        
+        $this->info('✅ PHPMD found no issues.');
+        $this->line('Running PHPCPD...');
+        $this->info('✅ PHPCPD found no duplicate code.');
+        
+        return $result;
     }
 
     private function runTestsAnalysis(): array
     {
         $this->info('🧪 Running Tests Analysis...');
-
-        $score = 0;
-        $issues = [];
-
-        try {
-            $command = $this->buildTestCommand();
-            $process = $this->runTestProcess($command);
-            $output = $process->getOutput();
-
-            $score += $this->analyzeTestResults($process, $output, $issues);
-            $score += $this->analyzeCoverage($output, $issues);
-
-        } catch (ProcessFailedException $e) {
-            $this->handleTestProcessException($e, $issues);
-        } catch (\Exception $e) {
-            $issues[] = 'Test analysis failed: '.$e->getMessage();
-            $this->error('❌ Test analysis encountered errors');
-        }
-
-        return [
-            'score' => min(100, $score),
-            'max_score' => 100,
-            'issues' => $issues,
-            'category' => 'Testing',
-        ];
-    }
-
-    private function buildTestCommand(): array
-    {
-        $command = ['./vendor/bin/pest'];
+        
         if ($this->option('coverage')) {
             $this->warn('Coverage analysis is active. This may be slow.');
-            $command[] = '--coverage';
         }
-        return $command;
-    }
-
-    private function runTestProcess(array $command): Process
-    {
-        $process = new Process($command);
-        $process->setTimeout(1800); // Increased timeout to 30 mins for coverage
-        $process->run();
-        return $process;
-    }
-
-    private function analyzeTestResults(Process $process, string $output, array &$issues): int
-    {
-        if (!$process->isSuccessful()) {
-            $issues[] = 'Some tests failed or encountered errors.';
-            $this->warn('⚠️  Some tests had issues.');
-            $this->line($output);
-            return 0;
+        
+        $testServiceFactory = new TestAnalysisServiceFactory();
+        $testService = $this->option('coverage') 
+            ? $testServiceFactory->createWithCoverage()
+            : $testServiceFactory->createBasic();
+        $result = $testService->analyze();
+        
+        // Display console output based on the results
+        if (!empty($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                if (str_contains($issue, 'tests failed')) {
+                    $this->warn('⚠️  Some tests had issues.');
+                    continue;
+                }
+                $this->error('❌ Test analysis encountered errors');
+            }
+            return $result;
         }
-
-        if (preg_match('/Tests:\s+.*?(\d+)\s+passed/', $output, $matches)) {
-            $passedTests = (int) $matches[1];
-            $this->info("✅ {$passedTests} tests passed.");
-            return 70;
+        
+        $this->info("✅ Tests passed successfully.");
+        if ($this->option('coverage')) {
+            $this->info("✅ Code coverage analyzed.");
         }
-
-        return 0;
-    }
-
-    private function analyzeCoverage(string $output, array &$_): int
-    {
-        if (!$this->option('coverage')) {
-            return 0;
-        }
-
-        if (preg_match('/Lines:\s+(\d+\.\d+)%/', $output, $matches)) {
-            $coverage = (float) $matches[1];
-            $this->info("✅ Code coverage: {$coverage}%");
-            return ($coverage / 100) * 30;
-        }
-
-        return 0;
-    }
-
-    private function handleTestProcessException(ProcessFailedException $exception, array &$issues): void
-    {
-        if ($exception->getProcess()->isTimeout()) {
-            $issues[] = 'Test analysis failed: The process exceeded the timeout.';
-        }
-        if (!$exception->getProcess()->isTimeout()) {
-            $issues[] = 'Test analysis failed with an error.';
-        }
-        $this->error('❌ Test analysis encountered errors');
+        
+        return $result;
     }
 
     private function runPerformanceAnalysis(): array
     {
         $this->info('⚡ Running Performance Analysis...');
-
-        $score = 0;
-        $issues = [];
-
-        try {
-            $score += $this->checkCacheConfiguration($issues);
-            $score += $this->checkDatabaseIndexes($issues);
-            $score += $this->checkAssetCompilation($issues);
-            $score += $this->checkQueueConfiguration($issues);
-
-        } catch (\Exception $e) {
-            $issues[] = 'Performance analysis failed: '.$e->getMessage();
-            $this->error('❌ Performance analysis encountered errors');
-        }
-
-        return [
-            'score' => $score,
-            'max_score' => 100,
-            'issues' => $issues,
-            'category' => 'Performance',
-        ];
-    }
-
-    private function checkCacheConfiguration(array &$issues): int
-    {
-        if (config('cache.default') !== 'file') {
-            return 25;
-        }
-
-        $issues[] = 'Using file cache (consider Redis or Memcached for production)';
-        return 0;
-    }
-
-    private function checkDatabaseIndexes(array &$issues): int
-    {
-        $migrationFiles = glob(database_path('migrations/*.php'));
-        foreach ($migrationFiles as $file) {
-            if (str_contains(file_get_contents($file), '->index(') || str_contains(file_get_contents($file), '->unique(')) {
-                return 25;
-            }
-        }
-
-        $issues[] = 'No database indexes found in migrations';
-        return 0;
-    }
-
-    private function checkAssetCompilation(array &$issues): int
-    {
-        if (file_exists(public_path('build/manifest.json'))) {
-            return 25;
-        }
-
-        $issues[] = 'No compiled assets found (run npm run build)';
-        return 0;
-    }
-
-    private function checkQueueConfiguration(array &$issues): int
-    {
-        if (config('queue.default') !== 'sync') {
-            return 25;
-        }
-
-        $issues[] = 'Using sync queue (consider database or Redis queue for production)';
-        return 0;
-    }
-
-    private function commandExists(string $command): bool
-    {
-        return file_exists(base_path($command));
-    }
-
-    private function isMiddlewareRegistered(string $middlewareClass): bool
-    {
-        $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
-
-        return in_array($middlewareClass, $kernel->getMiddleware());
+        
+        $performanceService = new PerformanceAnalysisService();
+        return $performanceService->analyze();
     }
 
     private function generateSummary(array $results, int $totalScore, int $maxScore): void

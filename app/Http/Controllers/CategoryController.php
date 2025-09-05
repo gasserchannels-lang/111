@@ -9,6 +9,11 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
+    public function index(): View
+    {
+        return view('categories.index');
+    }
+
     public function show(string $slug): View
     {
         $category = Category::query()->where('slug', $slug)->firstOrFail();

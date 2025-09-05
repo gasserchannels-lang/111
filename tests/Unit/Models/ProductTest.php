@@ -8,20 +8,21 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function product_belongs_to_category(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(Category::class, $product->category);
     }
 
-    /** @test */
+    #[Test]
     public function product_belongs_to_brand(): void
     {
         $product = Product::factory()->create();

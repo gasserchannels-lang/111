@@ -9,15 +9,14 @@ use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PriceSearchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @dataProvider validationProvider
-     */
+    #[DataProvider('validationProvider')]
     public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField): void
     {
         $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload));

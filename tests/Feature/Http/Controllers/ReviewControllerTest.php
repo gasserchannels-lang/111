@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ReviewControllerTest extends TestCase
@@ -22,7 +23,7 @@ class ReviewControllerTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    /** @test */
+    #[Test]
     public function store_creates_product_review(): void
     {
         $product = Product::factory()->create();
@@ -45,14 +46,14 @@ class ReviewControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function store_validates_required_fields(): void
     {
         $response = $this->actingAs($this->user)->post(route('reviews.store'), []);
         $response->assertSessionHasErrors(['product_id', 'title', 'content', 'rating']);
     }
 
-    /** @test */
+    #[Test]
     public function store_validates_rating_range(): void
     {
         $product = Product::factory()->create();
@@ -68,7 +69,7 @@ class ReviewControllerTest extends TestCase
         $response->assertSessionHasErrors(['rating']);
     }
 
-    /** @test */
+    #[Test]
     public function destroy_deletes_user_review(): void
     {
         $review = Review::factory()->create(['user_id' => $this->user->id]);
@@ -79,7 +80,7 @@ class ReviewControllerTest extends TestCase
         $this->assertDatabaseMissing('reviews', ['id' => $review->id]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_delete_other_users_review(): void
     {
         $otherUser = User::factory()->create();

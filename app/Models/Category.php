@@ -9,15 +9,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ */
 class Category extends Model
 {
     // ✅ الخطوة 1: إضافة الـ Trait الأساسي لربط الموديل بالـ Factory
+    /** @use HasFactory<\App\Models\Category> */
     use HasFactory;
 
     /**
      * Mass assignable attributes.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -30,6 +34,8 @@ class Category extends Model
 
     /**
      * Parent category relationship.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Category>
      */
     public function parent(): BelongsTo
     {
@@ -38,6 +44,8 @@ class Category extends Model
 
     /**
      * Children categories relationship.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Category, \App\Models\Category>
      */
     public function children(): HasMany
     {
@@ -46,6 +54,8 @@ class Category extends Model
 
     /**
      * Products relationship.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, \App\Models\Category>
      */
     public function products(): HasMany
     {

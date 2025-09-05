@@ -7,9 +7,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use InvalidArgumentException;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ */
 class UserLocaleSetting extends Model
 {
+    /** @use HasFactory<\App\Models\UserLocaleSetting> */
     use HasFactory;
 
     protected $fillable = [
@@ -29,6 +34,8 @@ class UserLocaleSetting extends Model
 
     /**
      * المستخدم المرتبط بهذا الإعداد
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\UserLocaleSetting>
      */
     public function user(): BelongsTo
     {
@@ -37,6 +44,8 @@ class UserLocaleSetting extends Model
 
     /**
      * اللغة المحددة
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Language, \App\Models\UserLocaleSetting>
      */
     public function language(): BelongsTo
     {
@@ -45,6 +54,8 @@ class UserLocaleSetting extends Model
 
     /**
      * العملة المحددة
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, \App\Models\UserLocaleSetting>
      */
     public function currency(): BelongsTo
     {
@@ -98,17 +109,14 @@ class UserLocaleSetting extends Model
             );
         }
 
-        if (! $userId && $sessionId) {
+        if ($sessionId) {
             return static::updateOrCreate(
                 ['session_id' => $sessionId],
                 $attributes
             );
         }
 
-        // Fallback case
-        return static::updateOrCreate(
-            ['session_id' => $sessionId],
-            $attributes
-        );
+        // Fallback case - this should not happen based on the calling logic
+        throw new InvalidArgumentException('Either userId or sessionId must be provided');
     }
 }

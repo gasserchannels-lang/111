@@ -9,6 +9,7 @@ use App\Models\Language;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Http\Request;
 
 class LocaleController extends Controller
 {
@@ -25,13 +26,28 @@ class LocaleController extends Controller
         $this->app = $app;
     }
 
-    public function changeLanguage($langCode)
+    public function switchLanguage(Request $request)
     {
-        $language = Language::where('code', $langCode)->first();
+        $request->validate([
+            'language' => 'required|string|in:en,ar,fr,es,de', // Add supported locales
+        ]);
+
+        $locale = $request->input('language');
+        
+        // Set the locale in session
+        $this->session->put('locale', $locale);
+        $this->app->setLocale($locale);
+
+        return redirect()->back();
+    }
+
+    public function changeLanguage($languageCode)
+    {
+        $language = Language::where('code', $languageCode)->first();
 
         if ($language) {
-            $this->session->put('locale_language', $langCode);
-            $this->app->setLocale($langCode);
+            $this->session->put('locale_language', $languageCode);
+            $this->app->setLocale($languageCode);
 
             if ($this->auth->check()) {
                 $user = $this->auth->user();

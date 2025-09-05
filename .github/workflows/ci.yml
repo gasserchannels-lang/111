@@ -7,6 +7,29 @@ on:
     branches: [ "main" ]
 
 jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
+        tools: composer
+
+    - name: Install Composer Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --memory-limit=256M
+
+    - name: Run PHPMD
+      run: vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+
   test-analyze-and-fix:
     runs-on: ubuntu-latest
 
@@ -24,14 +47,14 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1'
+        php-version: '8.2'
         extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
         tools: composer
         coverage: pcov
@@ -71,7 +94,7 @@ jobs:
         DB_PASSWORD: root
       run: php artisan migrate
 
-    - name: Run Tests and Generate Coverage
+    - name: Run Tests with Pest
       env:
         DB_CONNECTION: mysql
         DB_HOST: 127.0.0.1
@@ -79,7 +102,7 @@ jobs:
         DB_DATABASE: coprra_test
         DB_USERNAME: root
         DB_PASSWORD: root
-      run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
+      run: vendor/bin/pest
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master

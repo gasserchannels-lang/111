@@ -35,6 +35,9 @@ Route::resource('categories', CategoryController::class)->only(['index', 'show']
 Route::get('language/{langCode}', [LocaleController::class, 'changeLanguage'])->name('change.language');
 Route::get('currency/{currencyCode}', [LocaleController::class, 'changeCurrency'])->name('change.currency');
 
+// POST routes for locale switching (for testing)
+Route::post('locale/language', [LocaleController::class, 'switchLanguage'])->name('locale.language');
+
 // --- المسارات المحمية التي تتطلب تسجيل الدخول ---
 
 Route::middleware('auth')->group(function (): void {

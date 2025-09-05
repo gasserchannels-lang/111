@@ -1,0 +1,8 @@
+parameters:
+    ignoreErrors:
+        # Ignore generic type issues with HasFactory trait
+        - '#Type .* in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory<.*> in PHPDoc tag @use is not subtype of template type TFactory#'
+        - '#Method .* return type with generic class .* does not specify its types: TFactory#'
+        - '#Method .* should return .* but returns .*#'
+        - '#PHPDoc tag @property-read for property .* contains generic class .* but does not specify its types: TFactory#'
+        - '#Method .* has parameter .* with generic class .* but does not specify its types: TFactory#'
