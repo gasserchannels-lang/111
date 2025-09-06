@@ -1,8 +1,709 @@
 parameters:
-    ignoreErrors:
-        # Ignore generic type issues with HasFactory trait
-        - '#Type .* in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory<.*> in PHPDoc tag @use is not subtype of template type TFactory#'
-        - '#Method .* return type with generic class .* does not specify its types: TFactory#'
-        - '#Method .* should return .* but returns .*#'
-        - '#PHPDoc tag @property-read for property .* contains generic class .* but does not specify its types: TFactory#'
-        - '#Method .* has parameter .* with generic class .* but does not specify its types: TFactory#'
+	ignoreErrors:
+		-
+			message: '#^Method App\\Models\\Brand\:\:products\(\) return type with generic class App\\Models\\Brand does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Brand.php
+
+		-
+			message: '#^Method App\\Models\\Brand\:\:products\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Brand.php
+
+		-
+			message: '#^Method App\\Models\\Brand\:\:products\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Product, App\\Models\\Brand\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Product, \$this\(App\\Models\\Brand\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Brand.php
+
+		-
+			message: '#^Type App\\Models\\Brand in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Brand\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Brand.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:children\(\) return type with generic class App\\Models\\Category does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 2
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:children\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Category, App\\Models\\Category\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Category, \$this\(App\\Models\\Category\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:parent\(\) return type with generic class App\\Models\\Category does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 2
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:parent\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Category, App\\Models\\Category\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Category, \$this\(App\\Models\\Category\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:products\(\) return type with generic class App\\Models\\Category does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:products\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:products\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Product, App\\Models\\Category\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Product, \$this\(App\\Models\\Category\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Type App\\Models\\Category in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Category\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Currency\:\:languages\(\) return type with generic class App\\Models\\Currency does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Method App\\Models\\Currency\:\:languages\(\) return type with generic class App\\Models\\Language does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Method App\\Models\\Currency\:\:languages\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\Language, App\\Models\\Currency, Illuminate\\Database\\Eloquent\\Relations\\Pivot, ''pivot''\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\Language, \$this\(App\\Models\\Currency\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\), Illuminate\\Database\\Eloquent\\Relations\\Pivot, ''pivot''\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Method App\\Models\\Currency\:\:stores\(\) return type with generic class App\\Models\\Currency does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Method App\\Models\\Currency\:\:stores\(\) return type with generic class App\\Models\\Store does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Method App\\Models\\Currency\:\:stores\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Store, App\\Models\\Currency\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Store, \$this\(App\\Models\\Currency\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Type App\\Models\\Currency in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Currency\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Currency.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:currencies\(\) return type with generic class App\\Models\\Currency does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:currencies\(\) return type with generic class App\\Models\\Language does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:currencies\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\Currency, App\\Models\\Language, Illuminate\\Database\\Eloquent\\Relations\\Pivot, ''pivot''\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<App\\Models\\Currency, \$this\(App\\Models\\Language\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\), Illuminate\\Database\\Eloquent\\Relations\\Pivot, ''pivot''\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:defaultCurrency\(\) return type with generic class App\\Models\\Currency does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:findByCode\(\) return type with generic class App\\Models\\Language does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:scopeActive\(\) has parameter \$queryBuilder with generic class App\\Models\\Language but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:scopeOrdered\(\) has parameter \$queryBuilder with generic class App\\Models\\Language but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:userLocaleSettings\(\) return type with generic class App\\Models\\Language does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:userLocaleSettings\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\Language\:\:userLocaleSettings\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\UserLocaleSetting, App\\Models\\Language\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\UserLocaleSetting, \$this\(App\\Models\\Language\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Type App\\Models\\Language in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Language\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Language.php
+
+		-
+			message: '#^Method App\\Models\\PriceAlert\:\:product\(\) return type with generic class App\\Models\\PriceAlert does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Method App\\Models\\PriceAlert\:\:product\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Method App\\Models\\PriceAlert\:\:product\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, App\\Models\\PriceAlert\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, \$this\(App\\Models\\PriceAlert\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Method App\\Models\\PriceAlert\:\:user\(\) return type with generic class App\\Models\\PriceAlert does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Method App\\Models\\PriceAlert\:\:user\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Method App\\Models\\PriceAlert\:\:user\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, App\\Models\\PriceAlert\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, \$this\(App\\Models\\PriceAlert\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^PHPDoc tag @property\-read for property App\\Models\\PriceAlert\:\:\$product contains generic class App\\Models\\Product but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^PHPDoc tag @property\-read for property App\\Models\\PriceAlert\:\:\$user contains generic class App\\Models\\User but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Type App\\Models\\PriceAlert in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\PriceAlert\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/PriceAlert.php
+
+		-
+			message: '#^Method App\\Models\\PriceOffer\:\:product\(\) return type with generic class App\\Models\\PriceOffer does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Method App\\Models\\PriceOffer\:\:product\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Method App\\Models\\PriceOffer\:\:product\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, App\\Models\\PriceOffer\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, \$this\(App\\Models\\PriceOffer\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Method App\\Models\\PriceOffer\:\:store\(\) return type with generic class App\\Models\\PriceOffer does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Method App\\Models\\PriceOffer\:\:store\(\) return type with generic class App\\Models\\Store does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Method App\\Models\\PriceOffer\:\:store\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Store, App\\Models\\PriceOffer\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Store, \$this\(App\\Models\\PriceOffer\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Type App\\Models\\PriceOffer in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\PriceOffer\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/PriceOffer.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:brand\(\) return type with generic class App\\Models\\Brand does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:brand\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:brand\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Brand, App\\Models\\Product\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Brand, \$this\(App\\Models\\Product\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:category\(\) return type with generic class App\\Models\\Category does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:category\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:category\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Category, App\\Models\\Product\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Category, \$this\(App\\Models\\Product\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:priceAlerts\(\) return type with generic class App\\Models\\PriceAlert does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:priceAlerts\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:priceAlerts\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceAlert, App\\Models\\Product\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceAlert, \$this\(App\\Models\\Product\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:priceOffers\(\) return type with generic class App\\Models\\PriceOffer does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:priceOffers\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:priceOffers\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceOffer, App\\Models\\Product\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceOffer, \$this\(App\\Models\\Product\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:reviews\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:reviews\(\) return type with generic class App\\Models\\Review does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:reviews\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Review, App\\Models\\Product\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Review, \$this\(App\\Models\\Product\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:wishlists\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:wishlists\(\) return type with generic class App\\Models\\Wishlist does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:wishlists\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Wishlist, App\\Models\\Product\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Wishlist, \$this\(App\\Models\\Product\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Type App\\Models\\Product in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Product\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Review\:\:product\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Method App\\Models\\Review\:\:product\(\) return type with generic class App\\Models\\Review does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Method App\\Models\\Review\:\:product\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, App\\Models\\Review\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, \$this\(App\\Models\\Review\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Method App\\Models\\Review\:\:user\(\) return type with generic class App\\Models\\Review does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Method App\\Models\\Review\:\:user\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Method App\\Models\\Review\:\:user\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, App\\Models\\Review\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, \$this\(App\\Models\\Review\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^PHPDoc tag @property\-read for property App\\Models\\Review\:\:\$product contains generic class App\\Models\\Product but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^PHPDoc tag @property\-read for property App\\Models\\Review\:\:\$user contains generic class App\\Models\\User but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Type App\\Models\\Review in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Review\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:currency\(\) return type with generic class App\\Models\\Currency does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:currency\(\) return type with generic class App\\Models\\Store does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:currency\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Currency, App\\Models\\Store\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Currency, \$this\(App\\Models\\Store\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:priceOffers\(\) return type with generic class App\\Models\\PriceOffer does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:priceOffers\(\) return type with generic class App\\Models\\Store does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\Store\:\:priceOffers\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceOffer, App\\Models\\Store\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceOffer, \$this\(App\\Models\\Store\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Type App\\Models\\Store in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Store\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Store.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:localeSetting\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:localeSetting\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:localeSetting\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasOne\<App\\Models\\UserLocaleSetting, App\\Models\\User\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasOne\<App\\Models\\UserLocaleSetting, \$this\(App\\Models\\User\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:priceAlerts\(\) return type with generic class App\\Models\\PriceAlert does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:priceAlerts\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:priceAlerts\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceAlert, App\\Models\\User\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\PriceAlert, \$this\(App\\Models\\User\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:reviews\(\) return type with generic class App\\Models\\Review does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:reviews\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:reviews\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Review, App\\Models\\User\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Review, \$this\(App\\Models\\User\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:wishlist\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:wishlist\(\) return type with generic class App\\Models\\Wishlist does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:wishlist\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Wishlist, App\\Models\\User\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Wishlist, \$this\(App\\Models\\User\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:wishlists\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:wishlists\(\) return type with generic class App\\Models\\Wishlist does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:wishlists\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Wishlist, App\\Models\\User\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Wishlist, \$this\(App\\Models\\User\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Type App\\Models\\User in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\User\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:currency\(\) return type with generic class App\\Models\\Currency does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:currency\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:currency\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Currency, App\\Models\\UserLocaleSetting\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Currency, \$this\(App\\Models\\UserLocaleSetting\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:findForUser\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:language\(\) return type with generic class App\\Models\\Language does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:language\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:language\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Language, App\\Models\\UserLocaleSetting\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Language, \$this\(App\\Models\\UserLocaleSetting\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:updateOrCreateForUser\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:user\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:user\(\) return type with generic class App\\Models\\UserLocaleSetting does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\UserLocaleSetting\:\:user\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, App\\Models\\UserLocaleSetting\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, \$this\(App\\Models\\UserLocaleSetting\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Type App\\Models\\UserLocaleSetting in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\UserLocaleSetting\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/UserLocaleSetting.php
+
+		-
+			message: '#^Method App\\Models\\Wishlist\:\:product\(\) return type with generic class App\\Models\\Product does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^Method App\\Models\\Wishlist\:\:product\(\) return type with generic class App\\Models\\Wishlist does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^Method App\\Models\\Wishlist\:\:product\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, App\\Models\\Wishlist\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Product, \$this\(App\\Models\\Wishlist\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^Method App\\Models\\Wishlist\:\:user\(\) return type with generic class App\\Models\\User does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^Method App\\Models\\Wishlist\:\:user\(\) return type with generic class App\\Models\\Wishlist does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^Method App\\Models\\Wishlist\:\:user\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, App\\Models\\Wishlist\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, \$this\(App\\Models\\Wishlist\<TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory\>\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^PHPDoc tag @property\-read for property App\\Models\\Wishlist\:\:\$product contains generic class App\\Models\\Product but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^PHPDoc tag @property\-read for property App\\Models\\Wishlist\:\:\$user contains generic class App\\Models\\User but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Wishlist.php
+
+		-
+			message: '#^Type App\\Models\\Wishlist in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<App\\Models\\Wishlist\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Wishlist.php
