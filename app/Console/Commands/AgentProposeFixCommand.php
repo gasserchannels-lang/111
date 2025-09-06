@@ -142,8 +142,8 @@ class AgentProposeFixCommand extends Command
         // Define OS-agnostic path for PHPStan
         $phpstanPath = implode(DIRECTORY_SEPARATOR, ['.', 'vendor', 'bin', 'phpstan']);
 
-        // Run PHPStan with --generate-baseline
-        $phpstanResult = Process::run([$phpstanPath, 'analyse', '--generate-baseline']);
+        // Run PHPStan with --generate-baseline and increased memory limit
+        $phpstanResult = Process::run(['php', '-d', 'memory_limit=512M', $phpstanPath, 'analyse', '--generate-baseline']);
 
         if ($phpstanResult->failed()) {
             $this->error('❌ PHPStan baseline generation failed: '.$phpstanResult->errorOutput());
