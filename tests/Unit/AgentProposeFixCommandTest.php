@@ -4,8 +4,6 @@ namespace Tests\Unit;
 
 use App\Console\Commands\AgentProposeFixCommand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Process\ProcessResult;
-use Illuminate\Support\Facades\Process;
 use Tests\TestCase;
 
 class AgentProposeFixCommandTest extends TestCase
@@ -17,8 +15,8 @@ class AgentProposeFixCommandTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        $this->command = new AgentProposeFixCommand();
+
+        $this->command = new AgentProposeFixCommand;
     }
 
     public function test_it_has_correct_signature_and_description()
@@ -32,7 +30,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('getCommitMessage');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('style: Apply automated code style fixes', $method->invoke($this->command, 'style'));
         $this->assertEquals('refactor: Generate PHPStan baseline', $method->invoke($this->command, 'analysis'));
         $this->assertEquals('fix: Apply automated custom fixes', $method->invoke($this->command, 'custom'));
@@ -43,7 +41,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('getPullRequestTitle');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('Automated Style Fixes', $method->invoke($this->command, 'style'));
         $this->assertEquals('Automated Static Analysis Fixes: PHPStan Baseline', $method->invoke($this->command, 'analysis'));
         $this->assertEquals('Automated custom Fixes', $method->invoke($this->command, 'custom'));
@@ -54,16 +52,15 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('getPullRequestBody');
         $method->setAccessible(true);
-        
+
         $styleBody = $method->invoke($this->command, 'style');
         $analysisBody = $method->invoke($this->command, 'analysis');
         $customBody = $method->invoke($this->command, 'custom');
-        
+
         $this->assertStringContainsString('Laravel Pint', $styleBody);
         $this->assertStringContainsString('PHPStan baseline', $analysisBody);
         $this->assertStringContainsString('custom fixes', $customBody);
     }
-
 
     public function test_command_extends_console_command()
     {
@@ -75,7 +72,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $property = $reflection->getProperty('signature');
         $property->setAccessible(true);
-        
+
         $this->assertEquals('agent:propose-fix {--type=style : The type of issue to fix (e.g., style, analysis)}', $property->getValue($this->command));
     }
 
@@ -84,7 +81,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $property = $reflection->getProperty('description');
         $property->setAccessible(true);
-        
+
         $this->assertEquals('Propose automated fixes via Pull Request for different types of issues', $property->getValue($this->command));
     }
 
@@ -93,7 +90,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('handle');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(1, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -104,7 +101,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('createBranch');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(2, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -116,7 +113,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('runFixer');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(2, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -128,7 +125,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('runStyleFixer');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(1, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -139,7 +136,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('runAnalysisFixer');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(1, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -150,7 +147,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('stageChanges');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(1, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -161,7 +158,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('commitChanges');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(2, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -173,7 +170,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('pushBranch');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(2, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
@@ -185,7 +182,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('createPullRequest');
         $parameters = $method->getParameters();
-        
+
         $this->assertCount(3, $parameters);
         $this->assertEquals('process', $parameters[0]->getName());
         $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());

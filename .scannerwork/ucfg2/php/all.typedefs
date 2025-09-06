@@ -51,10 +51,8 @@ definition+database\factories\storefactory::definitionŒ
 definition+database\factories\brandfactory::definitionŽ
  database\factories\reviewfactory.illuminate\database\eloquent\factories\factory:
 
-definition,database\factories\reviewfactory::definition†
-
-+app\console\commands\agentproposefixcommandilluminate\console\commandG
-__construct8app\console\commands\agentproposefixcommand::__constructK
+definition,database\factories\reviewfactory::definitionþ
++app\console\commands\agentproposefixcommandilluminate\console\commandK
 commitchanges:app\console\commands\agentproposefixcommand::commitchangesI
 createbranch9app\console\commands\agentproposefixcommand::createbranchS
 createpullrequest>app\console\commands\agentproposefixcommand::createpullrequestQ
@@ -68,9 +66,8 @@ pushbranch7app\console\commands\agentproposefixcommand::pushbranchQ
 runanalysisfixer=app\console\commands\agentproposefixcommand::runanalysisfixerA
 runfixer5app\console\commands\agentproposefixcommand::runfixerK
 runstylefixer:app\console\commands\agentproposefixcommand::runstylefixerI
-stagechanges9app\console\commands\agentproposefixcommand::stagechanges"description"processService"	signature*
-description*-
-processServiceapp\services\processservice*
+stagechanges9app\console\commands\agentproposefixcommand::stagechanges"description"	signature*
+description*
 	signatureƒ
 .app\http\controllers\api\pricesearchcontrollerapp\http\controllers\controllerJ
 __construct;app\http\controllers\api\pricesearchcontroller::__constructF
@@ -255,9 +252,7 @@ definition7database\factories\userlocalesettingfactory::definition"model*
 user"app\models\userlocalesetting::user"casts"fillable*
 casts*
 
-fillableF
-app\services\processservice'
-run app\services\processservice::runl
+fillablel
 +app\http\middleware\redirectifauthenticated=
 handle3app\http\middleware\redirectifauthenticated::handleŽ
 app\console\kernel$illuminate\foundation\console\kernel(

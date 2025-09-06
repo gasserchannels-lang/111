@@ -1,25 +1,0 @@
-
-8app\console\commands\agentproposefixcommand::__constructa
-W/home/runner/work/my-website/my-website/app/Console/Commands/AgentProposeFixCommand.php ("1*B
-2
-AgentProposeFixCommand.php"
- (
-implicit return*“
-1 (s
-q
- (
-$processService"__id*L
-
-__unknown_file (0
-.
-$processServiceapp\services\processservice‰
-†
- (
-%1"'illuminate\console\command::__construct*K
-
-__unknown_file (/-
-+app\console\commands\agentproposefixcommand*
-2::
- (7.
-$processServiceapp\services\processserviceB/-
-+app\console\commands\agentproposefixcommandH

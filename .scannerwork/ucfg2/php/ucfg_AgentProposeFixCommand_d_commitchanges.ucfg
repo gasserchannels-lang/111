@@ -1,72 +1,72 @@
 
 :app\console\commands\agentproposefixcommand::commitchangesc
-W/home/runner/work/my-website/my-website/app/Console/Commands/AgentProposeFixCommand.phpŒ Œ(""1*æ
+W/home/runner/work/my-website/my-website/app/Console/Commands/AgentProposeFixCommand.php≈ ≈(""1*º
 2
-÷ ÷(cPN
+Õ Õ(cPN
 
-÷E ÷(a
-%7*-
+ÕE Õ(a
+%6*-
 
 __unknown_file (
 
 $commitResult2erroroutputv
 t
 
-÷ ÷(a
-%8"__concat*@
+Õ Õ(a
+%7"__concat*@
 
-÷ ÷(D20
+Õ Õ(D20
 .‚ö†Ô∏è No changes to commit or commit failed: *
 
-÷E ÷(a
+ÕE Õ(a
 
-%7åâ
+%6åâ
 
-÷ ÷(b
-%9*K
+Õ Õ(b
+%8*K
 
 __unknown_file (/-
 +app\console\commands\agentproposefixcommand*"
 
 __unknown_file (
 
-%82warnLJ
+%72warnKI
 
-◊. ◊(E
-%10*-
+Œ. Œ(E
+%9*-
 
 __unknown_file (
 
-$commitResult2output]
-[
+$commitResult2output\
+Z
 
-◊ ◊(E
-%11"__concat*%
+Œ Œ(E
+%10"__concat*%
 
-◊ ◊(-
-Git commit output: *
+Œ Œ(-
+Git commit output: *
 
-◊. ◊(E
-
-%10éã
+Œ. Œ(E
+
+%9éã
 
-◊ ◊(F
-%12*K
+Œ Œ(F
+%11*K
 
 __unknown_file (/-
 +app\console\commands\agentproposefixcommand*#
 
 __unknown_file (
 
-%112info"
+%102info"
 
-Ÿ Ÿ(
+– –(
 void*Ç
 3
-‹ ‹(8≠™
+” ”(8≠™
 
-‹ ‹(7
-%13*K
+” ”(7
+%12*K
 
 __unknown_file (/-
 +app\console\commands\agentproposefixcommand*B
@@ -74,51 +74,60 @@ t
 __unknown_file (&$
 "‚úÖ Changes committed successfully2infoLJ
 
-›* ›(A
-%14*-
+‘* ‘(A
+%13*-
 
 __unknown_file (
 
 $commitResult2output]
 [
 
-› ›(A
-%15"__concat*%
+‘ ‘(A
+%14"__concat*%
 
-› ›()
+‘ ‘()
 Git commit output: *
 
-›* ›(A
+‘* ‘(A
 
-%14éã
+%13éã
 
-› ›(B
-%16*K
+‘ ‘(B
+%15*K
 
 __unknown_file (/-
 +app\console\commands\agentproposefixcommand*#
 
 __unknown_file (
 
-%152info*
+%142info*
 4*D
 4
 AgentProposeFixCommand.php"!
 
-ﬁ ﬁ(
-implicit return*Í
+’ ’(
+implicit return*„
 1
-– –(8L
+« «(8n
+l
+
+≈ ≈("
+
+$process"__id*L
+
+__unknown_file (0
+.
+$process"illuminate\support\facades\processL
 J
 
-Œ Œ("
+≈ ≈("
 $type"__id*-
 
 __unknown_file (
 
 $typestringõò
 
-– –(7
+« «(7
 %1*K
 
 __unknown_file (/-
@@ -129,72 +138,68 @@ J
 $type2getcommitmessageJ
 H
 
-– –(7
+« «(7
 $commitMessage"__id*"
 
 __unknown_file (
 
 %1§°
 
-“ “(/
+… …(/
 %2*K
 
 __unknown_file (/-
 +app\console\commands\agentproposefixcommand*:
 
 __unknown_file (
-üíæ Committing changes...2info{
-y
-
-” ”(-
-%3"__id*_
-
-__unknown_file (C*A-
-+app\console\commands\agentproposefixcommand"
-processServicez
+üíæ Committing changes...2infoz
 x
 
-”3 ”(W
-%4"__concat*"
+ &  (J
+%3"__concat*"
 
-”4 ”(D
+ '  (7
 git commit -m \"*
 
-”T ”(V
+ G  (I
 \"* 
 
-”D ”(T
+ 7  (G
 
-$commitMessagea_
+$commitMessagege
 
-” ”(X
-%5*"
+   (K
+%4*(
+
+__unknown_file (
+
+
+$process*"
 
 __unknown_file (
 
-%3*"
-
-__unknown_file (
-
-%42runI
+%32runI
 G
 
-” ”(X
+   (K
 $commitResult"__id*"
 
 __unknown_file (
 
-%5KI
+%4KI
 
-’ ’(#
-%6*-
+Ã Ã(#
+%5*-
 
 __unknown_file (
 
 $commitResult2failed*
 2
-3:
+3:<
 
-Œ# Œ(/
+≈# ≈(3.
+$process"illuminate\support\facades\process:
+
+≈5 ≈(A
 $typestringB/-
 +app\console\commands\agentproposefixcommandH
