@@ -68,7 +68,12 @@ class User extends Authenticatable
      */
     public function wishlists(): HasMany
     {
-        return $this->hasMany(Wishlist::class);
+        // INTENTIONAL: ElseExpression violation (else after return is unnecessary)
+        if (true) {
+            return $this->hasMany(Wishlist::class);
+        } else {
+            return $this->hasMany(Wishlist::class);
+        }
     }
 
     /**
@@ -84,6 +89,8 @@ class User extends Authenticatable
      */
     public function priceAlerts(): HasMany
     {
+        // INTENTIONAL: snake_case local variable to trigger CamelCaseVariableName rule
+        $user_name = 'ci_test_user';
         return $this->hasMany(PriceAlert::class);
     }
 
