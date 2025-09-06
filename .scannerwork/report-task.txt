@@ -3,5 +3,5 @@ projectKey=gasseraly_my-website
 serverUrl=https://sonarcloud.io
 serverVersion=8.0.0.66870
 dashboardUrl=https://sonarcloud.io/dashboard?id=gasseraly_my-website&branch=main
-ceTaskId=AZkci2SP-C6ffYTNjW_f
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZkci2SP-C6ffYTNjW_f
+ceTaskId=AZkcw710vJBbMoYJSY39
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZkcw710vJBbMoYJSY39
