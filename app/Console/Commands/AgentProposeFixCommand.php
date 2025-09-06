@@ -124,11 +124,13 @@ class AgentProposeFixCommand extends Command
         if ($pintResult->failed()) {
             $this->warn('⚠️ Pint encountered issues: '.$pintResult->errorOutput());
             $this->info('Pint output: '.$pintResult->output());
+
             return true;
         }
 
         $this->info('✅ Pint completed successfully');
         $this->info('Pint output: '.$pintResult->output());
+
         return true;
     }
 
@@ -157,11 +159,13 @@ class AgentProposeFixCommand extends Command
         if ($phpstanResult->failed()) {
             $this->error('❌ PHPStan baseline generation failed: '.$phpstanResult->errorOutput());
             $this->error('PHPStan output: '.$phpstanResult->output());
+
             return false;
         }
 
         $this->info('✅ PHPStan baseline generated successfully');
         $this->info('PHPStan output: '.$phpstanResult->output());
+
         return true;
     }
 
@@ -209,6 +213,7 @@ class AgentProposeFixCommand extends Command
         if ($commitResult->failed()) {
             $this->warn('⚠️ No changes to commit or commit failed: '.$commitResult->errorOutput());
             $this->info('Git commit output: '.$commitResult->output());
+
             return;
         }
 

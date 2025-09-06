@@ -13,12 +13,13 @@ class AgentProposeFixCommandTest extends TestCase
     use RefreshDatabase;
 
     private ProcessService $processService;
+
     private AgentProposeFixCommand $command;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->processService = $this->createMock(ProcessService::class);
         $this->command = new AgentProposeFixCommand($this->processService);
     }
@@ -34,7 +35,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('getCommitMessage');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('style: Apply automated code style fixes', $method->invoke($this->command, 'style'));
         $this->assertEquals('refactor: Generate PHPStan baseline', $method->invoke($this->command, 'analysis'));
         $this->assertEquals('fix: Apply automated custom fixes', $method->invoke($this->command, 'custom'));
@@ -45,7 +46,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('getPullRequestTitle');
         $method->setAccessible(true);
-        
+
         $this->assertEquals('Automated Style Fixes', $method->invoke($this->command, 'style'));
         $this->assertEquals('Automated Static Analysis Fixes: PHPStan Baseline', $method->invoke($this->command, 'analysis'));
         $this->assertEquals('Automated custom Fixes', $method->invoke($this->command, 'custom'));
@@ -56,23 +57,22 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('getPullRequestBody');
         $method->setAccessible(true);
-        
+
         $styleBody = $method->invoke($this->command, 'style');
         $analysisBody = $method->invoke($this->command, 'analysis');
         $customBody = $method->invoke($this->command, 'custom');
-        
+
         $this->assertStringContainsString('Laravel Pint', $styleBody);
         $this->assertStringContainsString('PHPStan baseline', $analysisBody);
         $this->assertStringContainsString('custom fixes', $customBody);
     }
-
 
     public function test_process_service_is_injected_correctly()
     {
         $reflection = new \ReflectionClass($this->command);
         $property = $reflection->getProperty('processService');
         $property->setAccessible(true);
-        
+
         $this->assertSame($this->processService, $property->getValue($this->command));
     }
 
@@ -86,7 +86,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $property = $reflection->getProperty('signature');
         $property->setAccessible(true);
-        
+
         $this->assertEquals('agent:propose-fix {--type=style : The type of issue to fix (e.g., style, analysis)}', $property->getValue($this->command));
     }
 
@@ -95,7 +95,7 @@ class AgentProposeFixCommandTest extends TestCase
         $reflection = new \ReflectionClass($this->command);
         $property = $reflection->getProperty('description');
         $property->setAccessible(true);
-        
+
         $this->assertEquals('Propose automated fixes via Pull Request for different types of issues', $property->getValue($this->command));
     }
 
@@ -107,8 +107,8 @@ class AgentProposeFixCommandTest extends TestCase
         $result = $this->createMock(ProcessResult::class);
         $result->method('failed')->willReturn($failed);
         $result->method('output')->willReturn($output);
-        $result->method('errorOutput')->willReturn($failed ? 'Error: ' . $output : '');
-        
+        $result->method('errorOutput')->willReturn($failed ? 'Error: '.$output : '');
+
         return $result;
     }
 }
