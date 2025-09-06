@@ -9,14 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- *
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\User $user
  */
 class PriceAlert extends Model
 {
-    /** @use HasFactory<\App\Models\PriceAlert> */
     use HasFactory;
 
     protected $fillable = [
@@ -30,16 +27,16 @@ class PriceAlert extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\PriceAlert>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, \App\Models\PriceAlert>
      */
-    public function product(): BelongsTo
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(\App\Models\Product::class);
     }
 }

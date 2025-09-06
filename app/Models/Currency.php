@@ -9,12 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class Currency extends Model
 {
-    /** @use HasFactory<\App\Models\Currency> */
     use HasFactory;
 
     protected $guarded = [];
@@ -22,16 +18,16 @@ class Currency extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Store, \App\Models\Currency>
      */
-    public function stores(): HasMany
+    public function stores(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Store::class);
+        return $this->hasMany(\App\Models\Store::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Language, \App\Models\Currency, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
      */
-    public function languages(): BelongsToMany
+    public function languages(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Language::class, 'currency_language');
+        return $this->belongsToMany(\App\Models\Language::class, 'currency_language');
     }
 }

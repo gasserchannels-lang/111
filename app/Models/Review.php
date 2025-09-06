@@ -9,14 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- *
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\User $user
  */
 class Review extends Model
 {
-    /** @use HasFactory<\App\Models\Review> */
     use HasFactory;
 
     protected $fillable = [
@@ -42,17 +39,17 @@ class Review extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Review>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, \App\Models\Review>
      */
-    public function product(): BelongsTo
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(\App\Models\Product::class);
     }
 
     // دالة مساعدة للتوافق مع الكود القديم

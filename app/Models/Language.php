@@ -9,12 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class Language extends Model
 {
-    /** @use HasFactory<\App\Models\Language> */
     use HasFactory;
 
     /** @var list<string> */
@@ -37,9 +33,9 @@ class Language extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Currency, \App\Models\Language, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
      */
-    public function currencies(): BelongsToMany
+    public function currencies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Currency::class, 'language_currency')
+        return $this->belongsToMany(\App\Models\Currency::class, 'language_currency')
             ->withPivot('is_default')
             ->withTimestamps();
     }
@@ -57,9 +53,9 @@ class Language extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\UserLocaleSetting, \App\Models\Language>
      */
-    public function userLocaleSettings(): HasMany
+    public function userLocaleSettings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(UserLocaleSetting::class);
+        return $this->hasMany(\App\Models\UserLocaleSetting::class);
     }
 
     /**

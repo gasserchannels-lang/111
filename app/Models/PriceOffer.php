@@ -8,12 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class PriceOffer extends Model
 {
-    /** @use HasFactory<\App\Models\PriceOffer> */
     use HasFactory;
 
     protected $fillable = [
@@ -27,16 +23,16 @@ class PriceOffer extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, \App\Models\PriceOffer>
      */
-    public function product(): BelongsTo
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(\App\Models\Product::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Store, \App\Models\PriceOffer>
      */
-    public function store(): BelongsTo
+    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Store::class);
+        return $this->belongsTo(\App\Models\Store::class);
     }
 }

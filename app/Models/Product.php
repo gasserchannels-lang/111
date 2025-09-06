@@ -9,12 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class Product extends Model
 {
-    /** @use HasFactory<\App\Models\Product> */
     use HasFactory;
 
     protected $fillable = [
@@ -36,48 +32,48 @@ class Product extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Brand, \App\Models\Product>
      */
-    public function brand(): BelongsTo
+    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(\App\Models\Brand::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Product>
      */
-    public function category(): BelongsTo
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(\App\Models\Category::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceAlert, \App\Models\Product>
      */
-    public function priceAlerts(): HasMany
+    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(PriceAlert::class);
+        return $this->hasMany(\App\Models\PriceAlert::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Review, \App\Models\Product>
      */
-    public function reviews(): HasMany
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(\App\Models\Review::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Wishlist, \App\Models\Product>
      */
-    public function wishlists(): HasMany
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(\App\Models\Wishlist::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceOffer, \App\Models\Product>
      */
-    public function priceOffers(): HasMany
+    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(PriceOffer::class);
+        return $this->hasMany(\App\Models\PriceOffer::class);
     }
 }

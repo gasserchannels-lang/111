@@ -9,12 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class UserLocaleSetting extends Model
 {
-    /** @use HasFactory<\App\Models\UserLocaleSetting> */
     use HasFactory;
 
     protected $fillable = [
@@ -37,9 +33,9 @@ class UserLocaleSetting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\UserLocaleSetting>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     /**
@@ -47,9 +43,9 @@ class UserLocaleSetting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Language, \App\Models\UserLocaleSetting>
      */
-    public function language(): BelongsTo
+    public function language(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Language::class);
+        return $this->belongsTo(\App\Models\Language::class);
     }
 
     /**
@@ -57,9 +53,9 @@ class UserLocaleSetting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, \App\Models\UserLocaleSetting>
      */
-    public function currency(): BelongsTo
+    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Currency::class);
+        return $this->belongsTo(\App\Models\Currency::class);
     }
 
     /**

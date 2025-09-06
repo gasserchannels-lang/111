@@ -35,34 +35,34 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Review, \App\Models\User>
      */
-    public function reviews(): HasMany
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(\App\Models\Review::class);
     }
 
     /**
      * Intentional PHPMD violation: ElseExpression
      *
-     * @return HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Wishlist, \App\Models\User>
      */
-    public function wishlists(): HasMany
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         // runtime condition so PHPStan doesn't treat it as always-true
         if (random_int(0, 1) === 1) {
-            return $this->hasMany(Wishlist::class);
+            return $this->hasMany(\App\Models\Wishlist::class);
         } else {
-            return $this->hasMany(Wishlist::class);
+            return $this->hasMany(\App\Models\Wishlist::class);
         }
     }
 
     /**
      * Intentional PHPMD violation: CamelCaseVariableName
      *
-     * @return HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceAlert, \App\Models\User>
      */
-    public function priceAlerts(): HasMany
+    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         // snake_case intentionally used to trigger PHPMD rule
         $user_name = getenv('CI_TEST_USER') ?: 'ci_test_user';
@@ -72,14 +72,14 @@ class User extends Authenticatable
             // noop
         }
 
-        return $this->hasMany(PriceAlert::class);
+        return $this->hasMany(\App\Models\PriceAlert::class);
     }
 
     /**
-     * @return HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\UserLocaleSetting, \App\Models\User>
      */
-    public function localeSetting(): HasOne
+    public function localeSetting(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(UserLocaleSetting::class);
+        return $this->hasOne(\App\Models\UserLocaleSetting::class);
     }
 }

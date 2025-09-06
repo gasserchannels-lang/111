@@ -9,13 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class Category extends Model
 {
-    // ✅ الخطوة 1: إضافة الـ Trait الأساسي لربط الموديل بالـ Factory
-    /** @use HasFactory<\App\Models\Category> */
     use HasFactory;
 
     /**
@@ -37,9 +32,9 @@ class Category extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Category>
      */
-    public function parent(): BelongsTo
+    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Category::class, 'parent_id');
+        return $this->belongsTo(\App\Models\Category::class, 'parent_id');
     }
 
     /**
@@ -47,9 +42,9 @@ class Category extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Category, \App\Models\Category>
      */
-    public function children(): HasMany
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(\App\Models\Category::class, 'parent_id');
     }
 
     /**
@@ -57,8 +52,8 @@ class Category extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, \App\Models\Category>
      */
-    public function products(): HasMany
+    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Product::class, 'category_id');
+        return $this->hasMany(\App\Models\Product::class, 'category_id');
     }
 }

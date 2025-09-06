@@ -9,12 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
- */
 class Store extends Model
 {
-    /** @use HasFactory<\App\Models\Store> */
     use HasFactory;
 
     protected $guarded = [];
@@ -26,17 +22,17 @@ class Store extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceOffer, \App\Models\Store>
      */
-    public function priceOffers(): HasMany
+    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(PriceOffer::class);
+        return $this->hasMany(\App\Models\PriceOffer::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, \App\Models\Store>
      */
-    public function currency(): BelongsTo
+    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Currency::class);
+        return $this->belongsTo(\App\Models\Currency::class);
     }
 
     public function generateAffiliateUrl(string $productUrl): string
@@ -47,7 +43,8 @@ class Store extends Model
             return $productUrl;
         }
 
-        $affiliateUrl = str_replace('{AFFILIATE_CODE}', $this->api_config['affiliate_code'], $this->affiliate_base_url);
+        $affiliateCode = (string) $this->api_config['affiliate_code'];
+        $affiliateUrl = str_replace('{AFFILIATE_CODE}', $affiliateCode, $this->affiliate_base_url);
         $affiliateUrl = str_replace('{URL}', urlencode($productUrl), $affiliateUrl);
 
         return $affiliateUrl;

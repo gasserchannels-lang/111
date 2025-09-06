@@ -16,7 +16,8 @@ class AgentProposeFixCommandTest extends TestCase
     {
         parent::setUp();
 
-        $this->command = new AgentProposeFixCommand;
+        $processService = $this->createMock(\App\Services\ProcessService::class);
+        $this->command = new AgentProposeFixCommand($processService);
     }
 
     public function test_it_has_correct_signature_and_description()
@@ -85,108 +86,90 @@ class AgentProposeFixCommandTest extends TestCase
         $this->assertEquals('Propose automated fixes via Pull Request for different types of issues', $property->getValue($this->command));
     }
 
-    public function test_handle_method_accepts_process_parameter()
+    public function test_handle_method_accepts_no_parameters()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('handle');
         $parameters = $method->getParameters();
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
+        $this->assertCount(0, $parameters);
     }
 
-    public function test_create_branch_method_accepts_process_parameter()
+    public function test_create_branch_method_accepts_only_branch_name()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('createBranch');
         $parameters = $method->getParameters();
 
-        $this->assertCount(2, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
-        $this->assertEquals('branchName', $parameters[1]->getName());
+        $this->assertCount(1, $parameters);
+        $this->assertEquals('branchName', $parameters[0]->getName());
     }
 
-    public function test_run_fixer_method_accepts_process_parameter()
+    public function test_run_fixer_method_accepts_only_type()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('runFixer');
         $parameters = $method->getParameters();
 
-        $this->assertCount(2, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
-        $this->assertEquals('type', $parameters[1]->getName());
+        $this->assertCount(1, $parameters);
+        $this->assertEquals('type', $parameters[0]->getName());
     }
 
-    public function test_run_style_fixer_method_accepts_process_parameter()
+    public function test_run_style_fixer_method_accepts_no_parameters()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('runStyleFixer');
         $parameters = $method->getParameters();
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
+        $this->assertCount(0, $parameters);
     }
 
-    public function test_run_analysis_fixer_method_accepts_process_parameter()
+    public function test_run_analysis_fixer_method_accepts_no_parameters()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('runAnalysisFixer');
         $parameters = $method->getParameters();
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
+        $this->assertCount(0, $parameters);
     }
 
-    public function test_stage_changes_method_accepts_process_parameter()
+    public function test_stage_changes_method_accepts_no_parameters()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('stageChanges');
         $parameters = $method->getParameters();
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
+        $this->assertCount(0, $parameters);
     }
 
-    public function test_commit_changes_method_accepts_process_parameter()
+    public function test_commit_changes_method_accepts_only_type()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('commitChanges');
         $parameters = $method->getParameters();
 
-        $this->assertCount(2, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
-        $this->assertEquals('type', $parameters[1]->getName());
+        $this->assertCount(1, $parameters);
+        $this->assertEquals('type', $parameters[0]->getName());
     }
 
-    public function test_push_branch_method_accepts_process_parameter()
+    public function test_push_branch_method_accepts_only_branch_name()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('pushBranch');
         $parameters = $method->getParameters();
 
-        $this->assertCount(2, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
-        $this->assertEquals('branchName', $parameters[1]->getName());
+        $this->assertCount(1, $parameters);
+        $this->assertEquals('branchName', $parameters[0]->getName());
     }
 
-    public function test_create_pull_request_method_accepts_process_parameter()
+    public function test_create_pull_request_method_accepts_branch_name_and_type()
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('createPullRequest');
         $parameters = $method->getParameters();
 
-        $this->assertCount(3, $parameters);
-        $this->assertEquals('process', $parameters[0]->getName());
-        $this->assertEquals('Illuminate\Support\Facades\Process', $parameters[0]->getType()->getName());
-        $this->assertEquals('branchName', $parameters[1]->getName());
-        $this->assertEquals('type', $parameters[2]->getName());
+        $this->assertCount(2, $parameters);
+        $this->assertEquals('branchName', $parameters[0]->getName());
+        $this->assertEquals('type', $parameters[1]->getName());
     }
 }
