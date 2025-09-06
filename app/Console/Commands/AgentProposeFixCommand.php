@@ -27,17 +27,17 @@ class AgentProposeFixCommand extends Command
     public function handle()
     {
         $type = $this->option('type');
-        
+
         $this->info("🚀 Starting Agent Propose Fix process for type: {$type}");
 
         // Generate unique branch name with timestamp
         $timestamp = now()->format('Y-m-d-H-i-s');
         $branchName = "fix/{$type}-fixes-{$timestamp}";
-        
+
         $this->info("📝 Generated branch name: {$branchName}");
 
         // Step 1: Create and switch to new branch
-        if (!$this->createBranch($branchName)) {
+        if (! $this->createBranch($branchName)) {
             return 1;
         }
 
@@ -48,7 +48,7 @@ class AgentProposeFixCommand extends Command
         }
 
         // Step 3: Stage all changes
-        if (!$this->stageChanges()) {
+        if (! $this->stageChanges()) {
             return 1;
         }
 
@@ -56,18 +56,18 @@ class AgentProposeFixCommand extends Command
         $this->commitChanges($type);
 
         // Step 5: Push the new branch to remote
-        if (!$this->pushBranch($branchName)) {
+        if (! $this->pushBranch($branchName)) {
             return 1;
         }
 
         // Step 6: Create Pull Request
-        if (!$this->createPullRequest($branchName, $type)) {
+        if (! $this->createPullRequest($branchName, $type)) {
             return 1;
         }
 
         $this->info('🎉 Agent Propose Fix process completed successfully!');
         $this->info("✅ Branch '{$branchName}' has been pushed and Pull Request created.");
-        
+
         return 0;
     }
 
@@ -78,15 +78,16 @@ class AgentProposeFixCommand extends Command
     {
         $this->info('🌿 Creating and switching to new branch...');
         $checkoutResult = Process::run("git checkout -b {$branchName}");
-        
+
         if ($checkoutResult->failed()) {
-            $this->error('❌ Failed to create branch: ' . $checkoutResult->errorOutput());
+            $this->error('❌ Failed to create branch: '.$checkoutResult->errorOutput());
+
             return false;
         }
-        
+
         $this->info('✅ Branch created successfully');
-        $this->info('Git output: ' . $checkoutResult->output());
-        
+        $this->info('Git output: '.$checkoutResult->output());
+
         return true;
     }
 
@@ -110,15 +111,15 @@ class AgentProposeFixCommand extends Command
         $this->info('🎨 Running Laravel Pint code style fixer...');
         $pintPath = implode(DIRECTORY_SEPARATOR, ['.', 'vendor', 'bin', 'pint']);
         $pintResult = Process::run($pintPath);
-        
+
         if ($pintResult->failed()) {
-            $this->warn('⚠️ Pint encountered issues: ' . $pintResult->errorOutput());
+            $this->warn('⚠️ Pint encountered issues: '.$pintResult->errorOutput());
         } else {
             $this->info('✅ Pint completed successfully');
         }
-        
-        $this->info('Pint output: ' . $pintResult->output());
-        
+
+        $this->info('Pint output: '.$pintResult->output());
+
         return true;
     }
 
@@ -128,31 +129,32 @@ class AgentProposeFixCommand extends Command
     private function runAnalysisFixer(): bool
     {
         $this->info('🔍 Running PHPStan to generate a baseline...');
-        
+
         // Define the path to the baseline file
         $baselinePath = 'phpstan-baseline.neon';
-        
+
         // Check if baseline file exists, create empty one if not
-        if (!file_exists($baselinePath)) {
+        if (! file_exists($baselinePath)) {
             $this->info('INFO: Baseline file not found. Creating an empty one.');
             file_put_contents($baselinePath, '');
         }
-        
+
         // Define OS-agnostic path for PHPStan
         $phpstanPath = implode(DIRECTORY_SEPARATOR, ['.', 'vendor', 'bin', 'phpstan']);
-        
+
         // Run PHPStan with --generate-baseline
         $phpstanResult = Process::run([$phpstanPath, 'analyse', '--generate-baseline']);
-        
+
         if ($phpstanResult->failed()) {
-            $this->error('❌ PHPStan baseline generation failed: ' . $phpstanResult->errorOutput());
-            $this->error('PHPStan output: ' . $phpstanResult->output());
+            $this->error('❌ PHPStan baseline generation failed: '.$phpstanResult->errorOutput());
+            $this->error('PHPStan output: '.$phpstanResult->output());
+
             return false;
         }
-        
+
         $this->info('✅ PHPStan baseline generated successfully');
-        $this->info('PHPStan output: ' . $phpstanResult->output());
-        
+        $this->info('PHPStan output: '.$phpstanResult->output());
+
         return true;
     }
 
@@ -163,6 +165,7 @@ class AgentProposeFixCommand extends Command
     {
         $this->error("❌ The fix type '{$type}' is not yet supported.");
         $this->info('Supported types: style, analysis');
+
         return false;
     }
 
@@ -173,15 +176,16 @@ class AgentProposeFixCommand extends Command
     {
         $this->info('📦 Staging all changes...');
         $addResult = Process::run('git add .');
-        
+
         if ($addResult->failed()) {
-            $this->error('❌ Failed to stage changes: ' . $addResult->errorOutput());
+            $this->error('❌ Failed to stage changes: '.$addResult->errorOutput());
+
             return false;
         }
-        
+
         $this->info('✅ Changes staged successfully');
-        $this->info('Git add output: ' . $addResult->output());
-        
+        $this->info('Git add output: '.$addResult->output());
+
         return true;
     }
 
@@ -191,17 +195,17 @@ class AgentProposeFixCommand extends Command
     private function commitChanges(string $type): void
     {
         $commitMessage = $this->getCommitMessage($type);
-        
+
         $this->info('💾 Committing changes...');
         $commitResult = Process::run("git commit -m \"{$commitMessage}\"");
-        
+
         if ($commitResult->failed()) {
-            $this->warn('⚠️ No changes to commit or commit failed: ' . $commitResult->errorOutput());
+            $this->warn('⚠️ No changes to commit or commit failed: '.$commitResult->errorOutput());
         } else {
             $this->info('✅ Changes committed successfully');
         }
-        
-        $this->info('Git commit output: ' . $commitResult->output());
+
+        $this->info('Git commit output: '.$commitResult->output());
     }
 
     /**
@@ -211,15 +215,16 @@ class AgentProposeFixCommand extends Command
     {
         $this->info('🚀 Pushing branch to remote repository...');
         $pushResult = Process::run("git push --set-upstream origin {$branchName}");
-        
+
         if ($pushResult->failed()) {
-            $this->error('❌ Failed to push branch: ' . $pushResult->errorOutput());
+            $this->error('❌ Failed to push branch: '.$pushResult->errorOutput());
+
             return false;
         }
-        
+
         $this->info('✅ Branch pushed successfully');
-        $this->info('Git push output: ' . $pushResult->output());
-        
+        $this->info('Git push output: '.$pushResult->output());
+
         return true;
     }
 
@@ -230,26 +235,27 @@ class AgentProposeFixCommand extends Command
     {
         $prTitle = $this->getPullRequestTitle($type);
         $prBody = $this->getPullRequestBody($type);
-        
+
         $this->info('🔗 Creating Pull Request...');
         $prResult = Process::run([
             'gh', 'pr', 'create',
             '--base', 'main',
             '--head', $branchName,
             '--title', $prTitle,
-            '--body', $prBody
+            '--body', $prBody,
         ]);
-        
+
         if ($prResult->failed()) {
-            $this->error('❌ Failed to create Pull Request: ' . $prResult->errorOutput());
+            $this->error('❌ Failed to create Pull Request: '.$prResult->errorOutput());
             $this->warn('⚠️ Branch was pushed successfully, but PR creation failed.');
-            $this->warn('You can manually create the PR at: https://github.com/your-repo/compare/main...' . $branchName);
+            $this->warn('You can manually create the PR at: https://github.com/your-repo/compare/main...'.$branchName);
+
             return false;
         }
-        
+
         $this->info('✅ Pull Request created successfully');
-        $this->info('PR output: ' . $prResult->output());
-        
+        $this->info('PR output: '.$prResult->output());
+
         return true;
     }
 

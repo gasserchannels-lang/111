@@ -51,9 +51,22 @@ definition+database\factories\storefactory::definitionŒ
 definition+database\factories\brandfactory::definitionŽ
  database\factories\reviewfactory.illuminate\database\eloquent\factories\factory:
 
-definition,database\factories\reviewfactory::definition¼
-+app\console\commands\agentproposefixcommandilluminate\console\command=
-handle3app\console\commands\agentproposefixcommand::handle"description"	signature*
+definition,database\factories\reviewfactory::definitionþ
++app\console\commands\agentproposefixcommandilluminate\console\commandK
+commitchanges:app\console\commands\agentproposefixcommand::commitchangesI
+createbranch9app\console\commands\agentproposefixcommand::createbranchS
+createpullrequest>app\console\commands\agentproposefixcommand::createpullrequestQ
+getcommitmessage=app\console\commands\agentproposefixcommand::getcommitmessageU
+getpullrequestbody?app\console\commands\agentproposefixcommand::getpullrequestbodyW
+getpullrequesttitle@app\console\commands\agentproposefixcommand::getpullrequesttitle=
+handle3app\console\commands\agentproposefixcommand::handle[
+handleunsupportedtypeBapp\console\commands\agentproposefixcommand::handleunsupportedtypeE
+
+pushbranch7app\console\commands\agentproposefixcommand::pushbranchQ
+runanalysisfixer=app\console\commands\agentproposefixcommand::runanalysisfixerA
+runfixer5app\console\commands\agentproposefixcommand::runfixerK
+runstylefixer:app\console\commands\agentproposefixcommand::runstylefixerI
+stagechanges9app\console\commands\agentproposefixcommand::stagechanges"description"	signature*
 description*
 	signatureƒ
 .app\http\controllers\api\pricesearchcontrollerapp\http\controllers\controllerJ
