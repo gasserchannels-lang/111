@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Services\ProcessService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Process;
 
 class AgentProposeFixCommand extends Command
 {
@@ -20,6 +20,15 @@ class AgentProposeFixCommand extends Command
      * @var string
      */
     protected $description = 'Propose automated fixes via Pull Request for different types of issues';
+
+    /**
+     * Create a new command instance.
+     */
+    public function __construct(
+        private readonly ProcessService $processService
+    ) {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
@@ -77,7 +86,7 @@ class AgentProposeFixCommand extends Command
     private function createBranch(string $branchName): bool
     {
         $this->info('🌿 Creating and switching to new branch...');
-        $checkoutResult = Process::run("git checkout -b {$branchName}");
+        $checkoutResult = $this->processService->run("git checkout -b {$branchName}");
 
         if ($checkoutResult->failed()) {
             $this->error('❌ Failed to create branch: '.$checkoutResult->errorOutput());
@@ -110,14 +119,16 @@ class AgentProposeFixCommand extends Command
     {
         $this->info('🎨 Running Laravel Pint code style fixer...');
         $pintPath = implode(DIRECTORY_SEPARATOR, ['.', 'vendor', 'bin', 'pint']);
-        $pintResult = Process::run($pintPath);
+        $pintResult = $this->processService->run($pintPath);
 
         if ($pintResult->failed()) {
             $this->warn('⚠️ Pint encountered issues: '.$pintResult->errorOutput());
-        } else {
-            $this->info('✅ Pint completed successfully');
+            $this->info('Pint output: '.$pintResult->output());
+
+            return true;
         }
 
+        $this->info('✅ Pint completed successfully');
         $this->info('Pint output: '.$pintResult->output());
 
         return true;
@@ -143,7 +154,7 @@ class AgentProposeFixCommand extends Command
         $phpstanPath = implode(DIRECTORY_SEPARATOR, ['.', 'vendor', 'bin', 'phpstan']);
 
         // Run PHPStan with --generate-baseline and increased memory limit
-        $phpstanResult = Process::run(['php', '-d', 'memory_limit=512M', $phpstanPath, 'analyse', '--generate-baseline']);
+        $phpstanResult = $this->processService->run(['php', '-d', 'memory_limit=512M', $phpstanPath, 'analyse', '--generate-baseline']);
 
         if ($phpstanResult->failed()) {
             $this->error('❌ PHPStan baseline generation failed: '.$phpstanResult->errorOutput());
@@ -175,7 +186,7 @@ class AgentProposeFixCommand extends Command
     private function stageChanges(): bool
     {
         $this->info('📦 Staging all changes...');
-        $addResult = Process::run('git add .');
+        $addResult = $this->processService->run('git add .');
 
         if ($addResult->failed()) {
             $this->error('❌ Failed to stage changes: '.$addResult->errorOutput());
@@ -197,14 +208,16 @@ class AgentProposeFixCommand extends Command
         $commitMessage = $this->getCommitMessage($type);
 
         $this->info('💾 Committing changes...');
-        $commitResult = Process::run("git commit -m \"{$commitMessage}\"");
+        $commitResult = $this->processService->run("git commit -m \"{$commitMessage}\"");
 
         if ($commitResult->failed()) {
             $this->warn('⚠️ No changes to commit or commit failed: '.$commitResult->errorOutput());
-        } else {
-            $this->info('✅ Changes committed successfully');
+            $this->info('Git commit output: '.$commitResult->output());
+
+            return;
         }
 
+        $this->info('✅ Changes committed successfully');
         $this->info('Git commit output: '.$commitResult->output());
     }
 
@@ -214,7 +227,7 @@ class AgentProposeFixCommand extends Command
     private function pushBranch(string $branchName): bool
     {
         $this->info('🚀 Pushing branch to remote repository...');
-        $pushResult = Process::run("git push --set-upstream origin {$branchName}");
+        $pushResult = $this->processService->run("git push --set-upstream origin {$branchName}");
 
         if ($pushResult->failed()) {
             $this->error('❌ Failed to push branch: '.$pushResult->errorOutput());
@@ -237,7 +250,7 @@ class AgentProposeFixCommand extends Command
         $prBody = $this->getPullRequestBody($type);
 
         $this->info('🔗 Creating Pull Request...');
-        $prResult = Process::run([
+        $prResult = $this->processService->run([
             'gh', 'pr', 'create',
             '--base', 'main',
             '--head', $branchName,
