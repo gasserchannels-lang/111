@@ -11,7 +11,7 @@ class TestAnalysisService
 {
     private bool $coverageEnabled;
 
-    private function __construct(bool $coverageEnabled)
+    public function __construct(bool $coverageEnabled = false)
     {
         $this->coverageEnabled = $coverageEnabled;
     }
@@ -29,7 +29,7 @@ class TestAnalysisService
     /**
      * Run comprehensive test analysis
      */
-    public function analyze(): array
+    public function analyze(): array<string, mixed>
     {
         $score = 0;
         $issues = [];
@@ -59,7 +59,7 @@ class TestAnalysisService
     /**
      * Build test command
      */
-    private function buildTestCommand(): array
+    private function buildTestCommand(): array<string>
     {
         $command = ['./vendor/bin/pest'];
         if ($this->coverageEnabled) {
@@ -72,7 +72,7 @@ class TestAnalysisService
     /**
      * Run test process
      */
-    private function runTestProcess(array $command): Process
+    private function runTestProcess(array<string> $command): Process
     {
         $process = new Process($command);
         $process->setTimeout(1800); // Increased timeout to 30 mins for coverage
@@ -111,7 +111,7 @@ class TestAnalysisService
         if (preg_match('/Lines:\s+(\d+\.\d+)%/', $output, $matches)) {
             $coverage = (float) $matches[1];
 
-            return ($coverage / 100) * 30;
+            return (int) (($coverage / 100) * 30);
         }
 
         $issues[] = 'Code coverage information not available';
@@ -124,7 +124,7 @@ class TestAnalysisService
      */
     private function handleTestProcessException(ProcessFailedException $exception, array &$issues): void
     {
-        if ($exception->getProcess()->isTimeout()) {
+        if ($exception->getProcess()->isTimedOut()) {
             $issues[] = 'Test analysis failed: The process exceeded the timeout.';
 
             return;

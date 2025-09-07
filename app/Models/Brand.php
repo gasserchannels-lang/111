@@ -30,7 +30,7 @@ class Brand extends Model
     /**
      * @use HasFactory<BrandFactory>
      */
-    use HasFactory;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>>;
 
     /**
      * Mass assignable attributes.

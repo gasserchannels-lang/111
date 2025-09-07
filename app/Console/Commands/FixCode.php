@@ -14,7 +14,7 @@ class FixCode extends Command
 
     protected $description = 'Automatically fixes code style issues using Laravel Pint.';
 
-    private $phpPath;
+    private string $phpPath;
 
     public function __construct()
     {
@@ -25,7 +25,7 @@ class FixCode extends Command
         }
     }
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🚀 Starting Automatic Code Fixer...');
 
@@ -40,7 +40,7 @@ class FixCode extends Command
         return self::SUCCESS;
     }
 
-    private function runTool(string $message, array $command): int
+    private function runTool(string $message, array<string> $command): int
     {
         $this->line('');
         $this->info($message);

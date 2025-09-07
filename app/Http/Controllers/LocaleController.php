@@ -26,7 +26,7 @@ class LocaleController extends Controller
         $this->app = $app;
     }
 
-    public function switchLanguage(Request $request)
+    public function switchLanguage(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'language' => 'required|string|in:en,ar,fr,es,de', // Add supported locales
@@ -41,7 +41,7 @@ class LocaleController extends Controller
         return redirect()->back();
     }
 
-    public function changeLanguage($languageCode)
+    public function changeLanguage(string $languageCode): \Illuminate\Http\RedirectResponse
     {
         $language = Language::where('code', $languageCode)->first();
 
@@ -69,7 +69,7 @@ class LocaleController extends Controller
     }
 
     // تم حذف المتغير غير المستخدم من هنا
-    public function changeCurrency($currencyCode)
+    public function changeCurrency(string $currencyCode): \Illuminate\Http\RedirectResponse
     {
         $currency = Currency::where('code', $currencyCode)->first();
 

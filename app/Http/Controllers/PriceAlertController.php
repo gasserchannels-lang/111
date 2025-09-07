@@ -13,14 +13,14 @@ class PriceAlertController extends Controller
 {
     private const UNAUTHORIZED_MESSAGE = 'Unauthorized action.';
 
-    public function index(Guard $auth)
+    public function index(Guard $auth): \Illuminate\View\View
     {
         $priceAlerts = $auth->user()->priceAlerts()->with('product')->latest()->paginate(10);
 
         return view('price-alerts.index', ['priceAlerts' => $priceAlerts]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): \Illuminate\View\View
     {
         $product = null;
         if ($request->has('product_id')) {
@@ -30,7 +30,7 @@ class PriceAlertController extends Controller
         return view('price-alerts.create', ['product' => $product]);
     }
 
-    public function store(Request $request, Guard $auth)
+    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -52,7 +52,7 @@ class PriceAlertController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PriceAlert $priceAlert, Guard $auth)
+    public function show(PriceAlert $priceAlert, Guard $auth): \Illuminate\View\View
     {
         // التحقق من أن المستخدم هو صاحب التنبيه
         if ($priceAlert->user_id !== $auth->id()) {
@@ -69,7 +69,7 @@ class PriceAlertController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PriceAlert $priceAlert, Guard $auth)
+    public function edit(PriceAlert $priceAlert, Guard $auth): \Illuminate\View\View
     {
         if ($priceAlert->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
@@ -81,7 +81,7 @@ class PriceAlertController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PriceAlert $priceAlert, Guard $auth)
+    public function update(Request $request, PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         if ($priceAlert->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
@@ -104,7 +104,7 @@ class PriceAlertController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PriceAlert $priceAlert, Guard $auth)
+    public function destroy(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         if ($priceAlert->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
@@ -119,7 +119,7 @@ class PriceAlertController extends Controller
     /**
      * Toggle alert status
      */
-    public function toggle(PriceAlert $priceAlert, Guard $auth)
+    public function toggle(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         if ($priceAlert->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);

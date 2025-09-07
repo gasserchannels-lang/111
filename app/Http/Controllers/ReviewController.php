@@ -17,7 +17,7 @@ class ReviewController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Guard $auth)
+    public function index(Guard $auth): \Illuminate\View\View
     {
         // عرض المراجعات الخاصة بالمستخدم الحالي
         $reviews = $auth->user()->reviews()->with('product')->latest()->paginate(10);
@@ -28,7 +28,7 @@ class ReviewController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Product $product, Guard $auth)
+    public function create(Product $product, Guard $auth): \Illuminate\View\View
     {
         // التحقق مما إذا كان المستخدم قد قام بمراجعة هذا المنتج بالفعل
         $existingReview = $product->reviews()->where('user_id', $auth->id())->exists();
@@ -44,7 +44,7 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Guard $auth)
+    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -76,7 +76,7 @@ class ReviewController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Review $review, Guard $auth)
+    public function edit(Review $review, Guard $auth): \Illuminate\View\View
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
         if ($review->user_id !== $auth->id()) {
@@ -89,7 +89,7 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Review $review, Guard $auth)
+    public function update(Request $request, Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
         if ($review->user_id !== $auth->id()) {
@@ -111,10 +111,10 @@ class ReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Review $review, Guard $auth)
+    public function destroy(Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         // التحقق من أن المستخدم هو صاحب المراجعة أو مدير
-        if ($review->user_id !== $auth->id() && ! $auth->user()->is_admin) {
+        if ($review->user_id !== $auth->id() && ! $auth->user()->isAdmin()) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 

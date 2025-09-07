@@ -8,6 +8,7 @@ use App\Models\Store;
 use Exception;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Http;
 use Throwable;
@@ -24,7 +25,7 @@ class PriceSearchController extends Controller
         $this->log = $log;
     }
 
-    public function bestOffer(Request $request)
+    public function bestOffer(Request $request): JsonResponse
     {
         try {
             // The simple and guaranteed fix: a special test case
@@ -68,7 +69,7 @@ class PriceSearchController extends Controller
         }
     }
 
-    public function supportedStores(Request $request)
+    public function supportedStores(Request $request): JsonResponse
     {
         try {
             $countryCode = $this->getCountryCode($request);

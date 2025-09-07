@@ -23,8 +23,15 @@ class ProcessService
     /**
      * Run a process command.
      */
-    public function run(string|array $command): ProcessResult
+    public function run(string|array<string> $command): ProcessResult
     {
-        return $this->processFactory->run($command);
+        $process = $this->processFactory->new($command);
+        $process->run();
+        
+        return new ProcessResult(
+            $process->getExitCode(),
+            $process->getOutput(),
+            $process->getErrorOutput()
+        );
     }
 }

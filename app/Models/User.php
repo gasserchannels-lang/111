@@ -37,7 +37,7 @@ class User extends Authenticatable
     /**
      * @use HasFactory<UserFactory>
      */
-    use HasFactory, Notifiable;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>>, Notifiable;
 
     protected $fillable = [
         'name',
@@ -106,5 +106,13 @@ class User extends Authenticatable
     public function localeSetting(): HasOne
     {
         return $this->hasOne(UserLocaleSetting::class);
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->is_admin ?? false;
     }
 }

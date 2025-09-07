@@ -32,7 +32,7 @@ class Currency extends Model
     /**
      * @use HasFactory<CurrencyFactory>
      */
-    use HasFactory;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Currency>>;
 
     protected $guarded = [];
 

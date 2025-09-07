@@ -11,7 +11,7 @@ class QualityAnalysisService
     /**
      * Run comprehensive code quality analysis
      */
-    public function analyze(): array
+    public function analyze(): array<string, mixed>
     {
         $score = 0;
         $issues = [];
@@ -35,7 +35,7 @@ class QualityAnalysisService
     /**
      * Run PHPMD analysis
      */
-    private function runPhpmdAnalysis(array &$issues): int
+    private function runPhpmdAnalysis(array<string, mixed> &$issues): int
     {
         if (! $this->commandExists('vendor/bin/phpmd')) {
             return 0;
@@ -59,7 +59,7 @@ class QualityAnalysisService
     /**
      * Run PHPCPD analysis
      */
-    private function runPhpcpdAnalysis(array &$issues): int
+    private function runPhpcpdAnalysis(array<string, mixed> &$issues): int
     {
         if (! $this->commandExists('vendor/bin/phpcpd')) {
             return 0;

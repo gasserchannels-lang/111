@@ -34,7 +34,7 @@ class Store extends Model
     /**
      * @use HasFactory<StoreFactory>
      */
-    use HasFactory;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Store>>;
 
     protected $guarded = [];
 

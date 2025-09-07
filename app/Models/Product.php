@@ -40,7 +40,7 @@ class Product extends Model
     /**
      * @use HasFactory<ProductFactory>
      */
-    use HasFactory;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>>;
 
     protected $fillable = [
         'name',

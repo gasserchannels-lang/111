@@ -9,7 +9,7 @@ class PerformanceAnalysisService
     /**
      * Run comprehensive performance analysis
      */
-    public function analyze(): array
+    public function analyze(): array<string, mixed>
     {
         $score = 0;
         $issues = [];
@@ -35,7 +35,7 @@ class PerformanceAnalysisService
     /**
      * Check cache configuration
      */
-    private function checkCacheConfiguration(array &$issues): int
+    private function checkCacheConfiguration(array<string, mixed> &$issues): int
     {
         if (config('cache.default') !== 'file') {
             return 25;
@@ -49,7 +49,7 @@ class PerformanceAnalysisService
     /**
      * Check database indexes
      */
-    private function checkDatabaseIndexes(array &$issues): int
+    private function checkDatabaseIndexes(array<string, mixed> &$issues): int
     {
         $migrationFiles = glob(database_path('migrations/*.php'));
         foreach ($migrationFiles as $file) {
@@ -66,7 +66,7 @@ class PerformanceAnalysisService
     /**
      * Check asset compilation
      */
-    private function checkAssetCompilation(array &$issues): int
+    private function checkAssetCompilation(array<string, mixed> &$issues): int
     {
         if (file_exists(public_path('build/manifest.json'))) {
             return 25;
@@ -80,7 +80,7 @@ class PerformanceAnalysisService
     /**
      * Check queue configuration
      */
-    private function checkQueueConfiguration(array &$issues): int
+    private function checkQueueConfiguration(array<string, mixed> &$issues): int
     {
         if (config('queue.default') !== 'sync') {
             return 25;

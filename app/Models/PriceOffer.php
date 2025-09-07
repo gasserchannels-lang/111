@@ -33,7 +33,7 @@ class PriceOffer extends Model
     /**
      * @use HasFactory<PriceOfferFactory>
      */
-    use HasFactory;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PriceOffer>>;
 
     protected $fillable = [
         'product_id',

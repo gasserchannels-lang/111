@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         // ابدأ بكود بسيط جدًا لضمان عمله
         return view('welcome');

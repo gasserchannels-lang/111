@@ -33,7 +33,7 @@ class PriceAlert extends Model
     /**
      * @use HasFactory<PriceAlertFactory>
      */
-    use HasFactory;
+    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PriceAlert>>;
 
     protected $fillable = [
         'user_id',

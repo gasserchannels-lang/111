@@ -23,9 +23,9 @@ class WishlistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
-        $wishlistItems = $this->auth->user()->wishlist()->with('product')->get();
+        $wishlistItems = $this->auth->user()->wishlists()->with('product')->get();
 
         return view('wishlist.index', ['wishlistItems' => $wishlistItems]);
     }
@@ -33,14 +33,14 @@ class WishlistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
         // التحقق من أن المنتج ليس في المفضلة بالفعل
-        $existingWishlist = $this->auth->user()->wishlist()
+        $existingWishlist = $this->auth->user()->wishlists()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -51,7 +51,7 @@ class WishlistController extends Controller
             ]);
         }
 
-        $this->auth->user()->wishlist()->create([
+        $this->auth->user()->wishlists()->create([
             'product_id' => $request->product_id,
         ]);
 
@@ -64,13 +64,13 @@ class WishlistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
-        $wishlist = $this->auth->user()->wishlist()
+        $wishlist = $this->auth->user()->wishlists()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -92,13 +92,13 @@ class WishlistController extends Controller
     /**
      * Toggle product in wishlist
      */
-    public function toggle(Request $request)
+    public function toggle(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
-        $wishlist = $this->auth->user()->wishlist()
+        $wishlist = $this->auth->user()->wishlists()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -110,7 +110,7 @@ class WishlistController extends Controller
         }
 
         // إذا لم يكن موجودًا، قم بإضافته
-        $this->auth->user()->wishlist()->create([
+        $this->auth->user()->wishlists()->create([
             'product_id' => $request->product_id,
         ]);
 

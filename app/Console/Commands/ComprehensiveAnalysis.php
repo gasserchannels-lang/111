@@ -14,7 +14,7 @@ class ComprehensiveAnalysis extends Command
 
     protected $description = 'Run comprehensive code analysis including security, quality, and tests';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🚀 Starting Comprehensive Analysis...');
 
@@ -52,7 +52,7 @@ class ComprehensiveAnalysis extends Command
         return Command::SUCCESS;
     }
 
-    private function runSecurityAnalysis(): array
+    private function runSecurityAnalysis(): array<string, mixed>
     {
         $this->info('🛡️  Running Security Analysis...');
 
@@ -77,7 +77,7 @@ class ComprehensiveAnalysis extends Command
         return $result;
     }
 
-    private function runQualityAnalysis(): array
+    private function runQualityAnalysis(): array<string, mixed>
     {
         $this->info('📊 Running Code Quality Analysis...');
 
@@ -107,7 +107,7 @@ class ComprehensiveAnalysis extends Command
         return $result;
     }
 
-    private function runTestsAnalysis(): array
+    private function runTestsAnalysis(): array<string, mixed>
     {
         $this->info('🧪 Running Tests Analysis...');
 
@@ -143,7 +143,7 @@ class ComprehensiveAnalysis extends Command
         return $result;
     }
 
-    private function runPerformanceAnalysis(): array
+    private function runPerformanceAnalysis(): array<string, mixed>
     {
         $this->info('⚡ Running Performance Analysis...');
 
@@ -152,7 +152,7 @@ class ComprehensiveAnalysis extends Command
         return $performanceService->analyze();
     }
 
-    private function generateSummary(array $results, int $totalScore, int $maxScore): void
+    private function generateSummary(array<string, mixed> $results, int $totalScore, int $maxScore): void
     {
         $this->newLine();
         $this->info('📋 COMPREHENSIVE ANALYSIS SUMMARY');

@@ -30,11 +30,12 @@ class RouteConfigurationService
 
     public function configureRoutes(): void
     {
-        $this->router->middleware('api')
-            ->prefix('api')
-            ->group(base_path('routes/api.php'));
+        $this->router->group(['middleware' => 'api', 'prefix' => 'api'], function () {
+            require base_path('routes/api.php');
+        });
 
-        $this->router->middleware('web')
-            ->group(base_path('routes/web.php'));
+        $this->router->group(['middleware' => 'web'], function () {
+            require base_path('routes/web.php');
+        });
     }
 }
