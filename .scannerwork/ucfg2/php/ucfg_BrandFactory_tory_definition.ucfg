@@ -1,148 +1,0 @@
-
-+database\factories\brandfactory::definitionU
-K/home/runner/work/my-website/my-website/database/factories/BrandFactory.php ("1*¿
-1 (
-
- (	
-%1"$Arrayd
-b
- ("
-%2"__id*J
-
-__unknown_file (.*,!
-database\factories\brandfactory"
-fakerI
-G
- (+
-%3"__id*/
-
-__unknown_file (*
-
-%2"	
-companyã
-à
- (	
-%4"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-name*"
-
-__unknown_file (
-
-%3d
-b
- ("
-%5"__id*J
-
-__unknown_file (.*,!
-database\factories\brandfactory"
-fakerF
-D
- ((
-%6"__id*,
-
-__unknown_file (*
-
-%5"
-slugã
-à
- (	
-%7"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-slug*"
-
-__unknown_file (
-
-%6d
-b
- (&
-%8"__id*J
-
-__unknown_file (.*,!
-database\factories\brandfactory"
-fakerØ¨
- (D
-%9*"
-
-__unknown_file (
-
-%8*!
-
-__unknown_file (2»*!
-
-__unknown_file (2»*&
-
-__unknown_file (
-
-brands2imageurlê
-ç
- (	
-%10"__mapSet*"
-
-__unknown_file (
-
-%1*(
-
-__unknown_file (
-
-logo_url*"
-
-__unknown_file (
-
-%9e
-c
- ()
-%11"__id*J
-
-__unknown_file (.*,!
-database\factories\brandfactory"
-fakerG
-E
- (.
-%12"__id*,
-
-__unknown_file (*
-
-%11"
-urlî
-ë
- (	
-%13"__mapSet*"
-
-__unknown_file (
-
-%1*+
-
-__unknown_file (
-website_url*#
-
-__unknown_file (
-
-%12ì
-ê
- (	
-%14"__mapSet*"
-
-__unknown_file (
-
-%1*)
-
-__unknown_file (
-	is_active*$
-
-__unknown_file (
-true"
- (
-
-
-%1B#!
-database\factories\brandfactoryH

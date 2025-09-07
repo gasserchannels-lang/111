@@ -20,19 +20,19 @@ class Store extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceOffer, \App\Models\Store>
+     * @return HasMany<PriceOffer>
      */
-    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceOffers(): HasMany
     {
-        return $this->hasMany(\App\Models\PriceOffer::class);
+        return $this->hasMany(PriceOffer::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, \App\Models\Store>
+     * @return BelongsTo<Currency>
      */
-    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currency(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Currency::class);
+        return $this->belongsTo(Currency::class);
     }
 
     public function generateAffiliateUrl(string $productUrl): string
@@ -44,7 +44,9 @@ class Store extends Model
         }
 
         $affiliateCode = (string) $this->api_config['affiliate_code'];
-        $affiliateUrl = str_replace('{AFFILIATE_CODE}', $affiliateCode, $this->affiliate_base_url);
+        $affiliateBaseUrl = (string) $this->affiliate_base_url;
+
+        $affiliateUrl = str_replace('{AFFILIATE_CODE}', $affiliateCode, $affiliateBaseUrl);
         $affiliateUrl = str_replace('{URL}', urlencode($productUrl), $affiliateUrl);
 
         return $affiliateUrl;

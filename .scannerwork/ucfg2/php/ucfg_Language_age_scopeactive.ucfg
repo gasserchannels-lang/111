@@ -1,31 +1,0 @@
-
- app\models\language::scopeactiveI
-?/home/runner/work/my-website/my-website/app/Models/Language.phpF F("1*4
-2
-Language.php"
-I I(
-implicit return*©
-1H H(0x
-v
-F F(
-$queryBuilder"__id*S
-
-__unknown_file (7
-5
-$queryBuilder$illuminate\database\eloquent\builderš—
-H H(/
-%1*-
-
-__unknown_file (
-
-$queryBuilder*)
-
-__unknown_file (
-	is_active*$
-
-__unknown_file (
-true2where*
-2:A
-F  F(S5
-$queryBuilder$illuminate\database\eloquent\builderB
-app\models\languageH

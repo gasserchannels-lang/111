@@ -1,17 +1,0 @@
-
-W__sonar_lambda_/home/runner/work/my-website/my-website/app/Exceptions/Handler.php_21_26L
-B/home/runner/work/my-website/my-website/app/Exceptions/Handler.php (""1*|
-1
-Handler.phpG
-E
- ("
-$e"__id*-
-
-__unknown_file (
-
-$e	throwable"
- (	
-implicit return:
-$ (0
-$e	throwableB
-app\exceptions\handlerH

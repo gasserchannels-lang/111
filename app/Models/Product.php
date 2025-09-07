@@ -30,50 +30,50 @@ class Product extends Model
 
     // --- العلاقات ---
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Brand, \App\Models\Product>
+     * @return BelongsTo<Brand>
      */
-    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function brand(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Brand::class);
+        return $this->belongsTo(Brand::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Product>
+     * @return BelongsTo<Category>
      */
-    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceAlert, \App\Models\Product>
+     * @return HasMany<PriceAlert>
      */
-    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceAlerts(): HasMany
     {
-        return $this->hasMany(\App\Models\PriceAlert::class);
+        return $this->hasMany(PriceAlert::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Review, \App\Models\Product>
+     * @return HasMany<Review>
      */
-    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reviews(): HasMany
     {
-        return $this->hasMany(\App\Models\Review::class);
+        return $this->hasMany(Review::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Wishlist, \App\Models\Product>
+     * @return HasMany<Wishlist>
      */
-    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function wishlists(): HasMany
     {
-        return $this->hasMany(\App\Models\Wishlist::class);
+        return $this->hasMany(Wishlist::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceOffer, \App\Models\Product>
+     * @return HasMany<PriceOffer>
      */
-    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceOffers(): HasMany
     {
-        return $this->hasMany(\App\Models\PriceOffer::class);
+        return $this->hasMany(PriceOffer::class);
     }
 }

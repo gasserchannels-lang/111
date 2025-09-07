@@ -1,46 +1,0 @@
-
-j__sonar_lambda_/home/runner/work/my-website/my-website/app/Http/Controllers/PriceAlertController.php_62_63_
-U/home/runner/work/my-website/my-website/app/Http/Controllers/PriceAlertController.php>? >(G"1*@
-2
-PriceAlertController.php"
-@ @(	
-implicit return*—
-1? ?(O’
-? ?(+
-%1*&
-
-__unknown_file (
-
-
-$query*(
-
-__unknown_file (
-
-in_stock*$
-
-__unknown_file (
-true2whereŒ‰
-? ?(D
-%2*"
-
-__unknown_file (
-
-%1*%
-
-__unknown_file (	
-price*#
-
-__unknown_file (
-asc2orderby_]
-? ?(N
-%3*"
-
-__unknown_file (
-
-%2* 
-
-__unknown_file (22limit*
-2:
->I >(O
-$queryB-+
-)app\http\controllers\pricealertcontrollerH

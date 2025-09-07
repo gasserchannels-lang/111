@@ -1,37 +1,0 @@
-
-=app\services\routeconfigurationservice::configureratelimiting\
-R/home/runner/work/my-website/my-website/app/Services/RouteConfigurationService.php ()"1*E
-2
-RouteConfigurationService.php"
- (
-implicit return*À
-1 (q
-o
- (
-%1"__id*W
-
-__unknown_file (;*9(
-&app\services\routeconfigurationservice"
-rateLimiter°
-­
-' (	
-%2"__declareFunction*‡
-
-__unknown_file (ki
-g__sonar_lambda_/home/runner/work/my-website/my-website/app/Services/RouteConfigurationService.php_26_39…‚
- (
-
-%3*"
-
-__unknown_file (
-
-%1*#
-
-__unknown_file (
-api*"
-
-__unknown_file (
-
-%22for*
-2B*(
-&app\services\routeconfigurationserviceH

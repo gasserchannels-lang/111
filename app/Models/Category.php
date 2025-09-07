@@ -4,18 +4,37 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property int|null $parent_id
+ * @property int $level
+ * @property bool $is_active
+ *
+ * @property-read Category|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $children
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
+ *
+ * @method static CategoryFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
+ * @mixin TFactory
+ */
 class Category extends Model
 {
     use HasFactory;
 
     /**
-     * Mass assignable attributes.
-     *
      * @var list<string>
      */
     protected $fillable = [
@@ -23,37 +42,36 @@ class Category extends Model
         'slug',
         'parent_id',
         'level',
-        // ✅ الخطوة 2: إضافة الحقل الجديد ليتوافق مع الـ migration
         'is_active',
     ];
 
     /**
      * Parent category relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Category>
+     * @return BelongsTo<Category, $this>
      */
-    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function parent(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Category::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
      * Children categories relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Category, \App\Models\Category>
+     * @return HasMany<Category, $this>
      */
-    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function children(): HasMany
     {
-        return $this->hasMany(\App\Models\Category::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
      * Products relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, \App\Models\Category>
+     * @return HasMany<Product, $this>
      */
-    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(\App\Models\Product::class, 'category_id');
+        return $this->hasMany(Product::class, 'category_id');
     }
 }

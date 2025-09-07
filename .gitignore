@@ -8,3 +8,7 @@ venv/
 /storage/framework/cache/data/*
 /storage/logs/*.log
 .phpunit.result.cache
+.scannerwork/
+
+/scannerwork.
+

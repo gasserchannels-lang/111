@@ -26,6 +26,7 @@ class PriceAlertControllerTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->anotherUser = User::factory()->create();
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
     }
 
     // region -------------------- 1. View Lifecycle (Index & Show) --------------------
@@ -284,3 +285,5 @@ class PriceAlertControllerTest extends TestCase
 
     // endregion
 }
+
+

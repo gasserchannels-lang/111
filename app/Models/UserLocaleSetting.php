@@ -31,31 +31,31 @@ class UserLocaleSetting extends Model
     /**
      * المستخدم المرتبط بهذا الإعداد
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\UserLocaleSetting>
+     * @return BelongsTo<User>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
      * اللغة المحددة
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Language, \App\Models\UserLocaleSetting>
+     * @return BelongsTo<Language>
      */
-    public function language(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function language(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Language::class);
+        return $this->belongsTo(Language::class);
     }
 
     /**
      * العملة المحددة
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, \App\Models\UserLocaleSetting>
+     * @return BelongsTo<Currency>
      */
-    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currency(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Currency::class);
+        return $this->belongsTo(Currency::class);
     }
 
     /**

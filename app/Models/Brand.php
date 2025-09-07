@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>
+ * @mixin TFactory
+ */
 class Brand extends Model
 {
     use HasFactory;
@@ -20,14 +24,14 @@ class Brand extends Model
     protected $fillable = [
         'name',
         'slug',
-        // ✅ الخطوة 2: إضافة الحقل الجديد ليتوافق مع الـ migration القادم
+        // ✅ الحقل الجديد ليتوافق مع الـ migration القادم
         'is_active',
     ];
 
     /**
-     * Products relationship.
+     * Get the products for the brand.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, \App\Models\Brand>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, $this>
      */
     public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
