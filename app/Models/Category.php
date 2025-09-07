@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $parent_id
  * @property int $level
  * @property bool $is_active
- *
  * @property-read Category|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $children
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
@@ -28,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 /**
  * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
+ *
  * @mixin TFactory
  */
 class Category extends Model

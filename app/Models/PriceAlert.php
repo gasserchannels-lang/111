@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $target_price
  * @property bool $repeat_alert
  * @property bool $is_active
- *
  * @property-read User $user
  * @property-read Product $product
  *
@@ -26,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 /**
  * @template TFactory of PriceAlertFactory
+ *
  * @mixin TFactory
  */
 class PriceAlert extends Model

@@ -23,8 +23,6 @@ class AgentProposeFixCommand extends Command
 
     /**
      * The process service instance.
-     *
-     * @var ProcessService
      */
     private ProcessService $processService;
 

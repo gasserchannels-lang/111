@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $slug
  * @property bool $is_active
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  *
  * @method static BrandFactory factory(...$parameters)
@@ -23,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 /**
  * @template TFactory of BrandFactory
+ *
  * @mixin TFactory
  */
 class Brand extends Model

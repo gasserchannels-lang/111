@@ -7196,3 +7196,4 @@
 #19 C:\\Users\\Gaser\\Desktop\\كوبرا\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Gaser\\\\...')
 #20 {main}
 "} 
+[2025-09-07 03:09:26] testing.ERROR: PriceSearchController@bestOffer failed: Simulated database connection failed for testing.  

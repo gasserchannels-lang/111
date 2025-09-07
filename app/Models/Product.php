@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $is_active
  * @property int $category_id
  * @property int $brand_id
- *
  * @property-read Category $category
  * @property-read Brand $brand
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
@@ -33,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 /**
  * @template TFactory of ProductFactory
+ *
  * @mixin TFactory
  */
 class Product extends Model

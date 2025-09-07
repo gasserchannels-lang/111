@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $user_id
  * @property int $product_id
- *
  * @property-read User $user
  * @property-read Product $product
  *
@@ -23,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 /**
  * @template TFactory of WishlistFactory
+ *
  * @mixin TFactory
  */
 class Wishlist extends Model
