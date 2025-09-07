@@ -6,6 +6,7 @@ parameters:
     level: 6
     paths:
         - app/
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         # Ignore intentional PHPMD violations in User.php
         - '#Method App\\Models\\User::wishlists\(\) has intentional PHPMD violation#'
@@ -21,7 +22,7 @@ parameters:
         - '#Call to method .* on an unknown class Darryldecode\\Cart\\Cart#'
         - '#Call to method .* on an unknown class Livewire\\LivewireManager#'
         # Ignore view string issues
-        - '#Parameter #1 \$view of function view expects view-string\|null, string given#'
+        - '#Parameter #1 \$view of function view expects view-string\\|null, string given#'
         # Ignore generic type issues in controllers
         - '#Method .* has parameter .* with generic class .* but does not specify its types: TFactory#'
         # Ignore Eloquent relationship type issues

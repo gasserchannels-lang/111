@@ -30,7 +30,7 @@ class Brand extends Model
     /**
      * @use HasFactory<BrandFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>>;
+    use HasFactory;
 
     /**
      * Mass assignable attributes.
@@ -40,7 +40,9 @@ class Brand extends Model
     protected $fillable = [
         'name',
         'slug',
-        // ✅ الحقل الجديد ليتوافق مع الـ migration القادم
+        'description',
+        'logo_url',
+        'website_url',
         'is_active',
     ];
 

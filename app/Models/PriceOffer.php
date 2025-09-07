@@ -33,14 +33,30 @@ class PriceOffer extends Model
     /**
      * @use HasFactory<PriceOfferFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PriceOffer>>;
+    use HasFactory;
 
     protected $fillable = [
         'product_id',
+        'product_sku',
         'store_id',
         'price',
-        'url',
+        'currency',
+        'product_url',
+        'affiliate_url',
         'in_stock',
+        'stock_quantity',
+        'condition',
+        'rating',
+        'reviews_count',
+        'image_url',
+        'specifications',
+    ];
+
+    protected $casts = [
+        'specifications' => 'array',
+        'in_stock' => 'boolean',
+        'rating' => 'decimal:1',
+        'price' => 'decimal:2',
     ];
 
     /**

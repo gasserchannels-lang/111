@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('description')->nullable();
 
             // ✅ *** هذه هي الأسطر التي تمت إضافتها ***
             $table->string('logo_url')->nullable();

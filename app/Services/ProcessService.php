@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Process\Factory;
-use Illuminate\Process\ProcessResult;
 
 class ProcessService
 {
@@ -23,7 +22,7 @@ class ProcessService
     /**
      * Run a process command.
      */
-    public function run(string|array<string> $command): ProcessResult
+    public function run(string|array $command): ProcessResult
     {
         $process = $this->processFactory->new($command);
         $process->run();

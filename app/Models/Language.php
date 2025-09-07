@@ -35,7 +35,7 @@ class Language extends Model
     /**
      * @use HasFactory<LanguageFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Language>>;
+    use HasFactory;
 
     /** @var list<string> */
     protected $fillable = [

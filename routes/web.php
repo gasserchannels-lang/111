@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -58,4 +60,22 @@ Route::middleware('auth')->group(function (): void {
     Route::get('cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::delete('cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove'); // استخدام {product} أفضل من {productId}
+});
+
+// --- Admin Routes (تتطلب صلاحيات إدارية) ---
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
+    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('users', [AdminController::class, 'users'])->name('users');
+    Route::get('products', [AdminController::class, 'products'])->name('products');
+    Route::get('brands', [AdminController::class, 'brands'])->name('brands');
+    Route::get('categories', [AdminController::class, 'categories'])->name('categories');
+    Route::get('stores', [AdminController::class, 'stores'])->name('stores');
+    Route::post('users/{user}/toggle-admin', [AdminController::class, 'toggleUserAdmin'])->name('users.toggle-admin');
+});
+
+// --- Brand Routes (تتطلب تسجيل الدخول) ---
+
+Route::middleware('auth')->group(function (): void {
+    Route::resource('brands', BrandController::class);
 });

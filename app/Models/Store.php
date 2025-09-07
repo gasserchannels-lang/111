@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property string|null $logo
  * @property string $affiliate_base_url
  * @property array $api_config
  * @property int $currency_id
@@ -34,12 +35,25 @@ class Store extends Model
     /**
      * @use HasFactory<StoreFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Store>>;
+    use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'slug',
+        'logo',
+        'website_url',
+        'country_code',
+        'supported_countries',
+        'is_active',
+        'priority',
+        'affiliate_base_url',
+        'api_config',
+        'currency_id',
+    ];
 
     protected $casts = [
         'api_config' => 'array',
+        'supported_countries' => 'array',
     ];
 
     /**

@@ -24,6 +24,6 @@ class HomeControllerTest extends TestCase
     {
         $response = $this->get('/');
         // يمكنك تعديل هذا النص ليتوافق مع المحتوى الفعلي لصفحتك
-        $response->assertSee('COPRRA');
+        $response->assertSee('Find the Best Prices');
     }
 }

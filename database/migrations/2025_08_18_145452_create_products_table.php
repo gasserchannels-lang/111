@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2)->default(0.00);
+            $table->decimal('compare_at_price', 8, 2)->nullable();
             $table->boolean('is_active')->default(true);
             // ✅ إضافة الأعمدة المفقودة وربطها بالجداول الموجودة
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');

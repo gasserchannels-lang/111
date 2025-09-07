@@ -28,11 +28,6 @@ class PriceSearchController extends Controller
     public function bestOffer(Request $request): JsonResponse
     {
         try {
-            // The simple and guaranteed fix: a special test case
-            if ($request->input('simulate_db_error') === 'true') {
-                throw new Exception('Simulated database connection failed for testing.');
-            }
-
             $validator = $this->validationFactory->make($request->all(), [
                 'product' => 'required|string|min:3|max:255',
                 'country' => 'required|string|size:2',

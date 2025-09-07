@@ -30,7 +30,7 @@ class Wishlist extends Model
     /**
      * @use HasFactory<WishlistFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Wishlist>>;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',

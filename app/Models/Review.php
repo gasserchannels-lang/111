@@ -37,7 +37,7 @@ class Review extends Model
     /**
      * @use HasFactory<ReviewFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Review>>;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',

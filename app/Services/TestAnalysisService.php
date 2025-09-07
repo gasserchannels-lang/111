@@ -29,7 +29,7 @@ class TestAnalysisService
     /**
      * Run comprehensive test analysis
      */
-    public function analyze(): array<string, mixed>
+    public function analyze(): array
     {
         $score = 0;
         $issues = [];
@@ -59,7 +59,7 @@ class TestAnalysisService
     /**
      * Build test command
      */
-    private function buildTestCommand(): array<string>
+    private function buildTestCommand(): array
     {
         $command = ['./vendor/bin/pest'];
         if ($this->coverageEnabled) {
@@ -72,7 +72,7 @@ class TestAnalysisService
     /**
      * Run test process
      */
-    private function runTestProcess(array<string> $command): Process
+    private function runTestProcess(array $command): Process
     {
         $process = new Process($command);
         $process->setTimeout(1800); // Increased timeout to 30 mins for coverage

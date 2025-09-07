@@ -17,8 +17,10 @@ class StoreFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name),
+            'logo' => $this->faker->imageUrl(200, 200, 'stores'),
             'website_url' => $this->faker->url,
             'country_code' => $this->faker->randomElement(['EG', 'US', 'UK', 'DE', 'FR']),
+            'supported_countries' => $this->faker->randomElements(['US', 'CA', 'UK', 'DE', 'FR', 'IT', 'ES', 'AU'], 3),
             'is_active' => $this->faker->boolean(80),
             'priority' => $this->faker->numberBetween(0, 100),
             'affiliate_base_url' => $this->faker->optional()->url,

@@ -20,6 +20,8 @@ class ProductFactory extends Factory
             'slug' => Str::slug($name),
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->randomFloat(2, 10, 1000),
+            'compare_at_price' => $this->faker->randomFloat(2, 1200, 1500),
+            'image' => $this->faker->imageUrl(400, 400, 'products'),
             'is_active' => $this->faker->boolean(80), // 80% chance of being active
             'category_id' => Category::factory(),
             'brand_id' => Brand::factory(),

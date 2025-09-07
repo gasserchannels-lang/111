@@ -40,7 +40,7 @@ class FixCode extends Command
         return self::SUCCESS;
     }
 
-    private function runTool(string $message, array<string> $command): int
+    private function runTool(string $message, array $command): int
     {
         $this->line('');
         $this->info($message);

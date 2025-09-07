@@ -37,7 +37,7 @@ class User extends Authenticatable
     /**
      * @use HasFactory<UserFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>>, Notifiable;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',

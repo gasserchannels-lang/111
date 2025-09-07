@@ -11,7 +11,7 @@ class SecurityAnalysisService
     /**
      * Run comprehensive security analysis
      */
-    public function analyze(): array<string, mixed>
+    public function analyze(): array
     {
         $score = 0;
         $issues = [];
@@ -38,7 +38,7 @@ class SecurityAnalysisService
     /**
      * Check for outdated dependencies
      */
-    private function checkDependencies(array<string, mixed> &$issues): int
+    private function checkDependencies(array &$issues): int
     {
         $process = new Process(['composer', 'outdated', '--direct']);
         $process->run();
@@ -60,7 +60,7 @@ class SecurityAnalysisService
     /**
      * Check if .env.example file exists
      */
-    private function checkEnvironmentFile(array<string, mixed> &$issues): int
+    private function checkEnvironmentFile(array &$issues): int
     {
         if (file_exists(base_path('.env.example'))) {
             return 10;
@@ -74,7 +74,7 @@ class SecurityAnalysisService
     /**
      * Check if debug mode is disabled
      */
-    private function checkDebugMode(array<string, mixed> &$issues): int
+    private function checkDebugMode(array &$issues): int
     {
         if (config('app.debug') === false) {
             return 20;
@@ -88,7 +88,7 @@ class SecurityAnalysisService
     /**
      * Check if HTTPS is configured
      */
-    private function checkHttpsConfiguration(array<string, mixed> &$issues): int
+    private function checkHttpsConfiguration(array &$issues): int
     {
         if (config('app.url') && str_starts_with(config('app.url'), 'https')) {
             return 20;
@@ -102,7 +102,7 @@ class SecurityAnalysisService
     /**
      * Check if SecurityHeadersMiddleware is registered
      */
-    private function checkSecurityMiddleware(array<string, mixed> &$issues): int
+    private function checkSecurityMiddleware(array &$issues): int
     {
         if ($this->isMiddlewareRegistered(\App\Http\Middleware\SecurityHeadersMiddleware::class)) {
             return 20;

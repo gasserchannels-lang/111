@@ -14,8 +14,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('logo')->nullable();
             $table->string('website_url')->nullable();
             $table->string('country_code', 2);
+            $table->json('supported_countries')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('priority')->default(0);
             $table->text('affiliate_base_url')->nullable();

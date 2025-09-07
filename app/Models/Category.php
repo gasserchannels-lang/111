@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Category extends Model
 {
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>>;
+    use HasFactory;
 
     /**
      * @var list<string>

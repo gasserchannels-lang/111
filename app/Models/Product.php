@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $slug
  * @property string $description
  * @property float $price
+ * @property string|null $image
  * @property bool $is_active
  * @property int $category_id
  * @property int $brand_id
@@ -40,13 +41,14 @@ class Product extends Model
     /**
      * @use HasFactory<ProductFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>>;
+    use HasFactory;
 
     protected $fillable = [
         'name',
         'slug',
         'description',
         'price',
+        'image',
         'is_active',
         'category_id',
         'brand_id',

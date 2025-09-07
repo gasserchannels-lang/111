@@ -36,7 +36,7 @@ class UserLocaleSetting extends Model
     /**
      * @use HasFactory<UserLocaleSettingFactory>
      */
-    use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserLocaleSetting>>;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',

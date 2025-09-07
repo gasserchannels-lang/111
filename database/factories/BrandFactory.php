@@ -13,6 +13,7 @@ class BrandFactory extends Factory
         return [
             'name' => $this->faker->company,
             'slug' => $this->faker->slug,
+            'description' => $this->faker->paragraph(),
             'logo_url' => $this->faker->imageUrl(200, 200, 'brands'),
             'website_url' => $this->faker->url,
             'is_active' => true,

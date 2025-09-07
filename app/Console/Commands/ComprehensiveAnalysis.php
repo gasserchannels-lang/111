@@ -52,7 +52,7 @@ class ComprehensiveAnalysis extends Command
         return Command::SUCCESS;
     }
 
-    private function runSecurityAnalysis(): array<string, mixed>
+    private function runSecurityAnalysis(): array
     {
         $this->info('🛡️  Running Security Analysis...');
 
@@ -77,7 +77,7 @@ class ComprehensiveAnalysis extends Command
         return $result;
     }
 
-    private function runQualityAnalysis(): array<string, mixed>
+    private function runQualityAnalysis(): array
     {
         $this->info('📊 Running Code Quality Analysis...');
 
@@ -107,7 +107,7 @@ class ComprehensiveAnalysis extends Command
         return $result;
     }
 
-    private function runTestsAnalysis(): array<string, mixed>
+    private function runTestsAnalysis(): array
     {
         $this->info('🧪 Running Tests Analysis...');
 
@@ -116,9 +116,7 @@ class ComprehensiveAnalysis extends Command
         }
 
         $testServiceFactory = new TestAnalysisServiceFactory;
-        $testService = $this->option('coverage')
-            ? $testServiceFactory->createWithCoverage()
-            : $testServiceFactory->createBasic();
+        $testService = $testServiceFactory->create();
         $result = $testService->analyze();
 
         // Display console output based on the results
@@ -143,7 +141,7 @@ class ComprehensiveAnalysis extends Command
         return $result;
     }
 
-    private function runPerformanceAnalysis(): array<string, mixed>
+    private function runPerformanceAnalysis(): array
     {
         $this->info('⚡ Running Performance Analysis...');
 
@@ -152,7 +150,7 @@ class ComprehensiveAnalysis extends Command
         return $performanceService->analyze();
     }
 
-    private function generateSummary(array<string, mixed> $results, int $totalScore, int $maxScore): void
+    private function generateSummary(array $results, int $totalScore, int $maxScore): void
     {
         $this->newLine();
         $this->info('📋 COMPREHENSIVE ANALYSIS SUMMARY');

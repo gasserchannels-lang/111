@@ -6,15 +6,16 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Language;
+use App\Models\Currency;
 
 class LanguagesAndCurrenciesSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('languages')->truncate();
-        DB::table('currencies')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // Truncate tables using models (SQLite compatible)
+        Language::truncate();
+        Currency::truncate();
 
         $languages = [
             ['code' => 'zh', 'name' => 'Chinese', 'native_name' => '中文', 'direction' => 'ltr', 'is_active' => true, 'sort_order' => 1],
@@ -38,7 +39,10 @@ class LanguagesAndCurrenciesSeeder extends Seeder
             ['code' => 'vi', 'name' => 'Vietnamese', 'native_name' => 'Tiếng Việt', 'direction' => 'ltr', 'is_active' => true, 'sort_order' => 19],
             ['code' => 'ur', 'name' => 'Urdu', 'native_name' => 'اردو', 'direction' => 'rtl', 'is_active' => true, 'sort_order' => 20],
         ];
-        DB::table('languages')->insert($languages);
+        
+        foreach ($languages as $language) {
+            Language::create($language);
+        }
 
         $currencies = [
             ['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$', 'is_active' => true, 'sort_order' => 1, 'is_default' => true],
@@ -62,6 +66,9 @@ class LanguagesAndCurrenciesSeeder extends Seeder
             ['code' => 'KWD', 'name' => 'Kuwaiti Dinar', 'symbol' => 'د.ك', 'is_active' => true, 'sort_order' => 19],
             ['code' => 'QAR', 'name' => 'Qatari Riyal', 'symbol' => 'ر.ق', 'is_active' => true, 'sort_order' => 20],
         ];
-        DB::table('currencies')->insert($currencies);
+        
+        foreach ($currencies as $currency) {
+            Currency::create($currency);
+        }
     }
 }
