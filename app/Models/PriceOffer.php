@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $price
  * @property string $url
  * @property bool $in_stock
- *
  * @property-read Product $product
  * @property-read Store $store
  *
@@ -26,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 /**
  * @template TFactory of PriceOfferFactory
+ *
  * @mixin TFactory
  */
 class PriceOffer extends Model

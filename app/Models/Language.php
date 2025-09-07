@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $direction
  * @property bool $is_active
  * @property int $sort_order
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency> $currencies
  * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting> $userLocaleSettings
  *
@@ -28,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 /**
  * @template TFactory of LanguageFactory
+ *
  * @mixin TFactory
  */
 class Language extends Model

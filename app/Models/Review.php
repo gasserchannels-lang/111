@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_approved
  * @property array $helpful_votes
  * @property int $helpful_count
- *
  * @property-read User $user
  * @property-read Product $product
  *
@@ -30,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 /**
  * @template TFactory of ReviewFactory
+ *
  * @mixin TFactory
  */
 class Review extends Model

@@ -18,7 +18,6 @@ use Illuminate\Notifications\Notifiable;
  * @property string $password
  * @property \Carbon\Carbon|null $email_verified_at
  * @property bool $is_admin
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
@@ -30,6 +29,7 @@ use Illuminate\Notifications\Notifiable;
  */
 /**
  * @template TFactory of UserFactory
+ *
  * @mixin TFactory
  */
 class User extends Authenticatable

@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $affiliate_base_url
  * @property array $api_config
  * @property int $currency_id
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
  * @property-read Currency $currency
  *
@@ -27,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 /**
  * @template TFactory of StoreFactory
+ *
  * @mixin TFactory
  */
 class Store extends Model

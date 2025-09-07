@@ -18,7 +18,6 @@ use InvalidArgumentException;
  * @property int $currency_id
  * @property string|null $ip_address
  * @property string|null $country_code
- *
  * @property-read User|null $user
  * @property-read Language $language
  * @property-read Currency $currency
@@ -29,6 +28,7 @@ use InvalidArgumentException;
  */
 /**
  * @template TFactory of UserLocaleSettingFactory
+ *
  * @mixin TFactory
  */
 class UserLocaleSetting extends Model

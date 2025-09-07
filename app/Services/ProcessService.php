@@ -2,22 +2,18 @@
 
 namespace App\Services;
 
-use Illuminate\Process\ProcessResult;
 use Illuminate\Process\Factory;
+use Illuminate\Process\ProcessResult;
 
 class ProcessService
 {
     /**
      * The process factory instance.
-     *
-     * @var Factory
      */
     private Factory $processFactory;
 
     /**
      * Create a new process service instance.
-     *
-     * @param Factory $processFactory
      */
     public function __construct(Factory $processFactory)
     {
@@ -26,9 +22,6 @@ class ProcessService
 
     /**
      * Run a process command.
-     *
-     * @param string|array $command
-     * @return ProcessResult
      */
     public function run(string|array $command): ProcessResult
     {
