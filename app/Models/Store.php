@@ -4,13 +4,36 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\StoreFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string $affiliate_base_url
+ * @property array $api_config
+ * @property int $currency_id
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
+ * @property-read Currency $currency
+ *
+ * @method static StoreFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of StoreFactory
+ * @mixin TFactory
+ */
 class Store extends Model
 {
+    /**
+     * @use HasFactory<StoreFactory>
+     */
     use HasFactory;
 
     protected $guarded = [];
@@ -20,7 +43,7 @@ class Store extends Model
     ];
 
     /**
-     * @return HasMany<PriceOffer>
+     * @return HasMany<PriceOffer, Store>
      */
     public function priceOffers(): HasMany
     {
@@ -28,7 +51,7 @@ class Store extends Model
     }
 
     /**
-     * @return BelongsTo<Currency>
+     * @return BelongsTo<Currency, Store>
      */
     public function currency(): BelongsTo
     {

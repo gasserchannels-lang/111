@@ -4,13 +4,38 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\UserLocaleSettingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property string|null $session_id
+ * @property int $language_id
+ * @property int $currency_id
+ * @property string|null $ip_address
+ * @property string|null $country_code
+ *
+ * @property-read User|null $user
+ * @property-read Language $language
+ * @property-read Currency $currency
+ *
+ * @method static UserLocaleSettingFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of UserLocaleSettingFactory
+ * @mixin TFactory
+ */
 class UserLocaleSetting extends Model
 {
+    /**
+     * @use HasFactory<UserLocaleSettingFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -31,7 +56,7 @@ class UserLocaleSetting extends Model
     /**
      * المستخدم المرتبط بهذا الإعداد
      *
-     * @return BelongsTo<User>
+     * @return BelongsTo<User, UserLocaleSetting>
      */
     public function user(): BelongsTo
     {
@@ -41,7 +66,7 @@ class UserLocaleSetting extends Model
     /**
      * اللغة المحددة
      *
-     * @return BelongsTo<Language>
+     * @return BelongsTo<Language, UserLocaleSetting>
      */
     public function language(): BelongsTo
     {
@@ -51,7 +76,7 @@ class UserLocaleSetting extends Model
     /**
      * العملة المحددة
      *
-     * @return BelongsTo<Currency>
+     * @return BelongsTo<Currency, UserLocaleSetting>
      */
     public function currency(): BelongsTo
     {

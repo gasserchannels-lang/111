@@ -4,13 +4,37 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\LanguageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $code
+ * @property string $name
+ * @property string $native_name
+ * @property string $direction
+ * @property bool $is_active
+ * @property int $sort_order
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency> $currencies
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting> $userLocaleSettings
+ *
+ * @method static LanguageFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of LanguageFactory
+ * @mixin TFactory
+ */
 class Language extends Model
 {
+    /**
+     * @use HasFactory<LanguageFactory>
+     */
     use HasFactory;
 
     /** @var list<string> */
@@ -31,11 +55,11 @@ class Language extends Model
     /**
      * العملات المرتبطة بهذه اللغة
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Currency, \App\Models\Language, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
+     * @return BelongsToMany<Currency, Language>
      */
-    public function currencies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function currencies(): BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\Currency::class, 'language_currency')
+        return $this->belongsToMany(Currency::class, 'language_currency')
             ->withPivot('is_default')
             ->withTimestamps();
     }
@@ -43,7 +67,7 @@ class Language extends Model
     /**
      * العملة الافتراضية لهذه اللغة
      */
-    public function defaultCurrency(): ?\App\Models\Currency
+    public function defaultCurrency(): ?Currency
     {
         return $this->currencies()->wherePivot('is_default', true)->first();
     }
@@ -51,11 +75,11 @@ class Language extends Model
     /**
      * إعدادات المستخدمين لهذه اللغة
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\UserLocaleSetting, \App\Models\Language>
+     * @return HasMany<UserLocaleSetting, Language>
      */
-    public function userLocaleSettings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function userLocaleSettings(): HasMany
     {
-        return $this->hasMany(\App\Models\UserLocaleSetting::class);
+        return $this->hasMany(UserLocaleSetting::class);
     }
 
     /**

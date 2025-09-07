@@ -4,13 +4,42 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string $description
+ * @property float $price
+ * @property bool $is_active
+ * @property int $category_id
+ * @property int $brand_id
+ *
+ * @property-read Category $category
+ * @property-read Brand $brand
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
+ *
+ * @method static ProductFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of ProductFactory
+ * @mixin TFactory
+ */
 class Product extends Model
 {
+    /**
+     * @use HasFactory<ProductFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -30,7 +59,7 @@ class Product extends Model
 
     // --- العلاقات ---
     /**
-     * @return BelongsTo<Brand>
+     * @return BelongsTo<Brand, Product>
      */
     public function brand(): BelongsTo
     {
@@ -38,7 +67,7 @@ class Product extends Model
     }
 
     /**
-     * @return BelongsTo<Category>
+     * @return BelongsTo<Category, Product>
      */
     public function category(): BelongsTo
     {
@@ -46,7 +75,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<PriceAlert>
+     * @return HasMany<PriceAlert, Product>
      */
     public function priceAlerts(): HasMany
     {
@@ -54,7 +83,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Review>
+     * @return HasMany<Review, Product>
      */
     public function reviews(): HasMany
     {
@@ -62,7 +91,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Wishlist>
+     * @return HasMany<Wishlist, Product>
      */
     public function wishlists(): HasMany
     {
@@ -70,7 +99,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<PriceOffer>
+     * @return HasMany<PriceOffer, Product>
      */
     public function priceOffers(): HasMany
     {

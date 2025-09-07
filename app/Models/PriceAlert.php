@@ -4,16 +4,35 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\PriceAlertFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property-read \App\Models\Product $product
- * @property-read \App\Models\User $user
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
+ * @property float $target_price
+ * @property bool $repeat_alert
+ * @property bool $is_active
+ *
+ * @property-read User $user
+ * @property-read Product $product
+ *
+ * @method static PriceAlertFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of PriceAlertFactory
+ * @mixin TFactory
  */
 class PriceAlert extends Model
 {
+    /**
+     * @use HasFactory<PriceAlertFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -25,7 +44,7 @@ class PriceAlert extends Model
     ];
 
     /**
-     * @return BelongsTo<User>
+     * @return BelongsTo<User, PriceAlert>
      */
     public function user(): BelongsTo
     {
@@ -33,7 +52,7 @@ class PriceAlert extends Model
     }
 
     /**
-     * @return BelongsTo<Product>
+     * @return BelongsTo<Product, PriceAlert>
      */
     public function product(): BelongsTo
     {

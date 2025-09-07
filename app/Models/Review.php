@@ -4,16 +4,39 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\ReviewFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property-read \App\Models\Product $product
- * @property-read \App\Models\User $user
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
+ * @property string $title
+ * @property string $content
+ * @property int $rating
+ * @property bool $is_verified_purchase
+ * @property bool $is_approved
+ * @property array $helpful_votes
+ * @property int $helpful_count
+ *
+ * @property-read User $user
+ * @property-read Product $product
+ *
+ * @method static ReviewFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of ReviewFactory
+ * @mixin TFactory
  */
 class Review extends Model
 {
+    /**
+     * @use HasFactory<ReviewFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -37,19 +60,19 @@ class Review extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Review>
+     * @return BelongsTo<User, Review>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, \App\Models\Review>
+     * @return BelongsTo<Product, Review>
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     // دالة مساعدة للتوافق مع الكود القديم

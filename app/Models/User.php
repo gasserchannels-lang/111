@@ -4,14 +4,39 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property \Carbon\Carbon|null $email_verified_at
+ * @property bool $is_admin
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
+ * @property-read UserLocaleSetting|null $localeSetting
+ *
+ * @method static UserFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of UserFactory
+ * @mixin TFactory
+ */
 class User extends Authenticatable
 {
+    /**
+     * @use HasFactory<UserFactory>
+     */
     use HasFactory, Notifiable;
 
     protected $fillable = [
@@ -35,7 +60,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<Review>
+     * @return HasMany<Review, User>
      */
     public function reviews(): HasMany
     {
@@ -45,7 +70,7 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: ElseExpression
      *
-     * @return HasMany<Wishlist>
+     * @return HasMany<Wishlist, User>
      */
     public function wishlists(): HasMany
     {
@@ -60,7 +85,7 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: CamelCaseVariableName
      *
-     * @return HasMany<PriceAlert>
+     * @return HasMany<PriceAlert, User>
      */
     public function priceAlerts(): HasMany
     {
@@ -76,7 +101,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasOne<UserLocaleSetting>
+     * @return HasOne<UserLocaleSetting, User>
      */
     public function localeSetting(): HasOne
     {

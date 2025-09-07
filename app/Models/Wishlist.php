@@ -4,16 +4,32 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\WishlistFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property-read \App\Models\Product $product
- * @property-read \App\Models\User $user
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
+ *
+ * @property-read User $user
+ * @property-read Product $product
+ *
+ * @method static WishlistFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
+ */
+/**
+ * @template TFactory of WishlistFactory
+ * @mixin TFactory
  */
 class Wishlist extends Model
 {
+    /**
+     * @use HasFactory<WishlistFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
@@ -22,7 +38,7 @@ class Wishlist extends Model
     ];
 
     /**
-     * @return BelongsTo<User>
+     * @return BelongsTo<User, Wishlist>
      */
     public function user(): BelongsTo
     {
@@ -30,7 +46,7 @@ class Wishlist extends Model
     }
 
     /**
-     * @return BelongsTo<Product>
+     * @return BelongsTo<Product, Wishlist>
      */
     public function product(): BelongsTo
     {

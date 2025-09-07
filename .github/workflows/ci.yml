@@ -82,6 +82,7 @@ jobs:
 
     - name: Build assets
       run: npm run build
+      working-directory: .
 
     - name: Run Laravel Pint (Auto-fix)
       run: ./vendor/bin/pint
