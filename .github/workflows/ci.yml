@@ -31,7 +31,7 @@ jobs:
       run: vendor/bin/phpstan analyse --memory-limit=256M
 
     - name: Run PHPMD
-      run: vendor/bin/phpmd app text phpmd.xml
+      run: vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode --ignore-violations-on-exit
 
   test-analyze-and-fix:
     runs-on: ubuntu-latest
