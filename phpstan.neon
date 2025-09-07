@@ -10,6 +10,7 @@ parameters:
         # Ignore intentional PHPMD violations in User.php
         - '#Method App\\Models\\User::wishlists\(\) has intentional PHPMD violation#'
         - '#Method App\\Models\\User::priceAlerts\(\) has intentional PHPMD violation#'
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+        # Ignore generic type warnings that are handled by Larastan
+        - '#PHPDoc tag @var for property .* contains generic class but does not specify its types#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::.*#'
 
