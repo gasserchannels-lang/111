@@ -18,12 +18,13 @@ class AdminControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $adminUser;
+
     private User $regularUser;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->adminUser = User::factory()->create(['is_admin' => true]);
         $this->regularUser = User::factory()->create(['is_admin' => false]);
     }

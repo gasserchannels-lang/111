@@ -20,7 +20,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         Brand::factory()->count(3)->create();
 
         $response = $this->get('/brands');
@@ -35,7 +35,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $response = $this->get('/brands/create');
 
         $response->assertSuccessful();
@@ -47,7 +47,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $brandData = [
             'name' => 'Test Brand',
             'slug' => 'test-brand',
@@ -62,7 +62,7 @@ class BrandControllerTest extends TestCase
             'name' => 'Test Brand',
             'slug' => 'test-brand',
             'description' => 'Test description',
-            'is_active' => 1
+            'is_active' => 1,
         ]);
     }
 
@@ -71,7 +71,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $response = $this->post('/brands', []);
 
         $response->assertSessionHasErrors(['name', 'slug']);
@@ -82,7 +82,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $brand = Brand::factory()->create();
         Product::factory()->count(2)->create(['brand_id' => $brand->id]);
 
@@ -98,7 +98,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $brand = Brand::factory()->create();
 
         $response = $this->get("/brands/{$brand->id}/edit");
@@ -113,7 +113,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $brand = Brand::factory()->create();
         $updateData = [
             'name' => 'Updated Brand',
@@ -130,7 +130,7 @@ class BrandControllerTest extends TestCase
             'name' => 'Updated Brand',
             'slug' => 'updated-brand',
             'description' => 'Updated description',
-            'is_active' => 0
+            'is_active' => 0,
         ]);
     }
 
@@ -139,7 +139,7 @@ class BrandControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $brand = Brand::factory()->create();
 
         $response = $this->delete("/brands/{$brand->id}");

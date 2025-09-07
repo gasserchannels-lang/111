@@ -11,17 +11,17 @@ class PriceHelper
     /**
      * Format price with currency symbol
      */
-    public static function formatPrice(float $price, string $currencyCode = null): string
+    public static function formatPrice(float $price, ?string $currencyCode = null): string
     {
         $currencyCode = $currencyCode ?? config('coprra.default_currency', 'USD');
-        
+
         $currency = Currency::where('code', $currencyCode)->first();
-        
-        if (!$currency) {
-            return number_format($price, 2) . ' ' . $currencyCode;
+
+        if (! $currency) {
+            return number_format($price, 2).' '.$currencyCode;
         }
-        
-        return $currency->symbol . number_format($price, 2);
+
+        return $currency->symbol.number_format($price, 2);
     }
 
     /**
@@ -32,7 +32,7 @@ class PriceHelper
         if ($originalPrice <= 0) {
             return 0.0;
         }
-        
+
         return (($comparePrice - $originalPrice) / $originalPrice) * 100;
     }
 
@@ -42,13 +42,13 @@ class PriceHelper
     public static function getPriceDifferenceString(float $originalPrice, float $comparePrice): string
     {
         $difference = self::calculatePriceDifference($originalPrice, $comparePrice);
-        
+
         if ($difference > 0) {
-            return '+' . number_format($difference, 1) . '%';
+            return '+'.number_format($difference, 1).'%';
         } elseif ($difference < 0) {
-            return number_format($difference, 1) . '%';
+            return number_format($difference, 1).'%';
         }
-        
+
         return '0%';
     }
 
@@ -60,8 +60,9 @@ class PriceHelper
         if (empty($allPrices)) {
             return false;
         }
-        
+
         $average = array_sum($allPrices) / count($allPrices);
+
         return $price < $average * 0.9; // 10% below average
     }
 
@@ -73,7 +74,7 @@ class PriceHelper
         if (empty($prices)) {
             return null;
         }
-        
+
         return min($prices);
     }
 
@@ -92,27 +93,27 @@ class PriceHelper
             'AED' => 3.67,
             'EGP' => 30.9,
         ];
-        
+
         $fromRate = $exchangeRates[$fromCurrency] ?? 1.0;
         $toRate = $exchangeRates[$toCurrency] ?? 1.0;
-        
+
         return ($amount / $fromRate) * $toRate;
     }
 
     /**
      * Format price range
      */
-    public static function formatPriceRange(float $minPrice, float $maxPrice, string $currencyCode = null): string
+    public static function formatPriceRange(float $minPrice, float $maxPrice, ?string $currencyCode = null): string
     {
         $currencyCode = $currencyCode ?? config('coprra.default_currency', 'USD');
-        
+
         $currency = Currency::where('code', $currencyCode)->first();
         $symbol = $currency ? $currency->symbol : $currencyCode;
-        
+
         if ($minPrice === $maxPrice) {
-            return $symbol . number_format($minPrice, 2);
+            return $symbol.number_format($minPrice, 2);
         }
-        
-        return $symbol . number_format($minPrice, 2) . ' - ' . $symbol . number_format($maxPrice, 2);
+
+        return $symbol.number_format($minPrice, 2).' - '.$symbol.number_format($maxPrice, 2);
     }
 }

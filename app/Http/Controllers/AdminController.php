@@ -9,7 +9,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -45,7 +44,7 @@ class AdminController extends Controller
     public function users(): View
     {
         $users = User::with('localeSetting')->paginate(20);
-        
+
         return view('admin.users', compact('users'));
     }
 
@@ -56,7 +55,7 @@ class AdminController extends Controller
     {
         $products = Product::with(['brand', 'category', 'priceOffers'])
             ->paginate(20);
-        
+
         return view('admin.products', compact('products'));
     }
 
@@ -66,7 +65,7 @@ class AdminController extends Controller
     public function brands(): View
     {
         $brands = Brand::with('products')->paginate(20);
-        
+
         return view('admin.brands', compact('brands'));
     }
 
@@ -76,7 +75,7 @@ class AdminController extends Controller
     public function categories(): View
     {
         $categories = Category::with('products')->paginate(20);
-        
+
         return view('admin.categories', compact('categories'));
     }
 
@@ -86,7 +85,7 @@ class AdminController extends Controller
     public function stores(): View
     {
         $stores = Store::with('currency')->paginate(20);
-        
+
         return view('admin.stores', compact('stores'));
     }
 
@@ -95,8 +94,8 @@ class AdminController extends Controller
      */
     public function toggleUserAdmin(User $user)
     {
-        $user->update(['is_admin' => !$user->is_admin]);
-        
+        $user->update(['is_admin' => ! $user->is_admin]);
+
         return redirect()->back()
             ->with('success', 'User admin status updated successfully.');
     }

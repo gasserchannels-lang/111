@@ -24,7 +24,7 @@ return [
     'open' => 'Open',
     'yes' => 'Yes',
     'no' => 'No',
-    
+
     // Navigation
     'home' => 'Home',
     'products' => 'Products',
@@ -40,7 +40,7 @@ return [
     'logout' => 'Logout',
     'profile' => 'Profile',
     'settings' => 'Settings',
-    
+
     // Product related
     'product' => 'Product',
     'products' => 'Products',
@@ -64,7 +64,7 @@ return [
     'review_title' => 'Review Title',
     'review_comment' => 'Your Comment',
     'submit_review' => 'Submit Review',
-    
+
     // Cart related
     'cart_items' => 'Cart Items',
     'cart_total' => 'Cart Total',
@@ -79,13 +79,13 @@ return [
     'item_added' => 'Item added to cart',
     'item_removed' => 'Item removed from cart',
     'cart_cleared' => 'Cart cleared successfully',
-    
+
     // Wishlist related
     'wishlist_items' => 'Wishlist Items',
     'empty_wishlist' => 'Your wishlist is empty',
     'item_added_to_wishlist' => 'Item added to wishlist',
     'item_removed_from_wishlist' => 'Item removed from wishlist',
-    
+
     // Price alerts
     'price_alert' => 'Price Alert',
     'price_alerts' => 'Price Alerts',
@@ -98,7 +98,7 @@ return [
     'alert_updated' => 'Price alert updated successfully',
     'alert_deleted' => 'Price alert deleted successfully',
     'alert_triggered' => 'Price alert triggered!',
-    
+
     // Search and filters
     'search_products' => 'Search Products',
     'search_results' => 'Search Results',
@@ -113,7 +113,7 @@ return [
     'oldest_first' => 'Oldest First',
     'best_rating' => 'Best Rating',
     'most_reviewed' => 'Most Reviewed',
-    
+
     // Admin messages
     'admin_dashboard' => 'Admin Dashboard',
     'manage_products' => 'Manage Products',
@@ -128,7 +128,7 @@ return [
     'total_stores' => 'Total Stores',
     'total_users' => 'Total Users',
     'recent_activity' => 'Recent Activity',
-    
+
     // Form validation
     'required_field' => 'This field is required',
     'invalid_email' => 'Please enter a valid email address',
@@ -136,7 +136,7 @@ return [
     'passwords_dont_match' => 'Passwords do not match',
     'invalid_phone' => 'Please enter a valid phone number',
     'invalid_url' => 'Please enter a valid URL',
-    
+
     // Success/Error messages
     'product_created' => 'Product created successfully',
     'product_updated' => 'Product updated successfully',
@@ -154,7 +154,7 @@ return [
     'user_updated' => 'User updated successfully',
     'user_deleted' => 'User deleted successfully',
     'settings_updated' => 'Settings updated successfully',
-    
+
     // Currency and Language
     'currency' => 'Currency',
     'language' => 'Language',
@@ -162,7 +162,7 @@ return [
     'change_language' => 'Change Language',
     'currency_changed' => 'Currency changed successfully',
     'language_changed' => 'Language changed successfully',
-    
+
     // Pagination
     'showing' => 'Showing',
     'to' => 'to',
@@ -173,7 +173,7 @@ return [
     'page' => 'Page',
     'first_page' => 'First page',
     'last_page' => 'Last page',
-    
+
     // Time and dates
     'today' => 'Today',
     'yesterday' => 'Yesterday',
@@ -190,7 +190,7 @@ return [
     'weeks_ago' => ':count weeks ago',
     'months_ago' => ':count months ago',
     'years_ago' => ':count years ago',
-    
+
     // Status messages
     'active' => 'Active',
     'inactive' => 'Inactive',
@@ -204,7 +204,7 @@ return [
     'rejected' => 'Rejected',
     'completed' => 'Completed',
     'cancelled' => 'Cancelled',
-    
+
     // Error messages
     'not_found' => 'Not Found',
     'unauthorized' => 'Unauthorized',
@@ -217,7 +217,7 @@ return [
     'network_error' => 'Network Error',
     'try_again' => 'Please try again',
     'contact_support' => 'Contact Support',
-    
+
     // COPRRA specific
     'coprra_description' => 'Compare prices across multiple stores to find the best deals',
     'best_price_finder' => 'Best Price Finder',

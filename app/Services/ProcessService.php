@@ -26,7 +26,7 @@ class ProcessService
     {
         $process = $this->processFactory->new($command);
         $process->run();
-        
+
         return new ProcessResult(
             $process->getExitCode(),
             $process->getOutput(),

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Models\PriceAlert;
 use App\Models\PriceOffer;
 use App\Models\Review;
-use App\Models\PriceAlert;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class CleanupOldDataCommand extends Command
 {
@@ -33,9 +33,9 @@ class CleanupOldDataCommand extends Command
     {
         $days = (int) $this->option('days');
         $dryRun = $this->option('dry-run');
-        
+
         $this->info("🧹 Starting cleanup process for data older than {$days} days...");
-        
+
         if ($dryRun) {
             $this->warn('🧪 Running in dry-run mode - no data will be deleted');
         }
@@ -50,8 +50,8 @@ class CleanupOldDataCommand extends Command
 
         if ($oldPriceOffersCount > 0) {
             $this->info("📊 Found {$oldPriceOffersCount} old out-of-stock price offers to clean up");
-            
-            if (!$dryRun) {
+
+            if (! $dryRun) {
                 $deleted = PriceOffer::where('updated_at', '<', $cutoffDate)
                     ->where('in_stock', false)
                     ->delete();
@@ -67,8 +67,8 @@ class CleanupOldDataCommand extends Command
 
         if ($oldReviewsCount > 0) {
             $this->info("📝 Found {$oldReviewsCount} old unapproved reviews to clean up");
-            
-            if (!$dryRun) {
+
+            if (! $dryRun) {
                 $deleted = Review::where('created_at', '<', $cutoffDate)
                     ->where('is_approved', false)
                     ->delete();
@@ -84,8 +84,8 @@ class CleanupOldDataCommand extends Command
 
         if ($expiredAlertsCount > 0) {
             $this->info("🔔 Found {$expiredAlertsCount} old inactive price alerts to clean up");
-            
-            if (!$dryRun) {
+
+            if (! $dryRun) {
                 $deleted = PriceAlert::where('created_at', '<', $cutoffDate)
                     ->where('is_active', false)
                     ->delete();
@@ -95,21 +95,21 @@ class CleanupOldDataCommand extends Command
         }
 
         // Clean up session data (Laravel handles this automatically, but we can force it)
-        if (!$dryRun) {
+        if (! $dryRun) {
             $this->call('session:gc');
-            $this->line("✅ Cleaned up expired sessions");
+            $this->line('✅ Cleaned up expired sessions');
         }
 
         // Clean up cache
-        if (!$dryRun) {
+        if (! $dryRun) {
             $this->call('cache:prune-stale-tags');
-            $this->line("✅ Pruned stale cache tags");
+            $this->line('✅ Pruned stale cache tags');
         }
 
         $this->newLine();
-        
+
         $totalWouldDelete = $oldPriceOffersCount + $oldReviewsCount + $expiredAlertsCount;
-        
+
         if ($dryRun) {
             $this->info("🧪 Dry run completed. Would have deleted {$totalWouldDelete} records");
         } else {

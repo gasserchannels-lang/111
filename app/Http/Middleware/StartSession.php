@@ -13,7 +13,7 @@ class StartSession
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->hasSession()) {
+        if (! $request->hasSession()) {
             $request->setLaravelSession(
                 app('session.store')
             );
