@@ -80,6 +80,56 @@ class PriceSearchController extends Controller
         }
     }
 
+    public function search(Request $request): JsonResponse
+    {
+        try {
+            $query = $request->input('q', '');
+            
+            if (empty($query)) {
+                return response()->json([
+                    'data' => [],
+                    'message' => 'Search query is required'
+                ], 400);
+            }
+
+            $products = Product::where('name', 'like', '%' . $query . '%')
+                ->orWhere('description', 'like', '%' . $query . '%')
+                ->with(['priceOffers.store', 'brand', 'category'])
+                ->limit(20)
+                ->get();
+
+            $results = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'slug' => $product->slug,
+                    'brand' => $product->brand ? $product->brand->name : null,
+                    'category' => $product->category ? $product->category->name : null,
+                    'price_offers' => $product->priceOffers->map(function ($offer) {
+                        return [
+                            'id' => $offer->id,
+                            'price' => $offer->price,
+                            'url' => $offer->url,
+                            'store' => $offer->store ? $offer->store->name : null,
+                            'is_available' => $offer->is_available,
+                        ];
+                    }),
+                ];
+            });
+
+            return response()->json([
+                'data' => $results,
+                'total' => $results->count(),
+                'query' => $query
+            ]);
+        } catch (Throwable $e) {
+            $this->log->error('PriceSearchController@search failed: '.$e->getMessage());
+
+            return response()->json(['message' => 'An unexpected error occurred.'], 500);
+        }
+    }
+
     private function getCountryCode(Request $request): string
     {
         if ($request->has('country') && strlen((string) $request->input('country')) === 2) {

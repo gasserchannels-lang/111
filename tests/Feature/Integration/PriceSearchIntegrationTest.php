@@ -61,12 +61,24 @@ class PriceSearchIntegrationTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
-                    'product_name',
-                    'price',
-                    'store_name',
-                    'url',
+                    'name',
+                    'description',
+                    'slug',
+                    'brand',
+                    'category',
+                    'price_offers' => [
+                        '*' => [
+                            'id',
+                            'price',
+                            'url',
+                            'store',
+                            'is_available',
+                        ]
+                    ]
                 ]
-            ]
+            ],
+            'total',
+            'query'
         ]);
 
         $data = $response->json('data');
