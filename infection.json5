@@ -1,0 +1,21 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "app/",
+            "database/factories/",
+            "database/seeders/"
+        ]
+    },
+    "mutators": {
+        "@default": true
+    },
+    "coverage": {
+        "xdebug": {
+            "enabled": true
+        }
+    },
+    "phpUnit": {
+        "configDir": "phpunit.xml"
+    }
+}

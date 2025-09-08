@@ -17,11 +17,14 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^3.6",
+        "blackfire/php-sdk": "^2.5",
+        "deptrac/deptrac": "^4.1",
         "enlightn/security-checker": "^2.0",
         "fakerphp/faker": "^1.9.1",
         "infection/infection": "^0.31.2",
         "itsgoingd/clockwork": "^5.3",
         "larastan/larastan": "^2.11|^3.0",
+        "laravel/dusk": "^8.3",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "laravel/telescope": "^5.11",
@@ -32,11 +35,14 @@
         "pestphp/pest-plugin-laravel": "^2.4|^3.0",
         "phploc/phploc": "^2.0",
         "phpmd/phpmd": "^2.15",
+        "phpmetrics/phpmetrics": "^2.9",
         "phpunit/phpunit": "^11.5",
+        "qossmic/deptrac": "^2.0",
         "rector/rector": "^2.1",
         "roave/security-advisories": "dev-latest",
-        "sebastian/phpcpd": "^2.0",
-        "spatie/laravel-ignition": "^2.0"
+        "sentry/sentry-laravel": "^4.15",
+        "spatie/laravel-ignition": "^2.0",
+        "vimeo/psalm": "^6.13"
     },
     "autoload": {
         "psr-4": {
@@ -63,6 +69,35 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "test": "php artisan test",
+        "test:coverage": "php artisan test --coverage",
+        "test:dusk": "php artisan dusk",
+        "test:infection": "infection",
+        "analyse": "php -d memory_limit=1G vendor/bin/phpstan analyse",
+        "analyse:psalm": "psalm",
+        "analyse:deptrac": "deptrac analyse",
+        "analyse:phpmd": "phpmd app text phpmd.xml",
+        "analyse:phploc": "phploc app",
+        "analyse:phpinsights": "phpinsights analyse app",
+        "analyse:security": "composer audit && enlightn security:check",
+        "analyse:all": [
+            "@analyse",
+            "@analyse:psalm",
+            "@analyse:deptrac",
+            "@analyse:phpmd",
+            "@analyse:phploc",
+            "@analyse:phpinsights",
+            "@analyse:security"
+        ],
+        "fix": "pint",
+        "fix:rector": "rector process app --dry-run",
+        "fix:rector:apply": "rector process app",
+        "metrics": "phpmetrics app --config=phpmetrics.json",
+        "quality": [
+            "@fix",
+            "@analyse:all",
+            "@test"
         ]
     },
     "extra": {

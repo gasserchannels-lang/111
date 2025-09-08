@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="1"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="app" />
+        <directory name="config" />
+        <directory name="database" />
+        <directory name="routes" />
+        <ignoreFiles>
+            <directory name="vendor" />
+            <directory name="storage" />
+            <directory name="bootstrap/cache" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <LessSpecificReturnType errorLevel="info" />
+        <MoreSpecificReturnType errorLevel="info" />
+        <MixedAssignment errorLevel="info" />
+        <MixedArgument errorLevel="info" />
+        <MixedPropertyFetch errorLevel="info" />
+        <MixedMethodCall errorLevel="info" />
+        <MixedArrayAccess errorLevel="info" />
+        <MixedReturnStatement errorLevel="info" />
+        <MixedOperand errorLevel="info" />
+        <MixedPropertyAssignment errorLevel="info" />
+        <MixedArrayAssignment errorLevel="info" />
+        <MixedArrayOffset errorLevel="info" />
+        <MixedFunctionCall errorLevel="info" />
+    </issueHandlers>
+
+</psalm>

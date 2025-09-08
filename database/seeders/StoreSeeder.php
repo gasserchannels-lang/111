@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Store;
 use App\Models\Currency;
+use App\Models\Store;
 use Illuminate\Database\Seeder;
 
 class StoreSeeder extends Seeder
@@ -13,14 +13,15 @@ class StoreSeeder extends Seeder
     public function run(): void
     {
         Store::truncate();
-        
+
         // Get USD currency ID
         $usdCurrency = Currency::where('code', 'USD')->first();
-        if (!$usdCurrency) {
+        if (! $usdCurrency) {
             $this->command->error('USD currency not found. Please run LanguagesAndCurrenciesSeeder first!');
+
             return;
         }
-        
+
         $stores = [
             [
                 'name' => 'Amazon',

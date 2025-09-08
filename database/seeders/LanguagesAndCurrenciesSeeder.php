@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use App\Models\Language;
 use App\Models\Currency;
+use App\Models\Language;
+use Illuminate\Database\Seeder;
 
 class LanguagesAndCurrenciesSeeder extends Seeder
 {
@@ -39,7 +38,7 @@ class LanguagesAndCurrenciesSeeder extends Seeder
             ['code' => 'vi', 'name' => 'Vietnamese', 'native_name' => 'Tiếng Việt', 'direction' => 'ltr', 'is_active' => true, 'sort_order' => 19],
             ['code' => 'ur', 'name' => 'Urdu', 'native_name' => 'اردو', 'direction' => 'rtl', 'is_active' => true, 'sort_order' => 20],
         ];
-        
+
         foreach ($languages as $language) {
             Language::create($language);
         }
@@ -66,7 +65,7 @@ class LanguagesAndCurrenciesSeeder extends Seeder
             ['code' => 'KWD', 'name' => 'Kuwaiti Dinar', 'symbol' => 'د.ك', 'is_active' => true, 'sort_order' => 19],
             ['code' => 'QAR', 'name' => 'Qatari Riyal', 'symbol' => 'ر.ق', 'is_active' => true, 'sort_order' => 20],
         ];
-        
+
         foreach ($currencies as $currency) {
             Currency::create($currency);
         }

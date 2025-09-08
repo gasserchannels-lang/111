@@ -22,7 +22,7 @@ class PriceOfferSeeder extends Seeder
                 $productUrl = $store->website_url.'/product/'.strtolower($product->slug);
                 PriceOffer::create([
                     'product_id' => $product->id,
-                    'product_sku' => 'SKU-' . $product->id . '-' . random_int(1000, 9999),
+                    'product_sku' => 'SKU-'.$product->id.'-'.random_int(1000, 9999),
                     'store_id' => $store->id,
                     'price' => random_int(500, 1500) + (random_int(0, 99) / 100),
                     'currency' => 'USD',

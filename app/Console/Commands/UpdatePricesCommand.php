@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\PriceOffer;
 use App\Models\Store;
-use App\Models\Product;
+use Illuminate\Console\Command;
 
 class UpdatePricesCommand extends Command
 {
@@ -64,21 +63,21 @@ class UpdatePricesCommand extends Command
         foreach ($priceOffers as $priceOffer) {
             try {
                 $newPrice = $this->fetchPriceFromAPI($priceOffer);
-                
+
                 if ($newPrice && $newPrice !== $priceOffer->price) {
-                    if (!$dryRun) {
+                    if (! $dryRun) {
                         $priceOffer->update([
                             'price' => $newPrice,
                             'updated_at' => now(),
                         ]);
                     }
-                    
+
                     $updatedCount++;
                     $this->line("\n💰 Updated {$priceOffer->product->name} at {$priceOffer->store->name}: {$priceOffer->price} → {$newPrice}");
                 }
             } catch (\Exception $e) {
                 $errorCount++;
-                $this->error("\n❌ Error updating {$priceOffer->product->name} at {$priceOffer->store->name}: " . $e->getMessage());
+                $this->error("\n❌ Error updating {$priceOffer->product->name} at {$priceOffer->store->name}: ".$e->getMessage());
             }
 
             $progressBar->advance();
@@ -87,7 +86,7 @@ class UpdatePricesCommand extends Command
         $progressBar->finish();
         $this->newLine();
 
-        $this->info("✅ Price update completed!");
+        $this->info('✅ Price update completed!');
         $this->table(['Metric', 'Count'], [
             ['Total processed', $priceOffers->count()],
             ['Updated', $updatedCount],
@@ -105,16 +104,16 @@ class UpdatePricesCommand extends Command
     {
         // This is a placeholder implementation
         // In a real application, you would call the store's API here
-        
+
         // Simulate API call with random price fluctuation
         $fluctuation = rand(-10, 10) / 100; // ±10%
         $newPrice = $priceOffer->price * (1 + $fluctuation);
-        
+
         // Only return if price changed significantly (more than 1%)
         if (abs($priceOffer->price - $newPrice) / $priceOffer->price > 0.01) {
             return round($newPrice, 2);
         }
-        
+
         return null;
     }
 }

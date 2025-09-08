@@ -7,6 +7,8 @@ parameters:
     paths:
         - app/
     reportUnmatchedIgnoredErrors: false
+    parallel:
+        processTimeout: 300.0
     ignoreErrors:
         # Ignore intentional PHPMD violations in User.php
         - '#Method App\\Models\\User::wishlists\(\) has intentional PHPMD violation#'

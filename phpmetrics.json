@@ -1,0 +1,52 @@
+{
+    "extensions": [
+        "php"
+    ],
+    "excludes": [
+        "vendor",
+        "storage",
+        "bootstrap/cache",
+        "tests",
+        "node_modules"
+    ],
+    "complexity": {
+        "cyclomaticComplexity": 10,
+        "cognitiveComplexity": 10,
+        "maintainabilityIndex": 50
+    },
+    "coupling": {
+        "afferentCoupling": 10,
+        "efferentCoupling": 10
+    },
+    "size": {
+        "loc": 1000,
+        "ncloc": 800,
+        "commentLines": 200
+    },
+    "quality": {
+        "bugs": 0,
+        "vulnerabilities": 0,
+        "codeSmells": 0,
+        "duplicatedLines": 5,
+        "duplicatedBlocks": 0,
+        "duplicatedFiles": 0
+    },
+    "coverage": {
+        "lineCoverage": 80,
+        "branchCoverage": 70
+    },
+    "documentation": {
+        "commentLines": 20
+    },
+    "architecture": {
+        "layers": [
+            "Controllers",
+            "Models",
+            "Services",
+            "Middleware",
+            "Commands",
+            "Providers",
+            "Helpers"
+        ]
+    }
+}

@@ -14,7 +14,7 @@ class SubstituteBindings
     public function handle(Request $request, Closure $next): Response
     {
         $route = $request->route();
-        
+
         if ($route) {
             $parameters = $route->parameters();
             foreach ($parameters as $key => $value) {

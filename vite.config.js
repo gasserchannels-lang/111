@@ -8,12 +8,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    build: {
-        rollupOptions: {
-            input: {
-                main: 'resources/css/app.css',
-                app: 'resources/js/app.js'
-            }
-        }
-    }
 });

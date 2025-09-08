@@ -16,16 +16,16 @@ class AuthenticateSession
         if (auth()->check()) {
             $user = auth()->user();
             $sessionId = $request->session()->getId();
-            
+
             if ($user->session_id && $user->session_id !== $sessionId) {
                 auth()->logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
-                
+
                 if ($request->expectsJson()) {
                     return response()->json(['message' => 'Session expired'], 401);
                 }
-                
+
                 return redirect()->route('login');
             }
         }

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Product;
-use App\Models\Store;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\PriceOffer;
-use App\Models\Review;
-use App\Models\User;
 use App\Models\PriceAlert;
+use App\Models\PriceOffer;
+use App\Models\Product;
+use App\Models\Review;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Console\Command;
 
 class StatsCommand extends Command
 {
@@ -36,7 +36,7 @@ class StatsCommand extends Command
     public function handle(): int
     {
         $this->info('📊 COPRRA Platform Statistics');
-        $this->line('=' . str_repeat('=', 50));
+        $this->line('='.str_repeat('=', 50));
 
         $detailed = $this->option('detailed');
 
@@ -85,9 +85,9 @@ class StatsCommand extends Command
         $maxPrice = PriceOffer::max('price');
 
         $this->table(['Price Metric', 'Value'], [
-            ['Average Price', '$' . number_format($avgPrice, 2)],
-            ['Minimum Price', '$' . number_format($minPrice, 2)],
-            ['Maximum Price', '$' . number_format($maxPrice, 2)],
+            ['Average Price', '$'.number_format($avgPrice, 2)],
+            ['Minimum Price', '$'.number_format($minPrice, 2)],
+            ['Maximum Price', '$'.number_format($maxPrice, 2)],
         ]);
 
         // Top categories by product count
@@ -101,7 +101,7 @@ class StatsCommand extends Command
             $categoryData = $topCategories->map(function ($category) {
                 return [$category->name, $category->products_count];
             })->toArray();
-            
+
             $this->table(['Category', 'Products'], $categoryData);
         }
 
@@ -116,7 +116,7 @@ class StatsCommand extends Command
             $brandData = $topBrands->map(function ($brand) {
                 return [$brand->name, $brand->products_count];
             })->toArray();
-            
+
             $this->table(['Brand', 'Products'], $brandData);
         }
 
@@ -131,7 +131,7 @@ class StatsCommand extends Command
             $storeData = $storeStats->map(function ($store) {
                 return [$store->name, $store->price_offers_count];
             })->toArray();
-            
+
             $this->table(['Store', 'Price Offers'], $storeData);
         }
 
@@ -149,10 +149,10 @@ class StatsCommand extends Command
 
         // Database size approximation
         $this->info('💾 Database Information');
-        $totalRecords = Product::count() + Store::count() + Brand::count() + 
-                       Category::count() + PriceOffer::count() + Review::count() + 
+        $totalRecords = Product::count() + Store::count() + Brand::count() +
+                       Category::count() + PriceOffer::count() + Review::count() +
                        User::count() + PriceAlert::count();
-        
+
         $this->table(['Database Metric', 'Value'], [
             ['Total Records', number_format($totalRecords)],
             ['Estimated Size', $this->formatBytes($totalRecords * 1024)], // Rough estimate
@@ -162,11 +162,11 @@ class StatsCommand extends Command
     private function formatBytes(int $size, int $precision = 2): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
+
         for ($i = 0; $size > 1024 && $i < count($units) - 1; $i++) {
             $size /= 1024;
         }
-        
-        return round($size, $precision) . ' ' . $units[$i];
+
+        return round($size, $precision).' '.$units[$i];
     }
 }
