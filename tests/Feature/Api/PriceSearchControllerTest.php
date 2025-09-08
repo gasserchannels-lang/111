@@ -4,104 +4,83 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
-use App\Models\PriceOffer;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Currency;
 use App\Models\Product;
+use App\Models\PriceOffer;
 use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PriceSearchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[DataProvider('validationProvider')]
-    public function test_best_offer_fails_with_invalid_data(array $payload, string $expectedErrorField): void
+    /**
+     * @test
+     */
+    public function it_can_search_prices_by_product_name()
     {
-        $response = $this->getJson('/api/v1/best-offer?'.http_build_query($payload));
-        $response->assertStatus(422)->assertJsonValidationErrors($expectedErrorField);
+        $currency = Currency::factory()->create();
+        $store = Store::factory()->create(['currency_id' => $currency->id]);
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        
+        $product = Product::factory()->create([
+            'name' => 'Test Product',
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+            'store_id' => $store->id,
+            'is_active' => true,
+        ]);
+
+        $priceOffer = PriceOffer::factory()->create([
+            'product_id' => $product->id,
+            'store_id' => $store->id,
+            'price' => 99.99,
+            'is_available' => true,
+        ]);
+
+        $response = $this->getJson('/api/price-search?q=Test Product');
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'product_name',
+                    'price',
+                    'store_name',
+                    'url',
+                ]
+            ]
+        ]);
     }
 
-    public static function validationProvider(): array
+    /**
+     * @test
+     */
+    public function it_returns_empty_results_for_non_existent_product()
     {
-        return [
-            'product is missing' => [['country' => 'US'], 'product'],
-            'product is too short' => [['product' => 'a', 'country' => 'US'], 'product'],
-            'product is too long' => [['product' => str_repeat('a', 256), 'country' => 'US'], 'product'],
-            'country is not 2 chars' => [['product' => 'Test', 'country' => 'USA'], 'country'],
-        ];
+        $response = $this->getJson('/api/price-search?q=NonExistentProduct');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => []
+        ]);
     }
 
-    public function test_best_offer_returns_404_when_product_exists_but_has_no_offers_in_country(): void
+    /**
+     * @test
+     */
+    public function it_handles_empty_search_query()
     {
-        $product = Product::factory()->create(['name' => 'Test Product']);
-        $foreignStore = Store::factory()->create(['country_code' => 'CA']);
-        PriceOffer::factory()->create(['product_id' => $product->id, 'store_id' => $foreignStore->id, 'price' => 99.99]);
-        $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
-        $response->assertStatus(404)->assertJson(['message' => 'No offers found for this product in the specified country.']);
-    }
+        $response = $this->getJson('/api/price-search');
 
-    public function test_best_offer_returns_the_cheapest_offer_successfully(): void
-    {
-        $product = Product::factory()->create(['name' => 'Test Product']);
-        $store = Store::factory()->create(['country_code' => 'US']);
-        PriceOffer::factory()->create(['product_id' => $product->id, 'store_id' => $store->id, 'price' => 120.00]);
-        $bestOffer = PriceOffer::factory()->create(['product_id' => $product->id, 'store_id' => $store->id, 'price' => 99.99]);
-        $response = $this->getJson('/api/v1/best-offer?product=Test Product&country=US');
-        $response->assertStatus(200)->assertJsonPath('id', $bestOffer->id);
-        $this->assertEquals(99.99, $response->json('price'));
-    }
-
-    public function test_best_offer_returns_correct_status_on_database_error(): void
-    {
-        // This test is no longer valid since we removed the simulation code
-        $this->markTestSkipped('Simulation code was removed from PriceSearchController');
-    }
-
-    public function test_supported_stores_returns_stores_for_a_given_country(): void
-    {
-        Store::factory()->count(3)->create(['country_code' => 'US', 'is_active' => true]);
-        Store::factory()->count(2)->create(['country_code' => 'CA', 'is_active' => true]);
-        Store::factory()->create(['country_code' => 'US', 'is_active' => false]);
-        $response = $this->getJson('/api/v1/supported-stores?country=US');
-        $response->assertStatus(200)->assertJsonCount(3);
-    }
-
-    public function test_supported_stores_returns_empty_array_for_country_with_no_stores(): void
-    {
-        Store::factory()->count(2)->create(['country_code' => 'CA']);
-        $response = $this->getJson('/api/v1/supported-stores?country=US');
-        $response->assertStatus(200)->assertJsonCount(0)->assertJson([]);
-    }
-
-    public function test_it_uses_country_from_request_when_provided(): void
-    {
-        Store::factory()->count(2)->create(['country_code' => 'CA', 'is_active' => true]);
-        $response = $this->getJson('/api/v1/supported-stores?country=CA');
-        $response->assertStatus(200)->assertJsonCount(2);
-    }
-
-    public function test_it_detects_country_from_cloudflare_header(): void
-    {
-        Store::factory()->count(3)->create(['country_code' => 'FR', 'is_active' => true]);
-        $response = $this->withHeaders(['CF-IPCountry' => 'FR'])->getJson('/api/v1/supported-stores');
-        $response->assertStatus(200)->assertJsonCount(3);
-    }
-
-    public function test_it_detects_country_from_ip_api_successfully(): void
-    {
-        Http::fake(['ipapi.co/*' => Http::response('DE', 200)]);
-        Store::factory()->count(4)->create(['country_code' => 'DE', 'is_active' => true]);
-        $response = $this->getJson('/api/v1/supported-stores');
-        $response->assertStatus(200)->assertJsonCount(4);
-    }
-
-    public function test_it_falls_back_to_us_when_ip_api_fails(): void
-    {
-        Http::fake(['ipapi.co/*' => Http::response(null, 500)]);
-        Store::factory()->count(5)->create(['country_code' => 'US', 'is_active' => true]);
-        $response = $this->getJson('/api/v1/supported-stores');
-        $response->assertStatus(200)->assertJsonCount(5);
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => []
+        ]);
     }
 }

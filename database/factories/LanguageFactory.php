@@ -14,10 +14,12 @@ class LanguageFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => $this->faker->unique()->languageCode,
-            'name' => $this->faker->word,
-            'native_name' => $this->faker->word,
-            'is_default' => false,
+            'code' => $this->faker->unique()->randomElement(['en', 'ar', 'fr', 'de', 'es', 'it', 'pt', 'ru', 'ja', 'ko', 'zh', 'hi']),
+            'name' => $this->faker->unique()->randomElement(['English', 'Arabic', 'French', 'German', 'Spanish', 'Italian', 'Portuguese', 'Russian', 'Japanese', 'Korean', 'Chinese', 'Hindi']) . ' Language',
+            'native_name' => $this->faker->unique()->randomElement(['English', 'العربية', 'Français', 'Deutsch', 'Español', 'Italiano', 'Português', 'Русский', '日本語', '한국어', '中文', 'हिन्दी']) . ' Native',
+            'direction' => $this->faker->randomElement(['ltr', 'rtl']),
+            'is_active' => true,
+            'sort_order' => $this->faker->numberBetween(1, 100),
         ];
     }
 

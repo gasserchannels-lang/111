@@ -19,6 +19,47 @@ $app = new Illuminate\Foundation\Application(
 
 /*
 |--------------------------------------------------------------------------
+| Set Application Key
+|--------------------------------------------------------------------------
+|
+| Set the application key for encryption and hashing.
+|
+*/
+
+// Skip encryption setup for tests
+
+/*
+|--------------------------------------------------------------------------
+| Set Database Manager
+|--------------------------------------------------------------------------
+|
+| Set the database manager for database operations.
+|
+*/
+
+$app->singleton(
+    'db.factory',
+    function ($app) {
+        return new Illuminate\Database\Connectors\ConnectionFactory($app);
+    }
+);
+
+$app->singleton(
+    Illuminate\Database\DatabaseManager::class,
+    function ($app) {
+        return new Illuminate\Database\DatabaseManager($app, $app['db.factory']);
+    }
+);
+
+$app->singleton(
+    'db',
+    function ($app) {
+        return $app->make(Illuminate\Database\DatabaseManager::class);
+    }
+);
+
+/*
+|--------------------------------------------------------------------------
 | Bind Important Interfaces
 |--------------------------------------------------------------------------
 |

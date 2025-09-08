@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wishlist;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WishlistController extends Controller
@@ -33,7 +34,7 @@ class WishlistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
@@ -64,7 +65,7 @@ class WishlistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): \Illuminate\Http\RedirectResponse
+    public function destroy(Request $request): JsonResponse
     {
         $request->validate([
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
@@ -92,7 +93,7 @@ class WishlistController extends Controller
     /**
      * Toggle product in wishlist
      */
-    public function toggle(Request $request): \Illuminate\Http\RedirectResponse
+    public function toggle(Request $request): JsonResponse
     {
         $request->validate([
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا

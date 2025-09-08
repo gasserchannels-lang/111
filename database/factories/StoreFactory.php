@@ -12,23 +12,19 @@ class StoreFactory extends Factory
 {
     public function definition(): array
     {
-        $name = $this->faker->company;
-
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'logo' => $this->faker->imageUrl(200, 200, 'stores'),
-            'website_url' => $this->faker->url,
-            'country_code' => $this->faker->randomElement(['EG', 'US', 'UK', 'DE', 'FR']),
-            'supported_countries' => $this->faker->randomElements(['US', 'CA', 'UK', 'DE', 'FR', 'IT', 'ES', 'AU'], 3),
+            'name' => $this->faker->unique()->company . ' Store',
+            'slug' => $this->faker->unique()->slug(2),
+            'description' => $this->faker->sentence(),
+            'logo_url' => $this->faker->imageUrl(200, 200),
+            'website_url' => $this->faker->url(),
+            'country_code' => ['EG', 'US', 'UK', 'DE', 'FR'][array_rand(['EG', 'US', 'UK', 'DE', 'FR'])],
+            'supported_countries' => array_slice(['US', 'CA', 'UK', 'DE', 'FR', 'IT', 'ES', 'AU'], 0, 3),
             'is_active' => $this->faker->boolean(80),
             'priority' => $this->faker->numberBetween(0, 100),
             'affiliate_base_url' => $this->faker->optional()->url,
-
-            // ✅ *** هذا هو السطر الذي تم إصلاحه ***
-            // تم استبدال ->json() الخاطئة بـ json_encode لإنشاء نص JSON صحيح
-            'api_config' => $this->faker->optional()->passthrough(json_encode(['key' => $this->faker->uuid, 'secret' => $this->faker->sha256])),
-
+            'affiliate_code' => $this->faker->optional()->lexify('AFF????'),
+            'api_config' => $this->faker->optional()->passthrough(['key' => $this->faker->uuid, 'secret' => $this->faker->sha256]),
             'currency_id' => Currency::factory(),
         ];
     }

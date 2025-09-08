@@ -4,29 +4,52 @@ namespace App\Services;
 
 class ProcessResult
 {
-    public function __construct(
-        public readonly int $exitCode,
-        public readonly string $output,
-        public readonly string $errorOutput
-    ) {}
+    /**
+     * The exit code of the process.
+     */
+    public int $exitCode;
 
-    public function isSuccessful(): bool
+    /**
+     * The output of the process.
+     */
+    public string $output;
+
+    /**
+     * The error output of the process.
+     */
+    public string $errorOutput;
+
+    /**
+     * Create a new process result instance.
+     */
+    public function __construct(int $exitCode, string $output, string $errorOutput)
+    {
+        $this->exitCode = $exitCode;
+        $this->output = $output;
+        $this->errorOutput = $errorOutput;
+    }
+
+    /**
+     * Check if the process was successful.
+     */
+    public function successful(): bool
     {
         return $this->exitCode === 0;
     }
 
-    public function getOutput(): string
+    /**
+     * Check if the process failed.
+     */
+    public function failed(): bool
     {
-        return $this->output;
+        return !$this->successful();
     }
 
-    public function getErrorOutput(): string
+    /**
+     * Get the full output including errors.
+     */
+    public function getFullOutput(): string
     {
-        return $this->errorOutput;
-    }
-
-    public function getExitCode(): int
-    {
-        return $this->exitCode;
+        return $this->output . ($this->errorOutput ? "\n" . $this->errorOutput : '');
     }
 }

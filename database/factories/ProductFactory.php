@@ -4,27 +4,70 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class ProductFactory extends Factory
 {
+    protected $model = Product::class;
+
     public function definition(): array
     {
-        $name = $this->faker->words(3, true);
-
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
+            'name' => $this->faker->unique()->words(3, true) . ' Product',
+            'slug' => $this->faker->unique()->slug(3),
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->randomFloat(2, 10, 1000),
-            'compare_at_price' => $this->faker->randomFloat(2, 1200, 1500),
-            'image' => $this->faker->imageUrl(400, 400, 'products'),
-            'is_active' => $this->faker->boolean(80), // 80% chance of being active
-            'category_id' => Category::factory(),
+            'image' => $this->faker->imageUrl(400, 400),
             'brand_id' => Brand::factory(),
+            'category_id' => Category::factory(),
+            'store_id' => Store::factory(),
+            'is_active' => true,
         ];
+    }
+
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => true,
+        ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
+    }
+
+    public function withPrice(float $price): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'price' => $price,
+        ]);
+    }
+
+    public function withBrand(int $brandId): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'brand_id' => $brandId,
+        ]);
+    }
+
+    public function withCategory(int $categoryId): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'category_id' => $categoryId,
+        ]);
+    }
+
+    public function withStore(int $storeId): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'store_id' => $storeId,
+        ]);
     }
 }

@@ -20,7 +20,7 @@ class StoreModelTest extends TestCase
     {
         $store = new Store([
             'affiliate_base_url' => 'http://aff.example.com?ref={AFFILIATE_CODE}&product_url={URL}',
-            'api_config' => ['affiliate_code' => 'MY-CODE-123'],
+            'affiliate_code' => 'MY-CODE-123',
         ]);
 
         $productUrl = 'http://original-site.com/product/abc';
