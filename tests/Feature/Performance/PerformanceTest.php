@@ -27,7 +27,7 @@ class PerformanceTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         // Create 1000 products
         $products = Product::factory()->count(1000)->create([
             'brand_id' => $brand->id,
@@ -47,9 +47,9 @@ class PerformanceTest extends TestCase
         }
 
         $startTime = microtime(true);
-        
+
         $response = $this->getJson('/api/price-search?q=Test');
-        
+
         $endTime = microtime(true);
         $executionTime = $endTime - $startTime;
 
@@ -66,7 +66,7 @@ class PerformanceTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'brand_id' => $brand->id,
@@ -83,20 +83,20 @@ class PerformanceTest extends TestCase
         ]);
 
         $startTime = microtime(true);
-        
+
         // Simulate 10 concurrent requests
         $responses = [];
         for ($i = 0; $i < 10; $i++) {
             $responses[] = $this->getJson('/api/price-search?q=Test');
         }
-        
+
         $endTime = microtime(true);
         $executionTime = $endTime - $startTime;
 
         foreach ($responses as $response) {
             $response->assertStatus(200);
         }
-        
+
         $this->assertLessThan(5.0, $executionTime, 'Concurrent requests should complete within 5 seconds');
     }
 
@@ -109,7 +109,7 @@ class PerformanceTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         // Create 500 products
         $products = Product::factory()->count(500)->create([
             'brand_id' => $brand->id,
@@ -119,9 +119,9 @@ class PerformanceTest extends TestCase
         ]);
 
         $initialMemory = memory_get_usage();
-        
+
         $response = $this->getJson('/api/price-search?q=Test');
-        
+
         $finalMemory = memory_get_usage();
         $memoryUsed = $finalMemory - $initialMemory;
 
@@ -138,7 +138,7 @@ class PerformanceTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'brand_id' => $brand->id,
@@ -156,11 +156,11 @@ class PerformanceTest extends TestCase
 
         // Enable query logging
         \DB::enableQueryLog();
-        
+
         $response = $this->getJson('/api/price-search?q=Test');
-        
+
         $queries = \DB::getQueryLog();
-        
+
         $response->assertStatus(200);
         $this->assertLessThan(10, count($queries), 'Should use less than 10 database queries');
     }
@@ -174,7 +174,7 @@ class PerformanceTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         // Create 1000 products
         $products = Product::factory()->count(1000)->create([
             'brand_id' => $brand->id,
@@ -184,9 +184,9 @@ class PerformanceTest extends TestCase
         ]);
 
         $startTime = microtime(true);
-        
+
         $response = $this->getJson('/api/price-search?q=Test&per_page=50&page=1');
-        
+
         $endTime = microtime(true);
         $executionTime = $endTime - $startTime;
 
@@ -203,7 +203,7 @@ class PerformanceTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'brand_id' => $brand->id,
@@ -233,7 +233,7 @@ class PerformanceTest extends TestCase
 
         $response1->assertStatus(200);
         $response2->assertStatus(200);
-        
+
         // Second request should be faster (cache hit) or at least not significantly slower
         // Note: In testing environment, cache might not be enabled or timing might be inconsistent
         $this->assertTrue($secondRequestTime <= $firstRequestTime * 1.5, 'Cached request should not be significantly slower');

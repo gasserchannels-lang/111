@@ -43,7 +43,8 @@ class Product extends Model
     /**
      * @use HasFactory<ProductFactory>
      */
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -132,7 +133,7 @@ class Product extends Model
     public function validate(): bool
     {
         $this->errors = [];
-        
+
         foreach ($this->rules as $field => $rule) {
             $rules = explode('|', $rule);
             foreach ($rules as $singleRule) {
@@ -148,7 +149,7 @@ class Product extends Model
                 }
             }
         }
-        
+
         return empty($this->errors);
     }
 

@@ -20,9 +20,9 @@ class SecurityTest extends TestCase
     {
         // Create test data first
         $product = Product::factory()->create(['name' => 'Test Product']);
-        
+
         $response = $this->getJson('/api/price-search?q=test\'; DROP TABLE products; --');
-        
+
         $response->assertStatus(200);
         // Verify the product still exists (SQL injection was prevented)
         $this->assertDatabaseHas('products', ['name' => 'Test Product']);
@@ -34,7 +34,7 @@ class SecurityTest extends TestCase
     public function it_prevents_xss_attacks()
     {
         $response = $this->getJson('/api/price-search?q=<script>alert("xss")</script>');
-        
+
         $response->assertStatus(200);
         $response->assertDontSee('<script>');
     }
@@ -70,7 +70,7 @@ class SecurityTest extends TestCase
     public function it_validates_input_sanitization()
     {
         $response = $this->getJson('/api/price-search?q=test%20%3Cscript%3Ealert%281%29%3C%2Fscript%3E');
-        
+
         $response->assertStatus(200);
         $response->assertDontSee('<script>');
     }
@@ -120,7 +120,7 @@ class SecurityTest extends TestCase
     public function it_prevents_directory_traversal()
     {
         $response = $this->getJson('/api/price-search?q=../../../etc/passwd');
-        
+
         $response->assertStatus(200);
         $response->assertDontSee('root:');
     }
@@ -134,7 +134,7 @@ class SecurityTest extends TestCase
         $this->actingAs($user);
 
         $file = \Illuminate\Http\UploadedFile::fake()->create('test.php', 100);
-        
+
         $response = $this->postJson('/api/upload', [
             'file' => $file
         ]);

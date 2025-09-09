@@ -36,7 +36,8 @@ class Wishlist extends Model
     /**
      * @use HasFactory<WishlistFactory>
      */
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -101,12 +102,12 @@ class Wishlist extends Model
     public function validate(): bool
     {
         $validator = validator($this->attributes, $this->getRules());
-        
+
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
             return false;
         }
-        
+
         return true;
     }
 

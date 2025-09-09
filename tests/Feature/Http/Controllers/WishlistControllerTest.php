@@ -56,7 +56,7 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -127,7 +127,7 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -159,7 +159,7 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -216,7 +216,7 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -249,7 +249,7 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -311,7 +311,7 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -328,7 +328,7 @@ class WishlistControllerTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewHas('wishlistItems');
-        
+
         $wishlistItems = $response->viewData('wishlistItems');
         $this->assertCount(1, $wishlistItems);
         $this->assertNotNull($wishlistItems->first()->product);
@@ -343,14 +343,14 @@ class WishlistControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product1 = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         $product2 = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,

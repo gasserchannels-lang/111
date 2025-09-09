@@ -34,7 +34,7 @@ class PriceHelperTest extends TestCase
     public function it_formats_price_with_default_currency_when_none_specified(): void
     {
         config(['coprra.default_currency' => 'USD']);
-        
+
         $currency = Currency::factory()->create([
             'code' => 'USD',
             'symbol' => '$',
@@ -324,7 +324,7 @@ class PriceHelperTest extends TestCase
     public function it_formats_price_range_with_default_currency(): void
     {
         config(['coprra.default_currency' => 'EUR']);
-        
+
         $currency = Currency::factory()->create([
             'code' => 'EUR',
             'symbol' => '€',

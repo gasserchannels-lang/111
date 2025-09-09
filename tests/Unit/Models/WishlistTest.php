@@ -49,7 +49,7 @@ class WishlistTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $wishlist = new Wishlist();
-        
+
         $this->assertFalse($wishlist->validate());
         $this->assertArrayHasKey('user_id', $wishlist->getErrors());
         $this->assertArrayHasKey('product_id', $wishlist->getErrors());
@@ -59,7 +59,7 @@ class WishlistTest extends TestCase
     public function it_can_validate_notes_length()
     {
         $wishlist = Wishlist::factory()->make(['notes' => str_repeat('a', 1001)]);
-        
+
         $this->assertFalse($wishlist->validate());
         $this->assertArrayHasKey('notes', $wishlist->getErrors());
     }
@@ -69,12 +69,12 @@ class WishlistTest extends TestCase
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
-        
+
         Wishlist::factory()->create(['user_id' => $user1->id]);
         Wishlist::factory()->create(['user_id' => $user2->id]);
-        
+
         $user1Wishlist = Wishlist::forUser($user1->id)->get();
-        
+
         $this->assertCount(1, $user1Wishlist);
         $this->assertEquals($user1->id, $user1Wishlist->first()->user_id);
     }
@@ -84,12 +84,12 @@ class WishlistTest extends TestCase
     {
         $product1 = Product::factory()->create();
         $product2 = Product::factory()->create();
-        
+
         Wishlist::factory()->create(['product_id' => $product1->id]);
         Wishlist::factory()->create(['product_id' => $product2->id]);
-        
+
         $product1Wishlist = Wishlist::forProduct($product1->id)->get();
-        
+
         $this->assertCount(1, $product1Wishlist);
         $this->assertEquals($product1->id, $product1Wishlist->first()->product_id);
     }
@@ -98,9 +98,9 @@ class WishlistTest extends TestCase
     public function it_can_soft_delete_wishlist_item()
     {
         $wishlist = Wishlist::factory()->create();
-        
+
         $wishlist->delete();
-        
+
         $this->assertSoftDeleted('wishlists', ['id' => $wishlist->id]);
     }
 
@@ -109,9 +109,9 @@ class WishlistTest extends TestCase
     {
         $wishlist = Wishlist::factory()->create();
         $wishlist->delete();
-        
+
         $wishlist->restore();
-        
+
         $this->assertDatabaseHas('wishlists', [
             'id' => $wishlist->id,
             'deleted_at' => null,
@@ -123,14 +123,14 @@ class WishlistTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create();
-        
+
         Wishlist::factory()->create([
             'user_id' => $user->id,
             'product_id' => $product->id,
         ]);
-        
+
         $this->assertTrue(Wishlist::isProductInWishlist($user->id, $product->id));
-        
+
         $anotherProduct = Product::factory()->create();
         $this->assertFalse(Wishlist::isProductInWishlist($user->id, $anotherProduct->id));
     }
@@ -140,9 +140,9 @@ class WishlistTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create();
-        
+
         $wishlist = Wishlist::addToWishlist($user->id, $product->id, 'Test notes');
-        
+
         $this->assertInstanceOf(Wishlist::class, $wishlist);
         $this->assertEquals($user->id, $wishlist->user_id);
         $this->assertEquals($product->id, $wishlist->product_id);
@@ -154,14 +154,14 @@ class WishlistTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create();
-        
+
         Wishlist::factory()->create([
             'user_id' => $user->id,
             'product_id' => $product->id,
         ]);
-        
+
         $removed = Wishlist::removeFromWishlist($user->id, $product->id);
-        
+
         $this->assertTrue($removed);
         $this->assertFalse(Wishlist::isProductInWishlist($user->id, $product->id));
     }
@@ -170,11 +170,11 @@ class WishlistTest extends TestCase
     public function it_can_get_wishlist_count_for_user()
     {
         $user = User::factory()->create();
-        
+
         Wishlist::factory()->count(3)->create(['user_id' => $user->id]);
-        
+
         $count = Wishlist::getWishlistCount($user->id);
-        
+
         $this->assertEquals(3, $count);
     }
 }

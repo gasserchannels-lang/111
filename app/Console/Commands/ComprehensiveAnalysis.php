@@ -56,7 +56,7 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('🛡️  Running Security Analysis...');
 
-        $securityService = new SecurityAnalysisService;
+        $securityService = new SecurityAnalysisService();
         $result = $securityService->analyze();
 
         // Display console output based on the results
@@ -81,7 +81,7 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('📊 Running Code Quality Analysis...');
 
-        $qualityService = new QualityAnalysisService;
+        $qualityService = new QualityAnalysisService();
         $result = $qualityService->analyze();
 
         // Display console output based on the results
@@ -115,7 +115,7 @@ class ComprehensiveAnalysis extends Command
             $this->warn('Coverage analysis is active. This may be slow.');
         }
 
-        $testServiceFactory = new TestAnalysisServiceFactory;
+        $testServiceFactory = new TestAnalysisServiceFactory();
         $testService = $testServiceFactory->create();
         $result = $testService->analyze();
 
@@ -145,7 +145,7 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('⚡ Running Performance Analysis...');
 
-        $performanceService = new PerformanceAnalysisService;
+        $performanceService = new PerformanceAnalysisService();
 
         return $performanceService->analyze();
     }

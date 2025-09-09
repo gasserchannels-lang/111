@@ -36,7 +36,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'slug' => 'test-product',
             'brand_id' => $brand->id,
@@ -50,7 +50,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('product-show');
         $response->assertViewHas('product');
-        
+
         $viewProduct = $response->viewData('product');
         $this->assertEquals($product->id, $viewProduct->id);
         $this->assertEquals('test-product', $viewProduct->slug);
@@ -75,7 +75,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->create([
             'slug' => 'inactive-product',
             'brand_id' => $brand->id,
@@ -98,7 +98,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'slug' => 'test-product-with-relations',
             'brand_id' => $brand->id,
@@ -111,7 +111,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertStatus(200);
         $viewProduct = $response->viewData('product');
-        
+
         $this->assertNotNull($viewProduct->brand);
         $this->assertNotNull($viewProduct->category);
         $this->assertNotNull($viewProduct->store);
@@ -126,7 +126,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->create([
             'name' => 'Test Product One',
             'brand_id' => $brand->id,
@@ -134,7 +134,7 @@ class ProductControllerTest extends TestCase
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'name' => 'Another Product',
             'brand_id' => $brand->id,
@@ -159,14 +159,14 @@ class ProductControllerTest extends TestCase
         $brand = Brand::factory()->create();
         $category1 = Category::factory()->create(['slug' => 'category-1']);
         $category2 = Category::factory()->create(['slug' => 'category-2']);
-        
+
         Product::factory()->create([
             'category_id' => $category1->id,
             'brand_id' => $brand->id,
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'category_id' => $category2->id,
             'brand_id' => $brand->id,
@@ -190,14 +190,14 @@ class ProductControllerTest extends TestCase
         $brand1 = Brand::factory()->create(['slug' => 'brand-1']);
         $brand2 = Brand::factory()->create(['slug' => 'brand-2']);
         $category = Category::factory()->create();
-        
+
         Product::factory()->create([
             'brand_id' => $brand1->id,
             'category_id' => $category->id,
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'brand_id' => $brand2->id,
             'category_id' => $category->id,
@@ -220,7 +220,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->create([
             'price' => 100.00,
             'brand_id' => $brand->id,
@@ -228,7 +228,7 @@ class ProductControllerTest extends TestCase
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'price' => 50.00,
             'brand_id' => $brand->id,
@@ -252,7 +252,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->create([
             'name' => 'Zebra Product',
             'brand_id' => $brand->id,
@@ -260,7 +260,7 @@ class ProductControllerTest extends TestCase
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'name' => 'Apple Product',
             'brand_id' => $brand->id,
@@ -284,7 +284,7 @@ class ProductControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->count(25)->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -297,7 +297,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('products.index');
         $response->assertViewHas('products');
-        
+
         $products = $response->viewData('products');
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $products);
     }

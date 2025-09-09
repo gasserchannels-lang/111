@@ -6,6 +6,6 @@ class TestAnalysisServiceFactory
 {
     public function create(): TestAnalysisService
     {
-        return new TestAnalysisService;
+        return new TestAnalysisService();
     }
 }

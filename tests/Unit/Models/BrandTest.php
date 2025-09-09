@@ -45,7 +45,7 @@ class BrandTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $brand = new Brand();
-        
+
         $this->assertFalse($brand->validate());
         $this->assertArrayHasKey('name', $brand->getErrors());
     }
@@ -54,7 +54,7 @@ class BrandTest extends TestCase
     public function it_can_validate_name_length()
     {
         $brand = Brand::factory()->make(['name' => str_repeat('a', 256)]);
-        
+
         $this->assertFalse($brand->validate());
         $this->assertArrayHasKey('name', $brand->getErrors());
     }
@@ -63,7 +63,7 @@ class BrandTest extends TestCase
     public function it_can_validate_website_url_format()
     {
         $brand = Brand::factory()->make(['website_url' => 'invalid-url']);
-        
+
         $this->assertFalse($brand->validate());
         $this->assertArrayHasKey('website_url', $brand->getErrors());
     }
@@ -72,7 +72,7 @@ class BrandTest extends TestCase
     public function it_can_validate_logo_url_format()
     {
         $brand = Brand::factory()->make(['logo_url' => 'invalid-url']);
-        
+
         $this->assertFalse($brand->validate());
         $this->assertArrayHasKey('logo_url', $brand->getErrors());
     }
@@ -82,9 +82,9 @@ class BrandTest extends TestCase
     {
         Brand::factory()->create(['is_active' => true]);
         Brand::factory()->create(['is_active' => false]);
-        
+
         $activeBrands = Brand::active()->get();
-        
+
         $this->assertCount(1, $activeBrands);
         $this->assertTrue($activeBrands->first()->is_active);
     }
@@ -95,9 +95,9 @@ class BrandTest extends TestCase
         Brand::factory()->create(['name' => 'Apple']);
         Brand::factory()->create(['name' => 'Samsung']);
         Brand::factory()->create(['name' => 'Google']);
-        
+
         $results = Brand::search('Apple')->get();
-        
+
         $this->assertCount(1, $results);
         $this->assertEquals('Apple', $results->first()->name);
     }
@@ -107,9 +107,9 @@ class BrandTest extends TestCase
     {
         $brand = Brand::factory()->create();
         Product::factory()->count(3)->create(['brand_id' => $brand->id]);
-        
+
         $brandWithCount = Brand::withCount('products')->find($brand->id);
-        
+
         $this->assertEquals(3, $brandWithCount->products_count);
     }
 
@@ -117,9 +117,9 @@ class BrandTest extends TestCase
     public function it_can_soft_delete_brand()
     {
         $brand = Brand::factory()->create();
-        
+
         $brand->delete();
-        
+
         $this->assertSoftDeleted('brands', ['id' => $brand->id]);
     }
 
@@ -128,9 +128,9 @@ class BrandTest extends TestCase
     {
         $brand = Brand::factory()->create();
         $brand->delete();
-        
+
         $brand->restore();
-        
+
         $this->assertDatabaseHas('brands', [
             'id' => $brand->id,
             'deleted_at' => null,

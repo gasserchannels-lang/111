@@ -1,0 +1,139 @@
+# Dependencies
+node_modules/
+vendor/
+venv/
+
+# Environment
+.env
+.env.local
+.env.production
+.env.testing
+
+# Git
+.git/
+.gitignore
+README.md
+
+# Documentation
+docs/
+artifacts/
+
+# Testing
+tests/
+.phpunit.result.cache
+.scannerwork/
+
+# Logs
+storage/logs/*.log
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/cache/data/*
+
+# Build files
+/public/build
+/public/hot
+/public/storage
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Cache
+bootstrap/cache/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Compiled assets
+public/css/
+public/js/
+public/mix-manifest.json
+
+# Laravel specific
+bootstrap/cache/*.php
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*.log
+
+# Composer
+composer.phar
+composer.lock
+
+# NPM
+package-lock.json
+yarn.lock
+
+# PHP
+.phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Cache
+bootstrap/cache/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Compiled assets
+public/css/
+public/js/
+public/mix-manifest.json
+
+# Laravel specific
+bootstrap/cache/*.php
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*.log
+
+# Composer
+composer.phar
+composer.lock
+
+# NPM
+package-lock.json
+yarn.lock
+
+# PHP
+.phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache

@@ -1,0 +1,266 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
+class PerformanceMonitoringService
+{
+    private array $metrics = [];
+    private float $startTime;
+    private int $startMemory;
+
+    public function __construct()
+    {
+        $this->startTime = microtime(true);
+        $this->startMemory = memory_get_usage();
+    }
+
+    /**
+     * Start monitoring a specific operation
+     */
+    public function startOperation(string $operation): void
+    {
+        $this->metrics[$operation] = [
+            'start_time' => microtime(true),
+            'start_memory' => memory_get_usage(),
+            'queries' => DB::getQueryLog(),
+        ];
+    }
+
+    /**
+     * End monitoring a specific operation
+     */
+    public function endOperation(string $operation): array
+    {
+        if (!isset($this->metrics[$operation])) {
+            return [];
+        }
+
+        $endTime = microtime(true);
+        $endMemory = memory_get_usage();
+        
+        $operationData = $this->metrics[$operation];
+        
+        $result = [
+            'operation' => $operation,
+            'execution_time' => $endTime - $operationData['start_time'],
+            'memory_usage' => $endMemory - $operationData['start_memory'],
+            'peak_memory' => memory_get_peak_usage(),
+            'queries_count' => count(DB::getQueryLog()) - count($operationData['queries']),
+            'queries' => array_slice(DB::getQueryLog(), count($operationData['queries'])),
+        ];
+
+        // Check thresholds
+        $this->checkThresholds($result);
+
+        unset($this->metrics[$operation]);
+        
+        return $result;
+    }
+
+    /**
+     * Get overall performance metrics
+     */
+    public function getOverallMetrics(): array
+    {
+        $currentTime = microtime(true);
+        $currentMemory = memory_get_usage();
+
+        return [
+            'total_execution_time' => $currentTime - $this->startTime,
+            'total_memory_usage' => $currentMemory - $this->startMemory,
+            'peak_memory' => memory_get_peak_usage(),
+            'total_queries' => count(DB::getQueryLog()),
+            'queries' => DB::getQueryLog(),
+            'cache_hits' => $this->getCacheHits(),
+            'cache_misses' => $this->getCacheMisses(),
+        ];
+    }
+
+    /**
+     * Monitor database performance
+     */
+    public function monitorDatabase(): array
+    {
+        $queries = DB::getQueryLog();
+        $slowQueries = [];
+        $totalTime = 0;
+
+        foreach ($queries as $query) {
+            $executionTime = $query['time'];
+            $totalTime += $executionTime;
+
+            if ($executionTime > config('monitoring.performance.slow_query_threshold', 1000)) {
+                $slowQueries[] = [
+                    'sql' => $query['query'],
+                    'bindings' => $query['bindings'],
+                    'time' => $executionTime,
+                ];
+            }
+        }
+
+        return [
+            'total_queries' => count($queries),
+            'total_time' => $totalTime,
+            'average_time' => count($queries) > 0 ? $totalTime / count($queries) : 0,
+            'slow_queries' => $slowQueries,
+            'slow_queries_count' => count($slowQueries),
+        ];
+    }
+
+    /**
+     * Monitor cache performance
+     */
+    public function monitorCache(): array
+    {
+        $hits = $this->getCacheHits();
+        $misses = $this->getCacheMisses();
+        $total = $hits + $misses;
+
+        return [
+            'hits' => $hits,
+            'misses' => $misses,
+            'hit_rate' => $total > 0 ? $hits / $total : 0,
+            'miss_rate' => $total > 0 ? $misses / $total : 0,
+        ];
+    }
+
+    /**
+     * Monitor memory usage
+     */
+    public function monitorMemory(): array
+    {
+        $currentMemory = memory_get_usage();
+        $peakMemory = memory_get_peak_usage();
+        $limit = ini_get('memory_limit');
+
+        return [
+            'current_usage' => $currentMemory,
+            'peak_usage' => $peakMemory,
+            'limit' => $this->parseMemoryLimit($limit),
+            'usage_percentage' => $this->parseMemoryLimit($limit) > 0 
+                ? ($currentMemory / $this->parseMemoryLimit($limit)) * 100 
+                : 0,
+        ];
+    }
+
+    /**
+     * Monitor storage usage
+     */
+    public function monitorStorage(): array
+    {
+        $storagePath = storage_path();
+        $totalSpace = disk_total_space($storagePath);
+        $freeSpace = disk_free_space($storagePath);
+        $usedSpace = $totalSpace - $freeSpace;
+
+        return [
+            'total_space' => $totalSpace,
+            'used_space' => $usedSpace,
+            'free_space' => $freeSpace,
+            'usage_percentage' => $totalSpace > 0 ? ($usedSpace / $totalSpace) * 100 : 0,
+        ];
+    }
+
+    /**
+     * Log performance metrics
+     */
+    public function logMetrics(): void
+    {
+        $metrics = $this->getOverallMetrics();
+        
+        Log::info('Performance Metrics', [
+            'execution_time' => $metrics['total_execution_time'],
+            'memory_usage' => $metrics['total_memory_usage'],
+            'peak_memory' => $metrics['peak_memory'],
+            'queries_count' => $metrics['total_queries'],
+            'cache_hits' => $metrics['cache_hits'],
+            'cache_misses' => $metrics['cache_misses'],
+        ]);
+    }
+
+    /**
+     * Check performance thresholds
+     */
+    private function checkThresholds(array $metrics): void
+    {
+        $config = config('monitoring.performance', []);
+
+        // Check execution time
+        if (isset($config['execution_time_threshold']) && 
+            $metrics['execution_time'] > $config['execution_time_threshold']) {
+            Log::warning('Slow operation detected', [
+                'operation' => $metrics['operation'],
+                'execution_time' => $metrics['execution_time'],
+                'threshold' => $config['execution_time_threshold'],
+            ]);
+        }
+
+        // Check memory usage
+        if (isset($config['memory_threshold']) && 
+            $metrics['memory_usage'] > ($config['memory_threshold'] * 1024 * 1024)) {
+            Log::warning('High memory usage detected', [
+                'operation' => $metrics['operation'],
+                'memory_usage' => $metrics['memory_usage'],
+                'threshold' => $config['memory_threshold'],
+            ]);
+        }
+
+        // Check query count
+        if (isset($config['query_count_threshold']) && 
+            $metrics['queries_count'] > $config['query_count_threshold']) {
+            Log::warning('High query count detected', [
+                'operation' => $metrics['operation'],
+                'queries_count' => $metrics['queries_count'],
+                'threshold' => $config['query_count_threshold'],
+            ]);
+        }
+    }
+
+    /**
+     * Get cache hits (simplified implementation)
+     */
+    private function getCacheHits(): int
+    {
+        // This would need to be implemented based on your cache driver
+        return 0;
+    }
+
+    /**
+     * Get cache misses (simplified implementation)
+     */
+    private function getCacheMisses(): int
+    {
+        // This would need to be implemented based on your cache driver
+        return 0;
+    }
+
+    /**
+     * Parse memory limit string to bytes
+     */
+    private function parseMemoryLimit(string $limit): int
+    {
+        $limit = trim($limit);
+        $last = strtolower($limit[strlen($limit) - 1]);
+        $limit = (int) $limit;
+
+        switch ($last) {
+            case 'g':
+                $limit *= 1024;
+                // fall through
+            case 'm':
+                $limit *= 1024;
+                // fall through
+            case 'k':
+                $limit *= 1024;
+        }
+
+        return $limit;
+    }
+}

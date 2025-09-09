@@ -38,7 +38,8 @@ class Brand extends Model
     /**
      * @use HasFactory<BrandFactory>
      */
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * Mass assignable attributes.
@@ -117,12 +118,12 @@ class Brand extends Model
     public function validate(): bool
     {
         $validator = validator($this->attributes, $this->getRules());
-        
+
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
             return false;
         }
-        
+
         return true;
     }
 

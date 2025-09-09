@@ -60,14 +60,14 @@ class ProcessService
     {
         try {
             $this->status = 'processing';
-            
+
             if ($data === null || empty($data)) {
                 return ['error' => true, 'message' => 'Invalid data provided'];
             }
 
             $cleanedData = $this->clean($data);
             $validated = $this->validate($cleanedData);
-            
+
             if (!$validated) {
                 $this->metrics['error_count']++;
                 return ['error' => true, 'message' => 'Validation failed', 'errors' => $this->getErrors()];
@@ -76,7 +76,7 @@ class ProcessService
             $transformedData = $this->transform($cleanedData);
             $this->metrics['processed_count']++;
             $this->status = 'completed';
-            
+
             return ['processed' => true, 'data' => $transformedData];
         } catch (\Exception $e) {
             $this->metrics['error_count']++;
@@ -91,15 +91,15 @@ class ProcessService
     public function validate(array $data): bool
     {
         $this->errors = [];
-        
+
         if (isset($data['name']) && empty($data['name'])) {
             $this->errors['name'] = 'Name is required';
         }
-        
+
         if (isset($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = 'Email is invalid';
         }
-        
+
         return empty($this->errors);
     }
 
@@ -117,11 +117,11 @@ class ProcessService
     public function clean(array $data): array
     {
         $cleaned = [];
-        
+
         foreach ($data as $key => $value) {
             if (is_string($value)) {
                 $cleaned[$key] = trim($value);
-                
+
                 if ($key === 'email') {
                     $cleaned[$key] = strtolower($cleaned[$key]);
                 }
@@ -129,7 +129,7 @@ class ProcessService
                 $cleaned[$key] = $value;
             }
         }
-        
+
         return $cleaned;
     }
 
@@ -139,7 +139,7 @@ class ProcessService
     public function transform(array $data): array
     {
         $transformed = [];
-        
+
         foreach ($data as $key => $value) {
             if (is_string($value)) {
                 $transformed[$key] = ucfirst($value);
@@ -147,7 +147,7 @@ class ProcessService
                 $transformed[$key] = $value;
             }
         }
-        
+
         return $transformed;
     }
 

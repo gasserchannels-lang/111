@@ -39,7 +39,6 @@
         "phpmd/phpmd": "^2.15",
         "phpmetrics/phpmetrics": "^2.9",
         "phpunit/phpunit": "^11.5",
-        "qossmic/deptrac": "^2.0",
         "rector/rector": "^2.1",
         "roave/security-advisories": "dev-latest",
         "sentry/sentry-laravel": "^4.15",

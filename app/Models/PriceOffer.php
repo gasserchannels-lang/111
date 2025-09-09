@@ -157,7 +157,7 @@ class PriceOffer extends Model
         if (!$this->original_price) {
             return 0;
         }
-        
+
         return $this->price - $this->original_price;
     }
 
@@ -169,7 +169,7 @@ class PriceOffer extends Model
         if (!$this->original_price || $this->original_price == 0) {
             return 0;
         }
-        
+
         return (($this->price - $this->original_price) / $this->original_price) * 100;
     }
 }

@@ -13,6 +13,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,15 +25,53 @@ use Illuminate\Support\Facades\Route;
 // --- المسارات العامة التي لا تتطلب تسجيل الدخول ---
 
 // الصفحة الرئيسية
+// Health check route
+Route::get('/health', function () {
+    $status = [
+        'status' => 'healthy',
+        'timestamp' => now()->toISOString(),
+        'version' => config('app.version', '1.0.0'),
+        'environment' => config('app.env'),
+    ];
+
+    // Check database connection
+    try {
+        DB::connection()->getPdo();
+        $status['database'] = 'connected';
+    } catch (Exception $e) {
+        $status['database'] = 'disconnected';
+        $status['status'] = 'unhealthy';
+    }
+
+    // Check cache
+    try {
+        Cache::put('health_check', 'ok', 60);
+        $status['cache'] = Cache::get('health_check') === 'ok' ? 'working' : 'not_working';
+    } catch (Exception $e) {
+        $status['cache'] = 'not_working';
+        $status['status'] = 'unhealthy';
+    }
+
+    // Check storage
+    $status['storage'] = is_writable(storage_path()) ? 'writable' : 'not_writable';
+
+    $httpStatus = $status['status'] === 'healthy' ? 200 : 503;
+    
+    return response()->json($status, $httpStatus);
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// مسار وهمي لتسجيل الدخول (مهم للاختبارات)
-Route::get('/login', fn (): string => 'This is a dummy login page to satisfy the test.'
-)->name('login');
+// Authentication routes
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
 
-// مسار وهمي لتسجيل الخروج (مهم للاختبارات)
-Route::post('/logout', fn (): string => 'Logged out successfully'
-)->name('logout');
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+
+// Logout route removed for production
 
 // المنتجات والفئات
 Route::resource('products', ProductController::class)->only(['index', 'show']);
@@ -41,7 +81,7 @@ Route::resource('categories', CategoryController::class)->only(['index', 'show']
 Route::get('language/{langCode}', [LocaleController::class, 'changeLanguage'])->name('change.language');
 Route::get('currency/{currencyCode}', [LocaleController::class, 'changeCurrency'])->name('change.currency');
 
-// POST routes for locale switching (for testing)
+// Locale switching route
 Route::post('locale/language', [LocaleController::class, 'switchLanguage'])->name('locale.language');
 
 // --- المسارات المحمية التي تتطلب تسجيل الدخول ---

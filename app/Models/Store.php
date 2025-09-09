@@ -48,7 +48,8 @@ class Store extends Model
     /**
      * @use HasFactory<StoreFactory>
      */
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -148,12 +149,12 @@ class Store extends Model
     public function validate(): bool
     {
         $validator = validator($this->attributes, $this->getRules());
-        
+
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
             return false;
         }
-        
+
         return true;
     }
 

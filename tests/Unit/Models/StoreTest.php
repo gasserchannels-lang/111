@@ -45,7 +45,7 @@ class StoreTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $store = new Store();
-        
+
         $this->assertFalse($store->validate());
         $this->assertArrayHasKey('name', $store->getErrors());
     }
@@ -54,7 +54,7 @@ class StoreTest extends TestCase
     public function it_can_validate_name_length()
     {
         $store = Store::factory()->make(['name' => str_repeat('a', 256)]);
-        
+
         $this->assertFalse($store->validate());
         $this->assertArrayHasKey('name', $store->getErrors());
     }
@@ -63,7 +63,7 @@ class StoreTest extends TestCase
     public function it_can_validate_website_url_format()
     {
         $store = Store::factory()->make(['website_url' => 'invalid-url']);
-        
+
         $this->assertFalse($store->validate());
         $this->assertArrayHasKey('website_url', $store->getErrors());
     }
@@ -72,7 +72,7 @@ class StoreTest extends TestCase
     public function it_can_validate_logo_url_format()
     {
         $store = Store::factory()->make(['logo_url' => 'invalid-url']);
-        
+
         $this->assertFalse($store->validate());
         $this->assertArrayHasKey('logo_url', $store->getErrors());
     }
@@ -82,9 +82,9 @@ class StoreTest extends TestCase
     {
         Store::factory()->create(['is_active' => true]);
         Store::factory()->create(['is_active' => false]);
-        
+
         $activeStores = Store::active()->get();
-        
+
         $this->assertCount(1, $activeStores);
         $this->assertTrue($activeStores->first()->is_active);
     }
@@ -95,9 +95,9 @@ class StoreTest extends TestCase
         Store::factory()->create(['name' => 'Amazon']);
         Store::factory()->create(['name' => 'eBay']);
         Store::factory()->create(['name' => 'Walmart']);
-        
+
         $results = Store::search('Amazon')->get();
-        
+
         $this->assertCount(1, $results);
         $this->assertEquals('Amazon', $results->first()->name);
     }
@@ -107,9 +107,9 @@ class StoreTest extends TestCase
     {
         $store = Store::factory()->create();
         Product::factory()->count(3)->create(['store_id' => $store->id]);
-        
+
         $storeWithCount = Store::withCount('products')->find($store->id);
-        
+
         $this->assertEquals(3, $storeWithCount->products_count);
     }
 
@@ -117,9 +117,9 @@ class StoreTest extends TestCase
     public function it_can_soft_delete_store()
     {
         $store = Store::factory()->create();
-        
+
         $store->delete();
-        
+
         $this->assertSoftDeleted('stores', ['id' => $store->id]);
     }
 
@@ -128,9 +128,9 @@ class StoreTest extends TestCase
     {
         $store = Store::factory()->create();
         $store->delete();
-        
+
         $store->restore();
-        
+
         $this->assertDatabaseHas('stores', [
             'id' => $store->id,
             'deleted_at' => null,
@@ -145,9 +145,9 @@ class StoreTest extends TestCase
             'affiliate_base_url' => 'https://affiliate.example.com?code={AFFILIATE_CODE}&url={URL}',
             'affiliate_code' => 'AFF123',
         ]);
-        
+
         $affiliateUrl = $store->generateAffiliateUrl('https://example.com/product');
-        
+
         $this->assertStringContainsString('AFF123', $affiliateUrl);
     }
 
@@ -158,10 +158,10 @@ class StoreTest extends TestCase
             'website_url' => 'https://example.com',
             'affiliate_code' => null,
         ]);
-        
+
         $originalUrl = 'https://example.com/product';
         $affiliateUrl = $store->generateAffiliateUrl($originalUrl);
-        
+
         $this->assertEquals($originalUrl, $affiliateUrl);
     }
 }

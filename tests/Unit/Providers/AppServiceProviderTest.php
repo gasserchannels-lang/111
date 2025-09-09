@@ -44,7 +44,7 @@ class AppServiceProviderTest extends TestCase
     {
         $app = app();
         $provider = new AppServiceProvider($app);
-        
+
         // This should not throw any exceptions
         $provider->register();
         $this->assertTrue(true);
@@ -57,7 +57,7 @@ class AppServiceProviderTest extends TestCase
     {
         $app = app();
         $provider = new AppServiceProvider($app);
-        
+
         // This should not throw any exceptions
         $provider->boot();
         $this->assertTrue(true);

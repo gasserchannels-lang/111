@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY', 'base64:testkey123456789012345678901234567890123456789012345678901234567890='),
+    'key' => env('APP_KEY', 'base64:ndCar6Nb95EM1n2s+4PALe3MQYFJi2xEqwBEKRi/8E8='),
 
     'cipher' => 'AES-256-CBC',
 

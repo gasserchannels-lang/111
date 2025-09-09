@@ -37,7 +37,7 @@ class BrandControllerTest extends TestCase
 
         $this->assertInstanceOf(View::class, $response);
         $this->assertEquals('brands.index', $response->getName());
-        
+
         $brands = $response->getData()['brands'];
         $this->assertCount(5, $brands);
     }
@@ -100,7 +100,7 @@ class BrandControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals(route('brands.index'), $response->getTargetUrl());
-        
+
         $this->assertDatabaseHas('brands', [
             'name' => 'Test Brand',
             'slug' => 'test-brand',
@@ -115,7 +115,7 @@ class BrandControllerTest extends TestCase
         $request = Request::create('/brands', 'POST', []);
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        
+
         $this->controller->store($request);
     }
 
@@ -132,7 +132,7 @@ class BrandControllerTest extends TestCase
         ]);
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        
+
         $this->controller->store($request);
     }
 
@@ -149,7 +149,7 @@ class BrandControllerTest extends TestCase
         ]);
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        
+
         $this->controller->store($request);
     }
 
@@ -165,7 +165,7 @@ class BrandControllerTest extends TestCase
 
         $this->assertInstanceOf(View::class, $response);
         $this->assertEquals('brands.show', $response->getName());
-        
+
         $viewBrand = $response->getData()['brand'];
         $this->assertEquals($brand->id, $viewBrand->id);
         $this->assertTrue($viewBrand->relationLoaded('products'));
@@ -183,7 +183,7 @@ class BrandControllerTest extends TestCase
 
         $this->assertInstanceOf(View::class, $response);
         $this->assertEquals('brands.edit', $response->getName());
-        
+
         $viewBrand = $response->getData()['brand'];
         $this->assertEquals($brand->id, $viewBrand->id);
     }
@@ -209,7 +209,7 @@ class BrandControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals(route('brands.index'), $response->getTargetUrl());
-        
+
         $brand->refresh();
         $this->assertEquals('Updated Name', $brand->name);
         $this->assertEquals('updated-slug', $brand->slug);
@@ -265,7 +265,7 @@ class BrandControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals(route('brands.index'), $response->getTargetUrl());
-        
+
         $this->assertDatabaseMissing('brands', ['id' => $brand->id]);
     }
 
@@ -281,7 +281,7 @@ class BrandControllerTest extends TestCase
 
         // Verify the brand is completely removed from database
         $this->assertDatabaseMissing('brands', ['id' => $brandId]);
-        
+
         // Verify it's not in soft deleted records either
         $this->assertNull(Brand::withTrashed()->find($brandId));
     }
@@ -299,7 +299,7 @@ class BrandControllerTest extends TestCase
         ]);
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        
+
         $this->controller->store($request);
     }
 
@@ -316,7 +316,7 @@ class BrandControllerTest extends TestCase
         $response = $this->controller->store($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        
+
         $this->assertDatabaseHas('brands', [
             'name' => 'Minimal Brand',
             'slug' => 'minimal-brand',

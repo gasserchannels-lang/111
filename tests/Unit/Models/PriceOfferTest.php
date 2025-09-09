@@ -18,7 +18,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -42,7 +42,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -62,7 +62,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -81,7 +81,7 @@ class PriceOfferTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $priceOffer = new PriceOffer();
-        
+
         try {
             $priceOffer->save();
             $this->fail('Expected validation exception was not thrown.');
@@ -97,7 +97,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         // Create a valid price offer first
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
@@ -106,7 +106,7 @@ class PriceOfferTest extends TestCase
             'product_url' => 'https://example.com/product',
             'is_available' => true,
         ]);
-        
+
         // Verify it was created with numeric price
         $this->assertEquals(99.99, $priceOffer->price);
         $this->assertIsNumeric($priceOffer->price);
@@ -119,7 +119,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = new PriceOffer([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -140,7 +140,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = new PriceOffer([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -161,7 +161,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -179,7 +179,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $availableOffers = PriceOffer::available()->get();
-        
+
         $this->assertCount(1, $availableOffers);
         $this->assertTrue($availableOffers->first()->is_available);
     }
@@ -192,7 +192,7 @@ class PriceOfferTest extends TestCase
         $product1 = Product::factory()->create();
         $product2 = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         PriceOffer::create([
             'product_id' => $product1->id,
             'store_id' => $store->id,
@@ -210,7 +210,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $product1Offers = PriceOffer::forProduct($product1->id)->get();
-        
+
         $this->assertCount(1, $product1Offers);
         $this->assertEquals($product1->id, $product1Offers->first()->product_id);
     }
@@ -223,7 +223,7 @@ class PriceOfferTest extends TestCase
         $product = Product::factory()->create();
         $store1 = Store::factory()->create();
         $store2 = Store::factory()->create();
-        
+
         PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store1->id,
@@ -241,7 +241,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $store1Offers = PriceOffer::forStore($store1->id)->get();
-        
+
         $this->assertCount(1, $store1Offers);
         $this->assertEquals($store1->id, $store1Offers->first()->store_id);
     }
@@ -254,7 +254,7 @@ class PriceOfferTest extends TestCase
         $product = Product::factory()->create();
         $store1 = Store::factory()->create();
         $store2 = Store::factory()->create();
-        
+
         PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store1->id,
@@ -272,7 +272,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $lowestPrice = PriceOffer::lowestPriceForProduct($product->id);
-        
+
         $this->assertEquals(89.99, $lowestPrice);
     }
 
@@ -284,7 +284,7 @@ class PriceOfferTest extends TestCase
         $product = Product::factory()->create();
         $store1 = Store::factory()->create();
         $store2 = Store::factory()->create();
-        
+
         PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store1->id,
@@ -302,7 +302,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $bestOffer = PriceOffer::bestOfferForProduct($product->id);
-        
+
         $this->assertInstanceOf(PriceOffer::class, $bestOffer);
         $this->assertEquals(89.99, $bestOffer->price);
         $this->assertEquals($store2->id, $bestOffer->store_id);
@@ -315,7 +315,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -325,7 +325,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $priceOffer->markAsUnavailable();
-        
+
         $this->assertFalse($priceOffer->fresh()->is_available);
     }
 
@@ -336,7 +336,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -346,7 +346,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $priceOffer->markAsAvailable();
-        
+
         $this->assertTrue($priceOffer->fresh()->is_available);
     }
 
@@ -357,7 +357,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -367,7 +367,7 @@ class PriceOfferTest extends TestCase
         ]);
 
         $priceOffer->updatePrice(79.99);
-        
+
         $this->assertEquals(79.99, $priceOffer->fresh()->price);
     }
 
@@ -378,7 +378,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -391,7 +391,7 @@ class PriceOfferTest extends TestCase
         $priceOffer->save();
 
         $difference = $priceOffer->getPriceDifferenceFromOriginal();
-        
+
         $this->assertEquals(-20.00, $difference);
     }
 
@@ -402,7 +402,7 @@ class PriceOfferTest extends TestCase
     {
         $product = Product::factory()->create();
         $store = Store::factory()->create();
-        
+
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
             'store_id' => $store->id,
@@ -415,7 +415,7 @@ class PriceOfferTest extends TestCase
         $priceOffer->save();
 
         $percentage = $priceOffer->getPriceDifferencePercentage();
-        
+
         $this->assertEquals(-20.0, $percentage);
     }
 }

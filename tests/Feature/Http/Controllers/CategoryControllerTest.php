@@ -43,7 +43,7 @@ class CategoryControllerTest extends TestCase
         $response->assertViewIs('category-show');
         $response->assertViewHas('category');
         $response->assertViewHas('products');
-        
+
         $viewCategory = $response->viewData('category');
         $this->assertEquals($category->id, $viewCategory->id);
         $this->assertEquals('test-category', $viewCategory->slug);
@@ -86,7 +86,7 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         $products = Product::factory()->count(3)->create([
             'category_id' => $category->id,
             'brand_id' => $brand->id,
@@ -113,14 +113,14 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         Product::factory()->count(2)->create([
             'category_id' => $category->id,
             'brand_id' => $brand->id,
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->count(1)->create([
             'category_id' => $category->id,
             'brand_id' => $brand->id,
@@ -133,7 +133,7 @@ class CategoryControllerTest extends TestCase
         $response->assertStatus(200);
         $viewProducts = $response->viewData('products');
         $this->assertCount(2, $viewProducts);
-        
+
         foreach ($viewProducts as $product) {
             $this->assertTrue($product->is_active);
         }
@@ -151,7 +151,7 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         $oldProduct = Product::factory()->create([
             'name' => 'Old Product',
             'category_id' => $category->id,
@@ -160,7 +160,7 @@ class CategoryControllerTest extends TestCase
             'is_active' => true,
             'created_at' => now()->subDays(5),
         ]);
-        
+
         $newProduct = Product::factory()->create([
             'name' => 'New Product',
             'category_id' => $category->id,
@@ -189,7 +189,7 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         Product::factory()->count(25)->create([
             'category_id' => $category->id,
             'brand_id' => $brand->id,
@@ -216,7 +216,7 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'price' => 50.00,
             'category_id' => $category->id,
@@ -224,7 +224,7 @@ class CategoryControllerTest extends TestCase
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'price' => 150.00,
             'category_id' => $category->id,
@@ -251,7 +251,7 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'price' => 100.00,
             'category_id' => $category->id,
@@ -259,7 +259,7 @@ class CategoryControllerTest extends TestCase
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'price' => 50.00,
             'category_id' => $category->id,
@@ -286,7 +286,7 @@ class CategoryControllerTest extends TestCase
             'slug' => 'test-category',
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'name' => 'Test Product',
             'category_id' => $category->id,
@@ -294,7 +294,7 @@ class CategoryControllerTest extends TestCase
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->create([
             'name' => 'Another Product',
             'category_id' => $category->id,

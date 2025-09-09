@@ -45,7 +45,7 @@ class ProductControllerTest extends TestCase
 
         $this->assertInstanceOf(View::class, $response);
         $this->assertEquals('product-show', $response->getName());
-        
+
         $viewData = $response->getData();
         $this->assertEquals($product->id, $viewData['product']->id);
         $this->assertEquals('test-product', $viewData['product']->slug);

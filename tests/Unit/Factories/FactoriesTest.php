@@ -149,7 +149,7 @@ class FactoriesTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -363,7 +363,7 @@ class FactoriesTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -384,7 +384,7 @@ class FactoriesTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -434,7 +434,7 @@ class FactoriesTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,

@@ -17,7 +17,8 @@ class CoprraServiceProvider extends ServiceProvider
     {
         // Merge COPRRA configuration
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/coprra.php', 'coprra'
+            __DIR__.'/../../config/coprra.php',
+            'coprra'
         );
     }
 

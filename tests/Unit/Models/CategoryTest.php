@@ -43,7 +43,7 @@ class CategoryTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $category = new Category();
-        
+
         $this->assertFalse($category->validate());
         $this->assertArrayHasKey('name', $category->getErrors());
     }
@@ -52,7 +52,7 @@ class CategoryTest extends TestCase
     public function it_can_validate_name_length()
     {
         $category = Category::factory()->make(['name' => str_repeat('a', 256)]);
-        
+
         $this->assertFalse($category->validate());
         $this->assertArrayHasKey('name', $category->getErrors());
     }
@@ -62,9 +62,9 @@ class CategoryTest extends TestCase
     {
         Category::factory()->create(['is_active' => true]);
         Category::factory()->create(['is_active' => false]);
-        
+
         $activeCategories = Category::active()->get();
-        
+
         $this->assertCount(1, $activeCategories);
         $this->assertTrue($activeCategories->first()->is_active);
     }
@@ -75,9 +75,9 @@ class CategoryTest extends TestCase
         Category::factory()->create(['name' => 'Electronics']);
         Category::factory()->create(['name' => 'Clothing']);
         Category::factory()->create(['name' => 'Books']);
-        
+
         $results = Category::search('Electronics')->get();
-        
+
         $this->assertCount(1, $results);
         $this->assertEquals('Electronics', $results->first()->name);
     }
@@ -87,9 +87,9 @@ class CategoryTest extends TestCase
     {
         $category = Category::factory()->create();
         Product::factory()->count(3)->create(['category_id' => $category->id]);
-        
+
         $categoryWithCount = Category::withCount('products')->find($category->id);
-        
+
         $this->assertEquals(3, $categoryWithCount->products_count);
     }
 
@@ -97,9 +97,9 @@ class CategoryTest extends TestCase
     public function it_can_soft_delete_category()
     {
         $category = Category::factory()->create();
-        
+
         $category->delete();
-        
+
         $this->assertSoftDeleted('categories', ['id' => $category->id]);
     }
 
@@ -108,9 +108,9 @@ class CategoryTest extends TestCase
     {
         $category = Category::factory()->create();
         $category->delete();
-        
+
         $category->restore();
-        
+
         $this->assertDatabaseHas('categories', [
             'id' => $category->id,
             'deleted_at' => null,
@@ -132,7 +132,7 @@ class CategoryTest extends TestCase
     {
         $category = Category::factory()->create(['name' => 'Old Name']);
         $category->update(['name' => 'New Name']);
-        
+
         $this->assertEquals('new-name', $category->fresh()->slug);
     }
 }

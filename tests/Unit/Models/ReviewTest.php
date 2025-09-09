@@ -18,7 +18,7 @@ class ReviewTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create();
-        
+
         $review = Review::create([
             'user_id' => $user->id,
             'product_id' => $product->id,
@@ -44,7 +44,7 @@ class ReviewTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create();
-        
+
         $review = Review::create([
             'user_id' => $user->id,
             'product_id' => $product->id,
@@ -65,7 +65,7 @@ class ReviewTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create();
-        
+
         $review = Review::create([
             'user_id' => $user->id,
             'product_id' => $product->id,
@@ -85,7 +85,7 @@ class ReviewTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $review = new Review();
-        
+
         try {
             $review->save();
             $this->fail('Expected exception was not thrown');
@@ -164,7 +164,7 @@ class ReviewTest extends TestCase
         Review::factory()->create(['rating' => 3]);
 
         $fiveStarReviews = Review::where('rating', 5)->get();
-        
+
         $this->assertCount(1, $fiveStarReviews);
         $this->assertEquals(5, $fiveStarReviews->first()->rating);
     }
@@ -175,12 +175,12 @@ class ReviewTest extends TestCase
     public function it_can_query_reviews_by_product()
     {
         $product = Product::factory()->create();
-        
+
         Review::factory()->create(['product_id' => $product->id]);
         Review::factory()->create(['product_id' => $product->id]);
 
         $productReviews = Review::where('product_id', $product->id)->get();
-        
+
         $this->assertCount(2, $productReviews);
     }
 
@@ -193,7 +193,7 @@ class ReviewTest extends TestCase
         Review::factory()->create(['is_verified_purchase' => false]);
 
         $verifiedReviews = Review::where('is_verified_purchase', true)->get();
-        
+
         $this->assertCount(1, $verifiedReviews);
         $this->assertTrue($verifiedReviews->first()->is_verified_purchase);
     }
@@ -204,19 +204,19 @@ class ReviewTest extends TestCase
     public function it_can_calculate_average_rating()
     {
         $product = Product::factory()->create();
-        
+
         Review::factory()->create([
             'product_id' => $product->id,
             'rating' => 5,
         ]);
-        
+
         Review::factory()->create([
             'product_id' => $product->id,
             'rating' => 3,
         ]);
 
         $averageRating = Review::where('product_id', $product->id)->avg('rating');
-        
+
         $this->assertEquals(4.0, $averageRating);
     }
 
@@ -226,7 +226,7 @@ class ReviewTest extends TestCase
     public function it_can_count_reviews_by_rating()
     {
         $product = Product::factory()->create();
-        
+
         Review::factory()->create(['product_id' => $product->id, 'rating' => 5]);
         Review::factory()->create(['product_id' => $product->id, 'rating' => 5]);
         Review::factory()->create(['product_id' => $product->id, 'rating' => 3]);
@@ -234,7 +234,7 @@ class ReviewTest extends TestCase
         $fiveStarCount = Review::where('product_id', $product->id)
             ->where('rating', 5)
             ->count();
-        
+
         $this->assertEquals(2, $fiveStarCount);
     }
 
@@ -247,7 +247,7 @@ class ReviewTest extends TestCase
         Review::factory()->create(['created_at' => now()->subDays(1)]);
 
         $recentReviews = Review::where('created_at', '>', now()->subDays(2))->get();
-        
+
         $this->assertCount(1, $recentReviews);
     }
 }

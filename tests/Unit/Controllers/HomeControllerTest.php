@@ -66,7 +66,7 @@ class HomeControllerTest extends TestCase
         // Create categories with products
         $activeCategory = Category::factory()->create(['is_active' => true]);
         $inactiveCategory = Category::factory()->create(['is_active' => false]);
-        
+
         Product::factory()->count(5)->create(['category_id' => $activeCategory->id]);
         Product::factory()->count(3)->create(['category_id' => $inactiveCategory->id]);
 
@@ -86,7 +86,7 @@ class HomeControllerTest extends TestCase
         // Create brands with products
         $activeBrand = Brand::factory()->create(['is_active' => true]);
         $inactiveBrand = Brand::factory()->create(['is_active' => false]);
-        
+
         Product::factory()->count(7)->create(['brand_id' => $activeBrand->id]);
         Product::factory()->count(4)->create(['brand_id' => $inactiveBrand->id]);
 
@@ -144,7 +144,7 @@ class HomeControllerTest extends TestCase
     {
         $category1 = Category::factory()->create(['is_active' => true]);
         $category2 = Category::factory()->create(['is_active' => true]);
-        
+
         Product::factory()->count(3)->create(['category_id' => $category1->id]);
         Product::factory()->count(7)->create(['category_id' => $category2->id]);
 
@@ -162,7 +162,7 @@ class HomeControllerTest extends TestCase
     {
         $brand1 = Brand::factory()->create(['is_active' => true]);
         $brand2 = Brand::factory()->create(['is_active' => true]);
-        
+
         Product::factory()->count(4)->create(['brand_id' => $brand1->id]);
         Product::factory()->count(9)->create(['brand_id' => $brand2->id]);
 

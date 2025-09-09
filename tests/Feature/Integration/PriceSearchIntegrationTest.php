@@ -29,7 +29,7 @@ class PriceSearchIntegrationTest extends TestCase
         $store2 = Store::factory()->create(['name' => 'Store 2', 'currency_id' => $currency->id]);
         $brand = Brand::factory()->create(['name' => 'Apple']);
         $category = Category::factory()->create(['name' => 'Electronics']);
-        
+
         $product = Product::factory()->create([
             'name' => 'iPhone 15',
             'brand_id' => $brand->id,
@@ -83,11 +83,11 @@ class PriceSearchIntegrationTest extends TestCase
 
         $data = $response->json('data');
         $this->assertCount(1, $data);
-        
+
         // Verify the product has price offers
         $product = $data[0];
         $this->assertCount(2, $product['price_offers']);
-        
+
         // Verify prices are available
         $prices = array_column($product['price_offers'], 'price');
         $this->assertNotEmpty($prices);
@@ -106,7 +106,7 @@ class PriceSearchIntegrationTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'brand_id' => $brand->id,
@@ -152,7 +152,7 @@ class PriceSearchIntegrationTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'brand_id' => $brand->id,
@@ -195,7 +195,7 @@ class PriceSearchIntegrationTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'brand_id' => $brand->id,

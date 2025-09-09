@@ -4,12 +4,21 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "preview": "vite preview",
         "lint": "eslint resources/js --ext .js,.vue",
         "lint:fix": "eslint resources/js --ext .js,.vue --fix",
         "format": "prettier --write resources/**/*.{js,css,scss,vue}",
         "stylelint": "stylelint resources/css/**/*.css",
         "stylelint:fix": "stylelint resources/css/**/*.css --fix",
-        "test:frontend": "npm run lint && npm run stylelint"
+        "test:frontend": "npm run lint && npm run stylelint",
+        "analyze": "npm run build && npx vite-bundle-analyzer dist/assets/*.js",
+        "optimize": "npm run build -- --mode production",
+        "watch": "vite build --watch",
+        "clean": "rimraf dist public/build",
+        "assets": "npm run clean && npm run build",
+        "check": "npm run lint && npm run stylelint && npm run test:frontend",
+        "prepare": "husky install",
+        "postinstall": "npm run assets"
     },
     "devDependencies": {
         "axios": "^1.6.4",

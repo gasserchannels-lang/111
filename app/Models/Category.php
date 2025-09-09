@@ -38,7 +38,8 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Category extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * @var list<string>
@@ -136,12 +137,12 @@ class Category extends Model
     public function validate(): bool
     {
         $validator = validator($this->attributes, $this->getRules());
-        
+
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
             return false;
         }
-        
+
         return true;
     }
 
@@ -164,7 +165,7 @@ class Category extends Model
             if (empty($category->slug)) {
                 $category->slug = \Str::slug($category->name);
             }
-            
+
             if (empty($category->level)) {
                 $category->level = $category->parent ? $category->parent->level + 1 : 0;
             }
@@ -174,7 +175,7 @@ class Category extends Model
             if ($category->isDirty('name')) {
                 $category->slug = \Str::slug($category->name);
             }
-            
+
             if ($category->isDirty('parent_id')) {
                 $category->level = $category->parent ? $category->parent->level + 1 : 0;
             }

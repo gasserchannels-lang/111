@@ -1,0 +1,358 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Exception;
+
+class ProcessHeavyOperation implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $timeout = 300; // 5 minutes
+    public int $tries = 3;
+    public int $maxExceptions = 3;
+
+    private string $operation;
+    private array $data;
+    private ?int $userId;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(string $operation, array $data = [], ?int $userId = null)
+    {
+        $this->operation = $operation;
+        $this->data = $data;
+        $this->userId = $userId;
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        $startTime = microtime(true);
+        
+        try {
+            Log::info('Heavy operation started', [
+                'operation' => $this->operation,
+                'user_id' => $this->userId,
+                'data' => $this->data,
+            ]);
+
+            // Update job status
+            $this->updateJobStatus('processing');
+
+            // Execute the operation
+            $result = $this->executeOperation();
+
+            // Update job status
+            $this->updateJobStatus('completed', $result);
+
+            $executionTime = microtime(true) - $startTime;
+            
+            Log::info('Heavy operation completed', [
+                'operation' => $this->operation,
+                'user_id' => $this->userId,
+                'execution_time' => $executionTime,
+                'result' => $result,
+            ]);
+
+        } catch (Exception $e) {
+            $this->updateJobStatus('failed', ['error' => $e->getMessage()]);
+            
+            Log::error('Heavy operation failed', [
+                'operation' => $this->operation,
+                'user_id' => $this->userId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Execute the specific operation
+     */
+    private function executeOperation(): mixed
+    {
+        switch ($this->operation) {
+            case 'generate_report':
+                return $this->generateReport();
+            
+            case 'process_images':
+                return $this->processImages();
+            
+            case 'sync_data':
+                return $this->syncData();
+            
+            case 'send_bulk_notifications':
+                return $this->sendBulkNotifications();
+            
+            case 'update_statistics':
+                return $this->updateStatistics();
+            
+            case 'cleanup_old_data':
+                return $this->cleanupOldData();
+            
+            case 'export_data':
+                return $this->exportData();
+            
+            case 'import_data':
+                return $this->importData();
+            
+            default:
+                throw new Exception("Unknown operation: {$this->operation}");
+        }
+    }
+
+    /**
+     * Generate report
+     */
+    private function generateReport(): array
+    {
+        $reportType = $this->data['type'] ?? 'general';
+        $startDate = $this->data['start_date'] ?? now()->subMonth();
+        $endDate = $this->data['end_date'] ?? now();
+
+        // Simulate heavy report generation
+        sleep(2);
+
+        return [
+            'type' => $reportType,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'generated_at' => now(),
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Process images
+     */
+    private function processImages(): array
+    {
+        $imageIds = $this->data['image_ids'] ?? [];
+        $processed = 0;
+
+        foreach ($imageIds as $imageId) {
+            // Simulate image processing
+            usleep(100000); // 100ms per image
+            $processed++;
+        }
+
+        return [
+            'total_images' => count($imageIds),
+            'processed' => $processed,
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Sync data
+     */
+    private function syncData(): array
+    {
+        $source = $this->data['source'] ?? 'external_api';
+        $synced = 0;
+
+        // Simulate data synchronization
+        sleep(3);
+
+        return [
+            'source' => $source,
+            'synced_records' => $synced,
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Send bulk notifications
+     */
+    private function sendBulkNotifications(): array
+    {
+        $userIds = $this->data['user_ids'] ?? [];
+        $message = $this->data['message'] ?? '';
+        $sent = 0;
+
+        foreach ($userIds as $userId) {
+            // Simulate notification sending
+            usleep(50000); // 50ms per notification
+            $sent++;
+        }
+
+        return [
+            'total_users' => count($userIds),
+            'sent' => $sent,
+            'message' => $message,
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Update statistics
+     */
+    private function updateStatistics(): array
+    {
+        $statTypes = $this->data['stat_types'] ?? ['users', 'products', 'orders'];
+        $updated = 0;
+
+        foreach ($statTypes as $statType) {
+            // Simulate statistics update
+            usleep(200000); // 200ms per stat type
+            $updated++;
+        }
+
+        return [
+            'stat_types' => $statTypes,
+            'updated' => $updated,
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Cleanup old data
+     */
+    private function cleanupOldData(): array
+    {
+        $daysOld = $this->data['days_old'] ?? 30;
+        $cleaned = 0;
+
+        // Simulate data cleanup
+        sleep(2);
+
+        return [
+            'days_old' => $daysOld,
+            'cleaned_records' => $cleaned,
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Export data
+     */
+    private function exportData(): array
+    {
+        $format = $this->data['format'] ?? 'csv';
+        $table = $this->data['table'] ?? 'products';
+
+        // Simulate data export
+        sleep(3);
+
+        return [
+            'format' => $format,
+            'table' => $table,
+            'file_path' => "exports/{$table}_{$format}_" . time() . ".{$format}",
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Import data
+     */
+    private function importData(): array
+    {
+        $filePath = $this->data['file_path'] ?? '';
+        $imported = 0;
+
+        // Simulate data import
+        sleep(4);
+
+        return [
+            'file_path' => $filePath,
+            'imported_records' => $imported,
+            'status' => 'completed',
+        ];
+    }
+
+    /**
+     * Update job status
+     */
+    private function updateJobStatus(string $status, mixed $result = null): void
+    {
+        $jobId = $this->job->getJobId();
+        $cacheKey = "job_status:{$jobId}";
+        
+        $statusData = [
+            'job_id' => $jobId,
+            'operation' => $this->operation,
+            'status' => $status,
+            'user_id' => $this->userId,
+            'updated_at' => now(),
+            'result' => $result,
+        ];
+
+        Cache::put($cacheKey, $statusData, 3600); // Cache for 1 hour
+    }
+
+    /**
+     * Handle job failure
+     */
+    public function failed(Exception $exception): void
+    {
+        Log::error('Heavy operation job failed', [
+            'operation' => $this->operation,
+            'user_id' => $this->userId,
+            'error' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
+        ]);
+
+        $this->updateJobStatus('failed', ['error' => $exception->getMessage()]);
+    }
+
+    /**
+     * Get job status
+     */
+    public static function getJobStatus(string $jobId): ?array
+    {
+        $cacheKey = "job_status:{$jobId}";
+        return Cache::get($cacheKey);
+    }
+
+    /**
+     * Get user's job statuses
+     */
+    public static function getUserJobStatuses(int $userId): array
+    {
+        // This would require a more sophisticated implementation
+        // to track jobs by user ID
+        return [];
+    }
+
+    /**
+     * Cancel job
+     */
+    public function cancel(): bool
+    {
+        try {
+            $this->delete();
+            $this->updateJobStatus('cancelled');
+            
+            Log::info('Heavy operation cancelled', [
+                'operation' => $this->operation,
+                'user_id' => $this->userId,
+            ]);
+            
+            return true;
+            
+        } catch (Exception $e) {
+            Log::error('Failed to cancel heavy operation', [
+                'operation' => $this->operation,
+                'user_id' => $this->userId,
+                'error' => $e->getMessage(),
+            ]);
+            
+            return false;
+        }
+    }
+}

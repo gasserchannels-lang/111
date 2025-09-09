@@ -51,7 +51,7 @@ class PriceAlertTest extends TestCase
     public function it_can_validate_required_fields()
     {
         $priceAlert = new PriceAlert();
-        
+
         $this->assertFalse($priceAlert->validate());
         $this->assertArrayHasKey('user_id', $priceAlert->getErrors());
         $this->assertArrayHasKey('product_id', $priceAlert->getErrors());
@@ -62,7 +62,7 @@ class PriceAlertTest extends TestCase
     public function it_can_validate_target_price_is_numeric()
     {
         $priceAlert = PriceAlert::factory()->make(['target_price' => 'invalid']);
-        
+
         $this->assertFalse($priceAlert->validate());
         $this->assertArrayHasKey('target_price', $priceAlert->getErrors());
     }
@@ -71,7 +71,7 @@ class PriceAlertTest extends TestCase
     public function it_can_validate_target_price_is_positive()
     {
         $priceAlert = PriceAlert::factory()->make(['target_price' => -10.00]);
-        
+
         $this->assertFalse($priceAlert->validate());
         $this->assertArrayHasKey('target_price', $priceAlert->getErrors());
     }
@@ -81,9 +81,9 @@ class PriceAlertTest extends TestCase
     {
         PriceAlert::factory()->create(['is_active' => true]);
         PriceAlert::factory()->create(['is_active' => false]);
-        
+
         $activeAlerts = PriceAlert::active()->get();
-        
+
         $this->assertCount(1, $activeAlerts);
         $this->assertTrue($activeAlerts->first()->is_active);
     }
@@ -93,12 +93,12 @@ class PriceAlertTest extends TestCase
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
-        
+
         PriceAlert::factory()->create(['user_id' => $user1->id]);
         PriceAlert::factory()->create(['user_id' => $user2->id]);
-        
+
         $user1Alerts = PriceAlert::forUser($user1->id)->get();
-        
+
         $this->assertCount(1, $user1Alerts);
         $this->assertEquals($user1->id, $user1Alerts->first()->user_id);
     }
@@ -108,12 +108,12 @@ class PriceAlertTest extends TestCase
     {
         $product1 = Product::factory()->create();
         $product2 = Product::factory()->create();
-        
+
         PriceAlert::factory()->create(['product_id' => $product1->id]);
         PriceAlert::factory()->create(['product_id' => $product2->id]);
-        
+
         $product1Alerts = PriceAlert::forProduct($product1->id)->get();
-        
+
         $this->assertCount(1, $product1Alerts);
         $this->assertEquals($product1->id, $product1Alerts->first()->product_id);
     }
@@ -122,9 +122,9 @@ class PriceAlertTest extends TestCase
     public function it_can_soft_delete_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create();
-        
+
         $priceAlert->delete();
-        
+
         $this->assertSoftDeleted('price_alerts', ['id' => $priceAlert->id]);
     }
 
@@ -133,9 +133,9 @@ class PriceAlertTest extends TestCase
     {
         $priceAlert = PriceAlert::factory()->create();
         $priceAlert->delete();
-        
+
         $priceAlert->restore();
-        
+
         $this->assertDatabaseHas('price_alerts', [
             'id' => $priceAlert->id,
             'deleted_at' => null,
@@ -146,7 +146,7 @@ class PriceAlertTest extends TestCase
     public function it_can_check_if_price_target_reached()
     {
         $priceAlert = PriceAlert::factory()->create(['target_price' => 100.00]);
-        
+
         $this->assertTrue($priceAlert->isPriceTargetReached(90.00));
         $this->assertFalse($priceAlert->isPriceTargetReached(110.00));
     }
@@ -155,9 +155,9 @@ class PriceAlertTest extends TestCase
     public function it_can_activate_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['is_active' => false]);
-        
+
         $priceAlert->activate();
-        
+
         $this->assertTrue($priceAlert->is_active);
     }
 
@@ -165,9 +165,9 @@ class PriceAlertTest extends TestCase
     public function it_can_deactivate_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['is_active' => true]);
-        
+
         $priceAlert->deactivate();
-        
+
         $this->assertFalse($priceAlert->is_active);
     }
 }

@@ -19,7 +19,6 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:a2W8lhZJNyIvYRMdOfKLniBpQR4NT+mIVRKFuUaCfbo="/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="DB_CONNECTION" value="testing"/>
@@ -30,5 +29,6 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="APP_DEBUG" value="true"/>
         <env name="APP_URL" value="http://localhost"/>
+        <env name="APP_KEY" value="base64:O6M/9EaraNKwOYumngp8xbbaLAbZ3leJ9gSHkX93yvE="/>
     </php>
 </phpunit>

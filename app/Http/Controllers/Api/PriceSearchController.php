@@ -84,7 +84,7 @@ class PriceSearchController extends Controller
     {
         try {
             $query = $request->input('q', '');
-            
+
             if (empty($query)) {
                 return response()->json([
                     'data' => [],

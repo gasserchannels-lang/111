@@ -50,7 +50,7 @@ class CategoryControllerTest extends TestCase
 
         $this->assertInstanceOf(View::class, $response);
         $this->assertEquals('category-show', $response->getName());
-        
+
         $viewData = $response->getData();
         $this->assertEquals($category->id, $viewData['category']->id);
         $this->assertCount(5, $viewData['products']);
@@ -72,7 +72,7 @@ class CategoryControllerTest extends TestCase
     public function it_only_shows_active_products_in_category(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
-        
+
         // Create active and inactive products
         Product::factory()->count(3)->create([
             'category_id' => $category->id,
@@ -98,7 +98,7 @@ class CategoryControllerTest extends TestCase
     public function it_orders_products_by_latest(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
-        
+
         // Create products with different timestamps
         $oldProduct = Product::factory()->create([
             'category_id' => $category->id,

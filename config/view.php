@@ -35,4 +35,14 @@ return [
         realpath(storage_path('framework/views'))
     ),
 
+    /*
+    |--------------------------------------------------------------------------
+    | View Caching
+    |--------------------------------------------------------------------------
+    |
+    | Enable view caching for better performance in production
+    |
+    */
+    'cache' => env('VIEW_CACHE', true),
+
 ];

@@ -38,7 +38,8 @@ class PriceAlert extends Model
     /**
      * @use HasFactory<PriceAlertFactory>
      */
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -121,12 +122,12 @@ class PriceAlert extends Model
     public function validate(): bool
     {
         $validator = validator($this->attributes, $this->getRules());
-        
+
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
             return false;
         }
-        
+
         return true;
     }
 

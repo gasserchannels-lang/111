@@ -3,10 +3,13 @@ includes:
     - ./phpstan-baseline.neon
 
 parameters:
-    level: 6
+    level: 8
     paths:
         - app/
-    reportUnmatchedIgnoredErrors: false
+        - config/
+        - database/
+        - routes/
+    reportUnmatchedIgnoredErrors: true
     parallel:
         processTimeout: 300.0
     ignoreErrors:
@@ -18,10 +21,3 @@ parameters:
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::.*#'
         # Ignore missing third-party packages
         - '#Property App\\Http\\Controllers\\CartController::\$cart has unknown class#'
-        - '#Property App\\Http\\Controllers\\CartController::\$livewire has unknown class#'
-        - '#Parameter \$cart of method App\\Http\\Controllers\\CartController::__construct\(\) has invalid type#'
-        - '#Parameter \$livewire of method App\\Http\\Controllers\\CartController::__construct\(\) has invalid type#'
-        - '#Call to method .* on an unknown class Darryldecode\\Cart\\Cart#'
-        - '#Call to method .* on an unknown class Livewire\\LivewireManager#'
-        # Ignore all PHPStan errors for now
-        - '#.*#'

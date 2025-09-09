@@ -14,7 +14,7 @@ class ProcessServiceTest extends TestCase
     public function it_can_create_process_service_instance()
     {
         $service = new ProcessService();
-        
+
         $this->assertInstanceOf(ProcessService::class, $service);
     }
 
@@ -23,9 +23,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $data = ['test' => 'data'];
-        
+
         $result = $service->process($data);
-        
+
         $this->assertIsArray($result);
         $this->assertArrayHasKey('processed', $result);
         $this->assertTrue($result['processed']);
@@ -36,9 +36,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $validData = ['name' => 'Test', 'email' => 'test@example.com'];
-        
+
         $result = $service->validate($validData);
-        
+
         $this->assertTrue($result);
     }
 
@@ -47,9 +47,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $invalidData = ['name' => '', 'email' => 'invalid-email'];
-        
+
         $result = $service->validate($invalidData);
-        
+
         $this->assertFalse($result);
     }
 
@@ -58,10 +58,10 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $invalidData = ['name' => '', 'email' => 'invalid-email'];
-        
+
         $service->validate($invalidData);
         $errors = $service->getErrors();
-        
+
         $this->assertIsArray($errors);
         $this->assertNotEmpty($errors);
     }
@@ -71,9 +71,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $dirtyData = ['name' => '  Test  ', 'email' => 'TEST@EXAMPLE.COM'];
-        
+
         $result = $service->clean($dirtyData);
-        
+
         $this->assertEquals('Test', $result['name']);
         $this->assertEquals('test@example.com', $result['email']);
     }
@@ -83,9 +83,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $data = ['name' => 'test', 'value' => 100];
-        
+
         $result = $service->transform($data);
-        
+
         $this->assertIsArray($result);
         $this->assertArrayHasKey('name', $result);
         $this->assertArrayHasKey('value', $result);
@@ -96,9 +96,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $invalidData = null;
-        
+
         $result = $service->process($invalidData);
-        
+
         $this->assertIsArray($result);
         $this->assertArrayHasKey('error', $result);
         $this->assertTrue($result['error']);
@@ -108,9 +108,9 @@ class ProcessServiceTest extends TestCase
     public function it_can_get_processing_status()
     {
         $service = new ProcessService();
-        
+
         $status = $service->getStatus();
-        
+
         $this->assertIsString($status);
         $this->assertNotEmpty($status);
     }
@@ -120,9 +120,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $service->process(['test' => 'data']);
-        
+
         $service->reset();
-        
+
         $this->assertEmpty($service->getErrors());
     }
 
@@ -131,9 +131,9 @@ class ProcessServiceTest extends TestCase
     {
         $service = new ProcessService();
         $service->process(['test' => 'data']);
-        
+
         $metrics = $service->getMetrics();
-        
+
         $this->assertIsArray($metrics);
         $this->assertArrayHasKey('processed_count', $metrics);
         $this->assertArrayHasKey('error_count', $metrics);

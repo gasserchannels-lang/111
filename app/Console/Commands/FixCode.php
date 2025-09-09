@@ -19,7 +19,7 @@ class FixCode extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->phpPath = (new PhpExecutableFinder)->find(false);
+        $this->phpPath = (new PhpExecutableFinder())->find(false);
         if (! $this->phpPath) {
             throw new RuntimeException('PHP executable not found.');
         }

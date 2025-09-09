@@ -36,7 +36,7 @@ class HomeControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         $products = Product::factory()->count(5)->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -49,7 +49,7 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('home');
         $response->assertViewHas('featuredProducts');
-        
+
         $featuredProducts = $response->viewData('featuredProducts');
         $this->assertCount(5, $featuredProducts);
     }
@@ -65,7 +65,7 @@ class HomeControllerTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewHas('categories');
-        
+
         $viewCategories = $response->viewData('categories');
         $this->assertCount(3, $viewCategories);
     }
@@ -81,7 +81,7 @@ class HomeControllerTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewHas('brands');
-        
+
         $viewBrands = $response->viewData('brands');
         $this->assertCount(3, $viewBrands);
     }
@@ -95,7 +95,7 @@ class HomeControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->count(10)->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -147,14 +147,14 @@ class HomeControllerTest extends TestCase
         $store = Store::factory()->create(['currency_id' => $currency->id]);
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
-        
+
         Product::factory()->count(3)->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
             'store_id' => $store->id,
             'is_active' => true,
         ]);
-        
+
         Product::factory()->count(2)->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -167,7 +167,7 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(200);
         $featuredProducts = $response->viewData('featuredProducts');
         $this->assertCount(3, $featuredProducts);
-        
+
         foreach ($featuredProducts as $product) {
             $this->assertTrue($product->is_active);
         }
@@ -186,7 +186,7 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(200);
         $categories = $response->viewData('categories');
         $this->assertCount(3, $categories);
-        
+
         foreach ($categories as $category) {
             $this->assertTrue($category->is_active);
         }
@@ -205,7 +205,7 @@ class HomeControllerTest extends TestCase
         $response->assertStatus(200);
         $brands = $response->viewData('brands');
         $this->assertCount(3, $brands);
-        
+
         foreach ($brands as $brand) {
             $this->assertTrue($brand->is_active);
         }
@@ -223,7 +223,7 @@ class HomeControllerTest extends TestCase
         $response->assertViewHas('featuredProducts');
         $response->assertViewHas('categories');
         $response->assertViewHas('brands');
-        
+
         $this->assertCount(0, $response->viewData('featuredProducts'));
         $this->assertCount(0, $response->viewData('categories'));
         $this->assertCount(0, $response->viewData('brands'));
