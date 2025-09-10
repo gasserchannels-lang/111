@@ -120,7 +120,7 @@ class ReviewController extends Controller
     public function destroy(Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         // التحقق من أن المستخدم هو صاحب المراجعة أو مدير
-        if ($review->user_id !== $auth->id() && ! $auth->user()->isAdmin()) {
+        if ($review->user_id !== $auth->id() && !$auth->user()->isAdmin()) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 

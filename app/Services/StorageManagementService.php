@@ -103,7 +103,7 @@ class StorageManagementService
     {
         $usage = $this->monitorStorageUsage();
 
-        if (! $usage['needs_cleanup'] || ! $this->config['auto_cleanup']) {
+        if (!$usage['needs_cleanup'] || !$this->config['auto_cleanup']) {
             return [
                 'cleanup_performed' => false,
                 'reason' => 'No cleanup needed or auto cleanup disabled',
@@ -150,7 +150,7 @@ class StorageManagementService
      */
     public function compressOldFiles(): array
     {
-        if (! $this->config['compression_enabled']) {
+        if (!$this->config['compression_enabled']) {
             return ['compression_disabled' => true];
         }
 
@@ -190,7 +190,7 @@ class StorageManagementService
      */
     public function archiveOldFiles(): array
     {
-        if (! $this->config['archival_enabled']) {
+        if (!$this->config['archival_enabled']) {
             return ['archival_disabled' => true];
         }
 
@@ -280,7 +280,7 @@ class StorageManagementService
 
             // Update config file
             $configPath = config_path('storage_management.php');
-            $configContent = "<?php\n\nreturn ".var_export($this->config, true).";\n";
+            $configContent = "<?php\n\nreturn " . var_export($this->config, true) . ";\n";
             file_put_contents($configPath, $configContent);
 
             Log::info('Storage limits updated', $limits);
@@ -314,10 +314,10 @@ class StorageManagementService
 
             foreach ($files as $file) {
                 $fileTime = filemtime($file);
-                if (! $oldestFile || $fileTime < $oldestFile) {
+                if (!$oldestFile || $fileTime < $oldestFile) {
                     $oldestFile = $fileTime;
                 }
-                if (! $newestFile || $fileTime > $newestFile) {
+                if (!$newestFile || $fileTime > $newestFile) {
                     $newestFile = $fileTime;
                 }
             }
@@ -341,11 +341,11 @@ class StorageManagementService
         $filesCompressed = 0;
         $spaceSaved = 0;
 
-        $files = glob($directory.'/*');
+        $files = glob($directory . '/*');
         foreach ($files as $file) {
-            if (is_file($file) && ! str_ends_with($file, '.gz')) {
+            if (is_file($file) && !str_ends_with($file, '.gz')) {
                 $originalSize = filesize($file);
-                $compressedFile = $file.'.gz';
+                $compressedFile = $file . '.gz';
 
                 if (file_put_contents($compressedFile, gzencode(file_get_contents($file)))) {
                     $compressedSize = filesize($compressedFile);
@@ -367,15 +367,15 @@ class StorageManagementService
      */
     private function createArchive(string $directory, string $name): array
     {
-        $archiveName = $name.'_'.Carbon::now()->format('Y-m-d').'.tar.gz';
-        $archivePath = storage_path('archives/'.$archiveName);
+        $archiveName = $name . '_' . Carbon::now()->format('Y-m-d') . '.tar.gz';
+        $archivePath = storage_path('archives/' . $archiveName);
 
         // Create archives directory if it doesn't exist
-        if (! is_dir(dirname($archivePath))) {
+        if (!is_dir(dirname($archivePath))) {
             mkdir(dirname($archivePath), 0755, true);
         }
 
-        $command = "tar -czf {$archivePath} -C ".dirname($directory).' '.basename($directory);
+        $command = "tar -czf {$archivePath} -C " . dirname($directory) . ' ' . basename($directory);
         exec($command, $output, $returnCode);
 
         if ($returnCode === 0) {
@@ -387,7 +387,7 @@ class StorageManagementService
             $this->removeDirectory($directory);
 
             return [
-                'files_archived' => count(glob($directory.'/*')),
+                'files_archived' => count(glob($directory . '/*')),
                 'archives_created' => 1,
                 'space_saved_mb' => round($spaceSaved / 1024 / 1024, 2),
             ];
@@ -427,7 +427,7 @@ class StorageManagementService
      */
     private function removeDirectory(string $directory): void
     {
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             return;
         }
 
@@ -454,7 +454,7 @@ class StorageManagementService
     {
         $size = 0;
 
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             return $size;
         }
 

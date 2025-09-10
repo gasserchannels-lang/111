@@ -13,13 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property string|null $description
- * @property int|null $parent_id
- * @property int $level
- * @property bool $is_active
+ * @property int                 $id
+ * @property string              $name
+ * @property string              $slug
+ * @property string|null         $description
+ * @property int|null            $parent_id
+ * @property int                 $level
+ * @property bool                $is_active
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at

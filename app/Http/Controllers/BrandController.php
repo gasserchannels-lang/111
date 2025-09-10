@@ -73,8 +73,8 @@ class BrandController extends Controller
     public function update(Request $request, Brand $brand): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:brands,name,'.$brand->id,
-            'slug' => 'required|string|max:255|unique:brands,slug,'.$brand->id,
+            'name' => 'required|string|max:255|unique:brands,name,' . $brand->id,
+            'slug' => 'required|string|max:255|unique:brands,slug,' . $brand->id,
             'description' => 'nullable|string',
             'logo_url' => 'nullable|url|max:255',
             'website_url' => 'nullable|url|max:255',

@@ -17,7 +17,7 @@ class ImageOptimizationService
 
     public function __construct()
     {
-        $this->imageManager = new ImageManager(new Driver);
+        $this->imageManager = new ImageManager(new Driver());
         $this->config = config('image_optimization', [
             'max_width' => 1920,
             'max_height' => 1080,
@@ -41,8 +41,8 @@ class ImageOptimizationService
         $extension = $file->getClientOriginalExtension();
 
         // Generate unique filename
-        $filename = $originalName.'_'.time().'.'.$extension;
-        $fullPath = $path.'/'.$filename;
+        $filename = $originalName . '_' . time() . '.' . $extension;
+        $fullPath = $path . '/' . $filename;
 
         // Store original file
         $originalPath = $file->storeAs($path, $filename, 'public');
@@ -95,8 +95,8 @@ class ImageOptimizationService
 
         // Create different formats
         foreach ($this->config['formats'] as $format) {
-            $filename = $baseName.'_'.$sizeName.'_'.time().'.'.$format;
-            $filePath = $path.'/optimized/'.$filename;
+            $filename = $baseName . '_' . $sizeName . '_' . time() . '.' . $format;
+            $filePath = $path . '/optimized/' . $filename;
 
             // Optimize based on format
             $optimizedImage = $this->optimizeForFormat($resizedImage, $format);
@@ -186,7 +186,7 @@ class ImageOptimizationService
 
         $imgTag = '<img';
         foreach ($imgAttributes as $key => $value) {
-            $imgTag .= ' '.$key.'="'.htmlspecialchars($value).'"';
+            $imgTag .= ' ' . $key . '="' . htmlspecialchars($value) . '"';
         }
         $imgTag .= '>';
 
@@ -213,7 +213,7 @@ class ImageOptimizationService
 
         $imgTag = '<img';
         foreach ($imgAttributes as $key => $value) {
-            $imgTag .= ' '.$key.'="'.htmlspecialchars($value).'"';
+            $imgTag .= ' ' . $key . '="' . htmlspecialchars($value) . '"';
         }
         $imgTag .= '>';
 
@@ -228,7 +228,7 @@ class ImageOptimizationService
         $cutoffTime = now()->subDays($daysOld)->timestamp;
         $deletedCount = 0;
 
-        $files = Storage::disk('public')->files($path.'/optimized');
+        $files = Storage::disk('public')->files($path . '/optimized');
 
         foreach ($files as $file) {
             $fileTime = Storage::disk('public')->lastModified($file);

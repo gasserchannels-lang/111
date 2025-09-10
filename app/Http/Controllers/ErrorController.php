@@ -42,7 +42,7 @@ class ErrorController extends Controller
     {
         $error = $this->getErrorById($id);
 
-        if (! $error) {
+        if (!$error) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -292,7 +292,7 @@ class ErrorController extends Controller
 
             return ['status' => 'healthy', 'message' => 'Database connection successful'];
         } catch (\Exception $e) {
-            return ['status' => 'critical', 'message' => 'Database connection failed: '.$e->getMessage()];
+            return ['status' => 'critical', 'message' => 'Database connection failed: ' . $e->getMessage()];
         }
     }
 
@@ -302,7 +302,7 @@ class ErrorController extends Controller
     private function checkCacheHealth(): array
     {
         try {
-            $testKey = 'health_check_'.time();
+            $testKey = 'health_check_' . time();
             \Cache::put($testKey, 'test', 60);
             $retrieved = \Cache::get($testKey);
             \Cache::forget($testKey);
@@ -313,7 +313,7 @@ class ErrorController extends Controller
 
             return ['status' => 'warning', 'message' => 'Cache test failed'];
         } catch (\Exception $e) {
-            return ['status' => 'critical', 'message' => 'Cache error: '.$e->getMessage()];
+            return ['status' => 'critical', 'message' => 'Cache error: ' . $e->getMessage()];
         }
     }
 
@@ -330,14 +330,14 @@ class ErrorController extends Controller
             $usagePercentage = ($usedSpace / $totalSpace) * 100;
 
             if ($usagePercentage > 90) {
-                return ['status' => 'critical', 'message' => 'Storage usage critical: '.round($usagePercentage, 2).'%'];
+                return ['status' => 'critical', 'message' => 'Storage usage critical: ' . round($usagePercentage, 2) . '%'];
             } elseif ($usagePercentage > 80) {
-                return ['status' => 'warning', 'message' => 'Storage usage high: '.round($usagePercentage, 2).'%'];
+                return ['status' => 'warning', 'message' => 'Storage usage high: ' . round($usagePercentage, 2) . '%'];
             }
 
-            return ['status' => 'healthy', 'message' => 'Storage usage normal: '.round($usagePercentage, 2).'%'];
+            return ['status' => 'healthy', 'message' => 'Storage usage normal: ' . round($usagePercentage, 2) . '%'];
         } catch (\Exception $e) {
-            return ['status' => 'critical', 'message' => 'Storage check failed: '.$e->getMessage()];
+            return ['status' => 'critical', 'message' => 'Storage check failed: ' . $e->getMessage()];
         }
     }
 
@@ -352,12 +352,12 @@ class ErrorController extends Controller
         $usagePercentage = ($memoryUsage / $memoryLimitBytes) * 100;
 
         if ($usagePercentage > 90) {
-            return ['status' => 'critical', 'message' => 'Memory usage critical: '.round($usagePercentage, 2).'%'];
+            return ['status' => 'critical', 'message' => 'Memory usage critical: ' . round($usagePercentage, 2) . '%'];
         } elseif ($usagePercentage > 80) {
-            return ['status' => 'warning', 'message' => 'Memory usage high: '.round($usagePercentage, 2).'%'];
+            return ['status' => 'warning', 'message' => 'Memory usage high: ' . round($usagePercentage, 2) . '%'];
         }
 
-        return ['status' => 'healthy', 'message' => 'Memory usage normal: '.round($usagePercentage, 2).'%'];
+        return ['status' => 'healthy', 'message' => 'Memory usage normal: ' . round($usagePercentage, 2) . '%'];
     }
 
     /**
@@ -369,12 +369,12 @@ class ErrorController extends Controller
         $diskSpaceGB = $diskSpace / (1024 * 1024 * 1024);
 
         if ($diskSpaceGB < 1) {
-            return ['status' => 'critical', 'message' => 'Disk space critical: '.round($diskSpaceGB, 2).'GB free'];
+            return ['status' => 'critical', 'message' => 'Disk space critical: ' . round($diskSpaceGB, 2) . 'GB free'];
         } elseif ($diskSpaceGB < 5) {
-            return ['status' => 'warning', 'message' => 'Disk space low: '.round($diskSpaceGB, 2).'GB free'];
+            return ['status' => 'warning', 'message' => 'Disk space low: ' . round($diskSpaceGB, 2) . 'GB free'];
         }
 
-        return ['status' => 'healthy', 'message' => 'Disk space normal: '.round($diskSpaceGB, 2).'GB free'];
+        return ['status' => 'healthy', 'message' => 'Disk space normal: ' . round($diskSpaceGB, 2) . 'GB free'];
     }
 
     /**
@@ -384,7 +384,7 @@ class ErrorController extends Controller
     {
         $memoryLimit = trim($memoryLimit);
         $last = strtolower($memoryLimit[strlen($memoryLimit) - 1]);
-        $memoryLimit = (int) $memoryLimit;
+        $memoryLimit = (int)$memoryLimit;
 
         switch ($last) {
             case 'g':

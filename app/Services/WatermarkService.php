@@ -37,7 +37,7 @@ class WatermarkService
     public function addWatermark(UploadedFile $file, ?string $watermarkText = null): UploadedFile
     {
         try {
-            if (! $this->config['enabled']) {
+            if (!$this->config['enabled']) {
                 return $file;
             }
 
@@ -100,7 +100,7 @@ class WatermarkService
     public function addWatermarkToStoredImage(string $imagePath, ?string $watermarkText = null): string
     {
         try {
-            if (! $this->config['enabled']) {
+            if (!$this->config['enabled']) {
                 return $imagePath;
             }
 
@@ -177,7 +177,7 @@ class WatermarkService
         // Create image resource based on type
         $image = $this->createImageResource($imagePath, $mimeType);
 
-        if (! $image) {
+        if (!$image) {
             throw new Exception('Failed to create image resource');
         }
 
@@ -208,7 +208,7 @@ class WatermarkService
             case 'image/webp':
                 return imagecreatefromwebp($imagePath);
             default:
-                throw new Exception('Unsupported image type: '.$mimeType);
+                throw new Exception('Unsupported image type: ' . $mimeType);
         }
     }
 
@@ -335,7 +335,7 @@ class WatermarkService
                 imagewebp($image, $outputPath, 90);
                 break;
             default:
-                throw new Exception('Unsupported output image type: '.$mimeType);
+                throw new Exception('Unsupported output image type: ' . $mimeType);
         }
     }
 
@@ -347,7 +347,7 @@ class WatermarkService
         $hex = ltrim($hex, '#');
 
         if (strlen($hex) === 3) {
-            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         }
 
         return [
@@ -412,8 +412,8 @@ class WatermarkService
     {
         $validPositions = ['top-left', 'top-right', 'bottom-left', 'bottom-right', 'center'];
 
-        if (! in_array($position, $validPositions)) {
-            throw new Exception('Invalid watermark position: '.$position);
+        if (!in_array($position, $validPositions)) {
+            throw new Exception('Invalid watermark position: ' . $position);
         }
 
         $this->config['position'] = $position;

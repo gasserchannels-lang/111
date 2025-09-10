@@ -21,7 +21,7 @@ class PriceSearchController extends Controller
     {
         $validation = $this->priceSearchService->validateSearchRequest($request);
 
-        if (! $validation['success']) {
+        if (!$validation['success']) {
             return response()->json([
                 'errors' => $validation['errors'],
             ], 422);
@@ -33,7 +33,7 @@ class PriceSearchController extends Controller
             $validated['country']
         );
 
-        if (! $result['success']) {
+        if (!$result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -52,7 +52,7 @@ class PriceSearchController extends Controller
 
             return response()->json($stores);
         } catch (Throwable $e) {
-            $this->log->error('PriceSearchController@supportedStores failed: '.$e->getMessage());
+            $this->log->error('PriceSearchController@supportedStores failed: ' . $e->getMessage());
 
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
@@ -70,8 +70,8 @@ class PriceSearchController extends Controller
                 ], 400);
             }
 
-            $products = Product::where('name', 'like', '%'.$query.'%')
-                ->orWhere('description', 'like', '%'.$query.'%')
+            $products = Product::where('name', 'like', '%' . $query . '%')
+                ->orWhere('description', 'like', '%' . $query . '%')
                 ->with(['priceOffers.store', 'brand', 'category'])
                 ->limit(20)
                 ->get();
@@ -102,7 +102,7 @@ class PriceSearchController extends Controller
                 'query' => $query,
             ]);
         } catch (Throwable $e) {
-            $this->log->error('PriceSearchController@search failed: '.$e->getMessage());
+            $this->log->error('PriceSearchController@search failed: ' . $e->getMessage());
 
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
@@ -110,8 +110,8 @@ class PriceSearchController extends Controller
 
     private function getCountryCode(Request $request): string
     {
-        if ($request->has('country') && strlen((string) $request->input('country')) === 2) {
-            return strtoupper((string) $request->input('country'));
+        if ($request->has('country') && strlen((string)$request->input('country')) === 2) {
+            return strtoupper((string)$request->input('country'));
         }
 
         if ($request->header('CF-IPCountry')) {

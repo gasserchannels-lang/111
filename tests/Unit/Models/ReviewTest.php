@@ -84,7 +84,7 @@ class ReviewTest extends TestCase
      */
     public function it_can_validate_required_fields()
     {
-        $review = new Review;
+        $review = new Review();
 
         try {
             $review->save();

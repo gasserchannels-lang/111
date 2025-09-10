@@ -36,7 +36,7 @@ class StatsCommand extends Command
     public function handle(): int
     {
         $this->info('📊 COPRRA Platform Statistics');
-        $this->line('='.str_repeat('=', 50));
+        $this->line('=' . str_repeat('=', 50));
 
         $detailed = $this->option('detailed');
 
@@ -85,9 +85,9 @@ class StatsCommand extends Command
         $maxPrice = PriceOffer::max('price');
 
         $this->table(['Price Metric', 'Value'], [
-            ['Average Price', '$'.number_format($avgPrice, 2)],
-            ['Minimum Price', '$'.number_format($minPrice, 2)],
-            ['Maximum Price', '$'.number_format($maxPrice, 2)],
+            ['Average Price', '$' . number_format($avgPrice, 2)],
+            ['Minimum Price', '$' . number_format($minPrice, 2)],
+            ['Maximum Price', '$' . number_format($maxPrice, 2)],
         ]);
 
         // Top categories by product count
@@ -167,6 +167,6 @@ class StatsCommand extends Command
             $size /= 1024;
         }
 
-        return round($size, $precision).' '.$units[$i];
+        return round($size, $precision) . ' ' . $units[$i];
     }
 }

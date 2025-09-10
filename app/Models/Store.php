@@ -13,20 +13,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property string|null $description
- * @property string|null $logo_url
- * @property string|null $website_url
- * @property string|null $country_code
- * @property array|null $supported_countries
- * @property bool $is_active
- * @property int $priority
- * @property string|null $affiliate_base_url
- * @property string|null $affiliate_code
- * @property array|null $api_config
- * @property int|null $currency_id
+ * @property int                 $id
+ * @property string              $name
+ * @property string              $slug
+ * @property string|null         $description
+ * @property string|null         $logo_url
+ * @property string|null         $website_url
+ * @property string|null         $country_code
+ * @property array|null          $supported_countries
+ * @property bool                $is_active
+ * @property int                 $priority
+ * @property string|null         $affiliate_base_url
+ * @property string|null         $affiliate_code
+ * @property array|null          $api_config
+ * @property int|null            $currency_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
@@ -194,8 +194,8 @@ class Store extends Model
             return $productUrl;
         }
 
-        $affiliateCode = (string) $this->affiliate_code;
-        $affiliateBaseUrl = (string) $this->affiliate_base_url;
+        $affiliateCode = (string)$this->affiliate_code;
+        $affiliateBaseUrl = (string)$this->affiliate_base_url;
 
         $affiliateUrl = str_replace('{AFFILIATE_CODE}', $affiliateCode, $affiliateBaseUrl);
         $affiliateUrl = str_replace('{URL}', urlencode($productUrl), $affiliateUrl);

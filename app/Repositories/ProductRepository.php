@@ -36,7 +36,7 @@ class ProductRepository
     public function findBySlug(string $slug): ?Product
     {
         // Validate slug format
-        if (! preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+        if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
             throw new \InvalidArgumentException('Invalid slug format');
         }
 
@@ -83,7 +83,7 @@ class ProductRepository
     /**
      * Search products with validation and rate limiting.
      *
-     * @throws ValidationException If filters are invalid
+     * @throws ValidationException       If filters are invalid
      * @throws \InvalidArgumentException If parameters are invalid
      */
     public function search(string $query, array $filters = [], int $perPage = 15): LengthAwarePaginator
@@ -111,7 +111,7 @@ class ProductRepository
             md5($query),
             md5(json_encode($filters)),
             $perPage,
-            (int) request()->get('page', 1)
+            (int)request()->get('page', 1)
         );
 
         return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($query, $filters, $perPage) {
@@ -123,26 +123,26 @@ class ProductRepository
                 ])
                 ->where('is_active', true)
                 ->where(function ($q) use ($query) {
-                    $searchTerm = '%'.addcslashes($query, '%_').'%';
+                    $searchTerm = '%' . addcslashes($query, '%_') . '%';
                     $q->where('name', 'like', $searchTerm)
                         ->orWhere('description', 'like', $searchTerm);
                 });
 
             // Apply validated filters
-            if (! empty($filters['category_id'])) {
-                $productsQuery->where('category_id', (int) $filters['category_id']);
+            if (!empty($filters['category_id'])) {
+                $productsQuery->where('category_id', (int)$filters['category_id']);
             }
 
-            if (! empty($filters['brand_id'])) {
-                $productsQuery->where('brand_id', (int) $filters['brand_id']);
+            if (!empty($filters['brand_id'])) {
+                $productsQuery->where('brand_id', (int)$filters['brand_id']);
             }
 
-            if (! empty($filters['min_price'])) {
-                $productsQuery->where('price', '>=', (float) $filters['min_price']);
+            if (!empty($filters['min_price'])) {
+                $productsQuery->where('price', '>=', (float)$filters['min_price']);
             }
 
-            if (! empty($filters['max_price'])) {
-                $productsQuery->where('price', '<=', (float) $filters['max_price']);
+            if (!empty($filters['max_price'])) {
+                $productsQuery->where('price', '<=', (float)$filters['max_price']);
             }
 
             // Apply sorting
@@ -170,7 +170,7 @@ class ProductRepository
     /**
      * Update product price with validation, locking, and logging.
      *
-     * @throws ValidationException If price is invalid
+     * @throws ValidationException    If price is invalid
      * @throws ProductUpdateException If update fails
      */
     public function updatePrice(Product $product, float $newPrice): bool
@@ -203,7 +203,7 @@ class ProductRepository
 
                 $updated = $product->update(['price' => $newPrice]);
 
-                if (! $updated) {
+                if (!$updated) {
                     throw new ProductUpdateException('Failed to update product price');
                 }
 

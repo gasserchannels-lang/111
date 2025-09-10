@@ -24,32 +24,32 @@ class CheckDeploymentReadiness extends Command
         // 1. Environment Check
         $this->info('Checking environment configuration...');
         $envErrors = $this->checkEnvironment();
-        $hasErrors = $hasErrors || ! empty($envErrors);
+        $hasErrors = $hasErrors || !empty($envErrors);
 
         // 2. Storage Permissions
         $this->info('Checking storage permissions...');
         $storageErrors = $this->checkStoragePermissions();
-        $hasErrors = $hasErrors || ! empty($storageErrors);
+        $hasErrors = $hasErrors || !empty($storageErrors);
 
         // 3. Database Configuration
         $this->info('Checking database configuration...');
         $dbErrors = $this->checkDatabase();
-        $hasErrors = $hasErrors || ! empty($dbErrors);
+        $hasErrors = $hasErrors || !empty($dbErrors);
 
         // 4. Cache Configuration
         $this->info('Checking cache configuration...');
         $cacheErrors = $this->checkCache();
-        $hasErrors = $hasErrors || ! empty($cacheErrors);
+        $hasErrors = $hasErrors || !empty($cacheErrors);
 
         // 5. Queue Configuration
         $this->info('Checking queue configuration...');
         $queueErrors = $this->checkQueue();
-        $hasErrors = $hasErrors || ! empty($queueErrors);
+        $hasErrors = $hasErrors || !empty($queueErrors);
 
         // 6. Logging Configuration
         $this->info('Checking logging configuration...');
         $logErrors = $this->checkLogging();
-        $hasErrors = $hasErrors || ! empty($logErrors);
+        $hasErrors = $hasErrors || !empty($logErrors);
 
         // Display Results
         $this->displayResults([
@@ -110,7 +110,7 @@ class CheckDeploymentReadiness extends Command
         ];
 
         foreach ($paths as $path) {
-            if (! is_writable($path)) {
+            if (!is_writable($path)) {
                 $errors[] = "Directory not writable: {$path}";
             }
         }
@@ -164,10 +164,10 @@ class CheckDeploymentReadiness extends Command
 
         // Check if required queue tables exist when using database queue
         if (env('QUEUE_CONNECTION') === 'database') {
-            if (! Schema::hasTable('jobs')) {
+            if (!Schema::hasTable('jobs')) {
                 $errors[] = "Missing required table 'jobs' for database queue";
             }
-            if (! Schema::hasTable('failed_jobs')) {
+            if (!Schema::hasTable('failed_jobs')) {
                 $errors[] = "Missing required table 'failed_jobs' for database queue";
             }
         }
@@ -180,7 +180,7 @@ class CheckDeploymentReadiness extends Command
         $errors = [];
         $logPath = storage_path('logs');
 
-        if (! is_writable($logPath)) {
+        if (!is_writable($logPath)) {
             $errors[] = "Logs directory not writable: {$logPath}";
         }
 

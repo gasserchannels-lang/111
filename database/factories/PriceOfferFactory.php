@@ -14,7 +14,7 @@ class PriceOfferFactory extends Factory
     {
         return [
             'product_id' => Product::factory(),
-            'product_sku' => 'SKU-'.$this->faker->unique()->numberBetween(1000, 9999),
+            'product_sku' => 'SKU-' . $this->faker->unique()->numberBetween(1000, 9999),
             'store_id' => Store::factory(),
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'currency' => ['USD', 'EUR', 'GBP', 'SAR', 'AED'][array_rand(['USD', 'EUR', 'GBP', 'SAR', 'AED'])],
@@ -27,10 +27,10 @@ class PriceOfferFactory extends Factory
             'reviews_count' => $this->faker->numberBetween(0, 1000),
             'image_url' => $this->faker->imageUrl(300, 300, 'products'),
             'specifications' => [
-                'brand' => 'Brand '.$this->faker->randomNumber(3),
-                'model' => 'Model '.$this->faker->randomNumber(3),
-                'color' => 'Color '.$this->faker->randomNumber(3),
-                'weight' => $this->faker->numberBetween(100, 5000).'g',
+                'brand' => 'Brand ' . $this->faker->randomNumber(3),
+                'model' => 'Model ' . $this->faker->randomNumber(3),
+                'color' => 'Color ' . $this->faker->randomNumber(3),
+                'weight' => $this->faker->numberBetween(100, 5000) . 'g',
             ],
         ];
     }

@@ -157,7 +157,7 @@ class ProductSearchRequest extends FormRequest
             $data['tags'] = array_map('trim', $this->tags);
         }
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             $this->merge($data);
         }
     }

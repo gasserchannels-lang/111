@@ -28,7 +28,9 @@ namespace App\Http\Controllers\Api\Schemas;
  *     @OA\Property(property="price_offers", type="array", @OA\Items(ref="#/components/schemas/PriceOffer"))
  * )
  */
-class ProductSchema {}
+class ProductSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -45,7 +47,9 @@ class ProductSchema {}
  *     }
  * )
  */
-class ProductDetailSchema {}
+class ProductDetailSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -66,7 +70,9 @@ class ProductDetailSchema {}
  *     @OA\Property(property="store_id", type="integer", example=1)
  * )
  */
-class ProductCreateRequestSchema {}
+class ProductCreateRequestSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -86,7 +92,9 @@ class ProductCreateRequestSchema {}
  *     @OA\Property(property="store_id", type="integer", example=2)
  * )
  */
-class ProductUpdateRequestSchema {}
+class ProductUpdateRequestSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -104,7 +112,9 @@ class ProductUpdateRequestSchema {}
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class BrandSchema {}
+class BrandSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -122,7 +132,9 @@ class BrandSchema {}
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class CategorySchema {}
+class CategorySchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -149,7 +161,9 @@ class CategorySchema {}
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class PriceOfferSchema {}
+class PriceOfferSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -169,7 +183,9 @@ class PriceOfferSchema {}
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class ReviewSchema {}
+class ReviewSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -184,7 +200,9 @@ class ReviewSchema {}
  *     @OA\Property(property="next", type="string", nullable=true, example="http://api.example.com/products?page=3")
  * )
  */
-class PaginationLinksSchema {}
+class PaginationLinksSchema
+{
+}
 
 /**
  * @OA\Schema(
@@ -201,4 +219,6 @@ class PaginationLinksSchema {}
  *     @OA\Property(property="total", type="integer", example=150)
  * )
  */
-class PaginationMetaSchema {}
+class PaginationMetaSchema
+{
+}

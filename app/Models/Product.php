@@ -13,15 +13,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property string $description
- * @property float $price
+ * @property int         $id
+ * @property string      $name
+ * @property string      $slug
+ * @property string      $description
+ * @property float       $price
  * @property string|null $image
- * @property bool $is_active
- * @property int $category_id
- * @property int $brand_id
+ * @property bool        $is_active
+ * @property int         $category_id
+ * @property int         $brand_id
  * @property-read Category $category
  * @property-read Brand $brand
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
@@ -139,13 +139,13 @@ class Product extends Model
             $rules = explode('|', $rule);
             foreach ($rules as $singleRule) {
                 if ($singleRule === 'required' && empty($this->$field)) {
-                    $this->errors[$field] = ucfirst($field).' is required';
-                } elseif ($singleRule === 'numeric' && isset($this->$field) && ! is_numeric($this->$field)) {
-                    $this->errors[$field] = ucfirst($field).' must be numeric';
+                    $this->errors[$field] = ucfirst($field) . ' is required';
+                } elseif ($singleRule === 'numeric' && isset($this->$field) && !is_numeric($this->$field)) {
+                    $this->errors[$field] = ucfirst($field) . ' must be numeric';
                 } elseif (str_starts_with($singleRule, 'min:') && isset($this->$field)) {
-                    $min = (float) substr($singleRule, 4);
+                    $min = (float)substr($singleRule, 4);
                     if (is_numeric($this->$field) && $min > $this->$field) {
-                        $this->errors[$field] = ucfirst($field).' must be at least '.$min;
+                        $this->errors[$field] = ucfirst($field) . ' must be at least ' . $min;
                     }
                 }
             }

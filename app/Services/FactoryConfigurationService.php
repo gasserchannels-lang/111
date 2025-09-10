@@ -20,7 +20,7 @@ class FactoryConfigurationService
         $factoryClass = $this->factoryClass;
         $factoryClass::guessFactoryNamesUsing(
             function (string $modelName) {
-                return 'Database\\Factories\\'.class_basename($modelName).'Factory';
+                return 'Database\\Factories\\' . class_basename($modelName) . 'Factory';
             }
         );
     }

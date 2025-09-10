@@ -185,7 +185,7 @@ class CacheService
      */
     public function rememberApiResponse(string $endpoint, array $params, callable $callback, int $ttl = 300): mixed
     {
-        $key = 'api:'.$endpoint.':'.md5(serialize($params));
+        $key = 'api:' . $endpoint . ':' . md5(serialize($params));
         $tags = ['api', $endpoint];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -196,7 +196,7 @@ class CacheService
      */
     public function rememberSearch(string $query, array $filters, callable $callback, int $ttl = 600): mixed
     {
-        $key = 'search:'.md5($query.serialize($filters));
+        $key = 'search:' . md5($query . serialize($filters));
         $tags = ['search', 'products'];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -330,12 +330,12 @@ class CacheService
         $tags[] = strtolower(class_basename($modelClass));
 
         // Add specific model tag
-        $tags[] = strtolower(class_basename($modelClass)).':'.$model->getKey();
+        $tags[] = strtolower(class_basename($modelClass)) . ':' . $model->getKey();
 
         // Add related model tags
         foreach ($model->getRelations() as $relation => $related) {
             if ($related instanceof Model) {
-                $tags[] = strtolower(class_basename(get_class($related))).':'.$related->getKey();
+                $tags[] = strtolower(class_basename(get_class($related))) . ':' . $related->getKey();
             }
         }
 

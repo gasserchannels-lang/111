@@ -357,7 +357,7 @@ class DashboardController extends Controller
     private function checkStorageHealth(): array
     {
         try {
-            $testFile = 'health_check_'.time().'.txt';
+            $testFile = 'health_check_' . time() . '.txt';
             \Storage::put($testFile, 'test');
             $result = \Storage::get($testFile);
             \Storage::delete($testFile);
@@ -393,7 +393,7 @@ class DashboardController extends Controller
     {
         $memoryLimit = trim($memoryLimit);
         $last = strtolower($memoryLimit[strlen($memoryLimit) - 1]);
-        $memoryLimit = (int) $memoryLimit;
+        $memoryLimit = (int)$memoryLimit;
 
         switch ($last) {
             case 'g':

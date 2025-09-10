@@ -18,7 +18,7 @@ class CDNService
     public function __construct()
     {
         $this->provider = config('cdn.provider', 'cloudflare');
-        $this->config = config('cdn.providers.'.$this->provider, []);
+        $this->config = config('cdn.providers.' . $this->provider, []);
     }
 
     /**
@@ -132,7 +132,7 @@ class CDNService
     {
         $baseUrl = $this->config['base_url'] ?? '';
 
-        return rtrim($baseUrl, '/').'/'.ltrim($path, '/');
+        return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
     }
 
     /**
@@ -164,7 +164,7 @@ class CDNService
             $url = $this->getUrl($remotePath);
             $response = Http::head($url);
 
-            if (! $response->successful()) {
+            if (!$response->successful()) {
                 throw new Exception('File not found on CDN');
             }
 
@@ -220,8 +220,8 @@ class CDNService
             'Content-Type' => $mimeType,
         ])->put("https://api.cloudflare.com/client/v4/accounts/{$accountId}/images/v1/{$path}", $content);
 
-        if (! $response->successful()) {
-            throw new Exception('Cloudflare upload failed: '.$response->body());
+        if (!$response->successful()) {
+            throw new Exception('Cloudflare upload failed: ' . $response->body());
         }
 
         $data = $response->json();
@@ -422,7 +422,7 @@ class CDNService
             'Authorization' => "Bearer {$apiToken}",
         ])->get("https://api.cloudflare.com/client/v4/zones/{$zoneId}/analytics/dashboard");
 
-        if (! $response->successful()) {
+        if (!$response->successful()) {
             throw new Exception('Failed to get Cloudflare statistics');
         }
 
@@ -454,7 +454,7 @@ class CDNService
     {
         try {
             $testPath = 'test/connection.txt';
-            $testContent = 'CDN connection test - '.now();
+            $testContent = 'CDN connection test - ' . now();
 
             $result = $this->uploadToCDN($testContent, $testPath, 'text/plain');
 

@@ -55,7 +55,7 @@ class PerformanceBenchmark extends TestCase
         // Assert performance (should complete within 2 seconds)
         $this->assertLessThan(2.0, $executionTime, 'Product search should complete within 2 seconds');
 
-        echo "\nProduct search with 1000 products completed in: ".round($executionTime, 4)." seconds\n";
+        echo "\nProduct search with 1000 products completed in: " . round($executionTime, 4) . " seconds\n";
     }
 
     /**
@@ -101,7 +101,7 @@ class PerformanceBenchmark extends TestCase
         // Assert performance (should complete within 1 second)
         $this->assertLessThan(1.0, $executionTime, 'Complex database query should complete within 1 second');
 
-        echo "\nComplex database query with 500 products completed in: ".round($executionTime, 4)." seconds\n";
+        echo "\nComplex database query with 500 products completed in: " . round($executionTime, 4) . " seconds\n";
     }
 
     /**
@@ -131,7 +131,7 @@ class PerformanceBenchmark extends TestCase
         // Assert memory usage (should not exceed 50MB)
         $this->assertLessThan(50 * 1024 * 1024, $memoryUsed, 'Memory usage should not exceed 50MB');
 
-        echo "\nMemory usage for 1000 products: ".round($memoryUsedMB, 2)." MB\n";
+        echo "\nMemory usage for 1000 products: " . round($memoryUsedMB, 2) . " MB\n";
     }
 
     /**
@@ -168,6 +168,6 @@ class PerformanceBenchmark extends TestCase
         // Assert performance (10 concurrent requests should complete within 5 seconds)
         $this->assertLessThan(5.0, $executionTime, '10 concurrent requests should complete within 5 seconds');
 
-        echo "\n10 concurrent requests completed in: ".round($executionTime, 4)." seconds\n";
+        echo "\n10 concurrent requests completed in: " . round($executionTime, 4) . " seconds\n";
     }
 }

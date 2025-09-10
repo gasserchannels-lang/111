@@ -58,7 +58,7 @@ class SuspiciousActivityService
      */
     public function monitorActivity(string $event, array $data): void
     {
-        if (! $this->config['enabled']) {
+        if (!$this->config['enabled']) {
             return;
         }
 
@@ -116,7 +116,7 @@ class SuspiciousActivityService
     {
         $rule = $this->config['monitoring_rules']['multiple_failed_logins'];
 
-        if (! $rule['enabled']) {
+        if (!$rule['enabled']) {
             return [];
         }
 
@@ -150,7 +150,7 @@ class SuspiciousActivityService
     {
         $rule = $this->config['monitoring_rules']['unusual_login_location'];
 
-        if (! $rule['enabled']) {
+        if (!$rule['enabled']) {
             return [];
         }
 
@@ -188,7 +188,7 @@ class SuspiciousActivityService
     {
         $rule = $this->config['monitoring_rules']['rapid_api_requests'];
 
-        if (! $rule['enabled']) {
+        if (!$rule['enabled']) {
             return [];
         }
 
@@ -222,7 +222,7 @@ class SuspiciousActivityService
     {
         $rule = $this->config['monitoring_rules']['unusual_data_access'];
 
-        if (! $rule['enabled']) {
+        if (!$rule['enabled']) {
             return [];
         }
 
@@ -256,7 +256,7 @@ class SuspiciousActivityService
     {
         $rule = $this->config['monitoring_rules']['admin_actions'];
 
-        if (! $rule['enabled']) {
+        if (!$rule['enabled']) {
             return [];
         }
 
@@ -337,7 +337,7 @@ class SuspiciousActivityService
         try {
             $adminEmails = config('app.admin_emails', []);
 
-            if (! empty($adminEmails)) {
+            if (!empty($adminEmails)) {
                 $subject = "Suspicious Activity Alert - {$activity['type']}";
                 $message = $this->formatActivityMessage($activity);
 

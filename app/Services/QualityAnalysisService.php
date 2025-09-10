@@ -20,7 +20,7 @@ class QualityAnalysisService
             $score += $this->runPhpmdAnalysis($issues);
             $score += $this->runPhpcpdAnalysis($issues);
         } catch (\Exception $e) {
-            $issues[] = 'Code quality analysis failed: '.$e->getMessage();
+            $issues[] = 'Code quality analysis failed: ' . $e->getMessage();
         }
 
         return [
@@ -36,7 +36,7 @@ class QualityAnalysisService
      */
     private function runPhpmdAnalysis(array &$issues): int
     {
-        if (! $this->commandExists('vendor/bin/phpmd')) {
+        if (!$this->commandExists('vendor/bin/phpmd')) {
             return 0;
         }
 
@@ -60,7 +60,7 @@ class QualityAnalysisService
      */
     private function runPhpcpdAnalysis(array &$issues): int
     {
-        if (! $this->commandExists('vendor/bin/phpcpd')) {
+        if (!$this->commandExists('vendor/bin/phpcpd')) {
             return 0;
         }
 

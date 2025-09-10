@@ -34,7 +34,7 @@ class SecurityAudit extends TestCase
         $maliciousInput = "'; DROP TABLE users; --";
 
         // Test that malicious input is properly escaped
-        $response = $this->getJson('/api/price-search?q='.urlencode($maliciousInput));
+        $response = $this->getJson('/api/price-search?q=' . urlencode($maliciousInput));
 
         $response->assertStatus(200);
 
@@ -49,7 +49,7 @@ class SecurityAudit extends TestCase
     {
         $xssPayload = '<script>alert("XSS")</script>';
 
-        $response = $this->getJson('/api/price-search?q='.urlencode($xssPayload));
+        $response = $this->getJson('/api/price-search?q=' . urlencode($xssPayload));
 
         $response->assertStatus(200);
 
@@ -203,22 +203,22 @@ class SecurityAudit extends TestCase
         }
 
         // Check for uppercase letter
-        if (! preg_match('/[A-Z]/', $password)) {
+        if (!preg_match('/[A-Z]/', $password)) {
             return false;
         }
 
         // Check for lowercase letter
-        if (! preg_match('/[a-z]/', $password)) {
+        if (!preg_match('/[a-z]/', $password)) {
             return false;
         }
 
         // Check for number
-        if (! preg_match('/[0-9]/', $password)) {
+        if (!preg_match('/[0-9]/', $password)) {
             return false;
         }
 
         // Check for special character
-        if (! preg_match('/[^A-Za-z0-9]/', $password)) {
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
             return false;
         }
 

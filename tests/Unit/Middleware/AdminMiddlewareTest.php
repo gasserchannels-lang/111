@@ -21,7 +21,7 @@ class AdminMiddlewareTest extends TestCase
         $user = User::factory()->create(['is_admin' => true]);
         $this->actingAs($user);
 
-        $middleware = new AdminMiddleware;
+        $middleware = new AdminMiddleware();
         $request = Request::create('/admin', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -39,7 +39,7 @@ class AdminMiddlewareTest extends TestCase
         $user = User::factory()->create(['is_admin' => false]);
         $this->actingAs($user);
 
-        $middleware = new AdminMiddleware;
+        $middleware = new AdminMiddleware();
         $request = Request::create('/admin', 'GET');
         $request->headers->set('Accept', 'application/json');
 
@@ -57,7 +57,7 @@ class AdminMiddlewareTest extends TestCase
     {
         Auth::logout();
 
-        $middleware = new AdminMiddleware;
+        $middleware = new AdminMiddleware();
         $request = Request::create('/admin', 'GET');
 
         $response = $middleware->handle($request, function ($req) {

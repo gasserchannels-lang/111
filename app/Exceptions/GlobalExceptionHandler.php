@@ -326,13 +326,13 @@ class GlobalExceptionHandler extends ExceptionHandler
         try {
             $adminEmails = config('app.admin_emails', []);
 
-            if (! empty($adminEmails)) {
+            if (!empty($adminEmails)) {
                 Mail::raw(
-                    "Critical error occurred in COPRRA application:\n\n".
-                    'Error: '.$e->getMessage()."\n".
-                    'File: '.$e->getFile().':'.$e->getLine()."\n".
-                    'Time: '.now()->toISOString()."\n".
-                    'URL: '.request()->fullUrl(),
+                    "Critical error occurred in COPRRA application:\n\n" .
+                    'Error: ' . $e->getMessage() . "\n" .
+                    'File: ' . $e->getFile() . ':' . $e->getLine() . "\n" .
+                    'Time: ' . now()->toISOString() . "\n" .
+                    'URL: ' . request()->fullUrl(),
                     function ($message) use ($adminEmails) {
                         $message->to($adminEmails)
                             ->subject('Critical Error Alert - COPRRA');

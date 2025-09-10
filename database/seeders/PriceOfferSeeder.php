@@ -19,10 +19,10 @@ class PriceOfferSeeder extends Seeder
 
         foreach ($stores as $store) {
             foreach ($products as $product) {
-                $productUrl = $store->website_url.'/product/'.strtolower($product->slug);
+                $productUrl = $store->website_url . '/product/' . strtolower($product->slug);
                 PriceOffer::create([
                     'product_id' => $product->id,
-                    'product_sku' => 'SKU-'.$product->id.'-'.random_int(1000, 9999),
+                    'product_sku' => 'SKU-' . $product->id . '-' . random_int(1000, 9999),
                     'store_id' => $store->id,
                     'price' => random_int(500, 1500) + (random_int(0, 99) / 100),
                     'currency' => config('coprra.default_currency', 'USD'),
@@ -33,7 +33,7 @@ class PriceOfferSeeder extends Seeder
                     'condition' => config('coprra.default_condition', 'new'),
                     'rating' => random_int(35, 50) / 10,
                     'reviews_count' => random_int(10, 1000),
-                    'image_url' => config('app.url').'/images/placeholder/300x300?text='.urlencode($product->name),
+                    'image_url' => config('app.url') . '/images/placeholder/300x300?text=' . urlencode($product->name),
                     'specifications' => [
                         'brand' => explode(' ', $product->name)[0],
                         'model' => $product->name,

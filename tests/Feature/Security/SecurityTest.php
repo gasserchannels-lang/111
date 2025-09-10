@@ -70,7 +70,7 @@ class SecurityTest extends TestCase
         // Also accept 200 if CSRF is disabled in testing
         $this->assertTrue(
             in_array($response->status(), [200, 302, 419]),
-            'Expected CSRF protection to return 200, 302 or 419, got '.$response->status()
+            'Expected CSRF protection to return 200, 302 or 419, got ' . $response->status()
         );
     }
 
@@ -183,7 +183,7 @@ class SecurityTest extends TestCase
         // Logout might return 404 if route doesn't exist, or 302 if it does
         $this->assertTrue(
             in_array($response->status(), [302, 404]),
-            'Expected logout to return 302 or 404, got '.$response->status()
+            'Expected logout to return 302 or 404, got ' . $response->status()
         );
 
         // If logout route exists, verify user is logged out

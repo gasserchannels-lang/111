@@ -20,7 +20,7 @@ class PerformanceAnalysisService
             $score += $this->checkAssetCompilation($issues);
             $score += $this->checkQueueConfiguration($issues);
         } catch (\Exception $e) {
-            $issues[] = 'Performance analysis failed: '.$e->getMessage();
+            $issues[] = 'Performance analysis failed: ' . $e->getMessage();
         }
 
         return [

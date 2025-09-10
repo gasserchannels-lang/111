@@ -44,7 +44,7 @@ class TestAnalysisService
         } catch (ProcessFailedException $e) {
             $this->handleTestProcessException($e, $issues);
         } catch (\Exception $e) {
-            $issues[] = 'Test analysis failed: '.$e->getMessage();
+            $issues[] = 'Test analysis failed: ' . $e->getMessage();
         }
 
         return [
@@ -85,7 +85,7 @@ class TestAnalysisService
      */
     private function analyzeTestResults(Process $process, string $output, array &$issues): int
     {
-        if (! $process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             $issues[] = 'Some tests failed or encountered errors.';
 
             return 0;
@@ -103,14 +103,14 @@ class TestAnalysisService
      */
     private function analyzeCoverage(string $output, array &$issues): int
     {
-        if (! $this->coverageEnabled) {
+        if (!$this->coverageEnabled) {
             return 0;
         }
 
         if (preg_match('/Lines:\s+(\d+\.\d+)%/', $output, $matches)) {
-            $coverage = (float) $matches[1];
+            $coverage = (float)$matches[1];
 
-            return (int) (($coverage / 100) * 30);
+            return (int)(($coverage / 100) * 30);
         }
 
         $issues[] = 'Code coverage information not available';

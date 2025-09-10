@@ -23,7 +23,7 @@ class SecurityAnalysisService
             $score += $this->checkHttpsConfiguration($issues);
             $score += $this->checkSecurityMiddleware($issues);
         } catch (\Exception $e) {
-            $issues[] = 'Security analysis failed: '.$e->getMessage();
+            $issues[] = 'Security analysis failed: ' . $e->getMessage();
         }
 
         return [
@@ -42,7 +42,7 @@ class SecurityAnalysisService
         $process = new Process(['composer', 'outdated', '--direct']);
         $process->run();
 
-        if (! $process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             return 0;
         }
 
@@ -119,13 +119,13 @@ class SecurityAnalysisService
     {
         try {
             // Check if class exists first
-            if (! class_exists($middlewareClass)) {
+            if (!class_exists($middlewareClass)) {
                 return false;
             }
 
             // For Laravel 10+, we need to check the kernel file directly
             $kernelFile = app_path('Http/Kernel.php');
-            if (! file_exists($kernelFile)) {
+            if (!file_exists($kernelFile)) {
                 return false;
             }
 

@@ -40,7 +40,7 @@ class PerformanceMonitoringService
      */
     public function endOperation(string $operation): array
     {
-        if (! isset($this->metrics[$operation])) {
+        if (!isset($this->metrics[$operation])) {
             return [];
         }
 
@@ -250,7 +250,7 @@ class PerformanceMonitoringService
     {
         $limit = trim($limit);
         $last = strtolower($limit[strlen($limit) - 1]);
-        $limit = (int) $limit;
+        $limit = (int)$limit;
 
         switch ($last) {
             case 'g':

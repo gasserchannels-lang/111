@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
- * @property int $user_id
- * @property int $product_id
- * @property string|null $notes
+ * @property int                 $id
+ * @property int                 $user_id
+ * @property int                 $product_id
+ * @property string|null         $notes
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at

@@ -18,7 +18,7 @@ class CloudStorageService
     public function __construct()
     {
         $this->disk = config('filesystems.cloud_disk', 's3');
-        $this->config = config('filesystems.disks.'.$this->disk, []);
+        $this->config = config('filesystems.disks.' . $this->disk, []);
     }
 
     /**
@@ -28,12 +28,12 @@ class CloudStorageService
     {
         try {
             $filename = $filename ?? $this->generateUniqueFilename($file);
-            $fullPath = $path.'/'.$filename;
+            $fullPath = $path . '/' . $filename;
 
             // Upload to cloud storage
             $uploadedPath = Storage::disk($this->disk)->putFileAs($path, $file, $filename);
 
-            if (! $uploadedPath) {
+            if (!$uploadedPath) {
                 throw new Exception('Failed to upload file to cloud storage');
             }
 
@@ -365,9 +365,9 @@ class CloudStorageService
             // Create optimized versions
             foreach ($sizes as $sizeName => $dimensions) {
                 $optimizedFile = $this->createOptimizedImage($file, $dimensions[0], $dimensions[1]);
-                $optimizedPath = $path.'/optimized/'.$sizeName.'_'.$original['filename'];
+                $optimizedPath = $path . '/optimized/' . $sizeName . '_' . $original['filename'];
 
-                $optimized = $this->uploadFile($optimizedFile, $path.'/optimized', $sizeName.'_'.$original['filename']);
+                $optimized = $this->uploadFile($optimizedFile, $path . '/optimized', $sizeName . '_' . $original['filename']);
                 $results[$sizeName] = $optimized;
             }
 

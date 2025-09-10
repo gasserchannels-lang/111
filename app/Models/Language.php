@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
+ * @property int    $id
  * @property string $code
  * @property string $name
  * @property string $native_name
  * @property string $direction
- * @property bool $is_active
- * @property int $sort_order
+ * @property bool   $is_active
+ * @property int    $sort_order
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency> $currencies
  * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting> $userLocaleSettings
  *
@@ -85,7 +85,7 @@ class Language extends Model
     /**
      * نطاق للغات النشطة فقط.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Language> $queryBuilder
      */
     public function scopeActive(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
     {
@@ -95,7 +95,7 @@ class Language extends Model
     /**
      * نطاق للغات مرتبة حسب الترتيب.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
+     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Language> $queryBuilder
      */
     public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
     {

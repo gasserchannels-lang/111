@@ -33,7 +33,7 @@ class ThrottleSensitiveOperations
             ]);
 
             return response()->json([
-                'message' => 'Too many attempts. Please try again in '.$seconds.' seconds.',
+                'message' => 'Too many attempts. Please try again in ' . $seconds . ' seconds.',
                 'retry_after' => $seconds,
             ], 429);
         }

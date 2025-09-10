@@ -81,7 +81,7 @@ class FileCleanupService
             $cutoffDate = Carbon::now()->subDays($this->config['log_files_retention_days']);
 
             if (is_dir($logDirectory)) {
-                $files = glob($logDirectory.'/*.log');
+                $files = glob($logDirectory . '/*.log');
 
                 foreach ($files as $file) {
                     if (filemtime($file) < $cutoffDate->timestamp) {
@@ -271,7 +271,7 @@ class FileCleanupService
         $sizeDeleted = 0;
         $cutoffDate = Carbon::now()->subDays($retentionDays);
 
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             return ['files_deleted' => 0, 'size_deleted' => 0];
         }
 
@@ -303,7 +303,7 @@ class FileCleanupService
     {
         $size = 0;
 
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             return $size;
         }
 

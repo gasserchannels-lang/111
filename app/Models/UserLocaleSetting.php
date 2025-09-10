@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 
 /**
- * @property int $id
- * @property int|null $user_id
+ * @property int         $id
+ * @property int|null    $user_id
  * @property string|null $session_id
- * @property int $language_id
- * @property int $currency_id
+ * @property int         $language_id
+ * @property int         $currency_id
  * @property string|null $ip_address
  * @property string|null $country_code
  * @property-read User|null $user
@@ -94,11 +94,11 @@ class UserLocaleSetting extends Model
             $query->where('user_id', $userId);
         }
 
-        if (! $userId && $sessionId) {
+        if (!$userId && $sessionId) {
             $query->where('session_id', $sessionId);
         }
 
-        if (! $userId && ! $sessionId) {
+        if (!$userId && !$sessionId) {
             return null;
         }
 

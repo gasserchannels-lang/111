@@ -207,14 +207,14 @@ class FinancialTransactionService
      */
     private function validateOfferData(array $data): void
     {
-        if (! isset($data['product_id']) || ! isset($data['store_id']) || ! isset($data['price'])) {
+        if (!isset($data['product_id']) || !isset($data['store_id']) || !isset($data['price'])) {
             throw new Exception('Missing required fields: product_id, store_id, price');
         }
 
         $this->validatePrice($data['price']);
 
         // Check if product exists
-        if (! Product::find($data['product_id'])) {
+        if (!Product::find($data['product_id'])) {
             throw new Exception('Product not found');
         }
     }

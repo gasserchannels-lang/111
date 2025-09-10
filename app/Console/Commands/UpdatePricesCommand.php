@@ -65,7 +65,7 @@ class UpdatePricesCommand extends Command
                 $newPrice = $this->fetchPriceFromAPI($priceOffer);
 
                 if ($newPrice && $newPrice !== $priceOffer->price) {
-                    if (! $dryRun) {
+                    if (!$dryRun) {
                         $priceOffer->update([
                             'price' => $newPrice,
                             'updated_at' => now(),
@@ -77,7 +77,7 @@ class UpdatePricesCommand extends Command
                 }
             } catch (\Exception $e) {
                 $errorCount++;
-                $this->error("\n❌ Error updating {$priceOffer->product->name} at {$priceOffer->store->name}: ".$e->getMessage());
+                $this->error("\n❌ Error updating {$priceOffer->product->name} at {$priceOffer->store->name}: " . $e->getMessage());
             }
 
             $progressBar->advance();

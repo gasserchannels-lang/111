@@ -24,7 +24,7 @@ class UserBanService
      */
     public function banUser(User $user, string $reason, ?string $description = null, ?Carbon $expiresAt = null): bool
     {
-        if (! array_key_exists($reason, self::BAN_REASONS)) {
+        if (!array_key_exists($reason, self::BAN_REASONS)) {
             $reason = 'other';
         }
 
@@ -76,12 +76,12 @@ class UserBanService
      */
     public function isUserBanned(User $user): bool
     {
-        if (! $user->is_blocked) {
+        if (!$user->isBanned()) {
             return false;
         }
 
         // Check if ban has expired
-        if ($user->ban_expires_at && $user->ban_expires_at->isPast()) {
+        if ($user->isBanExpired()) {
             $this->unbanUser($user, 'Ban expired');
 
             return false;
@@ -95,11 +95,12 @@ class UserBanService
      */
     public function getBanInfo(User $user): ?array
     {
-        if (! $user->is_blocked) {
+        if (!$user->isBanned()) {
             return null;
         }
 
         return [
+            'is_banned' => $user->isBanned(),
             'reason' => $user->ban_reason,
             'description' => $user->ban_description,
             'banned_at' => $user->banned_at?->toISOString(),
@@ -196,7 +197,7 @@ class UserBanService
         }
 
         // Cannot ban already banned users
-        if ($user->is_blocked) {
+        if ($user->isBanned()) {
             return false;
         }
 
@@ -229,7 +230,7 @@ class UserBanService
      */
     public function extendBan(User $user, Carbon $newExpiresAt, ?string $reason = null): bool
     {
-        if (! $user->is_blocked) {
+        if (!$user->isBanned()) {
             return false;
         }
 
@@ -252,7 +253,7 @@ class UserBanService
      */
     public function reduceBan(User $user, Carbon $newExpiresAt, ?string $reason = null): bool
     {
-        if (! $user->is_blocked) {
+        if (!$user->isBanned()) {
             return false;
         }
 

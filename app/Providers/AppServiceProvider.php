@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configureFactoryNaming(): void
     {
-        $factoryConfigService = new FactoryConfigurationService;
+        $factoryConfigService = new FactoryConfigurationService();
         $factoryConfigService->configureNaming();
     }
 }

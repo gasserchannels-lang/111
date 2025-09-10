@@ -258,7 +258,7 @@ class ProcessHeavyOperation implements ShouldQueue
         return [
             'format' => $format,
             'table' => $table,
-            'file_path' => "exports/{$table}_{$format}_".time().".{$format}",
+            'file_path' => "exports/{$table}_{$format}_" . time() . ".{$format}",
             'status' => 'completed',
         ];
     }

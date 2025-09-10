@@ -15,7 +15,8 @@ class ProductService
     public function __construct(
         private readonly ProductRepository $repository,
         private readonly CacheService $cache
-    ) {}
+    ) {
+    }
 
     /**
      * Get paginated active products.
@@ -23,7 +24,7 @@ class ProductService
     public function getPaginatedProducts(int $perPage = 15): LengthAwarePaginator
     {
         return $this->cache->remember(
-            'products.page.'.request()->get('page', 1),
+            'products.page.' . request()->get('page', 1),
             3600,
             fn () => $this->repository->getPaginatedActive($perPage),
             ['products']
@@ -36,12 +37,12 @@ class ProductService
     public function getBySlug(string $slug): Product
     {
         return $this->cache->remember(
-            'product.slug.'.$slug,
+            'product.slug.' . $slug,
             3600,
             function () use ($slug) {
                 $product = $this->repository->findBySlug($slug);
-                if (! $product) {
-                    throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
+                if (!$product) {
+                    throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
                 }
 
                 return $product;
@@ -56,7 +57,7 @@ class ProductService
     public function getRelatedProducts(Product $product, int $limit = 4): Collection
     {
         return $this->cache->remember(
-            'product.related.'.$product->id,
+            'product.related.' . $product->id,
             3600,
             fn () => $this->repository->getRelated($product, $limit),
             ['products']

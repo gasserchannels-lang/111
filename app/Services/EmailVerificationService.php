@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -66,7 +67,7 @@ class EmailVerificationService
     public function verifyEmail(string $email, string $token): bool
     {
         // Validate token
-        if (! $this->validateVerificationToken($email, $token)) {
+        if (!$this->validateVerificationToken($email, $token)) {
             Log::warning('Invalid email verification token', [
                 'email' => $email,
                 'token' => $token,
@@ -78,7 +79,7 @@ class EmailVerificationService
 
         $user = User::where('email', $email)->first();
 
-        if (! $user) {
+        if (!$user) {
             return false;
         }
 
@@ -106,7 +107,7 @@ class EmailVerificationService
     {
         $user = User::where('email', $email)->first();
 
-        if (! $user || $user->hasVerifiedEmail()) {
+        if (!$user || $user->hasVerifiedEmail()) {
             return false;
         }
 
@@ -140,7 +141,7 @@ class EmailVerificationService
      */
     private function storeVerificationToken(string $email, string $token): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
 
         $data = [
             'token' => $token,
@@ -157,10 +158,10 @@ class EmailVerificationService
      */
     private function validateVerificationToken(string $email, string $token): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
         $data = Cache::get($key);
 
-        if (! $data) {
+        if (!$data) {
             return false;
         }
 
@@ -194,7 +195,7 @@ class EmailVerificationService
      */
     private function clearVerificationToken(string $email): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
         Cache::forget($key);
     }
 
@@ -203,10 +204,10 @@ class EmailVerificationService
      */
     private function hasExceededResendLimit(string $email): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
         $data = Cache::get($key);
 
-        if (! $data) {
+        if (!$data) {
             return false;
         }
 
@@ -218,7 +219,7 @@ class EmailVerificationService
      */
     private function incrementResendCount(string $email): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
         $data = Cache::get($key);
 
         if ($data) {
@@ -232,7 +233,7 @@ class EmailVerificationService
      */
     public function hasVerificationToken(string $email): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
 
         return Cache::has($key);
     }
@@ -242,10 +243,10 @@ class EmailVerificationService
      */
     public function getVerificationTokenInfo(string $email): ?array
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX . md5($email);
         $data = Cache::get($key);
 
-        if (! $data) {
+        if (!$data) {
             return null;
         }
 
@@ -265,7 +266,7 @@ class EmailVerificationService
     public function cleanupExpiredTokens(): int
     {
         $cleaned = 0;
-        $pattern = self::CACHE_PREFIX.'*';
+        $pattern = self::CACHE_PREFIX . '*';
 
         // This would need to be implemented based on your cache driver
         // For now, return 0

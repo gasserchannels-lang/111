@@ -48,7 +48,7 @@ class WishlistTest extends TestCase
     /** @test */
     public function it_can_validate_required_fields()
     {
-        $wishlist = new Wishlist;
+        $wishlist = new Wishlist();
 
         $this->assertFalse($wishlist->validate());
         $this->assertArrayHasKey('user_id', $wishlist->getErrors());

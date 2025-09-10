@@ -42,7 +42,7 @@ class CategoryTest extends TestCase
     /** @test */
     public function it_can_validate_required_fields()
     {
-        $category = new Category;
+        $category = new Category();
 
         $this->assertFalse($category->validate());
         $this->assertArrayHasKey('name', $category->getErrors());

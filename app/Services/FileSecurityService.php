@@ -40,35 +40,35 @@ class FileSecurityService
 
         // Check file extension
         $extensionCheck = $this->checkFileExtension($file);
-        if (! $extensionCheck['is_safe']) {
+        if (!$extensionCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $extensionCheck['threats']);
         }
 
         // Check file size
         $sizeCheck = $this->checkFileSize($file);
-        if (! $sizeCheck['is_safe']) {
+        if (!$sizeCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $sizeCheck['threats']);
         }
 
         // Check file content
         $contentCheck = $this->checkFileContent($file);
-        if (! $contentCheck['is_safe']) {
+        if (!$contentCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $contentCheck['threats']);
         }
 
         // Check for malware signatures
         $malwareCheck = $this->checkMalwareSignatures($file);
-        if (! $malwareCheck['is_safe']) {
+        if (!$malwareCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $malwareCheck['threats']);
         }
 
         // Check file headers
         $headerCheck = $this->checkFileHeaders($file);
-        if (! $headerCheck['is_safe']) {
+        if (!$headerCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $headerCheck['threats']);
         }
@@ -94,7 +94,7 @@ class FileSecurityService
         }
 
         // Check if extension is allowed
-        if (! in_array($extension, self::ALLOWED_EXTENSIONS)) {
+        if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
             $results['is_safe'] = false;
             $results['threats'][] = "File extension '{$extension}' is not allowed";
         }
@@ -111,7 +111,7 @@ class FileSecurityService
 
         if ($file->getSize() > self::MAX_FILE_SIZE) {
             $results['is_safe'] = false;
-            $results['threats'][] = "File size ({$file->getSize()} bytes) exceeds maximum allowed size (".self::MAX_FILE_SIZE.' bytes)';
+            $results['threats'][] = "File size ({$file->getSize()} bytes) exceeds maximum allowed size (" . self::MAX_FILE_SIZE . ' bytes)';
         }
 
         return $results;
@@ -155,7 +155,7 @@ class FileSecurityService
             }
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error reading file content: '.$e->getMessage();
+            $results['threats'][] = 'Error reading file content: ' . $e->getMessage();
         }
 
         return $results;
@@ -196,7 +196,7 @@ class FileSecurityService
             }
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error scanning for malware: '.$e->getMessage();
+            $results['threats'][] = 'Error scanning for malware: ' . $e->getMessage();
         }
 
         return $results;
@@ -211,7 +211,7 @@ class FileSecurityService
 
         try {
             $handle = fopen($file->getPathname(), 'rb');
-            if (! $handle) {
+            if (!$handle) {
                 $results['is_safe'] = false;
                 $results['threats'][] = 'Cannot open file for header analysis';
 
@@ -241,7 +241,7 @@ class FileSecurityService
             }
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error checking file headers: '.$e->getMessage();
+            $results['threats'][] = 'Error checking file headers: ' . $e->getMessage();
         }
 
         return $results;

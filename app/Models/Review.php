@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
- * @property int $user_id
- * @property int $product_id
+ * @property int    $id
+ * @property int    $user_id
+ * @property int    $product_id
  * @property string $title
  * @property string $content
- * @property int $rating
- * @property bool $is_verified_purchase
- * @property bool $is_approved
- * @property array $helpful_votes
- * @property int $helpful_count
+ * @property int    $rating
+ * @property bool   $is_verified_purchase
+ * @property bool   $is_approved
+ * @property array  $helpful_votes
+ * @property int    $helpful_count
  * @property-read User $user
  * @property-read Product $product
  *

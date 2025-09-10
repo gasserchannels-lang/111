@@ -178,11 +178,11 @@ class StatisticsService
                     'category' => $product->category->name ?? 'N/A',
                     'brand' => $product->brand->name ?? 'N/A',
                 ],
-                'wishlist_count' => (int) $stats->wishlist_count,
-                'price_alerts_count' => (int) $stats->price_alerts_count,
-                'reviews_count' => (int) $stats->reviews_count,
-                'average_rating' => round((float) $stats->average_rating, 2),
-                'offers_count' => (int) $stats->offers_count,
+                'wishlist_count' => (int)$stats->wishlist_count,
+                'price_alerts_count' => (int)$stats->price_alerts_count,
+                'reviews_count' => (int)$stats->reviews_count,
+                'average_rating' => round((float)$stats->average_rating, 2),
+                'offers_count' => (int)$stats->offers_count,
                 'price_range' => $this->getProductPriceRange($productId),
                 'view_count' => $this->getProductViewCount($productId),
                 'engagement_score' => $this->calculateProductEngagementScore($productId),
@@ -221,10 +221,10 @@ class StatisticsService
                     'email' => $user->email,
                     'created_at' => $user->created_at->format('Y-m-d H:i:s'),
                 ],
-                'wishlist_count' => (int) $stats->wishlist_count,
-                'price_alerts_count' => (int) $stats->price_alerts_count,
-                'reviews_count' => (int) $stats->reviews_count,
-                'average_rating_given' => round((float) $stats->average_rating_given, 2),
+                'wishlist_count' => (int)$stats->wishlist_count,
+                'price_alerts_count' => (int)$stats->price_alerts_count,
+                'reviews_count' => (int)$stats->reviews_count,
+                'average_rating_given' => round((float)$stats->average_rating_given, 2),
                 'activity_score' => $this->calculateUserActivityScore($userId),
                 'favorite_categories' => $this->getUserFavoriteCategories($userId),
                 'favorite_brands' => $this->getUserFavoriteBrands($userId),
@@ -766,7 +766,7 @@ class StatisticsService
     private function getCacheHealth(): array
     {
         try {
-            $testKey = 'health_check_'.time();
+            $testKey = 'health_check_' . time();
             Cache::put($testKey, 'test', 60);
             $retrieved = Cache::get($testKey);
             Cache::forget($testKey);
@@ -837,7 +837,7 @@ class StatisticsService
     private function getApiHealth(): array
     {
         try {
-            $response = \Http::timeout(5)->get(config('app.url').'/health');
+            $response = \Http::timeout(5)->get(config('app.url') . '/health');
 
             return [
                 'status' => $response->successful() ? 'healthy' : 'unhealthy',
@@ -875,7 +875,7 @@ class StatisticsService
             ->pluck('metadata->response_time')
             ->toArray();
 
-        return ! empty($responseTimes) ? array_sum($responseTimes) / count($responseTimes) : 0;
+        return !empty($responseTimes) ? array_sum($responseTimes) / count($responseTimes) : 0;
     }
 
     /**

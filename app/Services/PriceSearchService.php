@@ -26,9 +26,9 @@ class PriceSearchService
      */
     public function findBestOffer(string $productName, string $countryCode): array
     {
-        $product = Product::where('name', 'like', '%'.$productName.'%')->first();
+        $product = Product::where('name', 'like', '%' . $productName . '%')->first();
 
-        if (! $product) {
+        if (!$product) {
             return [
                 'success' => false,
                 'message' => 'Product not found.',
@@ -43,7 +43,7 @@ class PriceSearchService
             ->select('price_offers.*', 'stores.name as store_name', 'stores.country_code')
             ->first();
 
-        if (! $cheapestOffer) {
+        if (!$cheapestOffer) {
             return [
                 'success' => false,
                 'message' => 'No offers found for this product in the specified country.',
@@ -66,7 +66,7 @@ class PriceSearchService
         $query = Product::with(['priceOffers.store', 'brand', 'category']);
 
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%'.$filters['name'].'%');
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
         }
 
         if (isset($filters['brand_id'])) {
@@ -112,7 +112,7 @@ class PriceSearchService
     {
         $product = Product::find($productId);
 
-        if (! $product) {
+        if (!$product) {
             return [
                 'success' => false,
                 'message' => 'Product not found.',
@@ -151,7 +151,7 @@ class PriceSearchService
     {
         $product = Product::find($productId);
 
-        if (! $product) {
+        if (!$product) {
             return [
                 'success' => false,
                 'message' => 'Product not found.',
@@ -161,7 +161,7 @@ class PriceSearchService
 
         $query = $product->priceOffers()->with('store');
 
-        if (! empty($storeIds)) {
+        if (!empty($storeIds)) {
             $query->whereIn('store_id', $storeIds);
         }
 

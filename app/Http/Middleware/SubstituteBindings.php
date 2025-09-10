@@ -19,7 +19,7 @@ class SubstituteBindings
             $parameters = $route->parameters();
             foreach ($parameters as $key => $value) {
                 if (is_string($value) && is_numeric($value)) {
-                    $route->setParameter($key, (int) $value);
+                    $route->setParameter($key, (int)$value);
                 }
             }
         }

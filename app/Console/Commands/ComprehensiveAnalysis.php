@@ -33,7 +33,7 @@ class ComprehensiveAnalysis extends Command
         $maxScore += 100;
 
         // Tests Analysis
-        if (! $this->option('skip-tests')) {
+        if (!$this->option('skip-tests')) {
             $this->info('Setting APP_ENV to testing for test analysis...');
             putenv('APP_ENV=testing');
             $results['tests'] = $this->runTestsAnalysis();
@@ -56,12 +56,12 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('🛡️  Running Security Analysis...');
 
-        $securityService = new SecurityAnalysisService;
+        $securityService = new SecurityAnalysisService();
         $result = $securityService->analyze();
 
         // Display console output based on the results
         $this->line('Checking for outdated dependencies...');
-        if (! empty($result['issues'])) {
+        if (!empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 if (str_contains($issue, 'outdated dependencies')) {
                     $this->warn('⚠️  Some direct dependencies are outdated.');
@@ -81,12 +81,12 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('📊 Running Code Quality Analysis...');
 
-        $qualityService = new QualityAnalysisService;
+        $qualityService = new QualityAnalysisService();
         $result = $qualityService->analyze();
 
         // Display console output based on the results
         $this->line('Running PHPMD...');
-        if (! empty($result['issues'])) {
+        if (!empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 if (str_contains($issue, 'PHPMD found')) {
                     $this->warn("⚠️  {$issue}");
@@ -115,12 +115,12 @@ class ComprehensiveAnalysis extends Command
             $this->warn('Coverage analysis is active. This may be slow.');
         }
 
-        $testServiceFactory = new TestAnalysisServiceFactory;
+        $testServiceFactory = new TestAnalysisServiceFactory();
         $testService = $testServiceFactory->create();
         $result = $testService->analyze();
 
         // Display console output based on the results
-        if (! empty($result['issues'])) {
+        if (!empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 if (str_contains($issue, 'tests failed')) {
                     $this->warn('⚠️  Some tests had issues.');
@@ -145,7 +145,7 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('⚡ Running Performance Analysis...');
 
-        $performanceService = new PerformanceAnalysisService;
+        $performanceService = new PerformanceAnalysisService();
 
         return $performanceService->analyze();
     }
@@ -171,7 +171,7 @@ class ComprehensiveAnalysis extends Command
                 $percentage
             ));
 
-            if (! empty($result['issues'])) {
+            if (!empty($result['issues'])) {
                 foreach ($result['issues'] as $issue) {
                     $this->line("  ⚠️  {$issue}");
                 }

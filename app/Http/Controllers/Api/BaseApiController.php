@@ -113,7 +113,7 @@ abstract class BaseApiController extends Controller
             'data' => $data,
         ];
 
-        if (! empty($meta)) {
+        if (!empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -138,7 +138,7 @@ abstract class BaseApiController extends Controller
             $response['errors'] = $errors;
         }
 
-        if (! empty($meta)) {
+        if (!empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -228,7 +228,7 @@ abstract class BaseApiController extends Controller
             'pagination' => $pagination,
         ];
 
-        if (! empty($meta)) {
+        if (!empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -257,10 +257,10 @@ abstract class BaseApiController extends Controller
      */
     protected function getPaginationParams(Request $request): array
     {
-        $page = max(1, (int) $request->get('page', 1));
+        $page = max(1, (int)$request->get('page', 1));
         $perPage = min(
             $this->maxPerPage,
-            max(1, (int) $request->get('per_page', $this->perPage))
+            max(1, (int)$request->get('per_page', $this->perPage))
         );
 
         return [
@@ -278,7 +278,7 @@ abstract class BaseApiController extends Controller
         $sortOrder = $request->get('sort_order', 'desc');
 
         // Validate sort order
-        if (! in_array($sortOrder, ['asc', 'desc'])) {
+        if (!in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'desc';
         }
 

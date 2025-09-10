@@ -17,7 +17,7 @@ class ValidateApiRequest
     public function handle(Request $request, Closure $next, ?string $rules = null): Response
     {
         // Skip validation if no rules provided
-        if (! $rules) {
+        if (!$rules) {
             return $next($request);
         }
 

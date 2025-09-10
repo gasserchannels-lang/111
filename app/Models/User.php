@@ -12,12 +12,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $email
- * @property string $password
+ * @property int                 $id
+ * @property string              $name
+ * @property string              $email
+ * @property string              $password
  * @property \Carbon\Carbon|null $email_verified_at
- * @property bool $is_admin
+ * @property bool                $is_admin
+ * @property bool                $is_blocked
+ * @property string|null         $ban_reason
+ * @property string|null         $ban_description
+ * @property \Carbon\Carbon|null $banned_at
+ * @property \Carbon\Carbon|null $ban_expires_at
+ * @property-read bool $is_banned
+ * @property-read bool $is_ban_expired
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
@@ -46,6 +53,11 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_blocked',
+        'ban_reason',
+        'ban_description',
+        'banned_at',
+        'ban_expires_at',
     ];
 
     protected $hidden = [
@@ -59,6 +71,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'is_blocked' => 'boolean',
+            'banned_at' => 'datetime',
+            'ban_expires_at' => 'datetime',
         ];
     }
 
@@ -112,5 +127,25 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin ?? false;
+    }
+
+    /**
+     * Check if user is banned.
+     */
+    public function isBanned(): bool
+    {
+        return $this->is_blocked ?? false;
+    }
+
+    /**
+     * Check if user's ban has expired.
+     */
+    public function isBanExpired(): bool
+    {
+        if (!$this->is_blocked) {
+            return false;
+        }
+
+        return $this->ban_expires_at && $this->ban_expires_at->isPast();
     }
 }

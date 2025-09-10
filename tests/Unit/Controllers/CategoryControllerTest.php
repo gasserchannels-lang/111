@@ -21,7 +21,7 @@ class CategoryControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new CategoryController;
+        $this->controller = new CategoryController();
     }
 
     /**

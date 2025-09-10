@@ -80,7 +80,7 @@ class PriceOfferTest extends TestCase
      */
     public function it_can_validate_required_fields()
     {
-        $priceOffer = new PriceOffer;
+        $priceOffer = new PriceOffer();
 
         try {
             $priceOffer->save();

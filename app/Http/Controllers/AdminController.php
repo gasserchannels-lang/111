@@ -94,7 +94,7 @@ class AdminController extends Controller
      */
     public function toggleUserAdmin(User $user)
     {
-        $user->update(['is_admin' => ! $user->is_admin]);
+        $user->update(['is_admin' => !$user->is_admin]);
 
         return redirect()->back()
             ->with('success', 'User admin status updated successfully.');

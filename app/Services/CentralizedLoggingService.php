@@ -145,7 +145,7 @@ class CentralizedLoggingService
     private function log(string $channel, string $level, string $message, array $context = []): void
     {
         // Validate log level
-        if (! array_key_exists($level, self::LOG_LEVELS)) {
+        if (!array_key_exists($level, self::LOG_LEVELS)) {
             $level = 'info';
         }
 
@@ -208,7 +208,7 @@ class CentralizedLoggingService
             return str_repeat('*', $length);
         }
 
-        return substr($value, 0, 2).str_repeat('*', $length - 4).substr($value, -2);
+        return substr($value, 0, 2) . str_repeat('*', $length - 4) . substr($value, -2);
     }
 
     /**
@@ -262,7 +262,7 @@ class CentralizedLoggingService
     {
         $logPath = storage_path("logs/{$channel}.log");
 
-        if (! file_exists($logPath)) {
+        if (!file_exists($logPath)) {
             return;
         }
 
@@ -298,7 +298,7 @@ class CentralizedLoggingService
      */
     private function compressLog(string $logPath): void
     {
-        $compressedPath = $logPath.'.gz';
+        $compressedPath = $logPath . '.gz';
 
         if (function_exists('gzopen')) {
             $fp = gzopen($compressedPath, 'w9');
@@ -373,7 +373,7 @@ class CentralizedLoggingService
             $stats[$channel] = [
                 'total' => count($logs),
                 'levels' => $levelCounts,
-                'last_log' => ! empty($logs) ? end($logs)['timestamp'] : null,
+                'last_log' => !empty($logs) ? end($logs)['timestamp'] : null,
             ];
         }
 
@@ -395,7 +395,7 @@ class CentralizedLoggingService
             }
 
             // Search in message and context
-            $searchText = strtolower($log['message'].' '.json_encode($log['context']));
+            $searchText = strtolower($log['message'] . ' ' . json_encode($log['context']));
 
             if (str_contains($searchText, strtolower($query))) {
                 $results[] = $log;

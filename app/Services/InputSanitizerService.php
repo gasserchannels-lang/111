@@ -59,7 +59,7 @@ class InputSanitizerService
     public function sanitizeHtml(string $html): string
     {
         try {
-            $dom = new DOMDocument;
+            $dom = new DOMDocument();
             @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
             $this->removeDisallowedTags($dom);
@@ -87,7 +87,7 @@ class InputSanitizerService
 
         if ($nodes) {
             foreach ($nodes as $node) {
-                if (! in_array(strtolower($node->nodeName), $this->allowedHtmlTags)) {
+                if (!in_array(strtolower($node->nodeName), $this->allowedHtmlTags)) {
                     $node->parentNode?->removeChild($node);
                 }
             }
@@ -106,7 +106,7 @@ class InputSanitizerService
             foreach ($nodes as $node) {
                 if ($node->hasAttributes()) {
                     foreach ($node->attributes as $attr) {
-                        if (! in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
+                        if (!in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
                             $node->removeAttribute($attr->nodeName);
                         }
                     }
@@ -148,7 +148,7 @@ class InputSanitizerService
      */
     public function sanitizeFileUpload(array $file): ?array
     {
-        if (! isset($file['name']) || ! isset($file['type']) || ! isset($file['tmp_name']) || ! isset($file['error']) || ! isset($file['size'])) {
+        if (!isset($file['name']) || !isset($file['type']) || !isset($file['tmp_name']) || !isset($file['error']) || !isset($file['size'])) {
             return null;
         }
 
@@ -191,8 +191,8 @@ class InputSanitizerService
 
         // Ensure safe extension
         $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        if (! $this->isAllowedExtension($extension)) {
-            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME)).'.txt';
+        if (!$this->isAllowedExtension($extension)) {
+            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME)) . '.txt';
         }
 
         return $filename;

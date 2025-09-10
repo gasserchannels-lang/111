@@ -234,7 +234,7 @@ class NotificationService
                 }
             }
 
-            if (! empty($priceChanges)) {
+            if (!empty($priceChanges)) {
                 $user->notify(new SystemNotification(
                     'Daily Price Summary',
                     'Here are the latest price updates for your watched products.'
@@ -256,7 +256,7 @@ class NotificationService
         try {
             $notification = $user->notifications()->find($notificationId);
 
-            if ($notification && ! $notification->read_at) {
+            if ($notification && !$notification->read_at) {
                 $notification->markAsRead();
 
                 Log::info('Notification marked as read', [
