@@ -1,0 +1,80 @@
+name: Quality
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  schedule:
+    - cron: '0 12 * * 1' # Weekly on Monday at 12 PM
+  workflow_dispatch:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
+
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Run PHPStan
+      run: |
+        # Run PHPStan
+        echo "🔍 Running PHPStan..."
+        vendor/bin/phpstan analyse --memory-limit=256M
+        
+        echo "✅ PHPStan completed"
+
+    - name: Run PHPMD
+      run: |
+        # Run PHPMD
+        echo "🔍 Running PHPMD..."
+        vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+        
+        echo "✅ PHPMD completed"
+
+    - name: Run PHP-CS-Fixer
+      run: |
+        # Run PHP-CS-Fixer
+        echo "🔍 Running PHP-CS-Fixer..."
+        vendor/bin/php-cs-fixer fix --dry-run --diff
+        
+        echo "✅ PHP-CS-Fixer completed"
+
+    - name: Run Laravel Pint
+      run: |
+        # Run Laravel Pint
+        echo "🔍 Running Laravel Pint..."
+        ./vendor/bin/pint --test
+        
+        echo "✅ Laravel Pint completed"
+
+    - name: Run Psalm
+      run: |
+        # Run Psalm
+        echo "🔍 Running Psalm..."
+        vendor/bin/psalm
+        
+        echo "✅ Psalm completed"
+
+    - name: Run PHP Insights
+      run: |
+        # Run PHP Insights
+        echo "🔍 Running PHP Insights..."
+        vendor/bin/phpinsights analyse
+        
+        echo "✅ PHP Insights completed"
+
+    - name: Update Status
+      run: |
+        echo "✅ All quality checks completed successfully"

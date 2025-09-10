@@ -98,7 +98,7 @@ jobs:
         DB_PASSWORD: root
       run: php artisan migrate
 
-    - name: Run Tests with Pest
+    - name: Run Tests with PHPUnit
       env:
         DB_CONNECTION: mysql
         DB_HOST: 127.0.0.1
@@ -106,7 +106,7 @@ jobs:
         DB_DATABASE: coprra_test
         DB_USERNAME: root
         DB_PASSWORD: root
-      run: vendor/bin/pest
+      run: composer test
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master

@@ -1,0 +1,81 @@
+name: Cleanup
+
+on:
+  schedule:
+    - cron: '0 19 * * 1' # Weekly on Monday at 7 PM
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Cleanup Old Artifacts
+      run: |
+        # Cleanup old artifacts
+        echo "🧹 Cleaning up old artifacts..."
+        
+        # Remove old test results
+        find . -name "*.log" -mtime +7 -delete || true
+        find . -name "coverage" -type d -mtime +7 -exec rm -rf {} \; || true
+        find . -name "storage/logs" -type d -mtime +7 -exec rm -rf {} \; || true
+        
+        echo "✅ Old artifacts cleaned up"
+
+    - name: Cleanup Cache
+      run: |
+        # Cleanup cache
+        echo "🧹 Cleaning up cache..."
+        
+        # Clear Laravel cache
+        php artisan cache:clear || true
+        php artisan config:clear || true
+        php artisan route:clear || true
+        php artisan view:clear || true
+        
+        # Clear Composer cache
+        composer clear-cache || true
+        
+        # Clear NPM cache
+        npm cache clean --force || true
+        
+        echo "✅ Cache cleaned up"
+
+    - name: Cleanup Temporary Files
+      run: |
+        # Cleanup temporary files
+        echo "🧹 Cleaning up temporary files..."
+        
+        # Remove temporary files
+        find . -name "*.tmp" -delete || true
+        find . -name "*.temp" -delete || true
+        find . -name "*.swp" -delete || true
+        find . -name "*.swo" -delete || true
+        find . -name "*~" -delete || true
+        
+        # Remove IDE files
+        find . -name ".vscode" -type d -exec rm -rf {} \; || true
+        find . -name ".idea" -type d -exec rm -rf {} \; || true
+        
+        echo "✅ Temporary files cleaned up"
+
+    - name: Cleanup Dependencies
+      run: |
+        # Cleanup dependencies
+        echo "🧹 Cleaning up dependencies..."
+        
+        # Remove unused Composer packages
+        composer install --no-dev --optimize-autoloader || true
+        
+        # Remove unused NPM packages
+        npm prune || true
+        
+        echo "✅ Dependencies cleaned up"
+
+    - name: Update Status
+      run: |
+        echo "✅ Cleanup completed successfully"

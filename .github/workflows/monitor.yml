@@ -1,0 +1,176 @@
+name: Monitoring
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Every 5 minutes
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check Application Health
+      run: |
+        # Check application health
+        echo "🔍 Checking application health..."
+        
+        # Check if application is running
+        if curl -f http://localhost:8000/health > /dev/null 2>&1; then
+          echo "✅ Application is healthy"
+        else
+          echo "❌ Application is not responding"
+          exit 1
+        fi
+
+    - name: Check Database Connection
+      run: |
+        # Check database connection
+        echo "🔍 Checking database connection..."
+        
+        # Check database connectivity
+        if php artisan tinker --execute="DB::connection()->getPdo();" > /dev/null 2>&1; then
+          echo "✅ Database connection is healthy"
+        else
+          echo "❌ Database connection failed"
+          exit 1
+        fi
+
+    - name: Check Cache Status
+      run: |
+        # Check cache status
+        echo "🔍 Checking cache status..."
+        
+        # Check cache connectivity
+        if php artisan tinker --execute="Cache::put('test', 'value', 60); Cache::get('test');" > /dev/null 2>&1; then
+          echo "✅ Cache is healthy"
+        else
+          echo "❌ Cache is not working"
+          exit 1
+        fi
+
+    - name: Check Queue Status
+      run: |
+        # Check queue status
+        echo "🔍 Checking queue status..."
+        
+        # Check queue connectivity
+        if php artisan tinker --execute="dispatch(new App\Jobs\ProcessOrder(1));" > /dev/null 2>&1; then
+          echo "✅ Queue is healthy"
+        else
+          echo "❌ Queue is not working"
+          exit 1
+        fi
+
+    - name: Check Disk Space
+      run: |
+        # Check disk space
+        echo "🔍 Checking disk space..."
+        
+        # Check available disk space
+        DISK_USAGE=$(df -h / | awk 'NR==2{print $5}' | sed 's/%//')
+        if [ "$DISK_USAGE" -lt 90 ]; then
+          echo "✅ Disk space is healthy: ${DISK_USAGE}% used"
+        else
+          echo "❌ Disk space is low: ${DISK_USAGE}% used"
+          exit 1
+        fi
+
+    - name: Check Memory Usage
+      run: |
+        # Check memory usage
+        echo "🔍 Checking memory usage..."
+        
+        # Check available memory
+        MEMORY_USAGE=$(free | awk 'NR==2{printf "%.0f", $3*100/$2}')
+        if [ "$MEMORY_USAGE" -lt 90 ]; then
+          echo "✅ Memory usage is healthy: ${MEMORY_USAGE}% used"
+        else
+          echo "❌ Memory usage is high: ${MEMORY_USAGE}% used"
+          exit 1
+        fi
+
+    - name: Check CPU Usage
+      run: |
+        # Check CPU usage
+        echo "🔍 Checking CPU usage..."
+        
+        # Check CPU usage
+        CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | awk -F'%' '{print $1}')
+        if [ "$CPU_USAGE" -lt 90 ]; then
+          echo "✅ CPU usage is healthy: ${CPU_USAGE}% used"
+        else
+          echo "❌ CPU usage is high: ${CPU_USAGE}% used"
+          exit 1
+        fi
+
+    - name: Check Network Connectivity
+      run: |
+        # Check network connectivity
+        echo "🔍 Checking network connectivity..."
+        
+        # Check internet connectivity
+        if ping -c 1 google.com > /dev/null 2>&1; then
+          echo "✅ Network connectivity is healthy"
+        else
+          echo "❌ Network connectivity failed"
+          exit 1
+        fi
+
+    - name: Check SSL Certificate
+      run: |
+        # Check SSL certificate
+        echo "🔍 Checking SSL certificate..."
+        
+        # Check SSL certificate validity
+        if openssl s_client -connect localhost:443 -servername localhost < /dev/null 2>/dev/null | openssl x509 -noout -dates > /dev/null 2>&1; then
+          echo "✅ SSL certificate is valid"
+        else
+          echo "❌ SSL certificate is invalid or expired"
+          exit 1
+        fi
+
+    - name: Check Log Files
+      run: |
+        # Check log files
+        echo "🔍 Checking log files..."
+        
+        # Check for error logs
+        if [ -f "storage/logs/laravel.log" ]; then
+          ERROR_COUNT=$(grep -c "ERROR" storage/logs/laravel.log || echo "0")
+          if [ "$ERROR_COUNT" -lt 100 ]; then
+            echo "✅ Log files are healthy: $ERROR_COUNT errors"
+          else
+            echo "❌ Too many errors in log files: $ERROR_COUNT errors"
+            exit 1
+          fi
+        else
+          echo "✅ No log files found"
+        fi
+
+    - name: Check Backup Status
+      run: |
+        # Check backup status
+        echo "🔍 Checking backup status..."
+        
+        # Check if backup directory exists
+        if [ -d "backups" ]; then
+          BACKUP_COUNT=$(ls -1 backups/ | wc -l)
+          if [ "$BACKUP_COUNT" -gt 0 ]; then
+            echo "✅ Backups are available: $BACKUP_COUNT backups"
+          else
+            echo "❌ No backups found"
+            exit 1
+          fi
+        else
+          echo "❌ Backup directory not found"
+          exit 1
+        fi
+
+    - name: Update Status
+      run: |
+        echo "✅ All monitoring checks passed"

@@ -1,0 +1,79 @@
+name: Accessibility
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  schedule:
+    - cron: '0 13 * * 1' # Weekly on Monday at 1 PM
+  workflow_dispatch:
+
+jobs:
+  accessibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Build Assets
+      run: npm run build
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
+
+    - name: Install PHP Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Start Laravel Server
+      run: |
+        php artisan serve --host=0.0.0.0 --port=8000 &
+        sleep 10
+
+    - name: Run Lighthouse CI
+      run: |
+        # Install and run Lighthouse CI
+        npm install -g @lhci/cli@0.12.x
+        lhci autorun --collect.url=http://localhost:8000
+
+    - name: Run Pa11y
+      run: |
+        # Install and run Pa11y
+        npm install -g pa11y
+        pa11y http://localhost:8000
+
+    - name: Run axe-core
+      run: |
+        # Install and run axe-core
+        npm install -g @axe-core/cli
+        axe http://localhost:8000
+
+    - name: Run WAVE
+      run: |
+        # Install and run WAVE
+        npm install -g wave
+        wave http://localhost:8000
+
+    - name: Run HTML Validator
+      run: |
+        # Install and run HTML Validator
+        npm install -g html-validate
+        html-validate http://localhost:8000
+
+    - name: Update Status
+      run: |
+        echo "✅ All accessibility checks completed successfully"

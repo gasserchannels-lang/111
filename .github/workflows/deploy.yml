@@ -48,8 +48,8 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/cobra:latest
-          ${{ secrets.DOCKER_USERNAME }}/cobra:${{ github.sha }}
+          ${{ secrets.DOCKER_USERNAME }}/coprra:latest
+          ${{ secrets.DOCKER_USERNAME }}/coprra:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
@@ -60,11 +60,11 @@ jobs:
         username: ${{ secrets.PRODUCTION_USER }}
         key: ${{ secrets.PRODUCTION_SSH_KEY }}
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/cobra:${{ github.sha }}
-          docker stop cobra-app || true
-          docker rm cobra-app || true
+          docker pull ${{ secrets.DOCKER_USERNAME }}/coprra:${{ github.sha }}
+          docker stop coprra-app || true
+          docker rm coprra-app || true
           docker run -d \
-            --name cobra-app \
+            --name coprra-app \
             --restart unless-stopped \
             -p 80:80 \
             -e APP_ENV=production \
@@ -73,7 +73,7 @@ jobs:
             -e DB_DATABASE=${{ secrets.DB_DATABASE }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            ${{ secrets.DOCKER_USERNAME }}/cobra:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/coprra:${{ github.sha }}
 
   performance-tests:
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
         touch database/database.sqlite
     
     - name: Run Performance Tests
-      run: php artisan test --testsuite=Feature --filter=Performance
+      run: composer test -- --testsuite=Feature --filter=Performance
     
     - name: Run Load Tests with Artillery
       run: |

@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        default: '1.0.0'
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
+
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Setup Environment
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+
+    - name: Run Tests
+      run: |
+        # Run all tests before release
+        echo "🧪 Running tests before release..."
+        composer test
+        
+        echo "✅ All tests passed"
+
+    - name: Build Application
+      run: |
+        # Build application for release
+        echo "🏗️ Building application..."
+        
+        # Optimize for production
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+        
+        # Build assets
+        npm run build
+        
+        echo "✅ Application built"
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        body: |
+          ## Changes in this Release
+          
+          - Bug fixes
+          - Performance improvements
+          - New features
+          - Security updates
+          
+          ## Installation
+          
+          ```bash
+          composer install --no-dev --optimize-autoloader
+          npm install --production
+          npm run build
+          ```
+          
+          ## Docker
+          
+          ```bash
+          docker build -t coprra:${{ github.ref_name }} .
+          docker run -d --name coprra-app -p 80:80 coprra:${{ github.ref_name }}
+          ```
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: .
+        asset_name: coprra-${{ github.ref_name }}.zip
+        asset_content_type: application/zip
+
+    - name: Update Status
+      run: |
+        echo "✅ Release ${{ github.ref_name }} created successfully"

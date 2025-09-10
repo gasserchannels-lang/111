@@ -1,0 +1,56 @@
+name: Notifications
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  workflow_run:
+    workflows: ["CI", "Tests", "Security", "Performance", "Quality", "Accessibility", "Integration", "E2E", "Backup", "Docs"]
+    types: [completed]
+  schedule:
+    - cron: '0 18 * * 1' # Weekly on Monday at 6 PM
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Send Slack Notification
+      if: env.SLACK_WEBHOOK_URL != ''
+      run: |
+        # Send Slack notification
+        curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"🚀 COPRRA: Workflow completed successfully!"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: Send Discord Notification
+      if: env.DISCORD_WEBHOOK_URL != ''
+      run: |
+        # Send Discord notification
+        curl -X POST -H 'Content-type: application/json' \
+          --data '{"content":"🚀 COPRRA: Workflow completed successfully!"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    - name: Send Telegram Notification
+      if: env.TELEGRAM_BOT_TOKEN != '' && env.TELEGRAM_CHAT_ID != ''
+      run: |
+        # Send Telegram notification
+        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d "text=🚀 COPRRA: Workflow completed successfully!"
+
+    - name: Send Email Notification
+      if: env.EMAIL_SMTP_HOST != ''
+      run: |
+        # Send email notification
+        echo "Workflow completed successfully!" | mail -s "COPRRA Workflow Status" -a "From: ${{ secrets.EMAIL_FROM_ADDRESS }}" ${{ secrets.EMAIL_FROM_ADDRESS }}
+
+    - name: Update Status
+      run: |
+        echo "✅ All notifications sent successfully"

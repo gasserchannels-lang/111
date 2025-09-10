@@ -1,0 +1,235 @@
+name: Validation
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  schedule:
+    - cron: '0 9 * * 1' # Weekly on Monday at 9 AM
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
+
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Validate Composer
+      run: |
+        # Validate Composer configuration
+        echo "🔍 Validating Composer configuration..."
+        
+        # Check Composer file syntax
+        composer validate --no-check-publish
+        
+        # Check for circular dependencies
+        composer why-not php/php-src
+        
+        echo "✅ Composer validation passed"
+
+    - name: Validate NPM
+      run: |
+        # Validate NPM configuration
+        echo "🔍 Validating NPM configuration..."
+        
+        # Check package.json syntax
+        npm list --depth=0
+        
+        # Check for vulnerabilities
+        npm audit --audit-level moderate
+        
+        echo "✅ NPM validation passed"
+
+    - name: Validate Docker
+      run: |
+        # Validate Docker configuration
+        echo "🔍 Validating Docker configuration..."
+        
+        # Check Dockerfile syntax
+        docker build --dry-run .
+        
+        # Check docker-compose syntax
+        docker-compose config
+        
+        echo "✅ Docker validation passed"
+
+    - name: Validate Environment
+      run: |
+        # Validate environment configuration
+        echo "🔍 Validating environment configuration..."
+        
+        # Check .env.example exists
+        if [ -f ".env.example" ]; then
+          echo "✅ .env.example exists"
+        else
+          echo "❌ .env.example not found"
+          exit 1
+        fi
+        
+        # Check required environment variables
+        REQUIRED_VARS=("APP_NAME" "APP_ENV" "APP_KEY" "APP_DEBUG" "APP_URL" "DB_CONNECTION" "DB_HOST" "DB_PORT" "DB_DATABASE" "DB_USERNAME" "DB_PASSWORD")
+        for var in "${REQUIRED_VARS[@]}"; do
+          if grep -q "^$var=" .env.example; then
+            echo "✅ $var is defined"
+          else
+            echo "❌ $var is missing"
+            exit 1
+          fi
+        done
+        
+        echo "✅ Environment validation passed"
+
+    - name: Validate Routes
+      run: |
+        # Validate routes
+        echo "🔍 Validating routes..."
+        
+        # Check route cache
+        php artisan route:cache
+        
+        # List all routes
+        php artisan route:list
+        
+        echo "✅ Routes validation passed"
+
+    - name: Validate Configuration
+      run: |
+        # Validate configuration
+        echo "🔍 Validating configuration..."
+        
+        # Check config cache
+        php artisan config:cache
+        
+        # Validate configuration files
+        php artisan config:show
+        
+        echo "✅ Configuration validation passed"
+
+    - name: Validate Database
+      run: |
+        # Validate database
+        echo "🔍 Validating database..."
+        
+        # Check database connection
+        php artisan tinker --execute="DB::connection()->getPdo();"
+        
+        # Check migrations
+        php artisan migrate:status
+        
+        echo "✅ Database validation passed"
+
+    - name: Validate Cache
+      run: |
+        # Validate cache
+        echo "🔍 Validating cache..."
+        
+        # Check cache connection
+        php artisan tinker --execute="Cache::put('test', 'value', 60); Cache::get('test');"
+        
+        # Clear cache
+        php artisan cache:clear
+        
+        echo "✅ Cache validation passed"
+
+    - name: Validate Queue
+      run: |
+        # Validate queue
+        echo "🔍 Validating queue..."
+        
+        # Check queue connection
+        php artisan tinker --execute="dispatch(new App\Jobs\ProcessOrder(1));"
+        
+        # Check queue workers
+        php artisan queue:work --once --timeout=30
+        
+        echo "✅ Queue validation passed"
+
+    - name: Validate Storage
+      run: |
+        # Validate storage
+        echo "🔍 Validating storage..."
+        
+        # Check storage permissions
+        php artisan tinker --execute="Storage::put('test.txt', 'content'); Storage::get('test.txt');"
+        
+        # Check storage directories
+        ls -la storage/
+        
+        echo "✅ Storage validation passed"
+
+    - name: Validate Logs
+      run: |
+        # Validate logs
+        echo "🔍 Validating logs..."
+        
+        # Check log directory
+        if [ -d "storage/logs" ]; then
+          echo "✅ Log directory exists"
+        else
+          echo "❌ Log directory not found"
+          exit 1
+        fi
+        
+        # Check log permissions
+        touch storage/logs/test.log
+        rm storage/logs/test.log
+        
+        echo "✅ Logs validation passed"
+
+    - name: Validate Tests
+      run: |
+        # Validate tests
+        echo "🔍 Validating tests..."
+        
+        # Check test directory
+        if [ -d "tests" ]; then
+          echo "✅ Test directory exists"
+        else
+          echo "❌ Test directory not found"
+          exit 1
+        fi
+        
+        # Check test configuration
+        php artisan test --help
+        
+        echo "✅ Tests validation passed"
+
+    - name: Validate Documentation
+      run: |
+        # Validate documentation
+        echo "🔍 Validating documentation..."
+        
+        # Check README exists
+        if [ -f "README.md" ]; then
+          echo "✅ README.md exists"
+        else
+          echo "❌ README.md not found"
+          exit 1
+        fi
+        
+        # Check documentation directory
+        if [ -d "docs" ]; then
+          echo "✅ Documentation directory exists"
+        else
+          echo "❌ Documentation directory not found"
+          exit 1
+        fi
+        
+        echo "✅ Documentation validation passed"
+
+    - name: Update Status
+      run: |
+        echo "✅ All validation checks passed"

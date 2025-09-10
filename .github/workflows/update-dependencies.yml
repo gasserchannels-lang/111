@@ -1,0 +1,103 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Weekly on Monday at 8 AM
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Update Composer Dependencies
+      run: |
+        # Update Composer dependencies
+        echo "🔄 Updating Composer dependencies..."
+        
+        # Update Composer packages
+        composer update --no-interaction --no-scripts
+        
+        # Check for security vulnerabilities
+        composer audit --no-interaction
+        
+        echo "✅ Composer dependencies updated"
+
+    - name: Update NPM Dependencies
+      run: |
+        # Update NPM dependencies
+        echo "🔄 Updating NPM dependencies..."
+        
+        # Update NPM packages
+        npm update
+        
+        # Check for security vulnerabilities
+        npm audit --audit-level moderate
+        
+        echo "✅ NPM dependencies updated"
+
+    - name: Update Docker Dependencies
+      run: |
+        # Update Docker dependencies
+        echo "🔄 Updating Docker dependencies..."
+        
+        # Update Docker images
+        docker pull php:8.2-fpm-alpine
+        docker pull mysql:8.0
+        docker pull redis:7-alpine
+        docker pull nginx:alpine
+        
+        echo "✅ Docker dependencies updated"
+
+    - name: Update System Dependencies
+      run: |
+        # Update system dependencies
+        echo "🔄 Updating system dependencies..."
+        
+        # Update package lists
+        sudo apt-get update
+        
+        # Upgrade packages
+        sudo apt-get upgrade -y
+        
+        # Clean up
+        sudo apt-get autoremove -y
+        sudo apt-get autoclean
+        
+        echo "✅ System dependencies updated"
+
+    - name: Check for Updates
+      run: |
+        # Check for available updates
+        echo "🔍 Checking for available updates..."
+        
+        # Check Composer updates
+        composer outdated --direct
+        
+        # Check NPM updates
+        npm outdated
+        
+        # Check Docker updates
+        docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.CreatedAt}}"
+        
+        echo "✅ Update check completed"
+
+    - name: Update Status
+      run: |
+        echo "✅ All dependencies updated successfully"
