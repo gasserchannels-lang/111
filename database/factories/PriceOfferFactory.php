@@ -27,9 +27,9 @@ class PriceOfferFactory extends Factory
             'reviews_count' => $this->faker->numberBetween(0, 1000),
             'image_url' => $this->faker->imageUrl(300, 300, 'products'),
             'specifications' => [
-                'brand' => 'Brand ' . $this->faker->randomNumber(3),
-                'model' => 'Model ' . $this->faker->randomNumber(3),
-                'color' => 'Color ' . $this->faker->randomNumber(3),
+                'brand' => 'Brand '.$this->faker->randomNumber(3),
+                'model' => 'Model '.$this->faker->randomNumber(3),
+                'color' => 'Color '.$this->faker->randomNumber(3),
                 'weight' => $this->faker->numberBetween(100, 5000).'g',
             ],
         ];

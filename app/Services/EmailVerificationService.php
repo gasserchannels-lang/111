@@ -5,19 +5,21 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class EmailVerificationService
 {
     private const VERIFICATION_EXPIRY = 24; // hours
+
     private const MAX_ATTEMPTS = 3;
+
     private const CACHE_PREFIX = 'email_verification:';
 
     /**
-     * Send verification email
+     * Send verification email.
      */
     public function sendVerificationEmail(User $user): bool
     {
@@ -27,10 +29,10 @@ class EmailVerificationService
 
         // Generate verification token
         $token = $this->generateVerificationToken();
-        
+
         // Store token in cache
         $this->storeVerificationToken($user->email, $token);
-        
+
         // Send email
         try {
             Mail::send('emails.email-verification', [
@@ -39,43 +41,44 @@ class EmailVerificationService
                 'expiry' => self::VERIFICATION_EXPIRY,
             ], function ($message) use ($user) {
                 $message->to($user->email, $user->name)
-                        ->subject('تأكيد البريد الإلكتروني - كوبرا');
+                    ->subject('تأكيد البريد الإلكتروني - كوبرا');
             });
-            
+
             Log::info('Email verification sent', [
                 'email' => $user->email,
                 'user_id' => $user->id,
             ]);
-            
+
             return true;
         } catch (\Exception $e) {
             Log::error('Failed to send email verification', [
                 'email' => $user->email,
                 'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
 
     /**
-     * Verify email with token
+     * Verify email with token.
      */
     public function verifyEmail(string $email, string $token): bool
     {
         // Validate token
-        if (!$this->validateVerificationToken($email, $token)) {
+        if (! $this->validateVerificationToken($email, $token)) {
             Log::warning('Invalid email verification token', [
                 'email' => $email,
                 'token' => $token,
                 'ip' => request()->ip(),
             ]);
+
             return false;
         }
 
         $user = User::where('email', $email)->first();
-        
-        if (!$user) {
+
+        if (! $user) {
             return false;
         }
 
@@ -97,13 +100,13 @@ class EmailVerificationService
     }
 
     /**
-     * Resend verification email
+     * Resend verification email.
      */
     public function resendVerificationEmail(string $email): bool
     {
         $user = User::where('email', $email)->first();
-        
-        if (!$user || $user->hasVerifiedEmail()) {
+
+        if (! $user || $user->hasVerifiedEmail()) {
             return false;
         }
 
@@ -113,6 +116,7 @@ class EmailVerificationService
                 'email' => $email,
                 'ip' => request()->ip(),
             ]);
+
             return false;
         }
 
@@ -124,7 +128,7 @@ class EmailVerificationService
     }
 
     /**
-     * Generate verification token
+     * Generate verification token.
      */
     private function generateVerificationToken(): string
     {
@@ -132,31 +136,31 @@ class EmailVerificationService
     }
 
     /**
-     * Store verification token
+     * Store verification token.
      */
     private function storeVerificationToken(string $email, string $token): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
-        
+        $key = self::CACHE_PREFIX.md5($email);
+
         $data = [
             'token' => $token,
             'created_at' => now()->toISOString(),
             'attempts' => 0,
             'resend_count' => 0,
         ];
-        
+
         Cache::put($key, $data, now()->addHours(self::VERIFICATION_EXPIRY));
     }
 
     /**
-     * Validate verification token
+     * Validate verification token.
      */
     private function validateVerificationToken(string $email, string $token): bool
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
-        
-        if (!$data) {
+
+        if (! $data) {
             return false;
         }
 
@@ -165,12 +169,12 @@ class EmailVerificationService
             // Increment attempts
             $data['attempts']++;
             Cache::put($key, $data, now()->addHours(self::VERIFICATION_EXPIRY));
-            
+
             // Block if too many attempts
             if ($data['attempts'] >= self::MAX_ATTEMPTS) {
                 Cache::forget($key);
             }
-            
+
             return false;
         }
 
@@ -178,6 +182,7 @@ class EmailVerificationService
         $createdAt = Carbon::parse($data['created_at']);
         if ($createdAt->addHours(self::VERIFICATION_EXPIRY)->isPast()) {
             Cache::forget($key);
+
             return false;
         }
 
@@ -185,23 +190,23 @@ class EmailVerificationService
     }
 
     /**
-     * Clear verification token
+     * Clear verification token.
      */
     private function clearVerificationToken(string $email): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         Cache::forget($key);
     }
 
     /**
-     * Check if user has exceeded resend limit
+     * Check if user has exceeded resend limit.
      */
     private function hasExceededResendLimit(string $email): bool
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
-        
-        if (!$data) {
+
+        if (! $data) {
             return false;
         }
 
@@ -209,13 +214,13 @@ class EmailVerificationService
     }
 
     /**
-     * Increment resend count
+     * Increment resend count.
      */
     private function incrementResendCount(string $email): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
-        
+
         if ($data) {
             $data['resend_count']++;
             Cache::put($key, $data, now()->addHours(self::VERIFICATION_EXPIRY));
@@ -223,23 +228,24 @@ class EmailVerificationService
     }
 
     /**
-     * Check if verification token exists
+     * Check if verification token exists.
      */
     public function hasVerificationToken(string $email): bool
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
+
         return Cache::has($key);
     }
 
     /**
-     * Get verification token info
+     * Get verification token info.
      */
     public function getVerificationTokenInfo(string $email): ?array
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
-        
-        if (!$data) {
+
+        if (! $data) {
             return null;
         }
 
@@ -254,20 +260,20 @@ class EmailVerificationService
     }
 
     /**
-     * Clean up expired tokens
+     * Clean up expired tokens.
      */
     public function cleanupExpiredTokens(): int
     {
         $cleaned = 0;
-        $pattern = self::CACHE_PREFIX . '*';
-        
+        $pattern = self::CACHE_PREFIX.'*';
+
         // This would need to be implemented based on your cache driver
         // For now, return 0
         return $cleaned;
     }
 
     /**
-     * Get email verification statistics
+     * Get email verification statistics.
      */
     public function getStatistics(): array
     {

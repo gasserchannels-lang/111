@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PerformanceMonitoringService
 {
     private array $metrics = [];
+
     private float $startTime;
+
     private int $startMemory;
 
     public function __construct()
@@ -22,7 +24,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Start monitoring a specific operation
+     * Start monitoring a specific operation.
      */
     public function startOperation(string $operation): void
     {
@@ -34,19 +36,19 @@ class PerformanceMonitoringService
     }
 
     /**
-     * End monitoring a specific operation
+     * End monitoring a specific operation.
      */
     public function endOperation(string $operation): array
     {
-        if (!isset($this->metrics[$operation])) {
+        if (! isset($this->metrics[$operation])) {
             return [];
         }
 
         $endTime = microtime(true);
         $endMemory = memory_get_usage();
-        
+
         $operationData = $this->metrics[$operation];
-        
+
         $result = [
             'operation' => $operation,
             'execution_time' => $endTime - $operationData['start_time'],
@@ -60,12 +62,12 @@ class PerformanceMonitoringService
         $this->checkThresholds($result);
 
         unset($this->metrics[$operation]);
-        
+
         return $result;
     }
 
     /**
-     * Get overall performance metrics
+     * Get overall performance metrics.
      */
     public function getOverallMetrics(): array
     {
@@ -84,7 +86,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Monitor database performance
+     * Monitor database performance.
      */
     public function monitorDatabase(): array
     {
@@ -115,7 +117,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Monitor cache performance
+     * Monitor cache performance.
      */
     public function monitorCache(): array
     {
@@ -132,7 +134,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Monitor memory usage
+     * Monitor memory usage.
      */
     public function monitorMemory(): array
     {
@@ -144,14 +146,14 @@ class PerformanceMonitoringService
             'current_usage' => $currentMemory,
             'peak_usage' => $peakMemory,
             'limit' => $this->parseMemoryLimit($limit),
-            'usage_percentage' => $this->parseMemoryLimit($limit) > 0 
-                ? ($currentMemory / $this->parseMemoryLimit($limit)) * 100 
+            'usage_percentage' => $this->parseMemoryLimit($limit) > 0
+                ? ($currentMemory / $this->parseMemoryLimit($limit)) * 100
                 : 0,
         ];
     }
 
     /**
-     * Monitor storage usage
+     * Monitor storage usage.
      */
     public function monitorStorage(): array
     {
@@ -169,12 +171,12 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Log performance metrics
+     * Log performance metrics.
      */
     public function logMetrics(): void
     {
         $metrics = $this->getOverallMetrics();
-        
+
         Log::info('Performance Metrics', [
             'execution_time' => $metrics['total_execution_time'],
             'memory_usage' => $metrics['total_memory_usage'],
@@ -186,14 +188,14 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Check performance thresholds
+     * Check performance thresholds.
      */
     private function checkThresholds(array $metrics): void
     {
         $config = config('monitoring.performance', []);
 
         // Check execution time
-        if (isset($config['execution_time_threshold']) && 
+        if (isset($config['execution_time_threshold']) &&
             $metrics['execution_time'] > $config['execution_time_threshold']) {
             Log::warning('Slow operation detected', [
                 'operation' => $metrics['operation'],
@@ -203,7 +205,7 @@ class PerformanceMonitoringService
         }
 
         // Check memory usage
-        if (isset($config['memory_threshold']) && 
+        if (isset($config['memory_threshold']) &&
             $metrics['memory_usage'] > ($config['memory_threshold'] * 1024 * 1024)) {
             Log::warning('High memory usage detected', [
                 'operation' => $metrics['operation'],
@@ -213,7 +215,7 @@ class PerformanceMonitoringService
         }
 
         // Check query count
-        if (isset($config['query_count_threshold']) && 
+        if (isset($config['query_count_threshold']) &&
             $metrics['queries_count'] > $config['query_count_threshold']) {
             Log::warning('High query count detected', [
                 'operation' => $metrics['operation'],
@@ -224,7 +226,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Get cache hits (simplified implementation)
+     * Get cache hits (simplified implementation).
      */
     private function getCacheHits(): int
     {
@@ -233,7 +235,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Get cache misses (simplified implementation)
+     * Get cache misses (simplified implementation).
      */
     private function getCacheMisses(): int
     {
@@ -242,7 +244,7 @@ class PerformanceMonitoringService
     }
 
     /**
-     * Parse memory limit string to bytes
+     * Parse memory limit string to bytes.
      */
     private function parseMemoryLimit(string $limit): int
     {
@@ -254,9 +256,11 @@ class PerformanceMonitoringService
             case 'g':
                 $limit *= 1024;
                 // fall through
+                // no break
             case 'm':
                 $limit *= 1024;
                 // fall through
+                // no break
             case 'k':
                 $limit *= 1024;
         }

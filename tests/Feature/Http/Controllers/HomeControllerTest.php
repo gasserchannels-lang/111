@@ -6,9 +6,9 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Store;
-use App\Models\Currency;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

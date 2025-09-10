@@ -26,11 +26,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure factory naming convention
+     * Configure factory naming convention.
      */
     private function configureFactoryNaming(): void
     {
-        $factoryConfigService = new FactoryConfigurationService();
+        $factoryConfigService = new FactoryConfigurationService;
         $factoryConfigService->configureNaming();
     }
 }

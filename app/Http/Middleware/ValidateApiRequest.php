@@ -14,16 +14,16 @@ class ValidateApiRequest
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, Closure $next, string $rules = null): Response
+    public function handle(Request $request, Closure $next, ?string $rules = null): Response
     {
         // Skip validation if no rules provided
-        if (!$rules) {
+        if (! $rules) {
             return $next($request);
         }
 
         // Get validation rules from config
         $validationRules = $this->getValidationRules($rules);
-        
+
         if (empty($validationRules)) {
             return $next($request);
         }
@@ -43,17 +43,17 @@ class ValidateApiRequest
     }
 
     /**
-     * Get validation rules from config
+     * Get validation rules from config.
      */
     private function getValidationRules(string $rules): array
     {
         $configRules = config("validation.rules.{$rules}", []);
-        
+
         // If rules are provided as JSON string, decode them
         if (is_string($configRules)) {
             return json_decode($configRules, true) ?? [];
         }
-        
+
         return $configRules;
     }
 }

@@ -1,0 +1,25 @@
+# Ignore common test and development files in security scans
+**/tests/*
+**/vendor/*
+**/node_modules/*
+**/.git/*
+**/.env*
+**/storage/logs/*
+**/storage/framework/*
+
+# Ignore common build artifacts
+**/build/*
+**/dist/*
+**/public/build/*
+**/public/storage/*
+
+# But scan these security-critical files
+!**/composer.json
+!**/composer.lock
+!**/package.json
+!**/package-lock.json
+!**/yarn.lock
+!**/config/**/*
+!**/routes/**/*
+!**/app/Http/Middleware/**/*
+!**/app/Providers/**/*

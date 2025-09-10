@@ -44,7 +44,7 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse
+    public function store(Request $request, Guard $auth)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -61,13 +61,19 @@ class ReviewController extends Controller
                 ->with('error', 'You have already reviewed this product.');
         }
 
-        $auth->user()->reviews()->create([
+        $created = $auth->user()->reviews()->create([
             'product_id' => $request->product_id,
             'rating' => $request->rating,
-            'title' => $request->title,
+            'title' => $request->input('title'),
             'content' => $request->content,
             'is_approved' => true, // الموافقة التلقائية أو يمكن تغييرها لتتطلب مراجعة
         ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'created',
+                'review_id' => $created->id,
+            ], 201);
+        }
 
         return redirect()->route('products.show', $request->product_id)
             ->with('success', 'Thank you for your review!');

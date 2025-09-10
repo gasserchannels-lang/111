@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class FileCleanupService
 {
@@ -26,7 +26,7 @@ class FileCleanupService
     }
 
     /**
-     * Clean up temporary files
+     * Clean up temporary files.
      */
     public function cleanupTempFiles(): array
     {
@@ -54,7 +54,6 @@ class FileCleanupService
             }
 
             Log::info('Temp files cleanup completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('Temp files cleanup failed', [
@@ -67,7 +66,7 @@ class FileCleanupService
     }
 
     /**
-     * Clean up log files
+     * Clean up log files.
      */
     public function cleanupLogFiles(): array
     {
@@ -82,8 +81,8 @@ class FileCleanupService
             $cutoffDate = Carbon::now()->subDays($this->config['log_files_retention_days']);
 
             if (is_dir($logDirectory)) {
-                $files = glob($logDirectory . '/*.log');
-                
+                $files = glob($logDirectory.'/*.log');
+
                 foreach ($files as $file) {
                     if (filemtime($file) < $cutoffDate->timestamp) {
                         $size = filesize($file);
@@ -96,7 +95,6 @@ class FileCleanupService
             }
 
             Log::info('Log files cleanup completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('Log files cleanup failed', [
@@ -108,7 +106,7 @@ class FileCleanupService
     }
 
     /**
-     * Clean up cache files
+     * Clean up cache files.
      */
     public function cleanupCacheFiles(): array
     {
@@ -139,7 +137,6 @@ class FileCleanupService
             \Artisan::call('config:clear');
 
             Log::info('Cache files cleanup completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('Cache files cleanup failed', [
@@ -151,7 +148,7 @@ class FileCleanupService
     }
 
     /**
-     * Clean up backup files
+     * Clean up backup files.
      */
     public function cleanupBackupFiles(): array
     {
@@ -172,7 +169,6 @@ class FileCleanupService
             }
 
             Log::info('Backup files cleanup completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('Backup files cleanup failed', [
@@ -184,7 +180,7 @@ class FileCleanupService
     }
 
     /**
-     * Clean up uploaded files
+     * Clean up uploaded files.
      */
     public function cleanupUploadedFiles(): array
     {
@@ -209,7 +205,6 @@ class FileCleanupService
             }
 
             Log::info('Uploaded files cleanup completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('Uploaded files cleanup failed', [
@@ -221,7 +216,7 @@ class FileCleanupService
     }
 
     /**
-     * Perform complete cleanup
+     * Perform complete cleanup.
      */
     public function performCompleteCleanup(): array
     {
@@ -251,7 +246,7 @@ class FileCleanupService
     }
 
     /**
-     * Check storage usage
+     * Check storage usage.
      */
     public function checkStorageUsage(): array
     {
@@ -268,7 +263,7 @@ class FileCleanupService
     }
 
     /**
-     * Clean up directory based on age
+     * Clean up directory based on age.
      */
     private function cleanupDirectory(string $directory, int $retentionDays): array
     {
@@ -276,7 +271,7 @@ class FileCleanupService
         $sizeDeleted = 0;
         $cutoffDate = Carbon::now()->subDays($retentionDays);
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return ['files_deleted' => 0, 'size_deleted' => 0];
         }
 
@@ -302,13 +297,13 @@ class FileCleanupService
     }
 
     /**
-     * Get directory size
+     * Get directory size.
      */
     private function getDirectorySize(string $directory): int
     {
         $size = 0;
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return $size;
         }
 
@@ -326,12 +321,12 @@ class FileCleanupService
     }
 
     /**
-     * Get cleanup statistics
+     * Get cleanup statistics.
      */
     public function getCleanupStatistics(): array
     {
         $storageUsage = $this->checkStorageUsage();
-        
+
         return [
             'storage_usage' => $storageUsage,
             'config' => $this->config,
@@ -341,41 +336,42 @@ class FileCleanupService
     }
 
     /**
-     * Get last cleanup time
+     * Get last cleanup time.
      */
     private function getLastCleanupTime(): ?string
     {
         $lastCleanupFile = storage_path('logs/last_cleanup.log');
-        
+
         if (file_exists($lastCleanupFile)) {
             return file_get_contents($lastCleanupFile);
         }
-        
+
         return null;
     }
 
     /**
-     * Get next cleanup time
+     * Get next cleanup time.
      */
     private function getNextCleanupTime(): string
     {
         $lastCleanup = $this->getLastCleanupTime();
-        
+
         if ($lastCleanup) {
             $lastCleanupDate = Carbon::parse($lastCleanup);
+
             return $lastCleanupDate->addDay()->toISOString();
         }
-        
+
         return Carbon::now()->addDay()->toISOString();
     }
 
     /**
-     * Schedule cleanup
+     * Schedule cleanup.
      */
     public function scheduleCleanup(): void
     {
         $schedule = $this->config['cleanup_schedule'];
-        
+
         switch ($schedule) {
             case 'hourly':
                 \Artisan::call('schedule:run');

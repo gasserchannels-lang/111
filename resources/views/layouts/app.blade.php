@@ -8,12 +8,22 @@
     <meta name="description" content="@yield('description', __('messages.coprra_description'))">
     <meta name="keywords" content="@yield('keywords', 'price comparison, shopping, deals, discounts, COPRRA')">
     <meta name="author" content="{{ config('app.name', 'COPRRA') }}">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="color-scheme" content="light dark">
 
     <title>@yield('title', config('app.name', 'COPRRA'))</title>
 
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link rel="preload" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" as="style">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Critical CSS -->
+    <style>{!! file_exists(public_path('build/manifest.json')) ? \Illuminate\Support\Facades\File::get(resource_path('css/critical.css')) : \Illuminate\Support\Facades\File::get(resource_path('css/critical.css')) !!}</style>
     
     <!-- Additional CSS -->
     @stack('styles')

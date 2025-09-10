@@ -6,8 +6,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Symfony\Component\HttpFoundation\Response;
 
 class ThrottleSensitiveOperations
@@ -18,48 +18,48 @@ class ThrottleSensitiveOperations
     public function handle(Request $request, Closure $next, string $operation = 'default'): Response
     {
         $key = $this->resolveRequestSignature($request, $operation);
-        
+
         // Define rate limits for different operations
         $limits = $this->getRateLimits($operation);
-        
+
         if (RateLimiter::tooManyAttempts($key, $limits['max_attempts'])) {
             $seconds = RateLimiter::availableIn($key);
-            
+
             Log::warning('Rate limit exceeded', [
                 'operation' => $operation,
                 'ip' => $request->ip(),
                 'user_id' => $request->user()?->id,
                 'seconds_remaining' => $seconds,
             ]);
-            
+
             return response()->json([
-                'message' => 'Too many attempts. Please try again in ' . $seconds . ' seconds.',
+                'message' => 'Too many attempts. Please try again in '.$seconds.' seconds.',
                 'retry_after' => $seconds,
             ], 429);
         }
-        
+
         RateLimiter::hit($key, $limits['decay_seconds']);
-        
+
         return $next($request);
     }
-    
+
     /**
-     * Resolve the request signature for rate limiting
+     * Resolve the request signature for rate limiting.
      */
     protected function resolveRequestSignature(Request $request, string $operation): string
     {
         $user = $request->user();
         $ip = $request->ip();
-        
+
         if ($user) {
             return "throttle:{$operation}:user:{$user->id}";
         }
-        
+
         return "throttle:{$operation}:ip:{$ip}";
     }
-    
+
     /**
-     * Get rate limits for different operations
+     * Get rate limits for different operations.
      */
     protected function getRateLimits(string $operation): array
     {
@@ -75,7 +75,7 @@ class ThrottleSensitiveOperations
             'admin' => ['max_attempts' => 200, 'decay_seconds' => 60], // 200 attempts per minute
             'default' => ['max_attempts' => 60, 'decay_seconds' => 60], // 60 attempts per minute
         ];
-        
+
         return $limits[$operation] ?? $limits['default'];
     }
 }

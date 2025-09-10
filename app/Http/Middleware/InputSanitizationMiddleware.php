@@ -27,18 +27,18 @@ class InputSanitizationMiddleware
     }
 
     /**
-     * Sanitize input data
+     * Sanitize input data.
      */
     private function sanitizeInput(Request $request): void
     {
         $input = $request->all();
         $sanitized = $this->sanitizeArray($input);
-        
+
         $request->merge($sanitized);
     }
 
     /**
-     * Sanitize output data
+     * Sanitize output data.
      */
     private function sanitizeOutput(Response $response): void
     {
@@ -50,7 +50,7 @@ class InputSanitizationMiddleware
     }
 
     /**
-     * Sanitize array recursively
+     * Sanitize array recursively.
      */
     private function sanitizeArray(array $data): array
     {
@@ -66,22 +66,22 @@ class InputSanitizationMiddleware
     }
 
     /**
-     * Sanitize string
+     * Sanitize string.
      */
     private function sanitizeString(string $value): string
     {
         // Remove null bytes
         $value = str_replace("\0", '', $value);
-        
+
         // Remove control characters except newlines and tabs
         $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $value);
-        
+
         // Trim whitespace
         $value = trim($value);
-        
+
         // Normalize line endings
         $value = str_replace(["\r\n", "\r"], "\n", $value);
-        
+
         return $value;
     }
 }

@@ -4,64 +4,42 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Store;
-use Exception;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use App\Services\PriceSearchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Log\LogManager;
-use Illuminate\Support\Facades\Http;
-use Throwable;
 
 class PriceSearchController extends Controller
 {
-    private ValidationFactory $validationFactory;
+    private PriceSearchService $priceSearchService;
 
-    private LogManager $log;
-
-    public function __construct(ValidationFactory $validationFactory, LogManager $log)
+    public function __construct(PriceSearchService $priceSearchService)
     {
-        $this->validationFactory = $validationFactory;
-        $this->log = $log;
+        $this->priceSearchService = $priceSearchService;
     }
 
     public function bestOffer(Request $request): JsonResponse
     {
-        try {
-            $validator = $this->validationFactory->make($request->all(), [
-                'product' => 'required|string|min:3|max:255',
-                'country' => 'required|string|size:2',
-            ]);
+        $validation = $this->priceSearchService->validateSearchRequest($request);
 
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-
-            $productName = $request->input('product');
-            $countryCode = $request->input('country');
-            $product = Product::where('name', 'like', '%'.$productName.'%')->first();
-
-            if (! $product) {
-                return response()->json(['message' => 'Product not found.'], 404);
-            }
-
-            $cheapestOffer = $product->priceOffers()
-                ->join('stores', 'price_offers.store_id', '=', 'stores.id')
-                ->where('stores.country_code', $countryCode)
-                ->orderBy('price', 'asc')
-                ->select('price_offers.*', 'stores.name as store_name', 'stores.country_code')
-                ->first();
-
-            if (! $cheapestOffer) {
-                return response()->json(['message' => 'No offers found for this product in the specified country.'], 404);
-            }
-
-            return response()->json($cheapestOffer);
-        } catch (Throwable $e) {
-            $this->log->error('PriceSearchController@bestOffer failed: '.$e->getMessage());
-
-            return response()->json(['message' => 'An unexpected error occurred.'], 500);
+        if (! $validation['success']) {
+            return response()->json([
+                'errors' => $validation['errors'],
+            ], 422);
         }
+
+        $validated = $validation['data'];
+        $result = $this->priceSearchService->findBestOffer(
+            $validated['product'],
+            $validated['country']
+        );
+
+        if (! $result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json($result['data']);
     }
 
     public function supportedStores(Request $request): JsonResponse
@@ -88,12 +66,12 @@ class PriceSearchController extends Controller
             if (empty($query)) {
                 return response()->json([
                     'data' => [],
-                    'message' => 'Search query is required'
+                    'message' => 'Search query is required',
                 ], 400);
             }
 
-            $products = Product::where('name', 'like', '%' . $query . '%')
-                ->orWhere('description', 'like', '%' . $query . '%')
+            $products = Product::where('name', 'like', '%'.$query.'%')
+                ->orWhere('description', 'like', '%'.$query.'%')
                 ->with(['priceOffers.store', 'brand', 'category'])
                 ->limit(20)
                 ->get();
@@ -121,7 +99,7 @@ class PriceSearchController extends Controller
             return response()->json([
                 'data' => $results,
                 'total' => $results->count(),
-                'query' => $query
+                'query' => $query,
             ]);
         } catch (Throwable $e) {
             $this->log->error('PriceSearchController@search failed: '.$e->getMessage());

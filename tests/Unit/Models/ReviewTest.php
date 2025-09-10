@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Models;
 
-use App\Models\Review;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -84,7 +84,7 @@ class ReviewTest extends TestCase
      */
     public function it_can_validate_required_fields()
     {
-        $review = new Review();
+        $review = new Review;
 
         try {
             $review->save();

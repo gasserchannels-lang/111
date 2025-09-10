@@ -6,22 +6,33 @@
         "vendor",
         "storage",
         "bootstrap/cache",
-        "tests",
         "node_modules"
     ],
+    "report": {
+        "html": "artifacts/phpmetrics/",
+        "csv": "artifacts/phpmetrics/report.csv",
+        "json": "artifacts/phpmetrics/report.json",
+        "violations": "artifacts/phpmetrics/violations.xml"
+    },
     "complexity": {
-        "cyclomaticComplexity": 10,
-        "cognitiveComplexity": 10,
-        "maintainabilityIndex": 50
+        "cyclomaticComplexity": 5,
+        "cognitiveComplexity": 5,
+        "maintainabilityIndex": 85,
+        "halsteadComplexity": true,
+        "intelligentComplexity": true
     },
     "coupling": {
-        "afferentCoupling": 10,
-        "efferentCoupling": 10
+        "afferentCoupling": 5,
+        "efferentCoupling": 5,
+        "instability": 0.5,
+        "abstractness": 0.5,
+        "depthOfInheritance": 3
     },
     "size": {
-        "loc": 1000,
-        "ncloc": 800,
-        "commentLines": 200
+        "loc": 500,
+        "ncloc": 400,
+        "commentLines": 100,
+        "logicalLoc": 300
     },
     "quality": {
         "bugs": 0,

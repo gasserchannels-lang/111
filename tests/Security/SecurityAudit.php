@@ -6,7 +6,6 @@ namespace Tests\Security;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class SecurityAudit extends TestCase
@@ -14,7 +13,7 @@ class SecurityAudit extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test password security requirements
+     * Test password security requirements.
      */
     public function test_password_security_requirements()
     {
@@ -28,14 +27,14 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test SQL injection prevention
+     * Test SQL injection prevention.
      */
     public function test_sql_injection_prevention()
     {
         $maliciousInput = "'; DROP TABLE users; --";
 
         // Test that malicious input is properly escaped
-        $response = $this->getJson('/api/price-search?q=' . urlencode($maliciousInput));
+        $response = $this->getJson('/api/price-search?q='.urlencode($maliciousInput));
 
         $response->assertStatus(200);
 
@@ -44,13 +43,13 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test XSS prevention
+     * Test XSS prevention.
      */
     public function test_xss_prevention()
     {
         $xssPayload = '<script>alert("XSS")</script>';
 
-        $response = $this->getJson('/api/price-search?q=' . urlencode($xssPayload));
+        $response = $this->getJson('/api/price-search?q='.urlencode($xssPayload));
 
         $response->assertStatus(200);
 
@@ -60,7 +59,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test CSRF protection
+     * Test CSRF protection.
      */
     public function test_csrf_protection()
     {
@@ -68,7 +67,7 @@ class SecurityAudit extends TestCase
 
         // Test POST request without CSRF token
         $response = $this->postJson('/wishlist/toggle', [
-            'product_id' => 1
+            'product_id' => 1,
         ]);
 
         // Should either redirect to login or return 419 (CSRF token mismatch)
@@ -79,7 +78,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test authentication requirements
+     * Test authentication requirements.
      */
     public function test_authentication_requirements()
     {
@@ -90,13 +89,13 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test input validation
+     * Test input validation.
      */
     public function test_input_validation()
     {
         // Test with invalid data
         $response = $this->postJson('/api/upload', [
-            'file' => 'not_a_file'
+            'file' => 'not_a_file',
         ]);
 
         // Should return validation error
@@ -107,7 +106,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test rate limiting
+     * Test rate limiting.
      */
     public function test_rate_limiting()
     {
@@ -129,7 +128,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test file upload security
+     * Test file upload security.
      */
     public function test_file_upload_security()
     {
@@ -140,7 +139,7 @@ class SecurityAudit extends TestCase
         $maliciousFile = \Illuminate\Http\UploadedFile::fake()->create('malicious.php', 100);
 
         $response = $this->postJson('/api/upload', [
-            'file' => $maliciousFile
+            'file' => $maliciousFile,
         ]);
 
         // Should handle malicious files safely
@@ -151,7 +150,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test session security
+     * Test session security.
      */
     public function test_session_security()
     {
@@ -169,7 +168,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Test authorization levels
+     * Test authorization levels.
      */
     public function test_authorization_levels()
     {
@@ -194,7 +193,7 @@ class SecurityAudit extends TestCase
     }
 
     /**
-     * Helper method to check password strength
+     * Helper method to check password strength.
      */
     private function isPasswordStrong(string $password): bool
     {
@@ -204,22 +203,22 @@ class SecurityAudit extends TestCase
         }
 
         // Check for uppercase letter
-        if (!preg_match('/[A-Z]/', $password)) {
+        if (! preg_match('/[A-Z]/', $password)) {
             return false;
         }
 
         // Check for lowercase letter
-        if (!preg_match('/[a-z]/', $password)) {
+        if (! preg_match('/[a-z]/', $password)) {
             return false;
         }
 
         // Check for number
-        if (!preg_match('/[0-9]/', $password)) {
+        if (! preg_match('/[0-9]/', $password)) {
             return false;
         }
 
         // Check for special character
-        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+        if (! preg_match('/[^A-Za-z0-9]/', $password)) {
             return false;
         }
 

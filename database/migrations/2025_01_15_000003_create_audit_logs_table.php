@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->string('method', 10)->nullable(); // HTTP method
             $table->timestamps();
-            
+
             // Indexes for performance
             $table->index(['auditable_type', 'auditable_id']);
             $table->index('user_id');

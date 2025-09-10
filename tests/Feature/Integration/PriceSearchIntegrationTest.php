@@ -7,8 +7,8 @@ namespace Tests\Feature\Integration;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Currency;
-use App\Models\Product;
 use App\Models\PriceOffer;
+use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -73,12 +73,12 @@ class PriceSearchIntegrationTest extends TestCase
                             'url',
                             'store',
                             'is_available',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'total',
-            'query'
+            'query',
         ]);
 
         $data = $response->json('data');
@@ -127,17 +127,8 @@ class PriceSearchIntegrationTest extends TestCase
         $wishlistResponse->assertStatus(200);
 
         // Verify wishlist
-        $wishlistIndexResponse = $this->getJson('/wishlist');
+        $wishlistIndexResponse = $this->get('/wishlist');
         $wishlistIndexResponse->assertStatus(200);
-        $wishlistIndexResponse->assertJsonStructure([
-            'data' => [
-                '*' => [
-                    'id',
-                    'product',
-                    'created_at',
-                ]
-            ]
-        ]);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PriceAlertController;
@@ -13,8 +14,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,40 +24,8 @@ use Illuminate\Support\Facades\Cache;
 // --- المسارات العامة التي لا تتطلب تسجيل الدخول ---
 
 // الصفحة الرئيسية
-// Health check route
-Route::get('/health', function () {
-    $status = [
-        'status' => 'healthy',
-        'timestamp' => now()->toISOString(),
-        'version' => config('app.version', '1.0.0'),
-        'environment' => config('app.env'),
-    ];
-
-    // Check database connection
-    try {
-        DB::connection()->getPdo();
-        $status['database'] = 'connected';
-    } catch (Exception $e) {
-        $status['database'] = 'disconnected';
-        $status['status'] = 'unhealthy';
-    }
-
-    // Check cache
-    try {
-        Cache::put('health_check', 'ok', 60);
-        $status['cache'] = Cache::get('health_check') === 'ok' ? 'working' : 'not_working';
-    } catch (Exception $e) {
-        $status['cache'] = 'not_working';
-        $status['status'] = 'unhealthy';
-    }
-
-    // Check storage
-    $status['storage'] = is_writable(storage_path()) ? 'writable' : 'not_writable';
-
-    $httpStatus = $status['status'] === 'healthy' ? 200 : 503;
-    
-    return response()->json($status, $httpStatus);
-});
+// Health check route (controller for route:cache compatibility)
+Route::get('/health', [HealthController::class, 'index']);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -74,12 +41,20 @@ Route::get('/register', function () {
 // Logout route removed for production
 
 // المنتجات والفئات
-Route::resource('products', ProductController::class)->only(['index', 'show']);
-Route::resource('categories', CategoryController::class)->only(['index', 'show']);
+Route::get('products', [ProductController::class, 'index'])->name('products.index');
+Route::get('products/{slug}', [ProductController::class, 'show'])->name('products.show');
+
+Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // تغيير اللغة والعملة
 Route::get('language/{langCode}', [LocaleController::class, 'changeLanguage'])->name('change.language');
 Route::get('currency/{currencyCode}', [LocaleController::class, 'changeCurrency'])->name('change.currency');
+
+// Contact page
+Route::get('contact', function () {
+    return view('contact');
+})->name('contact');
 
 // Locale switching route
 Route::post('locale/language', [LocaleController::class, 'switchLanguage'])->name('locale.language');
@@ -87,7 +62,6 @@ Route::post('locale/language', [LocaleController::class, 'switchLanguage'])->nam
 // --- المسارات المحمية التي تتطلب تسجيل الدخول ---
 
 Route::middleware('auth')->group(function (): void {
-
     // Price Alert Routes (من الكود الخاص بك، وهو مثالي)
     Route::patch('price-alerts/{priceAlert}/toggle', [PriceAlertController::class, 'toggle'])->name('price-alerts.toggle');
     Route::resource('price-alerts', PriceAlertController::class)->parameters([
@@ -101,10 +75,12 @@ Route::middleware('auth')->group(function (): void {
     // Review Routes
     Route::resource('reviews', ReviewController::class)->only(['store', 'destroy']);
 
-    // Cart Routes (كمثال)
+    // Cart Routes
     Route::get('cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::delete('cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove'); // استخدام {product} أفضل من {productId}
+    Route::post('cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('cart/remove/{itemId}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
 
 // --- Admin Routes (تتطلب صلاحيات إدارية) ---

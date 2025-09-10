@@ -22,7 +22,7 @@
                                     <p class="card-text"><strong>${{ $item->product->price }}</strong></p>
                                     <div class="d-flex justify-content-between">
                                         <a href="#" class="btn btn-primary btn-sm">View Product</a>
-                                        <form method="POST" action="{{ route('wishlist.destroy') }}" class="d-inline">
+                                        <form method="POST" action="{{ route('wishlist.destroy', $item->id) }}" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="product_id" value="{{ $item->product->id }}">

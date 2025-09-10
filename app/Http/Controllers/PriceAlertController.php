@@ -30,7 +30,7 @@ class PriceAlertController extends Controller
         return view('price-alerts.create', ['product' => $product]);
     }
 
-    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse
+    public function store(Request $request, Guard $auth)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -38,12 +38,19 @@ class PriceAlertController extends Controller
             'repeat_alert' => 'nullable|boolean',
         ]);
 
-        $auth->user()->priceAlerts()->create([
+        $created = $auth->user()->priceAlerts()->create([
             'product_id' => $request->product_id,
             'target_price' => $request->target_price,
             'repeat_alert' => $request->boolean('repeat_alert'),
             'is_active' => true,
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'created',
+                'price_alert_id' => $created->id,
+            ], 201);
+        }
 
         return redirect()->route('price-alerts.index')
             ->with('success', 'Price alert created successfully!');
@@ -117,7 +124,7 @@ class PriceAlertController extends Controller
     }
 
     /**
-     * Toggle alert status
+     * Toggle alert status.
      */
     public function toggle(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {

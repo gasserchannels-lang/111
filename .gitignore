@@ -1,75 +1,109 @@
 # Dependencies
-node_modules/
-vendor/
-venv/
+/node_modules
+/vendor
+/.pnp
+.pnp.js
 
-# Environment
-.env
-.env.local
-.env.production
-.env.testing
+# Testing
+/coverage
+/.nyc_output
+.phpunit.result.cache
+.phpunit.cache
 
-# Build files
+# Production
+/build
 /public/build
 /public/hot
 /public/storage
+/storage/*.key
 
-# Laravel storage
+# Laravel storage and cache
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
 /storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
 /storage/framework/views/*
-/storage/framework/cache/data/*
+!/storage/framework/views/.gitkeep
 /storage/logs/*.log
+!/storage/logs/.gitkeep
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
 
-# Testing
-.phpunit.result.cache
+# Environment files
+.env
+.env*.local
+.env.backup
+.env.production
+.env.test
+.env.testing
 
 # IDE
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 .scannerwork/
-.vscode/
-.idea/
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
-
-# Temporary files
+*.log
 *.tmp
 *.temp
-*.log
 
-# Coverage
+# Development tools
+*.sublime-project
+*.sublime-workspace
+.php_cs.cache
+.php-cs-fixer.cache
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+
+# Sentry configuration
+sentry.properties
+
+# Docker compose override
+docker-compose.override.yml
+
+# Hostinger specific
+public/.user.ini
+hostinger-deployment.md
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Coverage reports
 coverage/
 .nyc_output/
 
-# Cache
-bootstrap/cache/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
+# Static analysis
+.phpstan/
+.psalm/
+phpstan-baseline.neon
+psalm-baseline.xml
 
-# Compiled assets
-public/css/
-public/js/
-public/mix-manifest.json
+# Performance monitoring
+clockwork.json
+telescope/
 
-# Laravel specific
-bootstrap/cache/*.php
-storage/app/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
-storage/logs/*.log
+# Security
+*.pem
+*.key
+*.crt
+*.csr
 
-# Composer
-composer.phar
-composer.lock
-
-# NPM
-package-lock.json
-yarn.lock
-
-# PHP
-.phpunit.result.cache
-.php_cs.cache
-.php-cs-fixer.cache
-
+# Documentation
+docs/build/

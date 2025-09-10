@@ -233,6 +233,10 @@ class PriceHelperTest extends TestCase
      */
     public function it_can_convert_usd_to_eur(): void
     {
+        // Mock exchange rates
+        config(['exchange_rates.USD' => 1.0]);
+        config(['exchange_rates.EUR' => 0.85]);
+
         $result = PriceHelper::convertCurrency(100.0, 'USD', 'EUR');
 
         $this->assertEquals(85.0, $result);
@@ -243,6 +247,10 @@ class PriceHelperTest extends TestCase
      */
     public function it_can_convert_eur_to_usd(): void
     {
+        // Mock exchange rates
+        config(['exchange_rates.EUR' => 0.85]);
+        config(['exchange_rates.USD' => 1.0]);
+
         $result = PriceHelper::convertCurrency(85.0, 'EUR', 'USD');
 
         $this->assertEquals(100.0, $result);
@@ -273,6 +281,10 @@ class PriceHelperTest extends TestCase
      */
     public function it_can_convert_to_egyptian_pounds(): void
     {
+        // Mock exchange rates
+        config(['exchange_rates.USD' => 1.0]);
+        config(['exchange_rates.EGP' => 30.9]);
+
         $result = PriceHelper::convertCurrency(100.0, 'USD', 'EGP');
 
         $this->assertEquals(3090.0, $result);

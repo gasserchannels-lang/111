@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 class ErrorController extends Controller
 {
     /**
-     * Display error dashboard
+     * Display error dashboard.
      */
     public function index(Request $request): View|JsonResponse
     {
@@ -36,13 +36,13 @@ class ErrorController extends Controller
     }
 
     /**
-     * Display error details
+     * Display error details.
      */
     public function show(Request $request, string $id): View|JsonResponse
     {
         $error = $this->getErrorById($id);
 
-        if (!$error) {
+        if (! $error) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -64,7 +64,7 @@ class ErrorController extends Controller
     }
 
     /**
-     * Get recent errors
+     * Get recent errors.
      */
     public function getRecentErrors(int $limit = 50): array
     {
@@ -76,7 +76,7 @@ class ErrorController extends Controller
             foreach ($logFiles as $logFile) {
                 $content = file_get_contents($logFile);
                 $lines = explode("\n", $content);
-                
+
                 foreach ($lines as $line) {
                     if (strpos($line, 'ERROR') !== false || strpos($line, 'CRITICAL') !== false) {
                         $errors[] = $this->parseLogLine($line);
@@ -90,7 +90,6 @@ class ErrorController extends Controller
             });
 
             return array_slice($errors, 0, $limit);
-
         } catch (\Exception $e) {
             Log::error('Failed to get recent errors', [
                 'error' => $e->getMessage(),
@@ -101,7 +100,7 @@ class ErrorController extends Controller
     }
 
     /**
-     * Get error statistics
+     * Get error statistics.
      */
     public function getErrorStatistics(): array
     {
@@ -118,25 +117,25 @@ class ErrorController extends Controller
             foreach ($logFiles as $logFile) {
                 $content = file_get_contents($logFile);
                 $lines = explode("\n", $content);
-                
+
                 foreach ($lines as $line) {
                     if (strpos($line, 'ERROR') !== false || strpos($line, 'CRITICAL') !== false) {
                         $error = $this->parseLogLine($line);
-                        
+
                         $stats['total_errors']++;
-                        
+
                         if (strpos($line, 'CRITICAL') !== false) {
                             $stats['critical_errors']++;
                         }
-                        
+
                         // Count by type
                         $type = $error['type'] ?? 'Unknown';
                         $stats['errors_by_type'][$type] = ($stats['errors_by_type'][$type] ?? 0) + 1;
-                        
+
                         // Count by hour
                         $hour = date('H', strtotime($error['timestamp']));
                         $stats['errors_by_hour'][$hour] = ($stats['errors_by_hour'][$hour] ?? 0) + 1;
-                        
+
                         // Count by day
                         $day = date('Y-m-d', strtotime($error['timestamp']));
                         $stats['errors_by_day'][$day] = ($stats['errors_by_day'][$day] ?? 0) + 1;
@@ -145,7 +144,6 @@ class ErrorController extends Controller
             }
 
             return $stats;
-
         } catch (\Exception $e) {
             Log::error('Failed to get error statistics', [
                 'error' => $e->getMessage(),
@@ -162,7 +160,7 @@ class ErrorController extends Controller
     }
 
     /**
-     * Get system health
+     * Get system health.
      */
     public function getSystemHealth(): array
     {
@@ -188,7 +186,6 @@ class ErrorController extends Controller
             $health['overall'] = $overallHealth;
 
             return $health;
-
         } catch (\Exception $e) {
             Log::error('Failed to get system health', [
                 'error' => $e->getMessage(),
@@ -206,18 +203,18 @@ class ErrorController extends Controller
     }
 
     /**
-     * Get error by ID
+     * Get error by ID.
      */
     private function getErrorById(string $id): ?array
     {
         // This would typically query a database or log storage
         // For now, we'll search through log files
         $logFiles = glob(storage_path('logs/*.log'));
-        
+
         foreach ($logFiles as $logFile) {
             $content = file_get_contents($logFile);
             $lines = explode("\n", $content);
-            
+
             foreach ($lines as $line) {
                 if (strpos($line, $id) !== false) {
                     return $this->parseLogLine($line);
@@ -229,13 +226,13 @@ class ErrorController extends Controller
     }
 
     /**
-     * Parse log line
+     * Parse log line.
      */
     private function parseLogLine(string $line): array
     {
         // Basic log parsing - this would be more sophisticated in production
         $parts = explode(' ', $line, 4);
-        
+
         return [
             'id' => uniqid(),
             'timestamp' => $parts[0] ?? now()->toISOString(),
@@ -247,7 +244,7 @@ class ErrorController extends Controller
     }
 
     /**
-     * Extract error type from log line
+     * Extract error type from log line.
      */
     private function extractErrorType(string $line): string
     {
@@ -266,18 +263,19 @@ class ErrorController extends Controller
         if (strpos($line, 'Authorization') !== false) {
             return 'Authorization';
         }
-        
+
         return 'General';
     }
 
     /**
-     * Extract context from log line
+     * Extract context from log line.
      */
     private function extractContext(string $line): array
     {
         // Extract JSON context if present
         if (preg_match('/\{.*\}/', $line, $matches)) {
             $context = json_decode($matches[0], true);
+
             return is_array($context) ? $context : [];
         }
 
@@ -285,41 +283,42 @@ class ErrorController extends Controller
     }
 
     /**
-     * Check database health
+     * Check database health.
      */
     private function checkDatabaseHealth(): array
     {
         try {
             DB::select('SELECT 1');
+
             return ['status' => 'healthy', 'message' => 'Database connection successful'];
         } catch (\Exception $e) {
-            return ['status' => 'critical', 'message' => 'Database connection failed: ' . $e->getMessage()];
+            return ['status' => 'critical', 'message' => 'Database connection failed: '.$e->getMessage()];
         }
     }
 
     /**
-     * Check cache health
+     * Check cache health.
      */
     private function checkCacheHealth(): array
     {
         try {
-            $testKey = 'health_check_' . time();
+            $testKey = 'health_check_'.time();
             \Cache::put($testKey, 'test', 60);
             $retrieved = \Cache::get($testKey);
             \Cache::forget($testKey);
-            
+
             if ($retrieved === 'test') {
                 return ['status' => 'healthy', 'message' => 'Cache is working'];
             }
-            
+
             return ['status' => 'warning', 'message' => 'Cache test failed'];
         } catch (\Exception $e) {
-            return ['status' => 'critical', 'message' => 'Cache error: ' . $e->getMessage()];
+            return ['status' => 'critical', 'message' => 'Cache error: '.$e->getMessage()];
         }
     }
 
     /**
-     * Check storage health
+     * Check storage health.
      */
     private function checkStorageHealth(): array
     {
@@ -331,19 +330,19 @@ class ErrorController extends Controller
             $usagePercentage = ($usedSpace / $totalSpace) * 100;
 
             if ($usagePercentage > 90) {
-                return ['status' => 'critical', 'message' => 'Storage usage critical: ' . round($usagePercentage, 2) . '%'];
+                return ['status' => 'critical', 'message' => 'Storage usage critical: '.round($usagePercentage, 2).'%'];
             } elseif ($usagePercentage > 80) {
-                return ['status' => 'warning', 'message' => 'Storage usage high: ' . round($usagePercentage, 2) . '%'];
+                return ['status' => 'warning', 'message' => 'Storage usage high: '.round($usagePercentage, 2).'%'];
             }
 
-            return ['status' => 'healthy', 'message' => 'Storage usage normal: ' . round($usagePercentage, 2) . '%'];
+            return ['status' => 'healthy', 'message' => 'Storage usage normal: '.round($usagePercentage, 2).'%'];
         } catch (\Exception $e) {
-            return ['status' => 'critical', 'message' => 'Storage check failed: ' . $e->getMessage()];
+            return ['status' => 'critical', 'message' => 'Storage check failed: '.$e->getMessage()];
         }
     }
 
     /**
-     * Check memory health
+     * Check memory health.
      */
     private function checkMemoryHealth(): array
     {
@@ -353,16 +352,16 @@ class ErrorController extends Controller
         $usagePercentage = ($memoryUsage / $memoryLimitBytes) * 100;
 
         if ($usagePercentage > 90) {
-            return ['status' => 'critical', 'message' => 'Memory usage critical: ' . round($usagePercentage, 2) . '%'];
+            return ['status' => 'critical', 'message' => 'Memory usage critical: '.round($usagePercentage, 2).'%'];
         } elseif ($usagePercentage > 80) {
-            return ['status' => 'warning', 'message' => 'Memory usage high: ' . round($usagePercentage, 2) . '%'];
+            return ['status' => 'warning', 'message' => 'Memory usage high: '.round($usagePercentage, 2).'%'];
         }
 
-        return ['status' => 'healthy', 'message' => 'Memory usage normal: ' . round($usagePercentage, 2) . '%'];
+        return ['status' => 'healthy', 'message' => 'Memory usage normal: '.round($usagePercentage, 2).'%'];
     }
 
     /**
-     * Check disk space health
+     * Check disk space health.
      */
     private function checkDiskSpaceHealth(): array
     {
@@ -370,16 +369,16 @@ class ErrorController extends Controller
         $diskSpaceGB = $diskSpace / (1024 * 1024 * 1024);
 
         if ($diskSpaceGB < 1) {
-            return ['status' => 'critical', 'message' => 'Disk space critical: ' . round($diskSpaceGB, 2) . 'GB free'];
+            return ['status' => 'critical', 'message' => 'Disk space critical: '.round($diskSpaceGB, 2).'GB free'];
         } elseif ($diskSpaceGB < 5) {
-            return ['status' => 'warning', 'message' => 'Disk space low: ' . round($diskSpaceGB, 2) . 'GB free'];
+            return ['status' => 'warning', 'message' => 'Disk space low: '.round($diskSpaceGB, 2).'GB free'];
         }
 
-        return ['status' => 'healthy', 'message' => 'Disk space normal: ' . round($diskSpaceGB, 2) . 'GB free'];
+        return ['status' => 'healthy', 'message' => 'Disk space normal: '.round($diskSpaceGB, 2).'GB free'];
     }
 
     /**
-     * Convert memory limit to bytes
+     * Convert memory limit to bytes.
      */
     private function convertToBytes(string $memoryLimit): int
     {
@@ -390,8 +389,10 @@ class ErrorController extends Controller
         switch ($last) {
             case 'g':
                 $memoryLimit *= 1024;
+                // no break
             case 'm':
                 $memoryLimit *= 1024;
+                // no break
             case 'k':
                 $memoryLimit *= 1024;
         }

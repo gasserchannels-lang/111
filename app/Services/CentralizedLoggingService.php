@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CentralizedLoggingService
 {
@@ -56,11 +54,13 @@ class CentralizedLoggingService
     ];
 
     private const LOG_ROTATION_DAYS = 30;
+
     private const LOG_COMPRESSION_DAYS = 7;
+
     private const MAX_LOG_SIZE = 10485760; // 10MB
 
     /**
-     * Log application event
+     * Log application event.
      */
     public function logApplication(string $level, string $message, array $context = []): void
     {
@@ -68,7 +68,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log security event
+     * Log security event.
      */
     public function logSecurity(string $level, string $message, array $context = []): void
     {
@@ -76,7 +76,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log performance event
+     * Log performance event.
      */
     public function logPerformance(string $level, string $message, array $context = []): void
     {
@@ -84,7 +84,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log error event
+     * Log error event.
      */
     public function logError(string $level, string $message, array $context = []): void
     {
@@ -92,7 +92,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log audit event
+     * Log audit event.
      */
     public function logAudit(string $level, string $message, array $context = []): void
     {
@@ -100,7 +100,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log API event
+     * Log API event.
      */
     public function logApi(string $level, string $message, array $context = []): void
     {
@@ -108,7 +108,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log database event
+     * Log database event.
      */
     public function logDatabase(string $level, string $message, array $context = []): void
     {
@@ -116,7 +116,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log queue event
+     * Log queue event.
      */
     public function logQueue(string $level, string $message, array $context = []): void
     {
@@ -124,7 +124,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log mail event
+     * Log mail event.
      */
     public function logMail(string $level, string $message, array $context = []): void
     {
@@ -132,7 +132,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Log cache event
+     * Log cache event.
      */
     public function logCache(string $level, string $message, array $context = []): void
     {
@@ -140,12 +140,12 @@ class CentralizedLoggingService
     }
 
     /**
-     * Central logging method
+     * Central logging method.
      */
     private function log(string $channel, string $level, string $message, array $context = []): void
     {
         // Validate log level
-        if (!array_key_exists($level, self::LOG_LEVELS)) {
+        if (! array_key_exists($level, self::LOG_LEVELS)) {
             $level = 'info';
         }
 
@@ -166,7 +166,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Filter sensitive data from context
+     * Filter sensitive data from context.
      */
     private function filterSensitiveData(array $context): array
     {
@@ -182,12 +182,12 @@ class CentralizedLoggingService
     }
 
     /**
-     * Check if field is sensitive
+     * Check if field is sensitive.
      */
     private function isSensitiveField(string $field): bool
     {
         $field = strtolower($field);
-        
+
         foreach (self::SENSITIVE_FIELDS as $sensitiveField) {
             if (str_contains($field, $sensitiveField)) {
                 return true;
@@ -198,21 +198,21 @@ class CentralizedLoggingService
     }
 
     /**
-     * Mask sensitive data
+     * Mask sensitive data.
      */
     private function maskSensitiveData(string $value): string
     {
         $length = strlen($value);
-        
+
         if ($length <= 4) {
             return str_repeat('*', $length);
         }
 
-        return substr($value, 0, 2) . str_repeat('*', $length - 4) . substr($value, -2);
+        return substr($value, 0, 2).str_repeat('*', $length - 4).substr($value, -2);
     }
 
     /**
-     * Add metadata to log context
+     * Add metadata to log context.
      */
     private function addMetadata(array $context): array
     {
@@ -231,7 +231,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Store log in cache for real-time monitoring
+     * Store log in cache for real-time monitoring.
      */
     private function storeInCache(string $channel, string $level, string $message, array $context): void
     {
@@ -256,70 +256,70 @@ class CentralizedLoggingService
     }
 
     /**
-     * Check and perform log rotation
+     * Check and perform log rotation.
      */
     private function checkLogRotation(string $channel): void
     {
         $logPath = storage_path("logs/{$channel}.log");
-        
-        if (!file_exists($logPath)) {
+
+        if (! file_exists($logPath)) {
             return;
         }
 
         $fileSize = filesize($logPath);
-        
+
         if ($fileSize > self::MAX_LOG_SIZE) {
             $this->rotateLog($channel, $logPath);
         }
     }
 
     /**
-     * Rotate log file
+     * Rotate log file.
      */
     private function rotateLog(string $channel, string $logPath): void
     {
         $timestamp = now()->format('Y-m-d-H-i-s');
         $rotatedPath = storage_path("logs/{$channel}-{$timestamp}.log");
-        
+
         // Move current log to rotated file
         rename($logPath, $rotatedPath);
-        
+
         // Compress old log if it's older than compression days
         if (filemtime($rotatedPath) < now()->subDays(self::LOG_COMPRESSION_DAYS)->timestamp) {
             $this->compressLog($rotatedPath);
         }
-        
+
         // Clean up old logs
         $this->cleanupOldLogs($channel);
     }
 
     /**
-     * Compress log file
+     * Compress log file.
      */
     private function compressLog(string $logPath): void
     {
-        $compressedPath = $logPath . '.gz';
-        
+        $compressedPath = $logPath.'.gz';
+
         if (function_exists('gzopen')) {
             $fp = gzopen($compressedPath, 'w9');
             gzwrite($fp, file_get_contents($logPath));
             gzclose($fp);
-            
+
             unlink($logPath);
         }
     }
 
     /**
-     * Clean up old log files
+     * Clean up old log files.
      */
     private function cleanupOldLogs(string $channel): void
     {
         $logDir = storage_path('logs');
         $pattern = "{$logDir}/{$channel}-*.log*";
         $files = glob($pattern);
-        
+
         $cutoffDate = now()->subDays(self::LOG_ROTATION_DAYS);
-        
+
         foreach ($files as $file) {
             if (filemtime($file) < $cutoffDate->timestamp) {
                 unlink($file);
@@ -328,12 +328,13 @@ class CentralizedLoggingService
     }
 
     /**
-     * Get recent logs from cache
+     * Get recent logs from cache.
      */
-    public function getRecentLogs(string $channel = null, int $limit = 50): array
+    public function getRecentLogs(?string $channel = null, int $limit = 50): array
     {
         if ($channel) {
             $key = "logs:{$channel}:recent";
+
             return Cache::get($key, []);
         }
 
@@ -353,68 +354,68 @@ class CentralizedLoggingService
     }
 
     /**
-     * Get log statistics
+     * Get log statistics.
      */
     public function getLogStatistics(): array
     {
         $stats = [];
-        
+
         foreach (array_keys(self::LOG_CHANNELS) as $channel) {
             $key = "logs:{$channel}:recent";
             $logs = Cache::get($key, []);
-            
+
             $levelCounts = [];
             foreach ($logs as $log) {
                 $level = $log['level'];
                 $levelCounts[$level] = ($levelCounts[$level] ?? 0) + 1;
             }
-            
+
             $stats[$channel] = [
                 'total' => count($logs),
                 'levels' => $levelCounts,
-                'last_log' => !empty($logs) ? end($logs)['timestamp'] : null,
+                'last_log' => ! empty($logs) ? end($logs)['timestamp'] : null,
             ];
         }
-        
+
         return $stats;
     }
 
     /**
-     * Search logs
+     * Search logs.
      */
-    public function searchLogs(string $query, string $channel = null, string $level = null, int $limit = 100): array
+    public function searchLogs(string $query, ?string $channel = null, ?string $level = null, int $limit = 100): array
     {
         $logs = $this->getRecentLogs($channel, 1000);
         $results = [];
-        
+
         foreach ($logs as $log) {
             // Filter by level
             if ($level && $log['level'] !== $level) {
                 continue;
             }
-            
+
             // Search in message and context
-            $searchText = strtolower($log['message'] . ' ' . json_encode($log['context']));
-            
+            $searchText = strtolower($log['message'].' '.json_encode($log['context']));
+
             if (str_contains($searchText, strtolower($query))) {
                 $results[] = $log;
             }
-            
+
             if (count($results) >= $limit) {
                 break;
             }
         }
-        
+
         return $results;
     }
 
     /**
-     * Export logs
+     * Export logs.
      */
-    public function exportLogs(string $channel = null, string $format = 'json'): string
+    public function exportLogs(?string $channel = null, string $format = 'json'): string
     {
         $logs = $this->getRecentLogs($channel, 1000);
-        
+
         switch ($format) {
             case 'json':
                 return json_encode($logs, JSON_PRETTY_PRINT);
@@ -428,12 +429,12 @@ class CentralizedLoggingService
     }
 
     /**
-     * Export logs to CSV
+     * Export logs to CSV.
      */
     private function exportToCsv(array $logs): string
     {
         $csv = "Timestamp,Channel,Level,Message,Context\n";
-        
+
         foreach ($logs as $log) {
             $csv .= sprintf(
                 "%s,%s,%s,%s,%s\n",
@@ -444,17 +445,17 @@ class CentralizedLoggingService
                 str_replace(',', ';', json_encode($log['context']))
             );
         }
-        
+
         return $csv;
     }
 
     /**
-     * Export logs to TXT
+     * Export logs to TXT.
      */
     private function exportToTxt(array $logs): string
     {
         $txt = '';
-        
+
         foreach ($logs as $log) {
             $txt .= sprintf(
                 "[%s] %s.%s: %s\nContext: %s\n\n",
@@ -465,14 +466,14 @@ class CentralizedLoggingService
                 json_encode($log['context'], JSON_PRETTY_PRINT)
             );
         }
-        
+
         return $txt;
     }
 
     /**
-     * Clear logs
+     * Clear logs.
      */
-    public function clearLogs(string $channel = null): void
+    public function clearLogs(?string $channel = null): void
     {
         if ($channel) {
             $key = "logs:{$channel}:recent";
@@ -486,7 +487,7 @@ class CentralizedLoggingService
     }
 
     /**
-     * Get log configuration
+     * Get log configuration.
      */
     public function getLogConfiguration(): array
     {

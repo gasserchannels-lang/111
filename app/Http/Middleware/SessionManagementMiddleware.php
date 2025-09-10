@@ -6,8 +6,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class SessionManagementMiddleware
@@ -35,7 +35,7 @@ class SessionManagementMiddleware
     }
 
     /**
-     * Prevent session fixation attacks
+     * Prevent session fixation attacks.
      */
     private function preventSessionFixation(Request $request): void
     {
@@ -59,7 +59,7 @@ class SessionManagementMiddleware
     }
 
     /**
-     * Regenerate session ID periodically
+     * Regenerate session ID periodically.
      */
     private function regenerateSessionId(Request $request): void
     {
@@ -69,7 +69,7 @@ class SessionManagementMiddleware
         if (time() - $lastRegeneration > $regenerationInterval) {
             Session::regenerate(true);
             Session::put('last_regeneration', time());
-            
+
             Log::debug('Session ID regenerated periodically', [
                 'ip' => $request->ip(),
                 'user_id' => $request->user()?->id,
@@ -78,7 +78,7 @@ class SessionManagementMiddleware
     }
 
     /**
-     * Clean up inactive sessions
+     * Clean up inactive sessions.
      */
     private function cleanupInactiveSessions(Request $request): void
     {
@@ -87,7 +87,7 @@ class SessionManagementMiddleware
 
         if (time() - $lastActivity > $inactivityTimeout) {
             Session::flush();
-            
+
             Log::info('Session cleaned up due to inactivity', [
                 'ip' => $request->ip(),
                 'user_id' => $request->user()?->id,
@@ -99,12 +99,12 @@ class SessionManagementMiddleware
     }
 
     /**
-     * Set secure session cookies
+     * Set secure session cookies.
      */
     private function setSecureSessionCookies(Response $response): void
     {
         $cookies = $response->headers->getCookies();
-        
+
         foreach ($cookies as $cookie) {
             if (str_starts_with($cookie->getName(), config('session.cookie'))) {
                 $cookie->setSecure(config('session.secure', true));

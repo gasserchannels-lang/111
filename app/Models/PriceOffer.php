@@ -154,7 +154,7 @@ class PriceOffer extends Model
      */
     public function getPriceDifferenceFromOriginal()
     {
-        if (!$this->original_price) {
+        if (! $this->original_price) {
             return 0;
         }
 
@@ -166,7 +166,7 @@ class PriceOffer extends Model
      */
     public function getPriceDifferencePercentage()
     {
-        if (!$this->original_price || $this->original_price == 0) {
+        if (! $this->original_price || $this->original_price == 0) {
             return 0;
         }
 

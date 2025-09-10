@@ -16,7 +16,7 @@ return [
     'updating' => 'جاري التحديث...',
     'searching' => 'جاري البحث...',
     'processing' => 'جاري المعالجة...',
-    
+
     // Navigation
     'home' => 'الرئيسية',
     'products' => 'المنتجات',
@@ -33,7 +33,7 @@ return [
     'view_all' => 'عرض الكل',
     'show_more' => 'عرض المزيد',
     'show_less' => 'عرض أقل',
-    
+
     // Product related
     'product' => 'منتج',
     'products_count' => 'عدد المنتجات',
@@ -55,7 +55,7 @@ return [
     'related_products' => 'منتجات ذات صلة',
     'similar_products' => 'منتجات مشابهة',
     'recommended_products' => 'منتجات موصى بها',
-    
+
     // Price alerts
     'price_alert' => 'تنبيه سعر',
     'price_alerts' => 'تنبيهات الأسعار',
@@ -70,13 +70,13 @@ return [
     'alert_updated' => 'تم تحديث التنبيه',
     'alert_deleted' => 'تم حذف التنبيه',
     'alert_triggered' => 'تم تفعيل التنبيه',
-    
+
     // Wishlist
     'wishlist_empty' => 'قائمة الأمنيات فارغة',
     'add_to_wishlist_success' => 'تم إضافة المنتج للأمنيات',
     'remove_from_wishlist_success' => 'تم إزالة المنتج من الأمنيات',
     'wishlist_item_count' => 'عدد العناصر في الأمنيات',
-    
+
     // Reviews
     'review' => 'تقييم',
     'reviews' => 'التقييمات',
@@ -94,7 +94,7 @@ return [
     'review_deleted' => 'تم حذف التقييم',
     'no_reviews' => 'لا توجد تقييمات',
     'be_first_to_review' => 'كن أول من يقيم هذا المنتج',
-    
+
     // Search and filters
     'search_products' => 'البحث في المنتجات',
     'search_results' => 'نتائج البحث',
@@ -109,7 +109,7 @@ return [
     'rating_filter' => 'تصفية التقييم',
     'clear_filters' => 'مسح المرشحات',
     'apply_filters' => 'تطبيق المرشحات',
-    
+
     // Sorting options
     'sort_by_price_low' => 'السعر: من الأقل للأعلى',
     'sort_by_price_high' => 'السعر: من الأعلى للأقل',
@@ -119,7 +119,7 @@ return [
     'sort_by_oldest' => 'الأقدم',
     'sort_by_popularity' => 'الشعبية',
     'sort_by_discount' => 'الخصم',
-    
+
     // Pagination
     'showing' => 'عرض',
     'of' => 'من',
@@ -130,7 +130,7 @@ return [
     'last_page' => 'الصفحة الأخيرة',
     'next_page' => 'الصفحة التالية',
     'previous_page' => 'الصفحة السابقة',
-    
+
     // Forms
     'form' => 'نموذج',
     'submit' => 'إرسال',
@@ -154,7 +154,7 @@ return [
     'form_updated' => 'تم تحديث النموذج',
     'form_deleted' => 'تم حذف النموذج',
     'form_error' => 'خطأ في النموذج',
-    
+
     // User account
     'my_account' => 'حسابي',
     'profile' => 'الملف الشخصي',
@@ -170,7 +170,7 @@ return [
     'reset_password' => 'إعادة تعيين كلمة المرور',
     'change_password' => 'تغيير كلمة المرور',
     'update_profile' => 'تحديث الملف الشخصي',
-    
+
     // Admin
     'admin' => 'الإدارة',
     'admin_panel' => 'لوحة الإدارة',
@@ -185,7 +185,7 @@ return [
     'manage_brands' => 'إدارة العلامات التجارية',
     'manage_stores' => 'إدارة المتاجر',
     'manage_reviews' => 'إدارة التقييمات',
-    
+
     // Notifications
     'notification' => 'إشعار',
     'notifications' => 'الإشعارات',
@@ -194,7 +194,7 @@ return [
     'delete_notification' => 'حذف الإشعار',
     'no_notifications' => 'لا توجد إشعارات',
     'new_notification' => 'إشعار جديد',
-    
+
     // Errors
     'page_not_found' => 'الصفحة غير موجودة',
     'access_denied' => 'الوصول مرفوض',
@@ -202,7 +202,7 @@ return [
     'maintenance_mode' => 'وضع الصيانة',
     'try_again' => 'حاول مرة أخرى',
     'contact_support' => 'اتصل بالدعم',
-    
+
     // Success messages
     'operation_successful' => 'تمت العملية بنجاح',
     'data_saved' => 'تم حفظ البيانات',
@@ -211,7 +211,7 @@ return [
     'email_sent' => 'تم إرسال البريد الإلكتروني',
     'password_changed' => 'تم تغيير كلمة المرور',
     'profile_updated' => 'تم تحديث الملف الشخصي',
-    
+
     // COPRRA specific
     'coprra_description' => 'منصة مقارنة الأسعار الرائدة في المنطقة',
     'find_best_deals' => 'اعثر على أفضل العروض',

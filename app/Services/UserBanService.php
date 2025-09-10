@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UserBanService
 {
@@ -20,11 +20,11 @@ class UserBanService
     ];
 
     /**
-     * Ban a user
+     * Ban a user.
      */
-    public function banUser(User $user, string $reason, string $description = null, Carbon $expiresAt = null): bool
+    public function banUser(User $user, string $reason, ?string $description = null, ?Carbon $expiresAt = null): bool
     {
-        if (!array_key_exists($reason, self::BAN_REASONS)) {
+        if (! array_key_exists($reason, self::BAN_REASONS)) {
             $reason = 'other';
         }
 
@@ -49,9 +49,9 @@ class UserBanService
     }
 
     /**
-     * Unban a user
+     * Unban a user.
      */
-    public function unbanUser(User $user, string $reason = null): bool
+    public function unbanUser(User $user, ?string $reason = null): bool
     {
         $user->is_blocked = false;
         $user->ban_reason = null;
@@ -72,17 +72,18 @@ class UserBanService
     }
 
     /**
-     * Check if user is banned
+     * Check if user is banned.
      */
     public function isUserBanned(User $user): bool
     {
-        if (!$user->is_blocked) {
+        if (! $user->is_blocked) {
             return false;
         }
 
         // Check if ban has expired
         if ($user->ban_expires_at && $user->ban_expires_at->isPast()) {
             $this->unbanUser($user, 'Ban expired');
+
             return false;
         }
 
@@ -90,11 +91,11 @@ class UserBanService
     }
 
     /**
-     * Get ban information
+     * Get ban information.
      */
     public function getBanInfo(User $user): ?array
     {
-        if (!$user->is_blocked) {
+        if (! $user->is_blocked) {
             return null;
         }
 
@@ -109,7 +110,7 @@ class UserBanService
     }
 
     /**
-     * Get all banned users
+     * Get all banned users.
      */
     public function getBannedUsers(): \Illuminate\Database\Eloquent\Collection
     {
@@ -122,7 +123,7 @@ class UserBanService
     }
 
     /**
-     * Get users with expired bans
+     * Get users with expired bans.
      */
     public function getUsersWithExpiredBans(): \Illuminate\Database\Eloquent\Collection
     {
@@ -132,7 +133,7 @@ class UserBanService
     }
 
     /**
-     * Clean up expired bans
+     * Clean up expired bans.
      */
     public function cleanupExpiredBans(): int
     {
@@ -152,7 +153,7 @@ class UserBanService
     }
 
     /**
-     * Get ban statistics
+     * Get ban statistics.
      */
     public function getBanStatistics(): array
     {
@@ -177,7 +178,7 @@ class UserBanService
     }
 
     /**
-     * Get ban reasons
+     * Get ban reasons.
      */
     public function getBanReasons(): array
     {
@@ -185,7 +186,7 @@ class UserBanService
     }
 
     /**
-     * Check if user can be banned
+     * Check if user can be banned.
      */
     public function canBanUser(User $user): bool
     {
@@ -203,7 +204,7 @@ class UserBanService
     }
 
     /**
-     * Check if user can be unbanned
+     * Check if user can be unbanned.
      */
     public function canUnbanUser(User $user): bool
     {
@@ -212,23 +213,23 @@ class UserBanService
     }
 
     /**
-     * Get ban history for user
+     * Get ban history for user.
      */
     public function getBanHistory(User $user): array
     {
         // This would require a ban_history table
         // For now, return current ban info
         $banInfo = $this->getBanInfo($user);
-        
+
         return $banInfo ? [$banInfo] : [];
     }
 
     /**
-     * Extend ban duration
+     * Extend ban duration.
      */
-    public function extendBan(User $user, Carbon $newExpiresAt, string $reason = null): bool
+    public function extendBan(User $user, Carbon $newExpiresAt, ?string $reason = null): bool
     {
-        if (!$user->is_blocked) {
+        if (! $user->is_blocked) {
             return false;
         }
 
@@ -247,11 +248,11 @@ class UserBanService
     }
 
     /**
-     * Reduce ban duration
+     * Reduce ban duration.
      */
-    public function reduceBan(User $user, Carbon $newExpiresAt, string $reason = null): bool
+    public function reduceBan(User $user, Carbon $newExpiresAt, ?string $reason = null): bool
     {
-        if (!$user->is_blocked) {
+        if (! $user->is_blocked) {
             return false;
         }
 

@@ -42,7 +42,7 @@ class ProcessResult
      */
     public function failed(): bool
     {
-        return !$this->successful();
+        return ! $this->successful();
     }
 
     /**
@@ -50,6 +50,6 @@ class ProcessResult
      */
     public function getFullOutput(): string
     {
-        return $this->output . ($this->errorOutput ? "\n" . $this->errorOutput : '');
+        return $this->output.($this->errorOutput ? "\n".$this->errorOutput : '');
     }
 }

@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Product;
-use App\Models\User;
-use App\Models\PriceOffer;
-use App\Models\Review;
-use App\Models\Wishlist;
-use App\Models\PriceAlert;
 use App\Models\AuditLog;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
+use App\Models\PriceAlert;
+use App\Models\PriceOffer;
+use App\Models\Product;
+use App\Models\Review;
+use App\Models\User;
+use App\Models\Wishlist;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class StatisticsService
 {
     /**
-     * Get real-time statistics
+     * Get real-time statistics.
      */
     public function getRealTimeStats(): array
     {
@@ -39,12 +39,12 @@ class StatisticsService
     }
 
     /**
-     * Get daily statistics
+     * Get daily statistics.
      */
     public function getDailyStats(Carbon $date): array
     {
         $cacheKey = "daily_stats_{$date->format('Y-m-d')}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($date) {
             return [
                 'date' => $date->format('Y-m-d'),
@@ -62,13 +62,13 @@ class StatisticsService
     }
 
     /**
-     * Get weekly statistics
+     * Get weekly statistics.
      */
     public function getWeeklyStats(Carbon $startDate): array
     {
         $endDate = $startDate->copy()->addWeek();
         $cacheKey = "weekly_stats_{$startDate->format('Y-m-d')}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($startDate, $endDate) {
             return [
                 'week_start' => $startDate->format('Y-m-d'),
@@ -88,14 +88,14 @@ class StatisticsService
     }
 
     /**
-     * Get monthly statistics
+     * Get monthly statistics.
      */
     public function getMonthlyStats(Carbon $date): array
     {
         $startDate = $date->copy()->startOfMonth();
         $endDate = $date->copy()->endOfMonth();
         $cacheKey = "monthly_stats_{$date->format('Y-m')}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($startDate, $endDate) {
             return [
                 'month' => $date->format('Y-m'),
@@ -116,14 +116,14 @@ class StatisticsService
     }
 
     /**
-     * Get yearly statistics
+     * Get yearly statistics.
      */
     public function getYearlyStats(int $year): array
     {
         $startDate = Carbon::createFromDate($year, 1, 1);
         $endDate = Carbon::createFromDate($year, 12, 31);
         $cacheKey = "yearly_stats_{$year}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($startDate, $endDate) {
             return [
                 'year' => $year,
@@ -144,15 +144,32 @@ class StatisticsService
     }
 
     /**
-     * Get product statistics
+     * Get product statistics.
      */
     public function getProductStats(int $productId): array
     {
         $cacheKey = "product_stats_{$productId}";
-        
+
         return Cache::remember($cacheKey, 1800, function () use ($productId) {
-            $product = Product::findOrFail($productId);
-            
+            $product = Product::with(['category:id,name', 'brand:id,name'])
+                ->findOrFail($productId);
+
+            // Use single query with counts to avoid N+1
+            $stats = DB::table('products')
+                ->leftJoin('wishlists', 'products.id', '=', 'wishlists.product_id')
+                ->leftJoin('price_alerts', 'products.id', '=', 'price_alerts.product_id')
+                ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
+                ->leftJoin('price_offers', 'products.id', '=', 'price_offers.product_id')
+                ->where('products.id', $productId)
+                ->selectRaw('
+                    COUNT(DISTINCT wishlists.id) as wishlist_count,
+                    COUNT(DISTINCT price_alerts.id) as price_alerts_count,
+                    COUNT(DISTINCT reviews.id) as reviews_count,
+                    AVG(reviews.rating) as average_rating,
+                    COUNT(DISTINCT price_offers.id) as offers_count
+                ')
+                ->first();
+
             return [
                 'product' => [
                     'id' => $product->id,
@@ -161,11 +178,11 @@ class StatisticsService
                     'category' => $product->category->name ?? 'N/A',
                     'brand' => $product->brand->name ?? 'N/A',
                 ],
-                'wishlist_count' => $product->wishlists()->count(),
-                'price_alerts_count' => $product->priceAlerts()->count(),
-                'reviews_count' => $product->reviews()->count(),
-                'average_rating' => $product->reviews()->avg('rating'),
-                'offers_count' => $product->priceOffers()->count(),
+                'wishlist_count' => (int) $stats->wishlist_count,
+                'price_alerts_count' => (int) $stats->price_alerts_count,
+                'reviews_count' => (int) $stats->reviews_count,
+                'average_rating' => round((float) $stats->average_rating, 2),
+                'offers_count' => (int) $stats->offers_count,
                 'price_range' => $this->getProductPriceRange($productId),
                 'view_count' => $this->getProductViewCount($productId),
                 'engagement_score' => $this->calculateProductEngagementScore($productId),
@@ -174,15 +191,29 @@ class StatisticsService
     }
 
     /**
-     * Get user statistics
+     * Get user statistics.
      */
     public function getUserStats(int $userId): array
     {
         $cacheKey = "user_stats_{$userId}";
-        
+
         return Cache::remember($cacheKey, 1800, function () use ($userId) {
             $user = User::findOrFail($userId);
-            
+
+            // Use single query with counts to avoid N+1
+            $stats = DB::table('users')
+                ->leftJoin('wishlists', 'users.id', '=', 'wishlists.user_id')
+                ->leftJoin('price_alerts', 'users.id', '=', 'price_alerts.user_id')
+                ->leftJoin('reviews', 'users.id', '=', 'reviews.user_id')
+                ->where('users.id', $userId)
+                ->selectRaw('
+                    COUNT(DISTINCT wishlists.id) as wishlist_count,
+                    COUNT(DISTINCT price_alerts.id) as price_alerts_count,
+                    COUNT(DISTINCT reviews.id) as reviews_count,
+                    AVG(reviews.rating) as average_rating_given
+                ')
+                ->first();
+
             return [
                 'user' => [
                     'id' => $user->id,
@@ -190,10 +221,10 @@ class StatisticsService
                     'email' => $user->email,
                     'created_at' => $user->created_at->format('Y-m-d H:i:s'),
                 ],
-                'wishlist_count' => $user->wishlists()->count(),
-                'price_alerts_count' => $user->priceAlerts()->count(),
-                'reviews_count' => $user->reviews()->count(),
-                'average_rating_given' => $user->reviews()->avg('rating'),
+                'wishlist_count' => (int) $stats->wishlist_count,
+                'price_alerts_count' => (int) $stats->price_alerts_count,
+                'reviews_count' => (int) $stats->reviews_count,
+                'average_rating_given' => round((float) $stats->average_rating_given, 2),
                 'activity_score' => $this->calculateUserActivityScore($userId),
                 'favorite_categories' => $this->getUserFavoriteCategories($userId),
                 'favorite_brands' => $this->getUserFavoriteBrands($userId),
@@ -203,7 +234,7 @@ class StatisticsService
     }
 
     /**
-     * Get system health statistics
+     * Get system health statistics.
      */
     public function getSystemHealthStats(): array
     {
@@ -222,7 +253,7 @@ class StatisticsService
     }
 
     /**
-     * Get active users today
+     * Get active users today.
      */
     private function getActiveUsersToday(): int
     {
@@ -236,7 +267,7 @@ class StatisticsService
     }
 
     /**
-     * Get new products today
+     * Get new products today.
      */
     private function getNewProductsToday(): int
     {
@@ -244,7 +275,7 @@ class StatisticsService
     }
 
     /**
-     * Get price changes today
+     * Get price changes today.
      */
     private function getPriceChangesToday(): int
     {
@@ -256,7 +287,7 @@ class StatisticsService
     }
 
     /**
-     * Get new reviews today
+     * Get new reviews today.
      */
     private function getNewReviewsToday(): int
     {
@@ -264,7 +295,7 @@ class StatisticsService
     }
 
     /**
-     * Get price changes for a specific date
+     * Get price changes for a specific date.
      */
     private function getPriceChangesForDate(Carbon $date): int
     {
@@ -276,7 +307,7 @@ class StatisticsService
     }
 
     /**
-     * Get most viewed products for a specific date
+     * Get most viewed products for a specific date.
      */
     private function getMostViewedProductsForDate(Carbon $date): array
     {
@@ -293,7 +324,7 @@ class StatisticsService
     }
 
     /**
-     * Get most active users for a specific date
+     * Get most active users for a specific date.
      */
     private function getMostActiveUsersForDate(Carbon $date): array
     {
@@ -316,23 +347,23 @@ class StatisticsService
     }
 
     /**
-     * Get daily breakdown
+     * Get daily breakdown.
      */
     private function getDailyBreakdown(Carbon $startDate, Carbon $endDate): array
     {
         $breakdown = [];
         $current = $startDate->copy();
-        
+
         while ($current->lte($endDate)) {
             $breakdown[] = $this->getDailyStats($current);
             $current->addDay();
         }
-        
+
         return $breakdown;
     }
 
     /**
-     * Get top categories
+     * Get top categories.
      */
     private function getTopCategories(Carbon $startDate, Carbon $endDate): array
     {
@@ -348,7 +379,7 @@ class StatisticsService
     }
 
     /**
-     * Get top brands
+     * Get top brands.
      */
     private function getTopBrands(Carbon $startDate, Carbon $endDate): array
     {
@@ -364,7 +395,7 @@ class StatisticsService
     }
 
     /**
-     * Get price trends
+     * Get price trends.
      */
     private function getPriceTrends(Carbon $startDate, Carbon $endDate): array
     {
@@ -378,43 +409,43 @@ class StatisticsService
     }
 
     /**
-     * Calculate user growth rate
+     * Calculate user growth rate.
      */
     private function calculateUserGrowthRate(Carbon $startDate, Carbon $endDate): float
     {
         $previousPeriodStart = $startDate->copy()->subMonth();
         $previousPeriodEnd = $startDate->copy()->subDay();
-        
+
         $previousCount = User::whereBetween('created_at', [$previousPeriodStart, $previousPeriodEnd])->count();
         $currentCount = User::whereBetween('created_at', [$startDate, $endDate])->count();
-        
+
         if ($previousCount === 0) {
             return $currentCount > 0 ? 100 : 0;
         }
-        
+
         return (($currentCount - $previousCount) / $previousCount) * 100;
     }
 
     /**
-     * Calculate product growth rate
+     * Calculate product growth rate.
      */
     private function calculateProductGrowthRate(Carbon $startDate, Carbon $endDate): float
     {
         $previousPeriodStart = $startDate->copy()->subMonth();
         $previousPeriodEnd = $startDate->copy()->subDay();
-        
+
         $previousCount = Product::whereBetween('created_at', [$previousPeriodStart, $previousPeriodEnd])->count();
         $currentCount = Product::whereBetween('created_at', [$startDate, $endDate])->count();
-        
+
         if ($previousCount === 0) {
             return $currentCount > 0 ? 100 : 0;
         }
-        
+
         return (($currentCount - $previousCount) / $previousCount) * 100;
     }
 
     /**
-     * Calculate engagement rate
+     * Calculate engagement rate.
      */
     private function calculateEngagementRate(Carbon $startDate, Carbon $endDate): float
     {
@@ -426,12 +457,12 @@ class StatisticsService
         })->orWhereHas('reviews', function ($query) use ($startDate, $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
         })->count();
-        
+
         return $totalUsers > 0 ? ($activeUsers / $totalUsers) * 100 : 0;
     }
 
     /**
-     * Get top performing products
+     * Get top performing products.
      */
     private function getTopPerformingProducts(Carbon $startDate, Carbon $endDate): array
     {
@@ -446,7 +477,7 @@ class StatisticsService
     }
 
     /**
-     * Get category performance
+     * Get category performance.
      */
     private function getCategoryPerformance(Carbon $startDate, Carbon $endDate): array
     {
@@ -472,7 +503,7 @@ class StatisticsService
     }
 
     /**
-     * Get brand performance
+     * Get brand performance.
      */
     private function getBrandPerformance(Carbon $startDate, Carbon $endDate): array
     {
@@ -498,40 +529,40 @@ class StatisticsService
     }
 
     /**
-     * Get monthly breakdown
+     * Get monthly breakdown.
      */
     private function getMonthlyBreakdown(Carbon $startDate, Carbon $endDate): array
     {
         $breakdown = [];
         $current = $startDate->copy()->startOfMonth();
-        
+
         while ($current->lte($endDate)) {
             $monthEnd = $current->copy()->endOfMonth();
             if ($monthEnd->gt($endDate)) {
                 $monthEnd = $endDate;
             }
-            
+
             $breakdown[] = $this->getMonthlyStats($current);
             $current->addMonth();
         }
-        
+
         return $breakdown;
     }
 
     /**
-     * Get quarterly breakdown
+     * Get quarterly breakdown.
      */
     private function getQuarterlyBreakdown(Carbon $startDate, Carbon $endDate): array
     {
         $quarters = [];
         $current = $startDate->copy()->startOfQuarter();
-        
+
         while ($current->lte($endDate)) {
             $quarterEnd = $current->copy()->endOfQuarter();
             if ($quarterEnd->gt($endDate)) {
                 $quarterEnd = $endDate;
             }
-            
+
             $quarters[] = [
                 'quarter' => $current->quarter,
                 'year' => $current->year,
@@ -542,30 +573,30 @@ class StatisticsService
                 'new_offers' => PriceOffer::whereBetween('created_at', [$current, $quarterEnd])->count(),
                 'new_reviews' => Review::whereBetween('created_at', [$current, $quarterEnd])->count(),
             ];
-            
+
             $current->addQuarter();
         }
-        
+
         return $quarters;
     }
 
     /**
-     * Get year over year growth
+     * Get year over year growth.
      */
     private function getYearOverYearGrowth(int $year): array
     {
         $currentYear = Carbon::createFromDate($year, 1, 1);
         $previousYear = $currentYear->copy()->subYear();
-        
+
         $currentYearEnd = $currentYear->copy()->endOfYear();
         $previousYearEnd = $previousYear->copy()->endOfYear();
-        
+
         $currentUsers = User::whereBetween('created_at', [$currentYear, $currentYearEnd])->count();
         $previousUsers = User::whereBetween('created_at', [$previousYear, $previousYearEnd])->count();
-        
+
         $currentProducts = Product::whereBetween('created_at', [$currentYear, $currentYearEnd])->count();
         $previousProducts = Product::whereBetween('created_at', [$previousYear, $previousYearEnd])->count();
-        
+
         return [
             'users_growth' => $this->calculateGrowthRate($previousUsers, $currentUsers),
             'products_growth' => $this->calculateGrowthRate($previousProducts, $currentProducts),
@@ -573,12 +604,12 @@ class StatisticsService
     }
 
     /**
-     * Get price analysis
+     * Get price analysis.
      */
     private function getPriceAnalysis(Carbon $startDate, Carbon $endDate): array
     {
         $offers = PriceOffer::whereBetween('created_at', [$startDate, $endDate])->get();
-        
+
         if ($offers->isEmpty()) {
             return [
                 'total_offers' => 0,
@@ -587,9 +618,9 @@ class StatisticsService
                 'price_volatility' => 0,
             ];
         }
-        
+
         $prices = $offers->pluck('price')->toArray();
-        
+
         return [
             'total_offers' => $offers->count(),
             'average_price' => array_sum($prices) / count($prices),
@@ -602,18 +633,18 @@ class StatisticsService
     }
 
     /**
-     * Get product price range
+     * Get product price range.
      */
     private function getProductPriceRange(int $productId): array
     {
         $offers = PriceOffer::where('product_id', $productId)->get();
-        
+
         if ($offers->isEmpty()) {
             return ['min' => 0, 'max' => 0];
         }
-        
+
         $prices = $offers->pluck('price')->toArray();
-        
+
         return [
             'min' => min($prices),
             'max' => max($prices),
@@ -621,7 +652,7 @@ class StatisticsService
     }
 
     /**
-     * Get product view count
+     * Get product view count.
      */
     private function getProductViewCount(int $productId): int
     {
@@ -632,7 +663,7 @@ class StatisticsService
     }
 
     /**
-     * Calculate product engagement score
+     * Calculate product engagement score.
      */
     private function calculateProductEngagementScore(int $productId): float
     {
@@ -640,24 +671,24 @@ class StatisticsService
         $priceAlertsCount = PriceAlert::where('product_id', $productId)->count();
         $reviewsCount = Review::where('product_id', $productId)->count();
         $viewCount = $this->getProductViewCount($productId);
-        
+
         return ($wishlistCount * 2) + ($priceAlertsCount * 3) + ($reviewsCount * 4) + ($viewCount * 0.1);
     }
 
     /**
-     * Calculate user activity score
+     * Calculate user activity score.
      */
     private function calculateUserActivityScore(int $userId): float
     {
         $wishlistCount = Wishlist::where('user_id', $userId)->count();
         $priceAlertsCount = PriceAlert::where('user_id', $userId)->count();
         $reviewsCount = Review::where('user_id', $userId)->count();
-        
+
         return ($wishlistCount * 1) + ($priceAlertsCount * 2) + ($reviewsCount * 3);
     }
 
     /**
-     * Get user favorite categories
+     * Get user favorite categories.
      */
     private function getUserFavoriteCategories(int $userId): array
     {
@@ -674,7 +705,7 @@ class StatisticsService
     }
 
     /**
-     * Get user favorite brands
+     * Get user favorite brands.
      */
     private function getUserFavoriteBrands(int $userId): array
     {
@@ -691,30 +722,30 @@ class StatisticsService
     }
 
     /**
-     * Get user last activity
+     * Get user last activity.
      */
     private function getUserLastActivity(int $userId): ?string
     {
         $lastWishlist = Wishlist::where('user_id', $userId)->latest()->first();
         $lastPriceAlert = PriceAlert::where('user_id', $userId)->latest()->first();
         $lastReview = Review::where('user_id', $userId)->latest()->first();
-        
+
         $activities = collect([$lastWishlist, $lastPriceAlert, $lastReview])
             ->filter()
             ->sortByDesc('created_at');
-        
+
         return $activities->first()?->created_at->format('Y-m-d H:i:s');
     }
 
     /**
-     * Get database health
+     * Get database health.
      */
     private function getDatabaseHealth(): array
     {
         try {
             $connectionCount = DB::select('SHOW STATUS LIKE "Threads_connected"')[0]->Value ?? 0;
             $maxConnections = DB::select('SHOW VARIABLES LIKE "max_connections"')[0]->Value ?? 0;
-            
+
             return [
                 'status' => 'healthy',
                 'connection_usage' => ($connectionCount / $maxConnections) * 100,
@@ -730,16 +761,16 @@ class StatisticsService
     }
 
     /**
-     * Get cache health
+     * Get cache health.
      */
     private function getCacheHealth(): array
     {
         try {
-            $testKey = 'health_check_' . time();
+            $testKey = 'health_check_'.time();
             Cache::put($testKey, 'test', 60);
             $retrieved = Cache::get($testKey);
             Cache::forget($testKey);
-            
+
             return [
                 'status' => $retrieved === 'test' ? 'healthy' : 'unhealthy',
                 'driver' => config('cache.default'),
@@ -753,14 +784,14 @@ class StatisticsService
     }
 
     /**
-     * Get queue health
+     * Get queue health.
      */
     private function getQueueHealth(): array
     {
         try {
             $queueSize = DB::table('jobs')->count();
             $failedJobs = DB::table('failed_jobs')->count();
-            
+
             return [
                 'status' => $failedJobs < 10 ? 'healthy' : 'unhealthy',
                 'queue_size' => $queueSize,
@@ -775,7 +806,7 @@ class StatisticsService
     }
 
     /**
-     * Get storage health
+     * Get storage health.
      */
     private function getStorageHealth(): array
     {
@@ -784,7 +815,7 @@ class StatisticsService
             $totalSpace = disk_total_space($disk->path(''));
             $freeSpace = disk_free_space($disk->path(''));
             $usedSpace = $totalSpace - $freeSpace;
-            
+
             return [
                 'status' => ($usedSpace / $totalSpace) < 0.9 ? 'healthy' : 'unhealthy',
                 'total_space' => $totalSpace,
@@ -801,13 +832,13 @@ class StatisticsService
     }
 
     /**
-     * Get API health
+     * Get API health.
      */
     private function getApiHealth(): array
     {
         try {
-            $response = \Http::timeout(5)->get(config('app.url') . '/health');
-            
+            $response = \Http::timeout(5)->get(config('app.url').'/health');
+
             return [
                 'status' => $response->successful() ? 'healthy' : 'unhealthy',
                 'response_time' => $response->transferStats?->getHandlerStat('total_time') ?? 0,
@@ -822,7 +853,7 @@ class StatisticsService
     }
 
     /**
-     * Get error rate
+     * Get error rate.
      */
     private function getErrorRate(): float
     {
@@ -830,12 +861,12 @@ class StatisticsService
         $errorRequests = AuditLog::where('event', 'api_access')
             ->whereJsonContains('metadata->status_code', '>=', 400)
             ->count();
-        
+
         return $totalRequests > 0 ? ($errorRequests / $totalRequests) * 100 : 0;
     }
 
     /**
-     * Get average response time
+     * Get average response time.
      */
     private function getAverageResponseTime(): float
     {
@@ -843,51 +874,51 @@ class StatisticsService
             ->whereNotNull('metadata->response_time')
             ->pluck('metadata->response_time')
             ->toArray();
-        
-        return !empty($responseTimes) ? array_sum($responseTimes) / count($responseTimes) : 0;
+
+        return ! empty($responseTimes) ? array_sum($responseTimes) / count($responseTimes) : 0;
     }
 
     /**
-     * Get uptime
+     * Get uptime.
      */
     private function getUptime(): string
     {
         $startTime = config('app.start_time', now()->subDay());
         $uptime = now()->diffInSeconds($startTime);
-        
+
         $days = floor($uptime / 86400);
         $hours = floor(($uptime % 86400) / 3600);
         $minutes = floor(($uptime % 3600) / 60);
-        
+
         return "{$days}d {$hours}h {$minutes}m";
     }
 
     /**
-     * Calculate price volatility
+     * Calculate price volatility.
      */
     private function calculatePriceVolatility(array $prices): float
     {
         if (count($prices) < 2) {
             return 0;
         }
-        
+
         $mean = array_sum($prices) / count($prices);
         $variance = array_sum(array_map(function ($price) use ($mean) {
             return pow($price - $mean, 2);
         }, $prices)) / count($prices);
-        
+
         return sqrt($variance);
     }
 
     /**
-     * Calculate growth rate
+     * Calculate growth rate.
      */
     private function calculateGrowthRate(int $previous, int $current): float
     {
         if ($previous === 0) {
             return $current > 0 ? 100 : 0;
         }
-        
+
         return (($current - $previous) / $previous) * 100;
     }
 }

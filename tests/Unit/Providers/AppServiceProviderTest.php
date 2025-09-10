@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Providers;
 
 use App\Providers\AppServiceProvider;
-use Illuminate\Foundation\Application;
 use Tests\TestCase;
 
 class AppServiceProviderTest extends TestCase

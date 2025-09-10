@@ -31,7 +31,7 @@ class SetLocaleAndCurrency
     }
 
     /**
-     * Set application locale based on user preference, session, or default
+     * Set application locale based on user preference, session, or default.
      */
     private function setLocale(Request $request): void
     {
@@ -81,7 +81,7 @@ class SetLocaleAndCurrency
     }
 
     /**
-     * Set currency based on user preference, session, or default
+     * Set currency based on user preference, session, or default.
      */
     private function setCurrency(Request $request): void
     {

@@ -8,6 +8,9 @@
     'readonly' => false,
     'placeholder' => null,
     'size' => 'md',
+    'ariaLabel' => null,
+    'ariaDescribedBy' => null,
+    'ariaInvalid' => null,
 ])
 
 @php
@@ -49,6 +52,10 @@
         @if($required) required @endif
         @if($disabled) disabled @endif
         @if($readonly) readonly @endif
+        @if($ariaLabel) aria-label="{{ $ariaLabel }}" @endif
+        @if($ariaDescribedBy) aria-describedby="{{ $ariaDescribedBy }}" @endif
+        @if($ariaInvalid !== null) aria-invalid="{{ $ariaInvalid ? 'true' : 'false' }}" @endif
+        @if($error) aria-invalid="true" @endif
     />
     
     @if($help && !$error)

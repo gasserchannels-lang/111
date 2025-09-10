@@ -91,7 +91,7 @@ class WishlistController extends Controller
     }
 
     /**
-     * Toggle product in wishlist
+     * Toggle product in wishlist.
      */
     public function toggle(Request $request): JsonResponse
     {

@@ -21,7 +21,9 @@ class WishlistControllerTest extends TestCase
     use RefreshDatabase;
 
     private WishlistController $controller;
+
     private Guard $mockAuth;
+
     private User $user;
 
     protected function setUp(): void

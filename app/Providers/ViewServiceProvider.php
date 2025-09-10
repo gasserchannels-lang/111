@@ -25,44 +25,44 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Register view composers
         View::composer('*', AppComposer::class);
-        
+
         // Register specific view composers
         View::composer(['layouts.app', 'layouts.admin'], function ($view) {
             $view->with('user', auth()->user());
         });
-        
+
         View::composer(['products.*', 'categories.*', 'brands.*'], function ($view) {
             $view->with('breadcrumbs', $this->getBreadcrumbs());
         });
     }
 
     /**
-     * Get breadcrumbs for current page
+     * Get breadcrumbs for current page.
      */
     private function getBreadcrumbs(): array
     {
         $breadcrumbs = [
-            ['name' => 'Home', 'url' => route('home')]
+            ['name' => 'Home', 'url' => route('home')],
         ];
 
         $route = request()->route();
-        
+
         if ($route) {
             $routeName = $route->getName();
-            
+
             switch ($routeName) {
                 case 'products.show':
                     $product = $route->parameter('product');
                     $breadcrumbs[] = ['name' => 'Products', 'url' => route('products.index')];
                     $breadcrumbs[] = ['name' => $product->name, 'url' => null];
                     break;
-                    
+
                 case 'categories.show':
                     $category = $route->parameter('category');
                     $breadcrumbs[] = ['name' => 'Categories', 'url' => route('categories.index')];
                     $breadcrumbs[] = ['name' => $category->name, 'url' => null];
                     break;
-                    
+
                 case 'brands.show':
                     $brand = $route->parameter('brand');
                     $breadcrumbs[] = ['name' => 'Brands', 'url' => route('brands.index')];

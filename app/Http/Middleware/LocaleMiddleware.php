@@ -18,8 +18,7 @@ class LocaleMiddleware
         private Guard $auth,
         private Session $session,
         private Application $app
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, Closure $next): Response
     {

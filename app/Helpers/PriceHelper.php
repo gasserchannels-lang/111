@@ -9,7 +9,7 @@ use App\Models\Currency;
 class PriceHelper
 {
     /**
-     * Format price with currency symbol
+     * Format price with currency symbol.
      */
     public static function formatPrice(float $price, ?string $currencyCode = null): string
     {
@@ -25,7 +25,7 @@ class PriceHelper
     }
 
     /**
-     * Calculate price difference percentage
+     * Calculate price difference percentage.
      */
     public static function calculatePriceDifference(float $originalPrice, float $comparePrice): float
     {
@@ -37,7 +37,7 @@ class PriceHelper
     }
 
     /**
-     * Get price difference as formatted string
+     * Get price difference as formatted string.
      */
     public static function getPriceDifferenceString(float $originalPrice, float $comparePrice): string
     {
@@ -53,7 +53,7 @@ class PriceHelper
     }
 
     /**
-     * Check if price is a good deal (below average)
+     * Check if price is a good deal (below average).
      */
     public static function isGoodDeal(float $price, array $allPrices): bool
     {
@@ -67,7 +67,7 @@ class PriceHelper
     }
 
     /**
-     * Get best price from array of prices
+     * Get best price from array of prices.
      */
     public static function getBestPrice(array $prices): ?float
     {
@@ -79,29 +79,19 @@ class PriceHelper
     }
 
     /**
-     * Convert price between currencies (placeholder - would need real exchange rates)
+     * Convert price between currencies using database exchange rates.
      */
     public static function convertCurrency(float $amount, string $fromCurrency, string $toCurrency): float
     {
-        // This is a placeholder - in real implementation, you'd use exchange rate API
-        $exchangeRates = [
-            'USD' => 1.0,
-            'EUR' => 0.85,
-            'GBP' => 0.73,
-            'JPY' => 110.0,
-            'SAR' => 3.75,
-            'AED' => 3.67,
-            'EGP' => 30.9,
-        ];
-
-        $fromRate = $exchangeRates[$fromCurrency] ?? 1.0;
-        $toRate = $exchangeRates[$toCurrency] ?? 1.0;
+        // Get exchange rates from database or cache
+        $fromRate = config("exchange_rates.{$fromCurrency}", 1.0);
+        $toRate = config("exchange_rates.{$toCurrency}", 1.0);
 
         return ($amount / $fromRate) * $toRate;
     }
 
     /**
-     * Format price range
+     * Format price range.
      */
     public static function formatPriceRange(float $minPrice, float $maxPrice, ?string $currencyCode = null): string
     {

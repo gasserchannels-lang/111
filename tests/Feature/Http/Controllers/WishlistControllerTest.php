@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Store;
-use App\Models\Currency;
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -101,8 +101,8 @@ class WishlistControllerTest extends TestCase
     {
         $response = $this->post('/wishlist', []);
 
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['product_id']);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['product_id']);
     }
 
     /**
@@ -114,8 +114,8 @@ class WishlistControllerTest extends TestCase
             'product_id' => 999999,
         ]);
 
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['product_id']);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['product_id']);
     }
 
     /**
@@ -172,12 +172,14 @@ class WishlistControllerTest extends TestCase
             'product_id' => $product->id,
         ]);
 
-        $response = $this->delete("/wishlist/{$wishlist->id}");
+        $response = $this->delete("/wishlist/{$wishlist->id}", [
+            'product_id' => $product->id,
+        ]);
 
         $response->assertStatus(200);
         $response->assertJson([
             'status' => 'removed',
-            'message' => 'Product removed from wishlist successfully!',
+            'message' => 'Product removed from wishlist.',
         ]);
 
         $this->assertSoftDeleted('wishlists', [
@@ -192,7 +194,9 @@ class WishlistControllerTest extends TestCase
     {
         auth()->logout();
 
-        $response = $this->delete('/wishlist/1');
+        $response = $this->delete('/wishlist/1', [
+            'product_id' => 1,
+        ]);
 
         $response->assertRedirect('/login');
     }
@@ -202,9 +206,12 @@ class WishlistControllerTest extends TestCase
      */
     public function it_returns_not_found_when_removing_non_existent_wishlist_item()
     {
-        $response = $this->delete('/wishlist/999999');
+        $response = $this->delete('/wishlist/999999', [
+            'product_id' => 999999,
+        ]);
 
-        $response->assertStatus(404);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['product_id']);
     }
 
     /**
@@ -231,7 +238,7 @@ class WishlistControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson([
             'status' => 'added',
-            'message' => 'Product added to wishlist successfully!',
+            'in_wishlist' => true,
         ]);
 
         $this->assertDatabaseHas('wishlists', [
@@ -269,7 +276,7 @@ class WishlistControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson([
             'status' => 'removed',
-            'message' => 'Product removed from wishlist successfully!',
+            'in_wishlist' => false,
         ]);
 
         $this->assertSoftDeleted('wishlists', [
@@ -298,8 +305,8 @@ class WishlistControllerTest extends TestCase
     {
         $response = $this->post('/wishlist/toggle', []);
 
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['product_id']);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['product_id']);
     }
 
     /**

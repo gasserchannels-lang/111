@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 class SecurityAnalysisService
 {
     /**
-     * Run comprehensive security analysis
+     * Run comprehensive security analysis.
      */
     public function analyze(): array
     {
@@ -22,7 +22,6 @@ class SecurityAnalysisService
             $score += $this->checkDebugMode($issues);
             $score += $this->checkHttpsConfiguration($issues);
             $score += $this->checkSecurityMiddleware($issues);
-
         } catch (\Exception $e) {
             $issues[] = 'Security analysis failed: '.$e->getMessage();
         }
@@ -36,7 +35,7 @@ class SecurityAnalysisService
     }
 
     /**
-     * Check for outdated dependencies
+     * Check for outdated dependencies.
      */
     private function checkDependencies(array &$issues): int
     {
@@ -58,7 +57,7 @@ class SecurityAnalysisService
     }
 
     /**
-     * Check if .env.example file exists
+     * Check if .env.example file exists.
      */
     private function checkEnvironmentFile(array &$issues): int
     {
@@ -72,7 +71,7 @@ class SecurityAnalysisService
     }
 
     /**
-     * Check if debug mode is disabled
+     * Check if debug mode is disabled.
      */
     private function checkDebugMode(array &$issues): int
     {
@@ -86,7 +85,7 @@ class SecurityAnalysisService
     }
 
     /**
-     * Check if HTTPS is configured
+     * Check if HTTPS is configured.
      */
     private function checkHttpsConfiguration(array &$issues): int
     {
@@ -100,7 +99,7 @@ class SecurityAnalysisService
     }
 
     /**
-     * Check if SecurityHeadersMiddleware is registered
+     * Check if SecurityHeadersMiddleware is registered.
      */
     private function checkSecurityMiddleware(array &$issues): int
     {
@@ -114,7 +113,7 @@ class SecurityAnalysisService
     }
 
     /**
-     * Check if middleware is registered in the kernel
+     * Check if middleware is registered in the kernel.
      */
     private function isMiddlewareRegistered(string $middlewareClass): bool
     {
@@ -136,7 +135,6 @@ class SecurityAnalysisService
             // Check if middleware is registered in any of the arrays
             return str_contains($kernelContent, $middlewareClass) ||
                    str_contains($kernelContent, $shortClassName);
-
         } catch (\Exception $e) {
             return false;
         }

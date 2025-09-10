@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\View\Composers;
 
-use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Language;
 use Illuminate\View\View;
 
@@ -29,7 +29,7 @@ class AppComposer
     }
 
     /**
-     * Get active languages
+     * Get active languages.
      */
     private function getLanguages(): array
     {
@@ -51,7 +51,7 @@ class AppComposer
     }
 
     /**
-     * Get active categories
+     * Get active categories.
      */
     private function getCategories(): array
     {
@@ -72,7 +72,7 @@ class AppComposer
     }
 
     /**
-     * Get active brands
+     * Get active brands.
      */
     private function getBrands(): array
     {
@@ -94,11 +94,12 @@ class AppComposer
     }
 
     /**
-     * Check if current locale is RTL
+     * Check if current locale is RTL.
      */
     private function isRTL(): bool
     {
         $rtlLocales = ['ar', 'ur', 'fa', 'he'];
+
         return in_array(app()->getLocale(), $rtlLocales);
     }
 }

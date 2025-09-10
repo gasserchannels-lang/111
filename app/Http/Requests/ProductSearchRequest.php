@@ -148,16 +148,16 @@ class ProductSearchRequest extends FormRequest
     {
         // Clean and format data before validation
         $data = [];
-        
+
         if ($this->has('q')) {
             $data['q'] = trim($this->q);
         }
-        
+
         if ($this->has('tags')) {
             $data['tags'] = array_map('trim', $this->tags);
         }
-        
-        if (!empty($data)) {
+
+        if (! empty($data)) {
             $this->merge($data);
         }
     }
@@ -172,7 +172,7 @@ class ProductSearchRequest extends FormRequest
             if ($this->has('min_price') && $this->has('max_price')) {
                 $minPrice = $this->input('min_price');
                 $maxPrice = $this->input('max_price');
-                
+
                 if ($minPrice && $maxPrice && $minPrice > $maxPrice) {
                     $validator->errors()->add('max_price', 'الحد الأقصى للسعر يجب أن يكون أكبر من الحد الأدنى');
                 }
@@ -182,7 +182,7 @@ class ProductSearchRequest extends FormRequest
             if ($this->has('q')) {
                 $query = $this->input('q');
                 $genericTerms = ['منتج', 'product', 'item', 'thing', 'stuff'];
-                
+
                 if (in_array(strtolower($query), $genericTerms)) {
                     $validator->warnings()->add('q', 'كلمة البحث عامة جداً - جرب كلمات أكثر تحديداً للحصول على نتائج أفضل');
                 }
@@ -196,56 +196,56 @@ class ProductSearchRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validated = parent::validated($key, $default);
-        
+
         // Set default values
         $validated['sort'] = $validated['sort'] ?? 'popularity';
         $validated['order'] = $validated['order'] ?? 'desc';
         $validated['page'] = $validated['page'] ?? 1;
         $validated['per_page'] = $validated['per_page'] ?? 15;
-        
+
         return $validated;
     }
 
     /**
-     * Get search filters
+     * Get search filters.
      */
     public function getFilters(): array
     {
         $filters = [];
-        
+
         if ($this->has('category_id')) {
             $filters['category_id'] = $this->input('category_id');
         }
-        
+
         if ($this->has('brand_id')) {
             $filters['brand_id'] = $this->input('brand_id');
         }
-        
+
         if ($this->has('min_price')) {
             $filters['min_price'] = $this->input('min_price');
         }
-        
+
         if ($this->has('max_price')) {
             $filters['max_price'] = $this->input('max_price');
         }
-        
+
         if ($this->has('tags')) {
             $filters['tags'] = $this->input('tags');
         }
-        
+
         if ($this->has('in_stock')) {
             $filters['in_stock'] = $this->input('in_stock');
         }
-        
+
         if ($this->has('featured')) {
             $filters['featured'] = $this->input('featured');
         }
-        
+
         return $filters;
     }
 
     /**
-     * Get search query
+     * Get search query.
      */
     public function getQuery(): string
     {
@@ -253,7 +253,7 @@ class ProductSearchRequest extends FormRequest
     }
 
     /**
-     * Get pagination parameters
+     * Get pagination parameters.
      */
     public function getPagination(): array
     {
@@ -264,7 +264,7 @@ class ProductSearchRequest extends FormRequest
     }
 
     /**
-     * Get sorting parameters
+     * Get sorting parameters.
      */
     public function getSorting(): array
     {

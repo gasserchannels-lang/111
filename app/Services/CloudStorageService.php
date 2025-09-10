@@ -4,51 +4,52 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CloudStorageService
 {
     private string $disk;
+
     private array $config;
 
     public function __construct()
     {
         $this->disk = config('filesystems.cloud_disk', 's3');
-        $this->config = config('filesystems.disks.' . $this->disk, []);
+        $this->config = config('filesystems.disks.'.$this->disk, []);
     }
 
     /**
-     * Upload file to cloud storage
+     * Upload file to cloud storage.
      */
     public function uploadFile(UploadedFile $file, string $path = 'images', ?string $filename = null): array
     {
         try {
             $filename = $filename ?? $this->generateUniqueFilename($file);
-            $fullPath = $path . '/' . $filename;
-            
+            $fullPath = $path.'/'.$filename;
+
             // Upload to cloud storage
             $uploadedPath = Storage::disk($this->disk)->putFileAs($path, $file, $filename);
-            
-            if (!$uploadedPath) {
+
+            if (! $uploadedPath) {
                 throw new Exception('Failed to upload file to cloud storage');
             }
-            
+
             // Get file URL
             $url = Storage::disk($this->disk)->url($uploadedPath);
-            
+
             // Get file metadata
             $metadata = $this->getFileMetadata($uploadedPath);
-            
+
             Log::info('File uploaded to cloud storage', [
                 'path' => $uploadedPath,
                 'url' => $url,
                 'size' => $metadata['size'],
                 'disk' => $this->disk,
             ]);
-            
+
             return [
                 'path' => $uploadedPath,
                 'url' => $url,
@@ -57,7 +58,6 @@ class CloudStorageService
                 'mime_type' => $metadata['mime_type'],
                 'disk' => $this->disk,
             ];
-            
         } catch (Exception $e) {
             Log::error('Failed to upload file to cloud storage', [
                 'error' => $e->getMessage(),
@@ -65,18 +65,18 @@ class CloudStorageService
                 'filename' => $filename,
                 'disk' => $this->disk,
             ]);
-            
+
             throw $e;
         }
     }
 
     /**
-     * Upload multiple files to cloud storage
+     * Upload multiple files to cloud storage.
      */
     public function uploadMultipleFiles(array $files, string $path = 'images'): array
     {
         $results = [];
-        
+
         foreach ($files as $file) {
             try {
                 $results[] = $this->uploadFile($file, $path);
@@ -87,60 +87,59 @@ class CloudStorageService
                 ];
             }
         }
-        
+
         return $results;
     }
 
     /**
-     * Delete file from cloud storage
+     * Delete file from cloud storage.
      */
     public function deleteFile(string $path): bool
     {
         try {
             $deleted = Storage::disk($this->disk)->delete($path);
-            
+
             if ($deleted) {
                 Log::info('File deleted from cloud storage', [
                     'path' => $path,
                     'disk' => $this->disk,
                 ]);
             }
-            
+
             return $deleted;
-            
         } catch (Exception $e) {
             Log::error('Failed to delete file from cloud storage', [
                 'error' => $e->getMessage(),
                 'path' => $path,
                 'disk' => $this->disk,
             ]);
-            
+
             return false;
         }
     }
 
     /**
-     * Delete multiple files from cloud storage
+     * Delete multiple files from cloud storage.
      */
     public function deleteMultipleFiles(array $paths): array
     {
         $results = [];
-        
+
         foreach ($paths as $path) {
             $results[$path] = $this->deleteFile($path);
         }
-        
+
         return $results;
     }
 
     /**
-     * Copy file within cloud storage
+     * Copy file within cloud storage.
      */
     public function copyFile(string $sourcePath, string $destinationPath): bool
     {
         try {
             $copied = Storage::disk($this->disk)->copy($sourcePath, $destinationPath);
-            
+
             if ($copied) {
                 Log::info('File copied in cloud storage', [
                     'source' => $sourcePath,
@@ -148,9 +147,8 @@ class CloudStorageService
                     'disk' => $this->disk,
                 ]);
             }
-            
+
             return $copied;
-            
         } catch (Exception $e) {
             Log::error('Failed to copy file in cloud storage', [
                 'error' => $e->getMessage(),
@@ -158,19 +156,19 @@ class CloudStorageService
                 'destination' => $destinationPath,
                 'disk' => $this->disk,
             ]);
-            
+
             return false;
         }
     }
 
     /**
-     * Move file within cloud storage
+     * Move file within cloud storage.
      */
     public function moveFile(string $sourcePath, string $destinationPath): bool
     {
         try {
             $moved = Storage::disk($this->disk)->move($sourcePath, $destinationPath);
-            
+
             if ($moved) {
                 Log::info('File moved in cloud storage', [
                     'source' => $sourcePath,
@@ -178,9 +176,8 @@ class CloudStorageService
                     'disk' => $this->disk,
                 ]);
             }
-            
+
             return $moved;
-            
         } catch (Exception $e) {
             Log::error('Failed to move file in cloud storage', [
                 'error' => $e->getMessage(),
@@ -188,13 +185,13 @@ class CloudStorageService
                 'destination' => $destinationPath,
                 'disk' => $this->disk,
             ]);
-            
+
             return false;
         }
     }
 
     /**
-     * Get file URL
+     * Get file URL.
      */
     public function getFileUrl(string $path): string
     {
@@ -202,7 +199,7 @@ class CloudStorageService
     }
 
     /**
-     * Get file metadata
+     * Get file metadata.
      */
     public function getFileMetadata(string $path): array
     {
@@ -210,21 +207,20 @@ class CloudStorageService
             $size = Storage::disk($this->disk)->size($path);
             $mimeType = Storage::disk($this->disk)->mimeType($path);
             $lastModified = Storage::disk($this->disk)->lastModified($path);
-            
+
             return [
                 'size' => $size,
                 'mime_type' => $mimeType,
                 'last_modified' => $lastModified,
                 'url' => $this->getFileUrl($path),
             ];
-            
         } catch (Exception $e) {
             Log::error('Failed to get file metadata', [
                 'error' => $e->getMessage(),
                 'path' => $path,
                 'disk' => $this->disk,
             ]);
-            
+
             return [
                 'size' => 0,
                 'mime_type' => 'unknown',
@@ -235,7 +231,7 @@ class CloudStorageService
     }
 
     /**
-     * Check if file exists
+     * Check if file exists.
      */
     public function fileExists(string $path): bool
     {
@@ -243,13 +239,13 @@ class CloudStorageService
     }
 
     /**
-     * List files in directory
+     * List files in directory.
      */
     public function listFiles(string $path = ''): array
     {
         try {
             $files = Storage::disk($this->disk)->files($path);
-            
+
             return array_map(function ($file) {
                 return [
                     'path' => $file,
@@ -257,46 +253,44 @@ class CloudStorageService
                     'metadata' => $this->getFileMetadata($file),
                 ];
             }, $files);
-            
         } catch (Exception $e) {
             Log::error('Failed to list files', [
                 'error' => $e->getMessage(),
                 'path' => $path,
                 'disk' => $this->disk,
             ]);
-            
+
             return [];
         }
     }
 
     /**
-     * Get directory size
+     * Get directory size.
      */
     public function getDirectorySize(string $path = ''): int
     {
         try {
             $files = Storage::disk($this->disk)->allFiles($path);
             $totalSize = 0;
-            
+
             foreach ($files as $file) {
                 $totalSize += Storage::disk($this->disk)->size($file);
             }
-            
+
             return $totalSize;
-            
         } catch (Exception $e) {
             Log::error('Failed to get directory size', [
                 'error' => $e->getMessage(),
                 'path' => $path,
                 'disk' => $this->disk,
             ]);
-            
+
             return 0;
         }
     }
 
     /**
-     * Clean up old files
+     * Clean up old files.
      */
     public function cleanupOldFiles(string $path = '', int $daysOld = 30): int
     {
@@ -304,26 +298,25 @@ class CloudStorageService
             $cutoffTime = now()->subDays($daysOld)->timestamp;
             $files = Storage::disk($this->disk)->allFiles($path);
             $deletedCount = 0;
-            
+
             foreach ($files as $file) {
                 $fileTime = Storage::disk($this->disk)->lastModified($file);
-                
+
                 if ($fileTime < $cutoffTime) {
                     if (Storage::disk($this->disk)->delete($file)) {
                         $deletedCount++;
                     }
                 }
             }
-            
+
             Log::info('Old files cleaned up', [
                 'path' => $path,
                 'days_old' => $daysOld,
                 'deleted_count' => $deletedCount,
                 'disk' => $this->disk,
             ]);
-            
+
             return $deletedCount;
-            
         } catch (Exception $e) {
             Log::error('Failed to cleanup old files', [
                 'error' => $e->getMessage(),
@@ -331,13 +324,13 @@ class CloudStorageService
                 'days_old' => $daysOld,
                 'disk' => $this->disk,
             ]);
-            
+
             return 0;
         }
     }
 
     /**
-     * Generate unique filename
+     * Generate unique filename.
      */
     private function generateUniqueFilename(UploadedFile $file): string
     {
@@ -345,12 +338,12 @@ class CloudStorageService
         $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $timestamp = time();
         $random = str_random(8);
-        
+
         return "{$name}_{$timestamp}_{$random}.{$extension}";
     }
 
     /**
-     * Upload image with optimization
+     * Upload image with optimization.
      */
     public function uploadOptimizedImage(UploadedFile $file, string $path = 'images', array $sizes = []): array
     {
@@ -361,38 +354,37 @@ class CloudStorageService
                 'medium' => [600, 600],
                 'large' => [1200, 1200],
             ];
-            
+
             $sizes = array_merge($defaultSizes, $sizes);
             $results = [];
-            
+
             // Upload original
             $original = $this->uploadFile($file, $path);
             $results['original'] = $original;
-            
+
             // Create optimized versions
             foreach ($sizes as $sizeName => $dimensions) {
                 $optimizedFile = $this->createOptimizedImage($file, $dimensions[0], $dimensions[1]);
-                $optimizedPath = $path . '/optimized/' . $sizeName . '_' . $original['filename'];
-                
-                $optimized = $this->uploadFile($optimizedFile, $path . '/optimized', $sizeName . '_' . $original['filename']);
+                $optimizedPath = $path.'/optimized/'.$sizeName.'_'.$original['filename'];
+
+                $optimized = $this->uploadFile($optimizedFile, $path.'/optimized', $sizeName.'_'.$original['filename']);
                 $results[$sizeName] = $optimized;
             }
-            
+
             return $results;
-            
         } catch (Exception $e) {
             Log::error('Failed to upload optimized image', [
                 'error' => $e->getMessage(),
                 'path' => $path,
                 'disk' => $this->disk,
             ]);
-            
+
             throw $e;
         }
     }
 
     /**
-     * Create optimized image
+     * Create optimized image.
      */
     private function createOptimizedImage(UploadedFile $file, int $width, int $height): UploadedFile
     {
@@ -402,7 +394,7 @@ class CloudStorageService
     }
 
     /**
-     * Get storage statistics
+     * Get storage statistics.
      */
     public function getStorageStats(): array
     {
@@ -411,15 +403,15 @@ class CloudStorageService
             $totalSize = 0;
             $fileCount = count($files);
             $mimeTypes = [];
-            
+
             foreach ($files as $file) {
                 $size = Storage::disk($this->disk)->size($file);
                 $totalSize += $size;
-                
+
                 $mimeType = Storage::disk($this->disk)->mimeType($file);
                 $mimeTypes[$mimeType] = ($mimeTypes[$mimeType] ?? 0) + 1;
             }
-            
+
             return [
                 'total_files' => $fileCount,
                 'total_size' => $totalSize,
@@ -427,13 +419,12 @@ class CloudStorageService
                 'mime_types' => $mimeTypes,
                 'disk' => $this->disk,
             ];
-            
         } catch (Exception $e) {
             Log::error('Failed to get storage stats', [
                 'error' => $e->getMessage(),
                 'disk' => $this->disk,
             ]);
-            
+
             return [
                 'total_files' => 0,
                 'total_size' => 0,

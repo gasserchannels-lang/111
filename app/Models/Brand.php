@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\BrandFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int $id
@@ -39,6 +39,7 @@ class Brand extends Model
      * @use HasFactory<BrandFactory>
      */
     use HasFactory;
+
     use SoftDeletes;
 
     /**
@@ -121,6 +122,7 @@ class Brand extends Model
 
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
+
             return false;
         }
 

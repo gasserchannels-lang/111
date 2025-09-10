@@ -53,7 +53,7 @@ class Language extends Model
     ];
 
     /**
-     * العملات المرتبطة بهذه اللغة
+     * العملات المرتبطة بهذه اللغة.
      *
      * @return BelongsToMany<Currency, Language>
      */
@@ -65,7 +65,7 @@ class Language extends Model
     }
 
     /**
-     * العملة الافتراضية لهذه اللغة
+     * العملة الافتراضية لهذه اللغة.
      */
     public function defaultCurrency(): ?Currency
     {
@@ -73,7 +73,7 @@ class Language extends Model
     }
 
     /**
-     * إعدادات المستخدمين لهذه اللغة
+     * إعدادات المستخدمين لهذه اللغة.
      *
      * @return HasMany<UserLocaleSetting, Language>
      */
@@ -83,7 +83,7 @@ class Language extends Model
     }
 
     /**
-     * نطاق للغات النشطة فقط
+     * نطاق للغات النشطة فقط.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
      */
@@ -93,7 +93,7 @@ class Language extends Model
     }
 
     /**
-     * نطاق للغات مرتبة حسب الترتيب
+     * نطاق للغات مرتبة حسب الترتيب.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
      */
@@ -103,7 +103,7 @@ class Language extends Model
     }
 
     /**
-     * التحقق من كون اللغة من اليمين لليسار
+     * التحقق من كون اللغة من اليمين لليسار.
      */
     public function isRtl(): bool
     {
@@ -111,7 +111,7 @@ class Language extends Model
     }
 
     /**
-     * الحصول على اللغة بالكود
+     * الحصول على اللغة بالكود.
      */
     public static function findByCode(string $code): ?self
     {

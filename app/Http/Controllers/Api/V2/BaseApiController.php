@@ -13,21 +13,22 @@ use Illuminate\Http\Request;
  *     title="COPRRA API v2",
  *     version="2.0.0",
  *     description="Enhanced API for COPRRA - Price Comparison Platform v2",
+ *
  *     @OA\Contact(
  *         email="api@coprra.com",
  *         name="COPRRA API Support"
  *     ),
+ *
  *     @OA\License(
  *         name="MIT",
  *         url="https://opensource.org/licenses/MIT"
  *     )
  * )
- * 
+ *
  * @OA\Server(
  *     url="https://api.coprra.com/v2",
  *     description="Production Server v2"
  * )
- * 
  * @OA\Server(
  *     url="http://localhost:8000/api/v2",
  *     description="Development Server v2"
@@ -36,10 +37,11 @@ use Illuminate\Http\Request;
 abstract class BaseApiController extends V1BaseController
 {
     protected int $perPage = 20; // Increased default per page
+
     protected int $maxPerPage = 200; // Increased max per page
 
     /**
-     * Enhanced success response with v2 features
+     * Enhanced success response with v2 features.
      */
     protected function successResponse(
         mixed $data = null,
@@ -55,7 +57,7 @@ abstract class BaseApiController extends V1BaseController
             'timestamp' => now()->toISOString(),
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -63,7 +65,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Enhanced error response with v2 features
+     * Enhanced error response with v2 features.
      */
     protected function errorResponse(
         string $message = 'Error',
@@ -82,7 +84,7 @@ abstract class BaseApiController extends V1BaseController
             $response['errors'] = $errors;
         }
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -90,7 +92,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Enhanced paginated response with v2 features
+     * Enhanced paginated response with v2 features.
      */
     protected function paginatedResponse(
         mixed $data,
@@ -122,7 +124,7 @@ abstract class BaseApiController extends V1BaseController
             'timestamp' => now()->toISOString(),
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -130,7 +132,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get API version from request
+     * Get API version from request.
      */
     protected function getApiVersion(Request $request): string
     {
@@ -138,7 +140,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Check API version compatibility
+     * Check API version compatibility.
      */
     protected function checkApiVersion(Request $request): bool
     {
@@ -146,7 +148,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get rate limit information for v2
+     * Get rate limit information for v2.
      */
     protected function getRateLimitInfo(): array
     {
@@ -159,12 +161,12 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Enhanced filtering with v2 features
+     * Enhanced filtering with v2 features.
      */
     protected function getFilteringParams(Request $request): array
     {
         $filters = $request->except(['page', 'per_page', 'sort_by', 'sort_order', 'search', 'include', 'fields']);
-        
+
         // Remove empty values
         $filters = array_filter($filters, function ($value) {
             return $value !== null && $value !== '';
@@ -183,12 +185,12 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get include parameters for relationships
+     * Get include parameters for relationships.
      */
     protected function getIncludeParams(Request $request): array
     {
         $include = $request->get('include', '');
-        
+
         if (empty($include)) {
             return [];
         }
@@ -197,12 +199,12 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get fields parameter for field selection
+     * Get fields parameter for field selection.
      */
     protected function getFieldsParams(Request $request): array
     {
         $fields = $request->get('fields', '');
-        
+
         if (empty($fields)) {
             return [];
         }
@@ -211,7 +213,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Enhanced search with v2 features
+     * Enhanced search with v2 features.
      */
     protected function getSearchParams(Request $request): array
     {
@@ -227,7 +229,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get sorting parameters with v2 enhancements
+     * Get sorting parameters with v2 enhancements.
      */
     protected function getSortingParams(Request $request): array
     {
@@ -236,7 +238,7 @@ abstract class BaseApiController extends V1BaseController
         $sortMode = $request->get('sort_mode', 'default'); // default, natural, custom
 
         // Validate sort order
-        if (!in_array($sortOrder, ['asc', 'desc'])) {
+        if (! in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'desc';
         }
 
@@ -248,7 +250,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Enhanced API documentation URL for v2
+     * Enhanced API documentation URL for v2.
      */
     protected function getApiDocumentationUrl(): string
     {
@@ -256,7 +258,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get API changelog URL for v2
+     * Get API changelog URL for v2.
      */
     protected function getApiChangelogUrl(): string
     {
@@ -264,7 +266,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get API migration guide URL
+     * Get API migration guide URL.
      */
     protected function getApiMigrationGuideUrl(): string
     {
@@ -272,7 +274,7 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Get API deprecation notices
+     * Get API deprecation notices.
      */
     protected function getApiDeprecationNotices(): array
     {
@@ -283,23 +285,23 @@ abstract class BaseApiController extends V1BaseController
     }
 
     /**
-     * Add deprecation headers to response
+     * Add deprecation headers to response.
      */
     protected function addDeprecationHeaders(JsonResponse $response): JsonResponse
     {
         $response->headers->set('X-API-Version', '2.0');
         $response->headers->set('X-API-Deprecation-Notice', 'Some features may be deprecated in future versions');
-        
+
         return $response;
     }
 
     /**
-     * Enhanced logging for v2
+     * Enhanced logging for v2.
      */
     protected function logApiRequest(Request $request, string $action): void
     {
         parent::logApiRequest($request, $action);
-        
+
         // Add v2 specific logging
         \Log::info('API v2 Request', [
             'version' => '2.0',

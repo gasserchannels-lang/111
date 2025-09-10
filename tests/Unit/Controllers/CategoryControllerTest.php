@@ -21,7 +21,7 @@ class CategoryControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new CategoryController();
+        $this->controller = new CategoryController;
     }
 
     /**
@@ -43,7 +43,7 @@ class CategoryControllerTest extends TestCase
         $category = Category::factory()->create(['slug' => 'test-category']);
         Product::factory()->count(5)->create([
             'category_id' => $category->id,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         $response = $this->controller->show('test-category');
@@ -76,11 +76,11 @@ class CategoryControllerTest extends TestCase
         // Create active and inactive products
         Product::factory()->count(3)->create([
             'category_id' => $category->id,
-            'is_active' => true
+            'is_active' => true,
         ]);
         Product::factory()->count(2)->create([
             'category_id' => $category->id,
-            'is_active' => false
+            'is_active' => false,
         ]);
 
         $response = $this->controller->show('test-category');
@@ -103,12 +103,12 @@ class CategoryControllerTest extends TestCase
         $oldProduct = Product::factory()->create([
             'category_id' => $category->id,
             'is_active' => true,
-            'created_at' => now()->subDays(2)
+            'created_at' => now()->subDays(2),
         ]);
         $newProduct = Product::factory()->create([
             'category_id' => $category->id,
             'is_active' => true,
-            'created_at' => now()
+            'created_at' => now(),
         ]);
 
         $response = $this->controller->show('test-category');
@@ -126,7 +126,7 @@ class CategoryControllerTest extends TestCase
         $category = Category::factory()->create(['slug' => 'test-category']);
         Product::factory()->count(25)->create([
             'category_id' => $category->id,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         $response = $this->controller->show('test-category');
@@ -145,7 +145,7 @@ class CategoryControllerTest extends TestCase
         $category = Category::factory()->create(['slug' => 'test-category']);
         Product::factory()->count(3)->create([
             'category_id' => $category->id,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         $response = $this->controller->show('test-category');

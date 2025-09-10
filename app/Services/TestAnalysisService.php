@@ -27,7 +27,7 @@ class TestAnalysisService
     }
 
     /**
-     * Run comprehensive test analysis
+     * Run comprehensive test analysis.
      */
     public function analyze(): array
     {
@@ -41,7 +41,6 @@ class TestAnalysisService
 
             $score += $this->analyzeTestResults($process, $output, $issues);
             $score += $this->analyzeCoverage($output, $issues);
-
         } catch (ProcessFailedException $e) {
             $this->handleTestProcessException($e, $issues);
         } catch (\Exception $e) {
@@ -57,7 +56,7 @@ class TestAnalysisService
     }
 
     /**
-     * Build test command
+     * Build test command.
      */
     private function buildTestCommand(): array
     {
@@ -70,7 +69,7 @@ class TestAnalysisService
     }
 
     /**
-     * Run test process
+     * Run test process.
      */
     private function runTestProcess(array $command): Process
     {
@@ -82,7 +81,7 @@ class TestAnalysisService
     }
 
     /**
-     * Analyze test results
+     * Analyze test results.
      */
     private function analyzeTestResults(Process $process, string $output, array &$issues): int
     {
@@ -100,7 +99,7 @@ class TestAnalysisService
     }
 
     /**
-     * Analyze coverage
+     * Analyze coverage.
      */
     private function analyzeCoverage(string $output, array &$issues): int
     {
@@ -120,7 +119,7 @@ class TestAnalysisService
     }
 
     /**
-     * Handle test process exception
+     * Handle test process exception.
      */
     private function handleTestProcessException(ProcessFailedException $exception, array &$issues): void
     {

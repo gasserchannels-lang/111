@@ -4,22 +4,40 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    private ProductService $productService;
+
+    public function __construct(?ProductService $productService = null)
+    {
+        $this->productService = $productService ?? app(ProductService::class);
+    }
+
     public function index(): View
     {
-        return view('products.index');
+        $products = $this->productService->getPaginatedProducts();
+
+        return view('products.index', [
+            'products' => $products,
+        ]);
     }
 
     public function show(string $slug): View
     {
-        $product = Product::query()->where('slug', $slug)->firstOrFail();
+        $product = $this->productService->getBySlug($slug);
+
+        if (! $product) {
+            abort(404);
+        }
+
+        $relatedProducts = $this->productService->getRelatedProducts($product);
 
         return view('product-show', [
             'product' => $product,
+            'relatedProducts' => $relatedProducts,
         ]);
     }
 }

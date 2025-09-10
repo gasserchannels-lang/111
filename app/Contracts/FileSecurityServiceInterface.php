@@ -9,27 +9,27 @@ use Illuminate\Http\UploadedFile;
 interface FileSecurityServiceInterface
 {
     /**
-     * Scan uploaded file for security threats
+     * Scan uploaded file for security threats.
      */
     public function scanFile(UploadedFile $file): array;
 
     /**
-     * Get allowed file extensions
+     * Get allowed file extensions.
      */
     public function getAllowedExtensions(): array;
 
     /**
-     * Get dangerous file extensions
+     * Get dangerous file extensions.
      */
     public function getDangerousExtensions(): array;
 
     /**
-     * Get maximum file size
+     * Get maximum file size.
      */
     public function getMaxFileSize(): int;
 
     /**
-     * Get file security statistics
+     * Get file security statistics.
      */
     public function getStatistics(): array;
 }

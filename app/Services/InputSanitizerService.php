@@ -1,0 +1,233 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use DOMDocument;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
+class InputSanitizerService
+{
+    /**
+     * HTML tags that are allowed.
+     */
+    private array $allowedHtmlTags = [
+        'p', 'br', 'b', 'i', 'u', 'em', 'strong', 'a', 'ul', 'ol', 'li',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'code',
+    ];
+
+    /**
+     * Attributes that are allowed on HTML tags.
+     */
+    private array $allowedAttributes = [
+        'href', 'title', 'alt', 'class', 'id', 'name', 'rel', 'target',
+    ];
+
+    /**
+     * Sanitize a string input.
+     */
+    public function sanitizeString(string $input): string
+    {
+        // Remove invisible characters
+        $input = preg_replace('/[\x00-\x1F\x7F]/u', '', $input);
+
+        // Convert special characters to HTML entities
+        return htmlspecialchars($input, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    /**
+     * Sanitize an array input recursively.
+     */
+    public function sanitizeArray(array $input): array
+    {
+        foreach ($input as $key => $value) {
+            if (is_array($value)) {
+                $input[$key] = $this->sanitizeArray($value);
+            } elseif (is_string($value)) {
+                $input[$key] = $this->sanitizeString($value);
+            }
+        }
+
+        return $input;
+    }
+
+    /**
+     * Sanitize HTML content.
+     */
+    public function sanitizeHtml(string $html): string
+    {
+        try {
+            $dom = new DOMDocument;
+            @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+            $this->removeDisallowedTags($dom);
+            $this->removeDisallowedAttributes($dom);
+
+            return $dom->saveHTML();
+        } catch (\Exception $e) {
+            Log::error('HTML sanitization failed', [
+                'error' => $e->getMessage(),
+                'html' => $html,
+            ]);
+
+            // If sanitization fails, strip all HTML
+            return strip_tags($html);
+        }
+    }
+
+    /**
+     * Remove any tags that are not in the allowedHtmlTags list.
+     */
+    private function removeDisallowedTags(DOMDocument $dom): void
+    {
+        $xpath = new \DOMXPath($dom);
+        $nodes = $xpath->query('//*');
+
+        if ($nodes) {
+            foreach ($nodes as $node) {
+                if (! in_array(strtolower($node->nodeName), $this->allowedHtmlTags)) {
+                    $node->parentNode?->removeChild($node);
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove any attributes that are not in the allowedAttributes list.
+     */
+    private function removeDisallowedAttributes(DOMDocument $dom): void
+    {
+        $xpath = new \DOMXPath($dom);
+        $nodes = $xpath->query('//*[@*]');
+
+        if ($nodes) {
+            foreach ($nodes as $node) {
+                if ($node->hasAttributes()) {
+                    foreach ($node->attributes as $attr) {
+                        if (! in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
+                            $node->removeAttribute($attr->nodeName);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Sanitize SQL input to prevent injection.
+     */
+    public function sanitizeSqlInput(string $input): string
+    {
+        // Remove common SQL injection patterns
+        $patterns = [
+            '/union\s+select/i',
+            '/union\s+all\s+select/i',
+            '/into\s+outfile/i',
+            '/load_file/i',
+            '/unhex/i',
+            '/hex/i',
+            '/char\s*\(/i',
+            '/cast\s*\(/i',
+            '/convert\s*\(/i',
+            '/group\s+by/i',
+            '/having/i',
+            '/sleep\s*\(/i',
+            '/benchmark\s*\(/i',
+        ];
+
+        $input = preg_replace($patterns, '', $input);
+
+        // Escape special characters
+        return addslashes($input);
+    }
+
+    /**
+     * Validate and sanitize file upload.
+     */
+    public function sanitizeFileUpload(array $file): ?array
+    {
+        if (! isset($file['name']) || ! isset($file['type']) || ! isset($file['tmp_name']) || ! isset($file['error']) || ! isset($file['size'])) {
+            return null;
+        }
+
+        // Check for basic upload errors
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        // Sanitize filename
+        $safeName = $this->sanitizeFileName($file['name']);
+
+        // Validate mime type
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        if ($this->isAllowedMimeType($mimeType)) {
+            return [
+                'name' => $safeName,
+                'type' => $mimeType,
+                'tmp_name' => $file['tmp_name'],
+                'error' => $file['error'],
+                'size' => $file['size'],
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Sanitize filename.
+     */
+    private function sanitizeFileName(string $filename): string
+    {
+        // Remove any directory components
+        $filename = basename($filename);
+
+        // Remove special characters
+        $filename = preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
+
+        // Ensure safe extension
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        if (! $this->isAllowedExtension($extension)) {
+            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME)).'.txt';
+        }
+
+        return $filename;
+    }
+
+    /**
+     * Check if file extension is allowed.
+     */
+    private function isAllowedExtension(string $extension): bool
+    {
+        $allowedExtensions = [
+            'jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx',
+            'xls', 'xlsx', 'txt', 'csv', 'zip',
+        ];
+
+        return in_array(strtolower($extension), $allowedExtensions);
+    }
+
+    /**
+     * Check if mime type is allowed.
+     */
+    private function isAllowedMimeType(string $mimeType): bool
+    {
+        $allowedMimeTypes = [
+            'image/jpeg', 'image/png', 'image/gif',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'text/plain',
+            'text/csv',
+            'application/zip',
+        ];
+
+        return in_array(strtolower($mimeType), $allowedMimeTypes);
+    }
+}

@@ -1,7 +1,5 @@
 <?php
 
-use Pest\Arch\Arch;
-
 // اختبار Controllers
 arch('controllers')
     ->expect('App\Http\Controllers')

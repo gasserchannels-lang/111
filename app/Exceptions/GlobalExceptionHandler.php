@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Throwable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class GlobalExceptionHandler extends ExceptionHandler
 {
@@ -57,7 +57,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle API exceptions
+     * Handle API exceptions.
      */
     private function handleApiException(Request $request, Throwable $e): JsonResponse
     {
@@ -101,7 +101,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle web exceptions
+     * Handle web exceptions.
      */
     private function handleWebException(Request $request, Throwable $e): \Illuminate\Http\Response
     {
@@ -139,7 +139,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle validation exceptions
+     * Handle validation exceptions.
      */
     private function handleValidationException(ValidationException $e): JsonResponse
     {
@@ -152,7 +152,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle authentication exceptions
+     * Handle authentication exceptions.
      */
     private function handleAuthenticationException(AuthenticationException $e): JsonResponse
     {
@@ -164,7 +164,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle authorization exceptions
+     * Handle authorization exceptions.
      */
     private function handleAuthorizationException(AuthorizationException $e): JsonResponse
     {
@@ -176,7 +176,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle model not found exceptions
+     * Handle model not found exceptions.
      */
     private function handleModelNotFoundException(ModelNotFoundException $e): JsonResponse
     {
@@ -188,7 +188,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle query exceptions
+     * Handle query exceptions.
      */
     private function handleQueryException(QueryException $e): JsonResponse
     {
@@ -207,7 +207,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle HTTP exceptions
+     * Handle HTTP exceptions.
      */
     private function handleHttpException(HttpException $e): JsonResponse
     {
@@ -223,7 +223,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle not found HTTP exceptions
+     * Handle not found HTTP exceptions.
      */
     private function handleNotFoundHttpException(NotFoundHttpException $e): JsonResponse
     {
@@ -235,7 +235,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle method not allowed HTTP exceptions
+     * Handle method not allowed HTTP exceptions.
      */
     private function handleMethodNotAllowedHttpException(MethodNotAllowedHttpException $e): JsonResponse
     {
@@ -248,7 +248,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Handle generic exceptions
+     * Handle generic exceptions.
      */
     private function handleGenericException(Throwable $e): JsonResponse
     {
@@ -276,7 +276,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Log exception with context
+     * Log exception with context.
      */
     private function logException(Throwable $e, Request $request): void
     {
@@ -303,7 +303,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Check if error is critical
+     * Check if error is critical.
      */
     private function isCriticalError(Throwable $e): bool
     {
@@ -319,20 +319,20 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Send critical error notification
+     * Send critical error notification.
      */
     private function sendCriticalErrorNotification(Throwable $e): void
     {
         try {
             $adminEmails = config('app.admin_emails', []);
-            
-            if (!empty($adminEmails)) {
+
+            if (! empty($adminEmails)) {
                 Mail::raw(
-                    "Critical error occurred in COPRRA application:\n\n" .
-                    "Error: " . $e->getMessage() . "\n" .
-                    "File: " . $e->getFile() . ":" . $e->getLine() . "\n" .
-                    "Time: " . now()->toISOString() . "\n" .
-                    "URL: " . request()->fullUrl(),
+                    "Critical error occurred in COPRRA application:\n\n".
+                    'Error: '.$e->getMessage()."\n".
+                    'File: '.$e->getFile().':'.$e->getLine()."\n".
+                    'Time: '.now()->toISOString()."\n".
+                    'URL: '.request()->fullUrl(),
                     function ($message) use ($adminEmails) {
                         $message->to($adminEmails)
                             ->subject('Critical Error Alert - COPRRA');
@@ -348,7 +348,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     }
 
     /**
-     * Get HTTP status message
+     * Get HTTP status message.
      */
     private function getHttpStatusMessage(int $statusCode): string
     {

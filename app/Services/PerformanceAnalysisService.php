@@ -7,7 +7,7 @@ namespace App\Services;
 class PerformanceAnalysisService
 {
     /**
-     * Run comprehensive performance analysis
+     * Run comprehensive performance analysis.
      */
     public function analyze(): array
     {
@@ -19,7 +19,6 @@ class PerformanceAnalysisService
             $score += $this->checkDatabaseIndexes($issues);
             $score += $this->checkAssetCompilation($issues);
             $score += $this->checkQueueConfiguration($issues);
-
         } catch (\Exception $e) {
             $issues[] = 'Performance analysis failed: '.$e->getMessage();
         }
@@ -33,7 +32,7 @@ class PerformanceAnalysisService
     }
 
     /**
-     * Check cache configuration
+     * Check cache configuration.
      */
     private function checkCacheConfiguration(array &$issues): int
     {
@@ -47,7 +46,7 @@ class PerformanceAnalysisService
     }
 
     /**
-     * Check database indexes
+     * Check database indexes.
      */
     private function checkDatabaseIndexes(array &$issues): int
     {
@@ -64,7 +63,7 @@ class PerformanceAnalysisService
     }
 
     /**
-     * Check asset compilation
+     * Check asset compilation.
      */
     private function checkAssetCompilation(array &$issues): int
     {
@@ -78,7 +77,7 @@ class PerformanceAnalysisService
     }
 
     /**
-     * Check queue configuration
+     * Check queue configuration.
      */
     private function checkQueueConfiguration(array &$issues): int
     {

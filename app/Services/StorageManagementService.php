@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class StorageManagementService
 {
     private array $config;
+
     private FileCleanupService $cleanupService;
 
     public function __construct(FileCleanupService $cleanupService)
@@ -29,7 +30,7 @@ class StorageManagementService
     }
 
     /**
-     * Monitor storage usage
+     * Monitor storage usage.
      */
     public function monitorStorageUsage(): array
     {
@@ -65,7 +66,7 @@ class StorageManagementService
     }
 
     /**
-     * Get storage breakdown by directory
+     * Get storage breakdown by directory.
      */
     public function getStorageBreakdown(): array
     {
@@ -96,13 +97,13 @@ class StorageManagementService
     }
 
     /**
-     * Auto cleanup if needed
+     * Auto cleanup if needed.
      */
     public function autoCleanupIfNeeded(): array
     {
         $usage = $this->monitorStorageUsage();
-        
-        if (!$usage['needs_cleanup'] || !$this->config['auto_cleanup']) {
+
+        if (! $usage['needs_cleanup'] || ! $this->config['auto_cleanup']) {
             return [
                 'cleanup_performed' => false,
                 'reason' => 'No cleanup needed or auto cleanup disabled',
@@ -145,11 +146,11 @@ class StorageManagementService
     }
 
     /**
-     * Compress old files
+     * Compress old files.
      */
     public function compressOldFiles(): array
     {
-        if (!$this->config['compression_enabled']) {
+        if (! $this->config['compression_enabled']) {
             return ['compression_disabled' => true];
         }
 
@@ -174,7 +175,6 @@ class StorageManagementService
             }
 
             Log::info('File compression completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('File compression failed', [
@@ -186,11 +186,11 @@ class StorageManagementService
     }
 
     /**
-     * Archive old files
+     * Archive old files.
      */
     public function archiveOldFiles(): array
     {
-        if (!$this->config['archival_enabled']) {
+        if (! $this->config['archival_enabled']) {
             return ['archival_disabled' => true];
         }
 
@@ -217,7 +217,6 @@ class StorageManagementService
             }
 
             Log::info('File archival completed', $results);
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('File archival failed', [
@@ -229,7 +228,7 @@ class StorageManagementService
     }
 
     /**
-     * Get storage recommendations
+     * Get storage recommendations.
      */
     public function getStorageRecommendations(): array
     {
@@ -272,40 +271,39 @@ class StorageManagementService
     }
 
     /**
-     * Set storage limits
+     * Set storage limits.
      */
     public function setStorageLimits(array $limits): bool
     {
         try {
             $this->config = array_merge($this->config, $limits);
-            
+
             // Update config file
             $configPath = config_path('storage_management.php');
-            $configContent = "<?php\n\nreturn " . var_export($this->config, true) . ";\n";
+            $configContent = "<?php\n\nreturn ".var_export($this->config, true).";\n";
             file_put_contents($configPath, $configContent);
-            
+
             Log::info('Storage limits updated', $limits);
-            
+
             return true;
-            
         } catch (Exception $e) {
             Log::error('Failed to update storage limits', [
                 'error' => $e->getMessage(),
                 'limits' => $limits,
             ]);
-            
+
             return false;
         }
     }
 
     /**
-     * Get storage statistics
+     * Get storage statistics.
      */
     public function getStorageStatistics(): array
     {
         $usage = $this->monitorStorageUsage();
         $breakdown = $usage['breakdown'];
-        
+
         $totalFiles = 0;
         $oldestFile = null;
         $newestFile = null;
@@ -313,13 +311,13 @@ class StorageManagementService
         foreach ($breakdown as $data) {
             $files = $this->getFilesInDirectory($data['path']);
             $totalFiles += count($files);
-            
+
             foreach ($files as $file) {
                 $fileTime = filemtime($file);
-                if (!$oldestFile || $fileTime < $oldestFile) {
+                if (! $oldestFile || $fileTime < $oldestFile) {
                     $oldestFile = $fileTime;
                 }
-                if (!$newestFile || $fileTime > $newestFile) {
+                if (! $newestFile || $fileTime > $newestFile) {
                     $newestFile = $fileTime;
                 }
             }
@@ -336,19 +334,19 @@ class StorageManagementService
     }
 
     /**
-     * Compress directory
+     * Compress directory.
      */
     private function compressDirectory(string $directory): array
     {
         $filesCompressed = 0;
         $spaceSaved = 0;
 
-        $files = glob($directory . '/*');
+        $files = glob($directory.'/*');
         foreach ($files as $file) {
-            if (is_file($file) && !str_ends_with($file, '.gz')) {
+            if (is_file($file) && ! str_ends_with($file, '.gz')) {
                 $originalSize = filesize($file);
-                $compressedFile = $file . '.gz';
-                
+                $compressedFile = $file.'.gz';
+
                 if (file_put_contents($compressedFile, gzencode(file_get_contents($file)))) {
                     $compressedSize = filesize($compressedFile);
                     $spaceSaved += $originalSize - $compressedSize;
@@ -365,31 +363,31 @@ class StorageManagementService
     }
 
     /**
-     * Create archive
+     * Create archive.
      */
     private function createArchive(string $directory, string $name): array
     {
-        $archiveName = $name . '_' . Carbon::now()->format('Y-m-d') . '.tar.gz';
-        $archivePath = storage_path('archives/' . $archiveName);
-        
+        $archiveName = $name.'_'.Carbon::now()->format('Y-m-d').'.tar.gz';
+        $archivePath = storage_path('archives/'.$archiveName);
+
         // Create archives directory if it doesn't exist
-        if (!is_dir(dirname($archivePath))) {
+        if (! is_dir(dirname($archivePath))) {
             mkdir(dirname($archivePath), 0755, true);
         }
 
-        $command = "tar -czf {$archivePath} -C " . dirname($directory) . " " . basename($directory);
+        $command = "tar -czf {$archivePath} -C ".dirname($directory).' '.basename($directory);
         exec($command, $output, $returnCode);
 
         if ($returnCode === 0) {
             $originalSize = $this->getDirectorySize($directory);
             $archiveSize = filesize($archivePath);
             $spaceSaved = $originalSize - $archiveSize;
-            
+
             // Remove original directory
             $this->removeDirectory($directory);
-            
+
             return [
-                'files_archived' => count(glob($directory . '/*')),
+                'files_archived' => count(glob($directory.'/*')),
                 'archives_created' => 1,
                 'space_saved_mb' => round($spaceSaved / 1024 / 1024, 2),
             ];
@@ -403,33 +401,33 @@ class StorageManagementService
     }
 
     /**
-     * Get files in directory
+     * Get files in directory.
      */
     private function getFilesInDirectory(string $directory): array
     {
         $files = [];
-        
+
         if (is_dir($directory)) {
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
             );
-            
+
             foreach ($iterator as $file) {
                 if ($file->isFile()) {
                     $files[] = $file->getPathname();
                 }
             }
         }
-        
+
         return $files;
     }
 
     /**
-     * Remove directory recursively
+     * Remove directory recursively.
      */
     private function removeDirectory(string $directory): void
     {
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return;
         }
 
@@ -450,13 +448,13 @@ class StorageManagementService
     }
 
     /**
-     * Get directory size
+     * Get directory size.
      */
     private function getDirectorySize(string $directory): int
     {
         $size = 0;
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return $size;
         }
 

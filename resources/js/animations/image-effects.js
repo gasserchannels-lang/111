@@ -3,15 +3,11 @@
  * مكتبة تأثيرات الصور باستخدام GSAP
  * 
  * هذا الملف يحتوي على جميع تأثيرات الصور المتحركة
- * Zoom, Pan, Parallax, Fade, Rotation, 2.5D
+ * Zoom, Pan, Fade, Rotation
  */
 
 // استيراد GSAP
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// تسجيل ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * فئة تأثيرات الصور
@@ -29,10 +25,8 @@ class ImageEffects {
     init() {
         this.setupZoomEffects();
         this.setupPanEffects();
-        this.setupParallaxEffects();
         this.setupFadeEffects();
         this.setupRotationEffects();
-        this.setup2_5DEffects();
         this.setupHoverEffects();
         this.setupClickEffects();
     }
@@ -51,13 +45,7 @@ class ImageEffects {
                 scale: 1,
                 opacity: 1,
                 duration: 1.5,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    end: "bottom 20%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -87,12 +75,7 @@ class ImageEffects {
             }, {
                 scale: 1,
                 duration: 2,
-                ease: "elastic.out(1, 0.3)",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 90%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "elastic.out(1, 0.3)"
             });
         });
     }
@@ -111,12 +94,7 @@ class ImageEffects {
                 x: 0,
                 opacity: 1,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -129,12 +107,7 @@ class ImageEffects {
                 y: 0,
                 opacity: 1,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -149,75 +122,7 @@ class ImageEffects {
                 y: 0,
                 opacity: 1,
                 duration: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-    }
-
-    /**
-     * تأثيرات Parallax
-     * Parallax Effects
-     */
-    setupParallaxEffects() {
-        // Parallax بسيط
-        gsap.utils.toArray('.parallax-simple').forEach(element => {
-            gsap.to(element, {
-                y: -100,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        });
-
-        // Parallax معتدل
-        gsap.utils.toArray('.parallax-medium').forEach(element => {
-            gsap.to(element, {
-                y: -200,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        });
-
-        // Parallax قوي
-        gsap.utils.toArray('.parallax-strong').forEach(element => {
-            gsap.to(element, {
-                y: -300,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        });
-
-        // Parallax مع دوران
-        gsap.utils.toArray('.parallax-rotate').forEach(element => {
-            gsap.to(element, {
-                y: -150,
-                rotation: 5,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
+                ease: "power2.out"
             });
         });
     }
@@ -234,12 +139,7 @@ class ImageEffects {
             }, {
                 opacity: 1,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -252,12 +152,7 @@ class ImageEffects {
                 opacity: 1,
                 y: 0,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -270,12 +165,7 @@ class ImageEffects {
                 opacity: 1,
                 y: 0,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -288,12 +178,7 @@ class ImageEffects {
                 opacity: 1,
                 x: 0,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -306,12 +191,7 @@ class ImageEffects {
                 opacity: 1,
                 x: 0,
                 duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
     }
@@ -330,12 +210,7 @@ class ImageEffects {
                 rotation: 0,
                 opacity: 1,
                 duration: 1.5,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
 
@@ -346,20 +221,6 @@ class ImageEffects {
                 duration: 10,
                 ease: "none",
                 repeat: -1
-            });
-        });
-
-        // دوران عند التمرير
-        gsap.utils.toArray('.rotate-on-scroll').forEach(element => {
-            gsap.to(element, {
-                rotation: 360,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
             });
         });
 
@@ -374,86 +235,7 @@ class ImageEffects {
                 rotationY: 0,
                 opacity: 1,
                 duration: 2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-    }
-
-    /**
-     * تأثيرات 2.5D
-     * 2.5D Effects
-     */
-    setup2_5DEffects() {
-        // تأثير 2.5D بسيط
-        gsap.utils.toArray('.effect-2-5d-simple').forEach(element => {
-            gsap.fromTo(element, {
-                rotationX: -15,
-                rotationY: -15,
-                z: -100,
-                opacity: 0
-            }, {
-                rotationX: 0,
-                rotationY: 0,
-                z: 0,
-                opacity: 1,
-                duration: 1.5,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-
-        // تأثير 2.5D مع تحريك
-        gsap.utils.toArray('.effect-2-5d-move').forEach(element => {
-            gsap.fromTo(element, {
-                rotationX: -30,
-                rotationY: -30,
-                z: -200,
-                x: -100,
-                opacity: 0
-            }, {
-                rotationX: 0,
-                rotationY: 0,
-                z: 0,
-                x: 0,
-                opacity: 1,
-                duration: 2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-
-        // تأثير 2.5D مع تكبير
-        gsap.utils.toArray('.effect-2-5d-scale').forEach(element => {
-            gsap.fromTo(element, {
-                rotationX: -20,
-                rotationY: -20,
-                scale: 0.5,
-                opacity: 0
-            }, {
-                rotationX: 0,
-                rotationY: 0,
-                scale: 1,
-                opacity: 1,
-                duration: 1.8,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                }
+                ease: "power2.out"
             });
         });
     }

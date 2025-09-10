@@ -54,7 +54,7 @@ class UserLocaleSetting extends Model
     ];
 
     /**
-     * المستخدم المرتبط بهذا الإعداد
+     * المستخدم المرتبط بهذا الإعداد.
      *
      * @return BelongsTo<User, UserLocaleSetting>
      */
@@ -64,7 +64,7 @@ class UserLocaleSetting extends Model
     }
 
     /**
-     * اللغة المحددة
+     * اللغة المحددة.
      *
      * @return BelongsTo<Language, UserLocaleSetting>
      */
@@ -74,7 +74,7 @@ class UserLocaleSetting extends Model
     }
 
     /**
-     * العملة المحددة
+     * العملة المحددة.
      *
      * @return BelongsTo<Currency, UserLocaleSetting>
      */
@@ -84,7 +84,7 @@ class UserLocaleSetting extends Model
     }
 
     /**
-     * البحث عن إعدادات المستخدم
+     * البحث عن إعدادات المستخدم.
      */
     public static function findForUser(?int $userId, ?string $sessionId): ?self
     {
@@ -106,7 +106,7 @@ class UserLocaleSetting extends Model
     }
 
     /**
-     * إنشاء أو تحديث إعدادات المستخدم
+     * إنشاء أو تحديث إعدادات المستخدم.
      */
     public static function updateOrCreateForUser(
         ?int $userId,

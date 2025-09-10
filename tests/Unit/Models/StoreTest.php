@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Store;
 use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,7 +44,7 @@ class StoreTest extends TestCase
     /** @test */
     public function it_can_validate_required_fields()
     {
-        $store = new Store();
+        $store = new Store;
 
         $this->assertFalse($store->validate());
         $this->assertArrayHasKey('name', $store->getErrors());

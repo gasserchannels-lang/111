@@ -10,7 +10,6 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Tests\TestCase;
 
@@ -23,7 +22,7 @@ class BrandControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new BrandController();
+        $this->controller = new BrandController;
     }
 
     /**
@@ -198,7 +197,7 @@ class BrandControllerTest extends TestCase
             'slug' => 'old-slug',
         ]);
 
-        $request = Request::create('/brands/' . $brand->id, 'PUT', [
+        $request = Request::create('/brands/'.$brand->id, 'PUT', [
             'name' => 'Updated Name',
             'slug' => 'updated-slug',
             'description' => 'Updated Description',
@@ -225,7 +224,7 @@ class BrandControllerTest extends TestCase
         $brand2 = Brand::factory()->create(['name' => 'Brand Two']);
 
         // Should allow updating brand2 to keep its own name
-        $request = Request::create('/brands/' . $brand2->id, 'PUT', [
+        $request = Request::create('/brands/'.$brand2->id, 'PUT', [
             'name' => 'Brand Two',
             'slug' => 'brand-two-updated',
         ]);
@@ -244,7 +243,7 @@ class BrandControllerTest extends TestCase
         $brand2 = Brand::factory()->create(['slug' => 'brand-two']);
 
         // Should allow updating brand2 to keep its own slug
-        $request = Request::create('/brands/' . $brand2->id, 'PUT', [
+        $request = Request::create('/brands/'.$brand2->id, 'PUT', [
             'name' => 'Updated Brand Two',
             'slug' => 'brand-two',
         ]);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CartRequest;
 use App\Models\Product;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Http\RedirectResponse;
@@ -22,27 +23,25 @@ class CartController extends Controller
         $cartItems = Cart::getContent();
         $total = Cart::getTotal();
 
-        return view('cart-index', [
+        return view('cart.index', [
             'cartItems' => $cartItems,
             'total' => $total,
         ]);
     }
 
-    public function add(Request $request, Product $product): RedirectResponse
+    public function add(CartRequest $request, Product $product): RedirectResponse
     {
-        $request->validate([
-            'quantity' => 'required|integer|min:1',
-        ]);
+        $validated = $request->validated();
 
         Cart::add([
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
-            'quantity' => $request->quantity,
-            'attributes' => [
+            'quantity' => $validated['quantity'],
+            'attributes' => array_merge([
                 'image' => $product->image ?? 'default-product.jpg',
                 'slug' => $product->slug,
-            ],
+            ], $validated['attributes'] ?? []),
         ]);
 
         return redirect()->back()->with('success', 'Product added to cart!');

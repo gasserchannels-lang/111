@@ -36,7 +36,7 @@ class CurrencyTest extends TestCase
      */
     public function it_can_validate_required_fields()
     {
-        $currency = new Currency();
+        $currency = new Currency;
 
         try {
             $currency->save();
@@ -123,7 +123,7 @@ class CurrencyTest extends TestCase
         $currency = Currency::factory()->create([
             'code' => 'USD',
             'symbol' => '$',
-            'decimal_places' => 2
+            'decimal_places' => 2,
         ]);
 
         // Test basic formatting

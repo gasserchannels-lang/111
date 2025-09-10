@@ -5,11 +5,12 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
+        "blade-ui-kit/blade-heroicons": "^2.0",
         "darryldecode/cart": "^4.2",
         "doctrine/dbal": "^3.10|^4.0",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.10|^11.0",
+        "laravel/framework": "^12.0",
         "laravel/sanctum": "^3.3|^4.0",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.0"
@@ -28,21 +29,16 @@
         "laravel/dusk": "^8.3",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
-        "laravel/telescope": "^5.11",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0|^8.0",
         "nunomaduro/phpinsights": "^2.13",
-        "pestphp/pest": "^2.36|^3.0",
-        "pestphp/pest-plugin-arch": "^3.1",
-        "pestphp/pest-plugin-laravel": "^2.4|^3.0",
-        "phploc/phploc": "^2.0",
-        "phpmd/phpmd": "^2.15",
-        "phpmetrics/phpmetrics": "^2.9",
+        
+        "nikic/php-parser": "^5.0",
         "phpunit/phpunit": "^11.5",
         "rector/rector": "^2.1",
         "roave/security-advisories": "dev-latest",
         "sentry/sentry-laravel": "^4.15",
-        "spatie/laravel-ignition": "^2.0",
+        "spatie/laravel-ignition": "^2.7",
         "vimeo/psalm": "^6.13"
     },
     "autoload": {
@@ -62,43 +58,107 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
+        "post-install-cmd": [
+            "@php artisan clear-compiled",
+            "@php artisan optimize",
+            "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate --ansi --quiet",
+            "@php artisan view:cache",
+            "@php artisan config:cache",
+            "@php artisan route:cache",
+            "@php artisan storage:link --quiet"
+        ],
         "post-update-cmd": [
+            "@php artisan clear-compiled",
+            "@php artisan optimize",
+            "@php artisan view:cache",
+            "@php artisan config:cache",
+            "@php artisan route:cache",
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
+        "pre-commit": [
+            "@php artisan test --parallel",
+            "@php ./vendor/bin/phpstan analyse",
+            "@php ./vendor/bin/php-cs-fixer fix --dry-run"
+        ],
+        "format": [
+            "@php ./vendor/bin/php-cs-fixer fix"
+        ],
+        "analyse": [
+            "@php ./vendor/bin/phpstan analyse",
+            "@php artisan test --parallel"
+        ],
+        "clear-all": [
+            "@php artisan cache:clear",
+            "@php artisan config:clear",
+            "@php artisan route:clear",
+            "@php artisan view:clear",
+            "composer dump-autoload -o"
+        ],
+        "cache-all": [
+            "@php artisan config:cache",
+            "@php artisan route:cache",
+            "@php artisan view:cache"
+        ],
         "post-root-package-install": [
-            "@php -r \"file_exists('.env' ) || copy('.env.example', '.env');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
-        "test": "php artisan test",
-        "test:coverage": "php artisan test --coverage",
-        "test:dusk": "php artisan dusk",
-        "test:infection": "infection",
-        "analyse": "php -d memory_limit=1G vendor/bin/phpstan analyse",
-        "analyse:psalm": "psalm",
-        "analyse:deptrac": "deptrac analyse",
-        "analyse:phpmd": "phpmd app text phpmd.xml",
-        "analyse:phploc": "phploc app",
-        "analyse:phpinsights": "phpinsights analyse app",
-        "analyse:security": "composer audit && enlightn security:check",
+        "test": [
+            "@php artisan test"
+        ],
+        "test:coverage": [
+            "@php artisan test --coverage"
+        ],
+        "test:dusk": [
+            "@php artisan dusk"
+        ],
+        "test:infection": [
+            "infection --threads=max"
+        ],
+        "test:all": [
+            "@test",
+            "@test:dusk",
+            "@test:infection"
+        ],
+        "analyse:phpstan": [
+            "php -d memory_limit=1G ./vendor/bin/phpstan analyse"
+        ],
+        "analyse:psalm": [
+            "./vendor/bin/psalm"
+        ],
+        "analyse:insights": [
+            "./vendor/bin/phpinsights analyse app"
+        ],
+        "analyse:security": [
+            "composer audit",
+            "./vendor/bin/security-checker security:check"
+        ],
         "analyse:all": [
-            "@analyse",
+            "@analyse:phpstan",
             "@analyse:psalm",
-            "@analyse:deptrac",
-            "@analyse:phpmd",
-            "@analyse:phploc",
-            "@analyse:phpinsights",
+            "@analyse:insights",
             "@analyse:security"
         ],
-        "fix": "pint",
-        "fix:rector": "rector process app --dry-run",
-        "fix:rector:apply": "rector process app",
-        "metrics": "phpmetrics app --config=phpmetrics.json",
+        "fix:style": [
+            "./vendor/bin/php-cs-fixer fix"
+        ],
+        "fix:rector": [
+            "./vendor/bin/rector process app"
+        ],
+        "fix:all": [
+            "@fix:style",
+            "@fix:rector"
+        ],
+        "metrics": [
+            "./vendor/bin/phpmetrics --config=phpmetrics.json app"
+        ],
         "quality": [
-            "@fix",
+            "@fix:all",
             "@analyse:all",
-            "@test"
+            "@test:all"
         ]
     },
     "extra": {

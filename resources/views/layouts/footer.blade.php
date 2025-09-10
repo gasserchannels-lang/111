@@ -68,7 +68,7 @@
                 <div class="flex items-center space-x-4 mt-4 md:mt-0">
                     <!-- Language Switcher -->
                     <div class="relative">
-                        <select onchange="window.location.href='{{ route('change.language', '') }}/' + this.value" 
+                        <select onchange="window.location.href='{{ url('language') }}/' + this.value" 
                                 class="bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
                             <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>English</option>
                             <option value="ar" {{ app()->getLocale() === 'ar' ? 'selected' : '' }}>العربية</option>
@@ -77,7 +77,7 @@
                     
                     <!-- Currency Switcher -->
                     <div class="relative">
-                        <select onchange="window.location.href='{{ route('change.currency', '') }}/' + this.value" 
+                        <select onchange="window.location.href='{{ url('currency') }}/' + this.value" 
                                 class="bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
                             <option value="USD" {{ session('currency', 'USD') === 'USD' ? 'selected' : '' }}>USD</option>
                             <option value="EUR" {{ session('currency', 'USD') === 'EUR' ? 'selected' : '' }}>EUR</option>

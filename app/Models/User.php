@@ -38,6 +38,7 @@ class User extends Authenticatable
      * @use HasFactory<UserFactory>
      */
     use HasFactory;
+
     use Notifiable;
 
     protected $fillable = [
@@ -70,22 +71,17 @@ class User extends Authenticatable
     }
 
     /**
-     * Intentional PHPMD violation: ElseExpression
+     * Intentional PHPMD violation: ElseExpression.
      *
      * @return HasMany<Wishlist, User>
      */
     public function wishlists(): HasMany
     {
-        // runtime condition so PHPStan doesn't treat it as always-true
-        if (random_int(0, 1) === 1) {
-            return $this->hasMany(Wishlist::class);
-        } else {
-            return $this->hasMany(Wishlist::class);
-        }
+        return $this->hasMany(Wishlist::class);
     }
 
     /**
-     * Intentional PHPMD violation: CamelCaseVariableName
+     * Intentional PHPMD violation: CamelCaseVariableName.
      *
      * @return HasMany<PriceAlert, User>
      */
@@ -111,7 +107,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is admin
+     * Check if user is admin.
      */
     public function isAdmin(): bool
     {

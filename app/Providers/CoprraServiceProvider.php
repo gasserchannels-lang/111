@@ -17,7 +17,7 @@ class CoprraServiceProvider extends ServiceProvider
     {
         // Merge COPRRA configuration
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/coprra.php',
+            config_path('coprra.php'),
             'coprra'
         );
     }
@@ -42,7 +42,7 @@ class CoprraServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register custom Blade directives
+     * Register custom Blade directives.
      */
     private function registerBladeDirectives(): void
     {

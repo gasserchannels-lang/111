@@ -18,12 +18,12 @@ return [
         'GET /health',
         'GET /ping',
     ],
-    'before_send' => function (\Sentry\Event $event, ?\Sentry\EventHint $hint): ?\Sentry\Event {
-        return $event;
-    },
-    'before_send_transaction' => function (\Sentry\Event $event, ?\Sentry\EventHint $hint): ?\Sentry\Event {
-        return $event;
-    },
+    // 'before_send' => function (\Sentry\Event $event, ?\Sentry\EventHint $hint): ?\Sentry\Event {
+    //     return $event;
+    // },
+    // 'before_send_transaction' => function (\Sentry\Event $event, ?\Sentry\EventHint $hint): ?\Sentry\Event {
+    //     return $event;
+    // },
     'tags' => [
         'environment' => env('APP_ENV', 'production'),
         'version' => env('APP_VERSION', '1.0.0'),

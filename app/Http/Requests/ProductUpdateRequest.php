@@ -15,6 +15,7 @@ class ProductUpdateRequest extends FormRequest
     public function authorize(): bool
     {
         $product = $this->route('product');
+
         return $this->user()?->can('update', $product) ?? false;
     }
 
@@ -24,7 +25,7 @@ class ProductUpdateRequest extends FormRequest
     public function rules(): array
     {
         $productId = $this->route('product')?->id;
-        
+
         return [
             'name' => [
                 'sometimes',
@@ -179,24 +180,24 @@ class ProductUpdateRequest extends FormRequest
     {
         // Clean and format data before validation
         $data = [];
-        
+
         if ($this->has('name')) {
             $data['name'] = trim($this->name);
         }
-        
+
         if ($this->has('description')) {
             $data['description'] = trim($this->description);
         }
-        
+
         if ($this->has('sku')) {
             $data['sku'] = strtoupper(trim($this->sku));
         }
-        
+
         if ($this->has('tags')) {
             $data['tags'] = array_map('trim', $this->tags);
         }
-        
-        if (!empty($data)) {
+
+        if (! empty($data)) {
             $this->merge($data);
         }
     }
@@ -223,12 +224,12 @@ class ProductUpdateRequest extends FormRequest
                 $product = $this->route('product');
                 $oldPrice = $product->price;
                 $newPrice = $this->input('price');
-                
+
                 if ($oldPrice && $newPrice) {
                     $changePercentage = abs(($newPrice - $oldPrice) / $oldPrice) * 100;
-                    
+
                     if ($changePercentage > 50) { // More than 50% change
-                        $validator->warnings()->add('price', 'تغيير السعر بنسبة ' . round($changePercentage, 2) . '% - يرجى التأكد من صحة السعر');
+                        $validator->warnings()->add('price', 'تغيير السعر بنسبة '.round($changePercentage, 2).'% - يرجى التأكد من صحة السعر');
                     }
                 }
             }
@@ -241,14 +242,14 @@ class ProductUpdateRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validated = parent::validated($key, $default);
-        
+
         // Add computed fields
         if (isset($validated['name'])) {
             $validated['slug'] = \Str::slug($validated['name']);
         }
-        
+
         $validated['updated_by'] = $this->user()?->id;
-        
+
         return $validated;
     }
 }

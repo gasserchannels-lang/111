@@ -5,23 +5,27 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\StatisticsService;
-use App\Services\ReportService;
 use App\Services\AuditService;
-use App\Services\LoginAttemptService;
-use App\Services\UserBanService;
 use App\Services\FileSecurityService;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Services\LoginAttemptService;
+use App\Services\ReportService;
+use App\Services\StatisticsService;
+use App\Services\UserBanService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     private StatisticsService $statisticsService;
+
     private ReportService $reportService;
+
     private AuditService $auditService;
+
     private LoginAttemptService $loginAttemptService;
+
     private UserBanService $userBanService;
+
     private FileSecurityService $fileSecurityService;
 
     public function __construct(
@@ -34,7 +38,7 @@ class DashboardController extends Controller
     ) {
         $this->middleware('auth');
         $this->middleware('admin');
-        
+
         $this->statisticsService = $statisticsService;
         $this->reportService = $reportService;
         $this->auditService = $auditService;
@@ -44,22 +48,22 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show admin dashboard
+     * Show admin dashboard.
      */
     public function index(): View
     {
         $statistics = $this->getDashboardStatistics();
-        
+
         return view('admin.dashboard', compact('statistics'));
     }
 
     /**
-     * Get dashboard statistics
+     * Get dashboard statistics.
      */
     public function getStatistics(): JsonResponse
     {
         $statistics = $this->getDashboardStatistics();
-        
+
         return response()->json([
             'success' => true,
             'data' => $statistics,
@@ -67,7 +71,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get real-time statistics
+     * Get real-time statistics.
      */
     public function getRealTimeStats(): JsonResponse
     {
@@ -85,7 +89,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get dashboard statistics
+     * Get dashboard statistics.
      */
     private function getDashboardStatistics(): array
     {
@@ -102,7 +106,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get user statistics
+     * Get user statistics.
      */
     private function getUserStatistics(): array
     {
@@ -118,7 +122,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get product statistics
+     * Get product statistics.
      */
     private function getProductStatistics(): array
     {
@@ -134,7 +138,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get order statistics
+     * Get order statistics.
      */
     private function getOrderStatistics(): array
     {
@@ -150,7 +154,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get revenue statistics
+     * Get revenue statistics.
      */
     private function getRevenueStatistics(): array
     {
@@ -165,7 +169,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get security statistics
+     * Get security statistics.
      */
     private function getSecurityStatistics(): array
     {
@@ -179,7 +183,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get system statistics
+     * Get system statistics.
      */
     private function getSystemStatistics(): array
     {
@@ -195,7 +199,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get recent activities
+     * Get recent activities.
      */
     private function getRecentActivities(): array
     {
@@ -203,7 +207,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get chart data
+     * Get chart data.
      */
     private function getChartData(): array
     {
@@ -216,7 +220,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get online users count
+     * Get online users count.
      */
     private function getOnlineUsersCount(): int
     {
@@ -225,7 +229,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get system health
+     * Get system health.
      */
     private function getSystemHealth(): array
     {
@@ -238,7 +242,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get security alerts
+     * Get security alerts.
      */
     private function getSecurityAlerts(): array
     {
@@ -251,7 +255,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get failed logins today
+     * Get failed logins today.
      */
     private function getFailedLoginsToday(): int
     {
@@ -260,7 +264,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get security incidents
+     * Get security incidents.
      */
     private function getSecurityIncidents(): array
     {
@@ -269,7 +273,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get disk usage
+     * Get disk usage.
      */
     private function getDiskUsage(): array
     {
@@ -286,7 +290,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get database size
+     * Get database size.
      */
     private function getDatabaseSize(): int
     {
@@ -295,7 +299,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get cache status
+     * Get cache status.
      */
     private function getCacheStatus(): array
     {
@@ -303,7 +307,7 @@ class DashboardController extends Controller
             \Cache::put('test_key', 'test_value', 1);
             $status = \Cache::get('test_key') === 'test_value';
             \Cache::forget('test_key');
-            
+
             return [
                 'status' => $status ? 'working' : 'error',
                 'driver' => config('cache.default'),
@@ -318,12 +322,13 @@ class DashboardController extends Controller
     }
 
     /**
-     * Check database health
+     * Check database health.
      */
     private function checkDatabaseHealth(): array
     {
         try {
             \DB::connection()->getPdo();
+
             return ['status' => 'healthy', 'message' => 'Database connection successful'];
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
@@ -331,7 +336,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Check cache health
+     * Check cache health.
      */
     private function checkCacheHealth(): array
     {
@@ -339,7 +344,7 @@ class DashboardController extends Controller
             \Cache::put('health_check', 'ok', 1);
             $result = \Cache::get('health_check');
             \Cache::forget('health_check');
-            
+
             return ['status' => $result === 'ok' ? 'healthy' : 'error', 'message' => 'Cache test completed'];
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
@@ -347,16 +352,16 @@ class DashboardController extends Controller
     }
 
     /**
-     * Check storage health
+     * Check storage health.
      */
     private function checkStorageHealth(): array
     {
         try {
-            $testFile = 'health_check_' . time() . '.txt';
+            $testFile = 'health_check_'.time().'.txt';
             \Storage::put($testFile, 'test');
             $result = \Storage::get($testFile);
             \Storage::delete($testFile);
-            
+
             return ['status' => $result === 'test' ? 'healthy' : 'error', 'message' => 'Storage test completed'];
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
@@ -364,7 +369,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Check memory health
+     * Check memory health.
      */
     private function checkMemoryHealth(): array
     {
@@ -382,7 +387,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Convert memory limit to bytes
+     * Convert memory limit to bytes.
      */
     private function convertToBytes(string $memoryLimit): int
     {
@@ -393,8 +398,10 @@ class DashboardController extends Controller
         switch ($last) {
             case 'g':
                 $memoryLimit *= 1024;
+                // no break
             case 'm':
                 $memoryLimit *= 1024;
+                // no break
             case 'k':
                 $memoryLimit *= 1024;
         }
@@ -403,7 +410,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get user registration chart data
+     * Get user registration chart data.
      */
     private function getUserRegistrationChart(): array
     {
@@ -415,11 +422,12 @@ class DashboardController extends Controller
                 'count' => \App\Models\User::whereDate('created_at', $date)->count(),
             ];
         }
+
         return $data;
     }
 
     /**
-     * Get product views chart data
+     * Get product views chart data.
      */
     private function getProductViewsChart(): array
     {
@@ -428,7 +436,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get revenue chart data
+     * Get revenue chart data.
      */
     private function getRevenueChart(): array
     {
@@ -437,7 +445,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get security incidents chart data
+     * Get security incidents chart data.
      */
     private function getSecurityIncidentsChart(): array
     {

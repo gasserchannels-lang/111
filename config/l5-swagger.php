@@ -9,40 +9,26 @@ return [
             ],
 
             'routes' => [
-                /*
-                 * Route for accessing api documentation interface
-                 */
+                // Route for accessing api documentation interface
                 'api' => 'api/documentation',
             ],
             'paths' => [
-                /*
-                 * Edit to include full URL in ui for assets
-                 */
+                // Edit to include full URL in ui for assets
                 'use_absolute_path' => env('L5_SWAGGER_USE_ABSOLUTE_PATH', true),
 
-                /*
-                * Edit to set path where swagger ui assets should be stored
-                */
+                // Edit to set path where swagger ui assets should be stored
                 'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),
 
-                /*
-                 * File name of the generated json documentation file
-                 */
+                // File name of the generated json documentation file
                 'docs_json' => 'api-docs.json',
 
-                /*
-                 * File name of the generated YAML documentation file
-                 */
+                // File name of the generated YAML documentation file
                 'docs_yaml' => 'api-docs.yaml',
 
-                /*
-                 * Set this to `json` or `yaml` to determine which documentation file to use in UI
-                 */
+                // Set this to `json` or `yaml` to determine which documentation file to use in UI
                 'format_to_use_for_docs' => env('L5_FORMAT_TO_USE_FOR_DOCS', 'json'),
 
-                /*
-                 * Absolute paths to directory containing the swagger annotations are stored.
-                 */
+                // Absolute paths to directory containing the swagger annotations are stored.
                 'annotations' => [
                     base_path('app'),
                 ],
@@ -51,19 +37,13 @@ return [
     ],
     'defaults' => [
         'routes' => [
-            /*
-             * Route for accessing parsed swagger annotations.
-             */
+            // Route for accessing parsed swagger annotations.
             'docs' => 'docs',
 
-            /*
-             * Route for Oauth2 authentication callback.
-             */
+            // Route for Oauth2 authentication callback.
             'oauth2_callback' => 'api/oauth2-callback',
 
-            /*
-             * Middleware allows to prevent unexpected access to API documentation
-             */
+            // Middleware allows to prevent unexpected access to API documentation
             'middleware' => [
                 'api' => [],
                 'asset' => [],
@@ -71,26 +51,18 @@ return [
                 'oauth2_callback' => [],
             ],
 
-            /*
-             * Route Group options
-             */
+            // Route Group options
             'group_options' => [],
         ],
 
         'paths' => [
-            /*
-             * Absolute path to location where parsed annotations will be stored
-             */
+            // Absolute path to location where parsed annotations will be stored
             'docs' => storage_path('api-docs'),
 
-            /*
-             * Absolute path to directory where to export views
-             */
+            // Absolute path to directory where to export views
             'views' => base_path('resources/views/vendor/l5-swagger'),
 
-            /*
-             * Edit to set the api's base path
-             */
+            // Edit to set the api's base path
             'base' => env('L5_SWAGGER_BASE_PATH', null),
 
             /*
@@ -102,14 +74,14 @@ return [
         ],
 
         'scanOptions' => [
-            /**
+            /*
              * Configuration for default processors. Allows to pass processors configuration to swagger-php.
              *
              * @link https://zircote.github.io/swagger-php/reference/processors.html
              */
             'default_processors_configuration' => [
-            /** Example */
-            /**
+                // Example
+                /*
              * 'operationId.hash' => true,
              * 'pathFilter' => [
              * 'tags' => [
@@ -120,21 +92,21 @@ return [
              */
             ],
 
-            /**
+            /*
              * analyser: defaults to \OpenApi\StaticAnalyser .
              *
              * @see \OpenApi\scan
              */
             'analyser' => null,
 
-            /**
+            /*
              * analysis: defaults to a new \OpenApi\Analysis .
              *
              * @see \OpenApi\scan
              */
             'analysis' => null,
 
-            /**
+            /*
              * Custom query path processors classes.
              *
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/processors/schema-query-parameter
@@ -144,7 +116,7 @@ return [
                 // new \App\SwaggerProcessors\SchemaQueryParameter(),
             ],
 
-            /**
+            /*
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
              *
              * @see \OpenApi\scan
@@ -165,14 +137,10 @@ return [
             'open_api_spec_version' => env('L5_SWAGGER_OPEN_API_SPEC_VERSION', \L5Swagger\Generator::OPEN_API_DEFAULT_SPEC_VERSION),
         ],
 
-        /*
-         * API security definitions. Will be generated into documentation file.
-        */
+        // API security definitions. Will be generated into documentation file.
         'securityDefinitions' => [
             'securitySchemes' => [
-                /*
-                 * Examples of Security schemes
-                 */
+                // Examples of Security schemes
                 /*
                 'api_key_security_example' => [ // Unique name of security
                     'type' => 'apiKey', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
@@ -217,9 +185,7 @@ return [
                 */
             ],
             'security' => [
-                /*
-                 * Examples of Securities
-                 */
+                // Examples of Securities
                 [
                     /*
                     'oauth2_security_example' => [
@@ -239,9 +205,7 @@ return [
          */
         'generate_always' => env('L5_SWAGGER_GENERATE_ALWAYS', false),
 
-        /*
-         * Set this to `true` to generate a copy of documentation in yaml format
-         */
+        // Set this to `true` to generate a copy of documentation in yaml format
         'generate_yaml_copy' => env('L5_SWAGGER_GENERATE_YAML_COPY', false),
 
         /*
@@ -269,9 +233,7 @@ return [
          */
         'validator_url' => null,
 
-        /*
-         * Swagger UI configuration parameters
-         */
+        // Swagger UI configuration parameters
         'ui' => [
             'display' => [
                 'dark_mode' => env('L5_SWAGGER_UI_DARK_MODE', false),
@@ -283,7 +245,7 @@ return [
                  */
                 'doc_expansion' => env('L5_SWAGGER_UI_DOC_EXPANSION', 'none'),
 
-                /**
+                /*
                  * If set, enables filtering. The top bar will show an edit box that
                  * you can use to filter the tagged operations that are shown. Can be
                  * Boolean to enable or disable, or a string, in which case filtering
@@ -295,22 +257,16 @@ return [
             ],
 
             'authorization' => [
-                /*
-                 * If set to true, it persists authorization data, and it would not be lost on browser close/refresh
-                 */
+                // If set to true, it persists authorization data, and it would not be lost on browser close/refresh
                 'persist_authorization' => env('L5_SWAGGER_UI_PERSIST_AUTHORIZATION', false),
 
                 'oauth2' => [
-                    /*
-                     * If set to true, adds PKCE to AuthorizationCodeGrant flow
-                     */
+                    // If set to true, adds PKCE to AuthorizationCodeGrant flow
                     'use_pkce_with_authorization_code_grant' => false,
                 ],
             ],
         ],
-        /*
-         * Constants which can be used in annotations
-         */
+        // Constants which can be used in annotations
         'constants' => [
             'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
         ],

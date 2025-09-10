@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\PriceAlertFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int $id
@@ -39,6 +39,7 @@ class PriceAlert extends Model
      * @use HasFactory<PriceAlertFactory>
      */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [
@@ -125,6 +126,7 @@ class PriceAlert extends Model
 
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
+
             return false;
         }
 

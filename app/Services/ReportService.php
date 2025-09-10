@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Product;
-use App\Models\User;
-use App\Models\PriceOffer;
-use App\Models\Review;
-use App\Models\Wishlist;
-use App\Models\PriceAlert;
 use App\Models\AuditLog;
-use Illuminate\Support\Facades\DB;
+use App\Models\PriceAlert;
+use App\Models\PriceOffer;
+use App\Models\Product;
+use App\Models\Review;
+use App\Models\User;
+use App\Models\Wishlist;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportService
 {
     /**
-     * Generate product performance report
+     * Generate product performance report.
      */
     public function generateProductPerformanceReport(int $productId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
@@ -48,7 +48,7 @@ class ReportService
     }
 
     /**
-     * Generate user activity report
+     * Generate user activity report.
      */
     public function generateUserActivityReport(int $userId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
@@ -78,7 +78,7 @@ class ReportService
     }
 
     /**
-     * Generate system performance report
+     * Generate system performance report.
      */
     public function generateSystemPerformanceReport(?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
@@ -101,7 +101,7 @@ class ReportService
     }
 
     /**
-     * Generate sales report
+     * Generate sales report.
      */
     public function generateSalesReport(?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
@@ -124,7 +124,7 @@ class ReportService
     }
 
     /**
-     * Get price analysis for a product
+     * Get price analysis for a product.
      */
     private function getPriceAnalysis(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -144,7 +144,7 @@ class ReportService
 
         $prices = $offers->pluck('price')->toArray();
         $priceChanges = [];
-        
+
         for ($i = 1; $i < count($prices); $i++) {
             $priceChanges[] = $prices[$i] - $prices[$i - 1];
         }
@@ -162,7 +162,7 @@ class ReportService
     }
 
     /**
-     * Get offer analysis for a product
+     * Get offer analysis for a product.
      */
     private function getOfferAnalysis(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -184,7 +184,7 @@ class ReportService
     }
 
     /**
-     * Get user engagement for a product
+     * Get user engagement for a product.
      */
     private function getUserEngagement(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -209,7 +209,7 @@ class ReportService
     }
 
     /**
-     * Get reviews analysis for a product
+     * Get reviews analysis for a product.
      */
     private function getReviewsAnalysis(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -238,7 +238,7 @@ class ReportService
     }
 
     /**
-     * Get user activity summary
+     * Get user activity summary.
      */
     private function getUserActivitySummary(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -263,7 +263,7 @@ class ReportService
     }
 
     /**
-     * Get wishlist activity
+     * Get wishlist activity.
      */
     private function getWishlistActivity(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -286,7 +286,7 @@ class ReportService
     }
 
     /**
-     * Get price alerts activity
+     * Get price alerts activity.
      */
     private function getPriceAlertsActivity(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -311,7 +311,7 @@ class ReportService
     }
 
     /**
-     * Get reviews activity
+     * Get reviews activity.
      */
     private function getReviewsActivity(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -337,7 +337,7 @@ class ReportService
     }
 
     /**
-     * Get system overview
+     * Get system overview.
      */
     private function getSystemOverview(Carbon $startDate, Carbon $endDate): array
     {
@@ -354,12 +354,12 @@ class ReportService
     }
 
     /**
-     * Get user metrics
+     * Get user metrics.
      */
     private function getUserMetrics(Carbon $startDate, Carbon $endDate): array
     {
         $users = User::whereBetween('created_at', [$startDate, $endDate])->get();
-        
+
         return [
             'new_users' => $users->count(),
             'active_users' => User::whereHas('wishlists')->orWhereHas('priceAlerts')->orWhereHas('reviews')->count(),
@@ -372,12 +372,12 @@ class ReportService
     }
 
     /**
-     * Get product metrics
+     * Get product metrics.
      */
     private function getProductMetrics(Carbon $startDate, Carbon $endDate): array
     {
         $products = Product::whereBetween('created_at', [$startDate, $endDate])->get();
-        
+
         return [
             'new_products' => $products->count(),
             'active_products' => Product::where('is_active', true)->count(),
@@ -392,7 +392,7 @@ class ReportService
     }
 
     /**
-     * Get engagement metrics
+     * Get engagement metrics.
      */
     private function getEngagementMetrics(Carbon $startDate, Carbon $endDate): array
     {
@@ -408,7 +408,7 @@ class ReportService
     }
 
     /**
-     * Get performance metrics
+     * Get performance metrics.
      */
     private function getPerformanceMetrics(Carbon $startDate, Carbon $endDate): array
     {
@@ -421,7 +421,7 @@ class ReportService
     }
 
     /**
-     * Get price changes
+     * Get price changes.
      */
     private function getPriceChanges(Carbon $startDate, Carbon $endDate): array
     {
@@ -439,7 +439,7 @@ class ReportService
     }
 
     /**
-     * Get top products
+     * Get top products.
      */
     private function getTopProducts(Carbon $startDate, Carbon $endDate): array
     {
@@ -464,7 +464,7 @@ class ReportService
     }
 
     /**
-     * Get top stores
+     * Get top stores.
      */
     private function getTopStores(Carbon $startDate, Carbon $endDate): array
     {
@@ -480,7 +480,7 @@ class ReportService
     }
 
     /**
-     * Get price trends
+     * Get price trends.
      */
     private function getPriceTrends(Carbon $startDate, Carbon $endDate): array
     {
@@ -500,7 +500,7 @@ class ReportService
     }
 
     /**
-     * Get most active users
+     * Get most active users.
      */
     private function getMostActiveUsers(Carbon $startDate, Carbon $endDate): array
     {
@@ -525,24 +525,24 @@ class ReportService
     }
 
     /**
-     * Get most viewed products
+     * Get most viewed products.
      */
     private function getMostViewedProducts(Carbon $startDate, Carbon $endDate): array
     {
         return DB::table('audit_logs')
-            ->where('event', 'viewed')
-            ->where('auditable_type', 'App\Models\Product')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->select('auditable_id', DB::raw('COUNT(*) as view_count'))
-            ->groupBy('auditable_id')
+            ->join('products', 'audit_logs.auditable_id', '=', 'products.id')
+            ->where('audit_logs.event', 'viewed')
+            ->where('audit_logs.auditable_type', 'App\Models\Product')
+            ->whereBetween('audit_logs.created_at', [$startDate, $endDate])
+            ->select('products.id', 'products.name', DB::raw('COUNT(*) as view_count'))
+            ->groupBy('products.id', 'products.name')
             ->orderBy('view_count', 'desc')
             ->take(10)
             ->get()
             ->map(function ($item) {
-                $product = Product::find($item->auditable_id);
                 return [
-                    'id' => $item->auditable_id,
-                    'name' => $product ? $product->name : 'Unknown',
+                    'id' => $item->id,
+                    'name' => $item->name,
                     'view_count' => $item->view_count,
                 ];
             })
@@ -550,7 +550,7 @@ class ReportService
     }
 
     /**
-     * Calculate price trend
+     * Calculate price trend.
      */
     private function calculatePriceTrend(array $prices): string
     {
@@ -573,7 +573,7 @@ class ReportService
     }
 
     /**
-     * Calculate growth rate
+     * Calculate growth rate.
      */
     private function calculateGrowthRate(int $previous, int $current): float
     {

@@ -315,7 +315,7 @@ class FactoriesTest extends TestCase
         $englishLanguage = Language::factory()->create([
             'code' => 'en',
             'name' => 'English',
-            'is_default' => false
+            'is_default' => false,
         ]);
         $this->assertEquals('en', $englishLanguage->code);
         $this->assertEquals('English', $englishLanguage->name);
@@ -323,7 +323,7 @@ class FactoriesTest extends TestCase
         $defaultLanguage = Language::factory()->create([
             'code' => 'fr',
             'is_default' => true,
-            'is_active' => true
+            'is_active' => true,
         ]);
         $this->assertTrue($defaultLanguage->is_active);
     }

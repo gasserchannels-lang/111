@@ -7,32 +7,32 @@ namespace App\Contracts;
 interface PasswordResetServiceInterface
 {
     /**
-     * Send password reset email
+     * Send password reset email.
      */
     public function sendResetEmail(string $email): bool;
 
     /**
-     * Reset password with token
+     * Reset password with token.
      */
     public function resetPassword(string $email, string $token, string $newPassword): bool;
 
     /**
-     * Check if reset token exists
+     * Check if reset token exists.
      */
     public function hasResetToken(string $email): bool;
 
     /**
-     * Get reset token info
+     * Get reset token info.
      */
     public function getResetTokenInfo(string $email): ?array;
 
     /**
-     * Clean up expired tokens
+     * Clean up expired tokens.
      */
     public function cleanupExpiredTokens(): int;
 
     /**
-     * Get password reset statistics
+     * Get password reset statistics.
      */
     public function getStatistics(): array;
 }

@@ -21,7 +21,7 @@ class HomeControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new HomeController();
+        $this->controller = new HomeController;
     }
 
     /**
@@ -37,7 +37,7 @@ class HomeControllerTest extends TestCase
         $response = $this->controller->index();
 
         $this->assertInstanceOf(View::class, $response);
-        $this->assertEquals('welcome', $response->getName());
+        $this->assertEquals('home', $response->getName());
     }
 
     /**

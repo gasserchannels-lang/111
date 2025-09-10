@@ -44,7 +44,7 @@ class BrandTest extends TestCase
     /** @test */
     public function it_can_validate_required_fields()
     {
-        $brand = new Brand();
+        $brand = new Brand;
 
         $this->assertFalse($brand->validate());
         $this->assertArrayHasKey('name', $brand->getErrors());

@@ -6,7 +6,6 @@ namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class FileSecurityService
 {
@@ -24,10 +23,11 @@ class FileSecurityService
     ];
 
     private const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
     private const SCAN_RESULT_CACHE_PREFIX = 'file_scan:';
 
     /**
-     * Scan uploaded file for security threats
+     * Scan uploaded file for security threats.
      */
     public function scanFile(UploadedFile $file): array
     {
@@ -40,35 +40,35 @@ class FileSecurityService
 
         // Check file extension
         $extensionCheck = $this->checkFileExtension($file);
-        if (!$extensionCheck['is_safe']) {
+        if (! $extensionCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $extensionCheck['threats']);
         }
 
         // Check file size
         $sizeCheck = $this->checkFileSize($file);
-        if (!$sizeCheck['is_safe']) {
+        if (! $sizeCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $sizeCheck['threats']);
         }
 
         // Check file content
         $contentCheck = $this->checkFileContent($file);
-        if (!$contentCheck['is_safe']) {
+        if (! $contentCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $contentCheck['threats']);
         }
 
         // Check for malware signatures
         $malwareCheck = $this->checkMalwareSignatures($file);
-        if (!$malwareCheck['is_safe']) {
+        if (! $malwareCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $malwareCheck['threats']);
         }
 
         // Check file headers
         $headerCheck = $this->checkFileHeaders($file);
-        if (!$headerCheck['is_safe']) {
+        if (! $headerCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $headerCheck['threats']);
         }
@@ -80,7 +80,7 @@ class FileSecurityService
     }
 
     /**
-     * Check file extension
+     * Check file extension.
      */
     private function checkFileExtension(UploadedFile $file): array
     {
@@ -94,7 +94,7 @@ class FileSecurityService
         }
 
         // Check if extension is allowed
-        if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
+        if (! in_array($extension, self::ALLOWED_EXTENSIONS)) {
             $results['is_safe'] = false;
             $results['threats'][] = "File extension '{$extension}' is not allowed";
         }
@@ -103,7 +103,7 @@ class FileSecurityService
     }
 
     /**
-     * Check file size
+     * Check file size.
      */
     private function checkFileSize(UploadedFile $file): array
     {
@@ -111,14 +111,14 @@ class FileSecurityService
 
         if ($file->getSize() > self::MAX_FILE_SIZE) {
             $results['is_safe'] = false;
-            $results['threats'][] = "File size ({$file->getSize()} bytes) exceeds maximum allowed size (" . self::MAX_FILE_SIZE . " bytes)";
+            $results['threats'][] = "File size ({$file->getSize()} bytes) exceeds maximum allowed size (".self::MAX_FILE_SIZE.' bytes)';
         }
 
         return $results;
     }
 
     /**
-     * Check file content
+     * Check file content.
      */
     private function checkFileContent(UploadedFile $file): array
     {
@@ -126,7 +126,7 @@ class FileSecurityService
 
         try {
             $content = file_get_contents($file->getPathname());
-            
+
             // Check for suspicious patterns
             $suspiciousPatterns = [
                 '/<script[^>]*>.*?<\/script>/is' => 'JavaScript code detected',
@@ -153,17 +153,16 @@ class FileSecurityService
                 $results['is_safe'] = false;
                 $results['threats'][] = 'Binary content detected in text file';
             }
-
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error reading file content: ' . $e->getMessage();
+            $results['threats'][] = 'Error reading file content: '.$e->getMessage();
         }
 
         return $results;
     }
 
     /**
-     * Check for malware signatures
+     * Check for malware signatures.
      */
     private function checkMalwareSignatures(UploadedFile $file): array
     {
@@ -171,7 +170,7 @@ class FileSecurityService
 
         try {
             $content = file_get_contents($file->getPathname());
-            
+
             // Simple malware signatures (in real implementation, use proper antivirus)
             $malwareSignatures = [
                 'eval(base64_decode(' => 'Base64 encoded PHP code',
@@ -195,17 +194,16 @@ class FileSecurityService
                     $results['threats'][] = "Malware signature detected: {$description}";
                 }
             }
-
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error scanning for malware: ' . $e->getMessage();
+            $results['threats'][] = 'Error scanning for malware: '.$e->getMessage();
         }
 
         return $results;
     }
 
     /**
-     * Check file headers
+     * Check file headers.
      */
     private function checkFileHeaders(UploadedFile $file): array
     {
@@ -213,9 +211,10 @@ class FileSecurityService
 
         try {
             $handle = fopen($file->getPathname(), 'rb');
-            if (!$handle) {
+            if (! $handle) {
                 $results['is_safe'] = false;
                 $results['threats'][] = 'Cannot open file for header analysis';
+
                 return $results;
             }
 
@@ -240,17 +239,16 @@ class FileSecurityService
                     $results['threats'][] = $description;
                 }
             }
-
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error checking file headers: ' . $e->getMessage();
+            $results['threats'][] = 'Error checking file headers: '.$e->getMessage();
         }
 
         return $results;
     }
 
     /**
-     * Get file information
+     * Get file information.
      */
     private function getFileInfo(UploadedFile $file): array
     {
@@ -264,16 +262,17 @@ class FileSecurityService
     }
 
     /**
-     * Check if file is text file
+     * Check if file is text file.
      */
     private function isTextFile(UploadedFile $file): bool
     {
         $textExtensions = ['txt', 'csv', 'json', 'xml', 'html', 'css', 'js', 'php', 'py', 'rb', 'pl'];
+
         return in_array(strtolower($file->getClientOriginalExtension()), $textExtensions);
     }
 
     /**
-     * Check if content contains binary data
+     * Check if content contains binary data.
      */
     private function containsBinaryContent(string $content): bool
     {
@@ -284,7 +283,7 @@ class FileSecurityService
         for ($i = 0; $i < $totalCount; $i++) {
             $char = $content[$i];
             $ord = ord($char);
-            
+
             // Check for null bytes and control characters
             if ($ord < 32 && $ord !== 9 && $ord !== 10 && $ord !== 13) {
                 $binaryCount++;
@@ -295,7 +294,7 @@ class FileSecurityService
     }
 
     /**
-     * Log scan results
+     * Log scan results.
      */
     private function logScanResults(UploadedFile $file, array $results): void
     {
@@ -309,7 +308,7 @@ class FileSecurityService
     }
 
     /**
-     * Get allowed file extensions
+     * Get allowed file extensions.
      */
     public function getAllowedExtensions(): array
     {
@@ -317,7 +316,7 @@ class FileSecurityService
     }
 
     /**
-     * Get dangerous file extensions
+     * Get dangerous file extensions.
      */
     public function getDangerousExtensions(): array
     {
@@ -325,7 +324,7 @@ class FileSecurityService
     }
 
     /**
-     * Get maximum file size
+     * Get maximum file size.
      */
     public function getMaxFileSize(): int
     {
@@ -333,7 +332,7 @@ class FileSecurityService
     }
 
     /**
-     * Get file security statistics
+     * Get file security statistics.
      */
     public function getStatistics(): array
     {

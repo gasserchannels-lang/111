@@ -9,37 +9,37 @@ use App\Models\User;
 interface EmailVerificationServiceInterface
 {
     /**
-     * Send verification email
+     * Send verification email.
      */
     public function sendVerificationEmail(User $user): bool;
 
     /**
-     * Verify email with token
+     * Verify email with token.
      */
     public function verifyEmail(string $email, string $token): bool;
 
     /**
-     * Resend verification email
+     * Resend verification email.
      */
     public function resendVerificationEmail(string $email): bool;
 
     /**
-     * Check if verification token exists
+     * Check if verification token exists.
      */
     public function hasVerificationToken(string $email): bool;
 
     /**
-     * Get verification token info
+     * Get verification token info.
      */
     public function getVerificationTokenInfo(string $email): ?array;
 
     /**
-     * Clean up expired tokens
+     * Clean up expired tokens.
      */
     public function cleanupExpiredTokens(): int;
 
     /**
-     * Get email verification statistics
+     * Get email verification statistics.
      */
     public function getStatistics(): array;
 }

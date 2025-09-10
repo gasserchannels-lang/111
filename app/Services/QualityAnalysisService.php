@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 class QualityAnalysisService
 {
     /**
-     * Run comprehensive code quality analysis
+     * Run comprehensive code quality analysis.
      */
     public function analyze(): array
     {
@@ -19,7 +19,6 @@ class QualityAnalysisService
         try {
             $score += $this->runPhpmdAnalysis($issues);
             $score += $this->runPhpcpdAnalysis($issues);
-
         } catch (\Exception $e) {
             $issues[] = 'Code quality analysis failed: '.$e->getMessage();
         }
@@ -33,7 +32,7 @@ class QualityAnalysisService
     }
 
     /**
-     * Run PHPMD analysis
+     * Run PHPMD analysis.
      */
     private function runPhpmdAnalysis(array &$issues): int
     {
@@ -57,7 +56,7 @@ class QualityAnalysisService
     }
 
     /**
-     * Run PHPCPD analysis
+     * Run PHPCPD analysis.
      */
     private function runPhpcpdAnalysis(array &$issues): int
     {
@@ -81,7 +80,7 @@ class QualityAnalysisService
     }
 
     /**
-     * Check if command exists
+     * Check if command exists.
      */
     private function commandExists(string $command): bool
     {

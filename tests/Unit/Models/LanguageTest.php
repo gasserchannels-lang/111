@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Models;
 
-use App\Models\Language;
 use App\Models\Currency;
+use App\Models\Language;
 use Tests\TestCase;
 
 class LanguageTest extends TestCase

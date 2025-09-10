@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\WishlistFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int $id
@@ -37,6 +37,7 @@ class Wishlist extends Model
      * @use HasFactory<WishlistFactory>
      */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [
@@ -105,6 +106,7 @@ class Wishlist extends Model
 
         if ($validator->fails()) {
             $this->errors = $validator->errors()->toArray();
+
             return false;
         }
 

@@ -86,7 +86,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Create and switch to a new branch
+     * Create and switch to a new branch.
      */
     private function createBranch(string $branchName): bool
     {
@@ -106,7 +106,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Run the appropriate fixer based on the type
+     * Run the appropriate fixer based on the type.
      */
     private function runFixer(string $type): bool
     {
@@ -118,7 +118,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Run Laravel Pint for style fixes
+     * Run Laravel Pint for style fixes.
      */
     private function runStyleFixer(): bool
     {
@@ -140,7 +140,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Run PHPStan to generate baseline for static analysis fixes
+     * Run PHPStan to generate baseline for static analysis fixes.
      */
     private function runAnalysisFixer(): bool
     {
@@ -175,7 +175,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Handle unsupported fix types
+     * Handle unsupported fix types.
      */
     private function handleUnsupportedType(string $type): bool
     {
@@ -186,7 +186,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Stage all changes
+     * Stage all changes.
      */
     private function stageChanges(): bool
     {
@@ -206,7 +206,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Commit changes with dynamic message based on type
+     * Commit changes with dynamic message based on type.
      */
     private function commitChanges(string $type): void
     {
@@ -227,7 +227,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Push branch to remote
+     * Push branch to remote.
      */
     private function pushBranch(string $branchName): bool
     {
@@ -247,7 +247,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Create Pull Request with dynamic title and body
+     * Create Pull Request with dynamic title and body.
      */
     private function createPullRequest(string $branchName, string $type): bool
     {
@@ -278,7 +278,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Get commit message based on type
+     * Get commit message based on type.
      */
     private function getCommitMessage(string $type): string
     {
@@ -290,7 +290,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Get Pull Request title based on type
+     * Get Pull Request title based on type.
      */
     private function getPullRequestTitle(string $type): string
     {
@@ -302,7 +302,7 @@ class AgentProposeFixCommand extends Command
     }
 
     /**
-     * Get Pull Request body based on type
+     * Get Pull Request body based on type.
      */
     private function getPullRequestBody(string $type): string
     {

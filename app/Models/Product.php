@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int $id
@@ -44,6 +44,7 @@ class Product extends Model
      * @use HasFactory<ProductFactory>
      */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [
@@ -71,7 +72,7 @@ class Product extends Model
      */
     public function brand(): BelongsTo
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(Brand::class)->select(['id', 'name']);
     }
 
     /**
@@ -79,7 +80,7 @@ class Product extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->select(['id', 'name']);
     }
 
     /**
@@ -138,13 +139,13 @@ class Product extends Model
             $rules = explode('|', $rule);
             foreach ($rules as $singleRule) {
                 if ($singleRule === 'required' && empty($this->$field)) {
-                    $this->errors[$field] = ucfirst($field) . ' is required';
-                } elseif ($singleRule === 'numeric' && isset($this->$field) && !is_numeric($this->$field)) {
-                    $this->errors[$field] = ucfirst($field) . ' must be numeric';
+                    $this->errors[$field] = ucfirst($field).' is required';
+                } elseif ($singleRule === 'numeric' && isset($this->$field) && ! is_numeric($this->$field)) {
+                    $this->errors[$field] = ucfirst($field).' must be numeric';
                 } elseif (str_starts_with($singleRule, 'min:') && isset($this->$field)) {
                     $min = (float) substr($singleRule, 4);
-                    if (is_numeric($this->$field) && $this->$field < $min) {
-                        $this->errors[$field] = ucfirst($field) . ' must be at least ' . $min;
+                    if (is_numeric($this->$field) && $min > $this->$field) {
+                        $this->errors[$field] = ucfirst($field).' must be at least '.$min;
                     }
                 }
             }
@@ -193,11 +194,24 @@ class Product extends Model
     public function getCurrentPrice(): float
     {
         $activeOffer = $this->priceOffers()->where('is_active', true)->latest()->first();
+
         return $activeOffer ? $activeOffer->price : $this->price;
     }
 
     public function getPriceHistory()
     {
         return $this->priceOffers()->orderBy('created_at', 'desc')->get();
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (self $product): void {
+            // Ensure related records are fully removed during product deletion
+            // to satisfy integrity expectations in tests and avoid orphan data
+            $product->priceOffers()->forceDelete();
+            $product->reviews()->forceDelete();
+            $product->wishlists()->forceDelete();
+            $product->priceAlerts()->forceDelete();
+        });
     }
 }

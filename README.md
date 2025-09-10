@@ -2,7 +2,7 @@
 
 ## 📋 Project Overview
 
-COPRRA is a comprehensive price comparison platform built with Laravel 11, designed to help users find the best prices for products across multiple stores. The platform features a smart AI-powered code quality agent that automatically analyzes, fixes, and maintains code quality.
+COPRRA is a comprehensive price comparison platform built with Laravel 12, designed to help users find the best prices for products across multiple stores. The platform features a smart AI-powered code quality agent that automatically analyzes, fixes, and maintains code quality.
 
 ## 🚀 Features
 
@@ -28,16 +28,17 @@ COPRRA is a comprehensive price comparison platform built with Laravel 11, desig
 ## 🛠️ Technology Stack
 
 ### Backend
-- **Laravel 11** - PHP Framework
-- **PHP 8.2** - Programming Language
-- **SQLite/MySQL** - Database
-- **Livewire** - Dynamic UI Components
+- **Laravel 12** - PHP Framework
+- **PHP 8.2+** - Programming Language
+- **MySQL 8.0** - Database
+- **Redis** - Caching & Sessions
 
 ### Frontend
 - **Blade Templates** - Server-side rendering
 - **Bootstrap 5** - CSS Framework
 - **Vite** - Build tool
-- **ESLint & Prettier** - Code formatting
+- **GSAP** - Animations
+- **PWA** - Progressive Web App
 
 ### Testing & Quality
 - **PHPUnit/Pest** - Testing framework
@@ -57,7 +58,6 @@ COPRRA is a comprehensive price comparison platform built with Laravel 11, desig
 
 ## 📦 Installation
 
-### Prerequisites
 - PHP 8.2 or higher
 - Composer
 - Node.js & npm

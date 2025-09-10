@@ -5,97 +5,88 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Exception;
 
 /**
  * @OA\Info(
  *     title="COPRRA API",
  *     version="1.0.0",
  *     description="API for COPRRA - Price Comparison Platform",
+ *
  *     @OA\Contact(
  *         email="api@coprra.com",
  *         name="COPRRA API Support"
  *     ),
+ *
  *     @OA\License(
  *         name="MIT",
  *         url="https://opensource.org/licenses/MIT"
  *     )
  * )
- * 
+ *
  * @OA\Server(
  *     url="https://api.coprra.com",
  *     description="Production Server"
  * )
- * 
  * @OA\Server(
  *     url="http://localhost:8000",
  *     description="Development Server"
  * )
- * 
+ *
  * @OA\SecurityScheme(
  *     securityScheme="bearerAuth",
  *     type="http",
  *     scheme="bearer",
  *     bearerFormat="JWT"
  * )
- * 
  * @OA\SecurityScheme(
  *     securityScheme="apiKey",
  *     type="apiKey",
  *     in="header",
  *     name="X-API-Key"
  * )
- * 
+ *
  * @OA\Tag(
  *     name="Authentication",
  *     description="User authentication and authorization"
  * )
- * 
  * @OA\Tag(
  *     name="Products",
  *     description="Product management and search"
  * )
- * 
  * @OA\Tag(
  *     name="Categories",
  *     description="Product categories"
  * )
- * 
  * @OA\Tag(
  *     name="Brands",
  *     description="Product brands"
  * )
- * 
  * @OA\Tag(
  *     name="Stores",
  *     description="Store management"
  * )
- * 
  * @OA\Tag(
  *     name="Reviews",
  *     description="Product reviews"
  * )
- * 
  * @OA\Tag(
  *     name="Wishlist",
  *     description="User wishlist management"
  * )
- * 
  * @OA\Tag(
  *     name="Price Alerts",
  *     description="Price alert management"
  * )
- * 
  * @OA\Tag(
  *     name="Statistics",
  *     description="Platform statistics and analytics"
  * )
- * 
  * @OA\Tag(
  *     name="Reports",
  *     description="Report generation"
@@ -104,10 +95,11 @@ use Exception;
 abstract class BaseApiController extends Controller
 {
     protected int $perPage = 15;
+
     protected int $maxPerPage = 100;
 
     /**
-     * Success response
+     * Success response.
      */
     protected function successResponse(
         mixed $data = null,
@@ -121,7 +113,7 @@ abstract class BaseApiController extends Controller
             'data' => $data,
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -129,7 +121,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Error response
+     * Error response.
      */
     protected function errorResponse(
         string $message = 'Error',
@@ -146,7 +138,7 @@ abstract class BaseApiController extends Controller
             $response['errors'] = $errors;
         }
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -154,7 +146,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Validation error response
+     * Validation error response.
      */
     protected function validationErrorResponse(
         array $errors,
@@ -164,7 +156,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Not found response
+     * Not found response.
      */
     protected function notFoundResponse(
         string $message = 'Resource not found'
@@ -173,7 +165,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Unauthorized response
+     * Unauthorized response.
      */
     protected function unauthorizedResponse(
         string $message = 'Unauthorized'
@@ -182,7 +174,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Forbidden response
+     * Forbidden response.
      */
     protected function forbiddenResponse(
         string $message = 'Forbidden'
@@ -191,7 +183,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Rate limit exceeded response
+     * Rate limit exceeded response.
      */
     protected function rateLimitExceededResponse(
         string $message = 'Rate limit exceeded',
@@ -203,7 +195,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Server error response
+     * Server error response.
      */
     protected function serverErrorResponse(
         string $message = 'Internal server error'
@@ -212,7 +204,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Paginated response
+     * Paginated response.
      */
     protected function paginatedResponse(
         mixed $data,
@@ -236,7 +228,7 @@ abstract class BaseApiController extends Controller
             'pagination' => $pagination,
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -244,7 +236,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Validate request data
+     * Validate request data.
      */
     protected function validateRequest(
         Request $request,
@@ -261,7 +253,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get pagination parameters
+     * Get pagination parameters.
      */
     protected function getPaginationParams(Request $request): array
     {
@@ -278,7 +270,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get sorting parameters
+     * Get sorting parameters.
      */
     protected function getSortingParams(Request $request): array
     {
@@ -286,7 +278,7 @@ abstract class BaseApiController extends Controller
         $sortOrder = $request->get('sort_order', 'desc');
 
         // Validate sort order
-        if (!in_array($sortOrder, ['asc', 'desc'])) {
+        if (! in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'desc';
         }
 
@@ -297,12 +289,12 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get filtering parameters
+     * Get filtering parameters.
      */
     protected function getFilteringParams(Request $request): array
     {
         $filters = $request->except(['page', 'per_page', 'sort_by', 'sort_order', 'search']);
-        
+
         // Remove empty values
         return array_filter($filters, function ($value) {
             return $value !== null && $value !== '';
@@ -310,7 +302,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get search parameters
+     * Get search parameters.
      */
     protected function getSearchParams(Request $request): array
     {
@@ -324,7 +316,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Handle API exceptions
+     * Handle API exceptions.
      */
     protected function handleApiException(Exception $e): JsonResponse
     {
@@ -355,7 +347,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Log API request
+     * Log API request.
      */
     protected function logApiRequest(Request $request, string $action): void
     {
@@ -371,7 +363,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Log API response
+     * Log API response.
      */
     protected function logApiResponse(JsonResponse $response, string $action): void
     {
@@ -383,7 +375,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get API version from request
+     * Get API version from request.
      */
     protected function getApiVersion(Request $request): string
     {
@@ -391,18 +383,18 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Check API version compatibility
+     * Check API version compatibility.
      */
     protected function checkApiVersion(Request $request): bool
     {
         $version = $this->getApiVersion($request);
         $supportedVersions = ['1.0', '1.1'];
-        
+
         return in_array($version, $supportedVersions);
     }
 
     /**
-     * Get rate limit information
+     * Get rate limit information.
      */
     protected function getRateLimitInfo(): array
     {
@@ -414,21 +406,21 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Add rate limit headers to response
+     * Add rate limit headers to response.
      */
     protected function addRateLimitHeaders(JsonResponse $response): JsonResponse
     {
         $rateLimitInfo = $this->getRateLimitInfo();
-        
+
         $response->headers->set('X-RateLimit-Limit', $rateLimitInfo['limit']);
         $response->headers->set('X-RateLimit-Remaining', $rateLimitInfo['remaining']);
         $response->headers->set('X-RateLimit-Reset', $rateLimitInfo['reset']);
-        
+
         return $response;
     }
 
     /**
-     * Get API documentation URL
+     * Get API documentation URL.
      */
     protected function getApiDocumentationUrl(): string
     {
@@ -436,7 +428,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get API changelog URL
+     * Get API changelog URL.
      */
     protected function getApiChangelogUrl(): string
     {
@@ -444,7 +436,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get API support URL
+     * Get API support URL.
      */
     protected function getApiSupportUrl(): string
     {

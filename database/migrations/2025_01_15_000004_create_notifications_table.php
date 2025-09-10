@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('notifications')) {
+        if (! Schema::hasTable('notifications')) {
             Schema::create('notifications', function (Blueprint $table) {
                 $table->uuid('id')->primary();
                 $table->string('type');
@@ -20,7 +20,7 @@ return new class extends Migration
                 $table->text('data');
                 $table->timestamp('read_at')->nullable();
                 $table->timestamps();
-                
+
                 // Indexes for performance
                 $table->index(['notifiable_type', 'notifiable_id']);
                 $table->index('read_at');

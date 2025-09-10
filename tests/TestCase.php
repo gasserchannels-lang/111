@@ -26,10 +26,13 @@ abstract class TestCase extends BaseTestCase
             'foreign_key_constraints' => true,
         ]);
 
-        // إعدادات التطبيق
-        $this->app['config']->set('app.key', 'base64:testkey123456789012345678901234567890123456789012345678901234567890=');
+        // إعدادات التطبيق: استخدام مفتاح صالح من البيئة (phpunit.xml)
+        $this->app['config']->set('app.key', env('APP_KEY', 'base64:mAkbpuXF7OVTRIDCIMkD8+xw6xVi7pge9CFImeqZaxE='));
         $this->app['config']->set('app.env', 'testing');
         $this->app['config']->set('app.debug', true);
+
+        // تعطيل Telescope في الاختبارات
+        $this->app['config']->set('telescope.enabled', false);
 
         // تهيئة قاعدة البيانات
         $this->artisan('migrate', ['--database' => 'testing']);

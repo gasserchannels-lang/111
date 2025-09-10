@@ -33,7 +33,7 @@ class ProcessService
     /**
      * Create a new process service instance.
      */
-    public function __construct(Factory $processFactory = null)
+    public function __construct(?Factory $processFactory = null)
     {
         $this->processFactory = $processFactory ?? Process::getFacadeRoot();
     }
@@ -68,8 +68,9 @@ class ProcessService
             $cleanedData = $this->clean($data);
             $validated = $this->validate($cleanedData);
 
-            if (!$validated) {
+            if (! $validated) {
                 $this->metrics['error_count']++;
+
                 return ['error' => true, 'message' => 'Validation failed', 'errors' => $this->getErrors()];
             }
 
@@ -81,6 +82,7 @@ class ProcessService
         } catch (\Exception $e) {
             $this->metrics['error_count']++;
             $this->status = 'error';
+
             return ['error' => true, 'message' => $e->getMessage()];
         }
     }
@@ -96,7 +98,7 @@ class ProcessService
             $this->errors['name'] = 'Name is required';
         }
 
-        if (isset($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        if (isset($data['email']) && ! filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = 'Email is invalid';
         }
 

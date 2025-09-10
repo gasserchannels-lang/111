@@ -232,7 +232,7 @@ class PriceAlertControllerTest extends TestCase
             ->assertRedirect(route('price-alerts.index'))
             ->assertSessionHas('success');
 
-        $this->assertDatabaseMissing('price_alerts', ['id' => $priceAlert->id]);
+        $this->assertSoftDeleted('price_alerts', ['id' => $priceAlert->id]);
     }
 
     #[Test]

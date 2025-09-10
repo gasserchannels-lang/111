@@ -98,7 +98,7 @@ class UpdatePricesCommand extends Command
     }
 
     /**
-     * Fetch price from external API (placeholder implementation)
+     * Fetch price from external API (placeholder implementation).
      */
     private function fetchPriceFromAPI(PriceOffer $priceOffer): ?float
     {

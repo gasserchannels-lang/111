@@ -7,8 +7,8 @@ namespace Tests\Feature\Api;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Currency;
-use App\Models\Product;
 use App\Models\PriceOffer;
+use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -61,12 +61,12 @@ class PriceSearchControllerTest extends TestCase
                             'url',
                             'store',
                             'is_available',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'total',
-            'query'
+            'query',
         ]);
     }
 
@@ -79,7 +79,7 @@ class PriceSearchControllerTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'data' => []
+            'data' => [],
         ]);
     }
 
@@ -88,11 +88,12 @@ class PriceSearchControllerTest extends TestCase
      */
     public function it_handles_empty_search_query()
     {
-        $response = $this->getJson('/api/price-search');
+        $response = $this->getJson('/api/price-search?q=');
 
-        $response->assertStatus(200);
+        $response->assertStatus(400);
         $response->assertJson([
-            'data' => []
+            'data' => [],
+            'message' => 'Search query is required',
         ]);
     }
 }

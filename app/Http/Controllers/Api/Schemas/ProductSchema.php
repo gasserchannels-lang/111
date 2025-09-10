@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\Schemas;
  *     type="object",
  *     title="Product",
  *     description="Product model",
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="iPhone 15 Pro"),
  *     @OA\Property(property="slug", type="string", example="iphone-15-pro"),
@@ -27,9 +28,7 @@ namespace App\Http\Controllers\Api\Schemas;
  *     @OA\Property(property="price_offers", type="array", @OA\Items(ref="#/components/schemas/PriceOffer"))
  * )
  */
-class ProductSchema
-{
-}
+class ProductSchema {}
 
 /**
  * @OA\Schema(
@@ -40,14 +39,13 @@ class ProductSchema
  *     allOf={
  *         @OA\Schema(ref="#/components/schemas/Product"),
  *         @OA\Schema(
+ *
  *             @OA\Property(property="reviews", type="array", @OA\Items(ref="#/components/schemas/Review")),
  *         )
  *     }
  * )
  */
-class ProductDetailSchema
-{
-}
+class ProductDetailSchema {}
 
 /**
  * @OA\Schema(
@@ -56,6 +54,7 @@ class ProductDetailSchema
  *     title="Product Create Request",
  *     description="Request data for creating a product",
  *     required={"name", "slug", "price", "category_id", "brand_id"},
+ *
  *     @OA\Property(property="name", type="string", example="iPhone 15 Pro"),
  *     @OA\Property(property="slug", type="string", example="iphone-15-pro"),
  *     @OA\Property(property="description", type="string", example="Latest iPhone with advanced features"),
@@ -67,9 +66,7 @@ class ProductDetailSchema
  *     @OA\Property(property="store_id", type="integer", example=1)
  * )
  */
-class ProductCreateRequestSchema
-{
-}
+class ProductCreateRequestSchema {}
 
 /**
  * @OA\Schema(
@@ -77,6 +74,7 @@ class ProductCreateRequestSchema
  *     type="object",
  *     title="Product Update Request",
  *     description="Request data for updating a product",
+ *
  *     @OA\Property(property="name", type="string", example="iPhone 15 Pro Max"),
  *     @OA\Property(property="slug", type="string", example="iphone-15-pro-max"),
  *     @OA\Property(property="description", type="string", example="Updated description"),
@@ -88,9 +86,7 @@ class ProductCreateRequestSchema
  *     @OA\Property(property="store_id", type="integer", example=2)
  * )
  */
-class ProductUpdateRequestSchema
-{
-}
+class ProductUpdateRequestSchema {}
 
 /**
  * @OA\Schema(
@@ -98,6 +94,7 @@ class ProductUpdateRequestSchema
  *     type="object",
  *     title="Brand",
  *     description="Brand model",
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Apple"),
  *     @OA\Property(property="slug", type="string", example="apple"),
@@ -107,9 +104,7 @@ class ProductUpdateRequestSchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class BrandSchema
-{
-}
+class BrandSchema {}
 
 /**
  * @OA\Schema(
@@ -117,6 +112,7 @@ class BrandSchema
  *     type="object",
  *     title="Category",
  *     description="Category model",
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Smartphones"),
  *     @OA\Property(property="slug", type="string", example="smartphones"),
@@ -126,9 +122,7 @@ class BrandSchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class CategorySchema
-{
-}
+class CategorySchema {}
 
 /**
  * @OA\Schema(
@@ -136,6 +130,7 @@ class CategorySchema
  *     type="object",
  *     title="Price Offer",
  *     description="Price offer model",
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="product_id", type="integer", example=1),
  *     @OA\Property(property="store_id", type="integer", example=1),
@@ -154,9 +149,7 @@ class CategorySchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class PriceOfferSchema
-{
-}
+class PriceOfferSchema {}
 
 /**
  * @OA\Schema(
@@ -164,6 +157,7 @@ class PriceOfferSchema
  *     type="object",
  *     title="Review",
  *     description="Review model",
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="product_id", type="integer", example=1),
  *     @OA\Property(property="user_id", type="integer", example=1),
@@ -175,9 +169,7 @@ class PriceOfferSchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class ReviewSchema
-{
-}
+class ReviewSchema {}
 
 /**
  * @OA\Schema(
@@ -185,15 +177,14 @@ class ReviewSchema
  *     type="object",
  *     title="Pagination Links",
  *     description="Pagination links for paginated responses",
+ *
  *     @OA\Property(property="first", type="string", example="http://api.example.com/products?page=1"),
  *     @OA\Property(property="last", type="string", example="http://api.example.com/products?page=10"),
  *     @OA\Property(property="prev", type="string", nullable=true, example="http://api.example.com/products?page=1"),
  *     @OA\Property(property="next", type="string", nullable=true, example="http://api.example.com/products?page=3")
  * )
  */
-class PaginationLinksSchema
-{
-}
+class PaginationLinksSchema {}
 
 /**
  * @OA\Schema(
@@ -201,6 +192,7 @@ class PaginationLinksSchema
  *     type="object",
  *     title="Pagination Meta",
  *     description="Pagination metadata for paginated responses",
+ *
  *     @OA\Property(property="current_page", type="integer", example=2),
  *     @OA\Property(property="from", type="integer", example=16),
  *     @OA\Property(property="last_page", type="integer", example=10),
@@ -209,6 +201,4 @@ class PaginationLinksSchema
  *     @OA\Property(property="total", type="integer", example=150)
  * )
  */
-class PaginationMetaSchema
-{
-}
+class PaginationMetaSchema {}

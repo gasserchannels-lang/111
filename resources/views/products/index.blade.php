@@ -40,10 +40,19 @@
              data-price="{{ $product->price }}">
             <div class="card h-100 product-card">
                 @if($product->image)
-                <img src="{{ $product->image }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                <img src="{{ $product->image }}" 
+                     class="card-img-top" 
+                     alt="{{ $product->name }} - {{ $product->category->name ?? 'Product' }}" 
+                     style="height: 200px; object-fit: cover;"
+                     loading="lazy"
+                     width="300"
+                     height="200">
                 @else
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fas fa-image fa-3x text-muted"></i>
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                     style="height: 200px;"
+                     role="img"
+                     aria-label="No image available for {{ $product->name }}">
+                    <i class="fas fa-image fa-3x text-muted" aria-hidden="true"></i>
                 </div>
                 @endif
                 <div class="card-body d-flex flex-column">
@@ -58,7 +67,11 @@
                         <strong class="text-primary">${{ number_format($product->price, 2) }}</strong>
                     </p>
                     <div class="mt-auto">
-                        <a href="{{ route('products.show', $product) }}" class="btn btn-primary btn-sm w-100">View Details</a>
+                        <a href="{{ route('products.show', $product->slug) }}" 
+                           class="btn btn-primary btn-sm w-100"
+                           aria-label="View details for {{ $product->name }}">
+                            View Details
+                        </a>
                     </div>
                 </div>
             </div>

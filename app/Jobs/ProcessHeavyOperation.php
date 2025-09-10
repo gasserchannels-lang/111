@@ -4,25 +4,32 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ProcessHeavyOperation implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public int $timeout = 300; // 5 minutes
+
     public int $tries = 3;
+
     public int $maxExceptions = 3;
 
     private string $operation;
+
     private array $data;
+
     private ?int $userId;
 
     /**
@@ -41,7 +48,7 @@ class ProcessHeavyOperation implements ShouldQueue
     public function handle(): void
     {
         $startTime = microtime(true);
-        
+
         try {
             Log::info('Heavy operation started', [
                 'operation' => $this->operation,
@@ -59,17 +66,16 @@ class ProcessHeavyOperation implements ShouldQueue
             $this->updateJobStatus('completed', $result);
 
             $executionTime = microtime(true) - $startTime;
-            
+
             Log::info('Heavy operation completed', [
                 'operation' => $this->operation,
                 'user_id' => $this->userId,
                 'execution_time' => $executionTime,
                 'result' => $result,
             ]);
-
         } catch (Exception $e) {
             $this->updateJobStatus('failed', ['error' => $e->getMessage()]);
-            
+
             Log::error('Heavy operation failed', [
                 'operation' => $this->operation,
                 'user_id' => $this->userId,
@@ -82,42 +88,42 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Execute the specific operation
+     * Execute the specific operation.
      */
     private function executeOperation(): mixed
     {
         switch ($this->operation) {
             case 'generate_report':
                 return $this->generateReport();
-            
+
             case 'process_images':
                 return $this->processImages();
-            
+
             case 'sync_data':
                 return $this->syncData();
-            
+
             case 'send_bulk_notifications':
                 return $this->sendBulkNotifications();
-            
+
             case 'update_statistics':
                 return $this->updateStatistics();
-            
+
             case 'cleanup_old_data':
                 return $this->cleanupOldData();
-            
+
             case 'export_data':
                 return $this->exportData();
-            
+
             case 'import_data':
                 return $this->importData();
-            
+
             default:
                 throw new Exception("Unknown operation: {$this->operation}");
         }
     }
 
     /**
-     * Generate report
+     * Generate report.
      */
     private function generateReport(): array
     {
@@ -138,7 +144,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Process images
+     * Process images.
      */
     private function processImages(): array
     {
@@ -159,7 +165,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Sync data
+     * Sync data.
      */
     private function syncData(): array
     {
@@ -177,7 +183,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Send bulk notifications
+     * Send bulk notifications.
      */
     private function sendBulkNotifications(): array
     {
@@ -200,7 +206,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Update statistics
+     * Update statistics.
      */
     private function updateStatistics(): array
     {
@@ -221,7 +227,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Cleanup old data
+     * Cleanup old data.
      */
     private function cleanupOldData(): array
     {
@@ -239,7 +245,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Export data
+     * Export data.
      */
     private function exportData(): array
     {
@@ -252,13 +258,13 @@ class ProcessHeavyOperation implements ShouldQueue
         return [
             'format' => $format,
             'table' => $table,
-            'file_path' => "exports/{$table}_{$format}_" . time() . ".{$format}",
+            'file_path' => "exports/{$table}_{$format}_".time().".{$format}",
             'status' => 'completed',
         ];
     }
 
     /**
-     * Import data
+     * Import data.
      */
     private function importData(): array
     {
@@ -276,13 +282,13 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Update job status
+     * Update job status.
      */
     private function updateJobStatus(string $status, mixed $result = null): void
     {
         $jobId = $this->job->getJobId();
         $cacheKey = "job_status:{$jobId}";
-        
+
         $statusData = [
             'job_id' => $jobId,
             'operation' => $this->operation,
@@ -296,7 +302,7 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Handle job failure
+     * Handle job failure.
      */
     public function failed(Exception $exception): void
     {
@@ -311,16 +317,17 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Get job status
+     * Get job status.
      */
     public static function getJobStatus(string $jobId): ?array
     {
         $cacheKey = "job_status:{$jobId}";
+
         return Cache::get($cacheKey);
     }
 
     /**
-     * Get user's job statuses
+     * Get user's job statuses.
      */
     public static function getUserJobStatuses(int $userId): array
     {
@@ -330,28 +337,27 @@ class ProcessHeavyOperation implements ShouldQueue
     }
 
     /**
-     * Cancel job
+     * Cancel job.
      */
     public function cancel(): bool
     {
         try {
             $this->delete();
             $this->updateJobStatus('cancelled');
-            
+
             Log::info('Heavy operation cancelled', [
                 'operation' => $this->operation,
                 'user_id' => $this->userId,
             ]);
-            
+
             return true;
-            
         } catch (Exception $e) {
             Log::error('Failed to cancel heavy operation', [
                 'operation' => $this->operation,
                 'user_id' => $this->userId,
                 'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }

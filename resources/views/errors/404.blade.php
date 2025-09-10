@@ -78,7 +78,7 @@
                     </a>
                     
                     <a 
-                        href="{{ route('contact') }}" 
+                        href="mailto:info@coprra.com" 
                         class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200"
                     >
                         <x-icon name="heroicon-o-phone" class="h-4 w-4 mr-2" />
@@ -112,7 +112,7 @@
         <div class="text-center">
             <p class="text-sm text-gray-500">
                 إذا كنت تعتقد أن هذا خطأ، يرجى 
-                <a href="{{ route('contact') }}" class="text-primary-600 hover:text-primary-500">
+                <a href="mailto:info@coprra.com" class="text-primary-600 hover:text-primary-500">
                     الاتصال بنا
                 </a>
             </p>

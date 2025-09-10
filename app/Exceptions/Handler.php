@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
@@ -42,6 +44,13 @@ class Handler extends ExceptionHandler
             }
         });
 
+        // 2.5 التعامل مع عدم المصادقة (Unauthenticated)
+        $this->renderable(function (AuthenticationException $e, $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+        });
+
         // 3. التعامل مع أخطاء قاعدة البيانات
         $this->renderable(function (QueryException $e, $request) {
             if ($request->is('api/*')) {
@@ -53,6 +62,13 @@ class Handler extends ExceptionHandler
         $this->renderable(function (Throwable $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json(['message' => 'An unexpected server error occurred.'], 500);
+            }
+        });
+
+        // 5. التعامل مع عدم التفويض (Forbidden)
+        $this->renderable(function (AuthorizationException $e, $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json(['message' => 'Forbidden.'], 403);
             }
         });
     }

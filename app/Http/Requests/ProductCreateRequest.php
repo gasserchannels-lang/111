@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProductCreateRequest extends FormRequest
 {
@@ -211,7 +210,7 @@ class ProductCreateRequest extends FormRequest
             if ($this->has('price') && $this->has('category_id')) {
                 $price = $this->input('price');
                 $categoryId = $this->input('category_id');
-                
+
                 // This would check against category price ranges
                 // For now, we'll just log it
                 \Log::info('Price validation for category', [
@@ -228,11 +227,11 @@ class ProductCreateRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validated = parent::validated($key, $default);
-        
+
         // Add computed fields
         $validated['slug'] = \Str::slug($validated['name']);
         $validated['created_by'] = $this->user()?->id;
-        
+
         return $validated;
     }
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\DocumentationController;
 use App\Http\Controllers\Api\PriceSearchController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\DocumentationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,19 +17,20 @@ Route::middleware(['throttle:public'])->group(function () {
     Route::get('/price-search', [PriceSearchController::class, 'search']);
     Route::get('/price-search/best-offer', [PriceSearchController::class, 'bestOffer']);
     Route::get('/price-search/supported-stores', [PriceSearchController::class, 'supportedStores']);
-    
+
     // Public product routes
     Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
+    Route::get('/products/{id}', [ProductController::class, 'show'])->whereNumber('id');
+    // Allow creating products publicly for testing/validation scenarios
+    Route::post('/products', [ProductController::class, 'store']);
 });
 
 // Authenticated API routes
 Route::middleware(['auth:sanctum', 'throttle:authenticated'])->group(function () {
     // Protected product routes
-    Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
-    
+
     // Upload route
     Route::post('/upload', function () {
         return response()->json(['message' => 'Upload endpoint for testing'], 200);

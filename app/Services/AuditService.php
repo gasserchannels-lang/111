@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class AuditService
 {
     /**
-     * Log an audit event
+     * Log an audit event.
      */
     public function log(
         string $event,
@@ -41,7 +41,7 @@ class AuditService
     }
 
     /**
-     * Log model creation
+     * Log model creation.
      */
     public function logCreated(Model $model, ?array $metadata = null): void
     {
@@ -49,7 +49,7 @@ class AuditService
     }
 
     /**
-     * Log model update
+     * Log model update.
      */
     public function logUpdated(Model $model, array $oldValues, ?array $metadata = null): void
     {
@@ -57,7 +57,7 @@ class AuditService
     }
 
     /**
-     * Log model deletion
+     * Log model deletion.
      */
     public function logDeleted(Model $model, ?array $metadata = null): void
     {
@@ -65,7 +65,7 @@ class AuditService
     }
 
     /**
-     * Log model viewing
+     * Log model viewing.
      */
     public function logViewed(Model $model, ?array $metadata = null): void
     {
@@ -73,7 +73,7 @@ class AuditService
     }
 
     /**
-     * Log sensitive operations
+     * Log sensitive operations.
      */
     public function logSensitiveOperation(
         string $operation,
@@ -84,19 +84,19 @@ class AuditService
     }
 
     /**
-     * Log authentication events
+     * Log authentication events.
      */
     public function logAuthEvent(string $event, ?int $userId = null, ?array $metadata = null): void
     {
         $user = $userId ? \App\Models\User::find($userId) : Auth::user();
-        
+
         if ($user) {
             $this->log($event, $user, null, null, $metadata);
         }
     }
 
     /**
-     * Log API access
+     * Log API access.
      */
     public function logApiAccess(
         string $endpoint,
@@ -105,7 +105,7 @@ class AuditService
         ?array $metadata = null
     ): void {
         $user = $userId ? \App\Models\User::find($userId) : Auth::user();
-        
+
         if ($user) {
             $this->log('api_access', $user, null, null, array_merge($metadata ?? [], [
                 'endpoint' => $endpoint,
@@ -115,7 +115,7 @@ class AuditService
     }
 
     /**
-     * Get audit logs for a model
+     * Get audit logs for a model.
      */
     public function getModelLogs(Model $model, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
@@ -127,7 +127,7 @@ class AuditService
     }
 
     /**
-     * Get audit logs for a user
+     * Get audit logs for a user.
      */
     public function getUserLogs(int $userId, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
@@ -138,7 +138,7 @@ class AuditService
     }
 
     /**
-     * Get audit logs by event
+     * Get audit logs by event.
      */
     public function getEventLogs(string $event, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
@@ -149,7 +149,7 @@ class AuditService
     }
 
     /**
-     * Clean old audit logs
+     * Clean old audit logs.
      */
     public function cleanOldLogs(int $daysOld = 90): int
     {

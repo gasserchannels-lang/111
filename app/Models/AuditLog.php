@@ -34,7 +34,7 @@ class AuditLog extends Model
     ];
 
     /**
-     * Get the user who performed the action
+     * Get the user who performed the action.
      */
     public function user(): BelongsTo
     {
@@ -42,7 +42,7 @@ class AuditLog extends Model
     }
 
     /**
-     * Get the auditable model
+     * Get the auditable model.
      */
     public function auditable(): MorphTo
     {
@@ -50,7 +50,7 @@ class AuditLog extends Model
     }
 
     /**
-     * Scope for specific events
+     * Scope for specific events.
      */
     public function scopeEvent($query, string $event)
     {
@@ -58,7 +58,7 @@ class AuditLog extends Model
     }
 
     /**
-     * Scope for specific user
+     * Scope for specific user.
      */
     public function scopeForUser($query, int $userId)
     {
@@ -66,7 +66,7 @@ class AuditLog extends Model
     }
 
     /**
-     * Scope for specific model type
+     * Scope for specific model type.
      */
     public function scopeForModel($query, string $modelType)
     {
@@ -74,7 +74,7 @@ class AuditLog extends Model
     }
 
     /**
-     * Scope for date range
+     * Scope for date range.
      */
     public function scopeDateRange($query, $startDate, $endDate)
     {
@@ -82,7 +82,7 @@ class AuditLog extends Model
     }
 
     /**
-     * Get formatted event name
+     * Get formatted event name.
      */
     public function getFormattedEventAttribute(): string
     {
@@ -90,11 +90,11 @@ class AuditLog extends Model
     }
 
     /**
-     * Get changes summary
+     * Get changes summary.
      */
     public function getChangesSummaryAttribute(): string
     {
-        if (!$this->old_values || !$this->new_values) {
+        if (! $this->old_values || ! $this->new_values) {
             return 'No changes recorded';
         }
 

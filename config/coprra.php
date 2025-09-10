@@ -58,6 +58,34 @@ return [
     */
 
     'user_preferences' => [
+        'default_condition' => env('COPRRA_DEFAULT_CONDITION', 'new'),
+        'max_price_range' => env('COPRRA_MAX_PRICE_RANGE', 10000),
+        'min_price_range' => env('COPRRA_MIN_PRICE_RANGE', 1),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exchange Rates
+    |--------------------------------------------------------------------------
+    */
+
+    'exchange_rates' => [
+        'USD' => env('EXCHANGE_RATE_USD', 1.0),
+        'EUR' => env('EXCHANGE_RATE_EUR', 0.85),
+        'GBP' => env('EXCHANGE_RATE_GBP', 0.73),
+        'JPY' => env('EXCHANGE_RATE_JPY', 110.0),
+        'SAR' => env('EXCHANGE_RATE_SAR', 3.75),
+        'AED' => env('EXCHANGE_RATE_AED', 3.67),
+        'EGP' => env('EXCHANGE_RATE_EGP', 30.9),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination and Limits
+    |--------------------------------------------------------------------------
+    */
+
+    'pagination' => [
         'default_items_per_page' => env('DEFAULT_ITEMS_PER_PAGE', 20),
         'max_wishlist_items' => env('MAX_WISHLIST_ITEMS', 100),
         'max_price_alerts' => env('MAX_PRICE_ALERTS', 50),

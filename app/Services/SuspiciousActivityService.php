@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use Exception;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SuspiciousActivityService
 {
@@ -54,11 +54,11 @@ class SuspiciousActivityService
     }
 
     /**
-     * Monitor user activity
+     * Monitor user activity.
      */
     public function monitorActivity(string $event, array $data): void
     {
-        if (!$this->config['enabled']) {
+        if (! $this->config['enabled']) {
             return;
         }
 
@@ -100,7 +100,6 @@ class SuspiciousActivityService
             foreach ($suspiciousActivities as $activity) {
                 $this->processSuspiciousActivity($activity);
             }
-
         } catch (Exception $e) {
             Log::error('Suspicious activity monitoring failed', [
                 'event' => $event,
@@ -111,20 +110,20 @@ class SuspiciousActivityService
     }
 
     /**
-     * Check for multiple failed logins
+     * Check for multiple failed logins.
      */
     private function checkMultipleFailedLogins(int $userId, string $ipAddress): array
     {
         $rule = $this->config['monitoring_rules']['multiple_failed_logins'];
-        
-        if (!$rule['enabled']) {
+
+        if (! $rule['enabled']) {
             return [];
         }
 
         $key = "failed_logins:{$userId}:{$ipAddress}";
         $failedCount = Cache::get($key, 0);
         $failedCount++;
-        
+
         Cache::put($key, $failedCount, $rule['time_window'] * 60);
 
         if ($failedCount >= $rule['threshold']) {
@@ -145,26 +144,26 @@ class SuspiciousActivityService
     }
 
     /**
-     * Check for unusual login location
+     * Check for unusual login location.
      */
     private function checkUnusualLoginLocation(int $userId, array $location, string $ipAddress): array
     {
         $rule = $this->config['monitoring_rules']['unusual_login_location'];
-        
-        if (!$rule['enabled']) {
+
+        if (! $rule['enabled']) {
             return [];
         }
 
         // Get user's previous login locations
         $previousLocations = $this->getUserPreviousLocations($userId);
-        
+
         if (empty($previousLocations)) {
             return []; // No previous locations to compare
         }
 
         // Check if current location is significantly different
         $isUnusual = $this->isLocationUnusual($location, $previousLocations);
-        
+
         if ($isUnusual) {
             return [[
                 'type' => 'unusual_login_location',
@@ -183,20 +182,20 @@ class SuspiciousActivityService
     }
 
     /**
-     * Check for rapid API requests
+     * Check for rapid API requests.
      */
     private function checkRapidApiRequests(int $userId, string $ipAddress): array
     {
         $rule = $this->config['monitoring_rules']['rapid_api_requests'];
-        
-        if (!$rule['enabled']) {
+
+        if (! $rule['enabled']) {
             return [];
         }
 
         $key = "api_requests:{$userId}:{$ipAddress}";
         $requestCount = Cache::get($key, 0);
         $requestCount++;
-        
+
         Cache::put($key, $requestCount, $rule['time_window'] * 60);
 
         if ($requestCount >= $rule['threshold']) {
@@ -217,20 +216,20 @@ class SuspiciousActivityService
     }
 
     /**
-     * Check for unusual data access
+     * Check for unusual data access.
      */
     private function checkUnusualDataAccess(int $userId, array $data): array
     {
         $rule = $this->config['monitoring_rules']['unusual_data_access'];
-        
-        if (!$rule['enabled']) {
+
+        if (! $rule['enabled']) {
             return [];
         }
 
         $key = "data_access:{$userId}";
         $accessCount = Cache::get($key, 0);
         $accessCount++;
-        
+
         Cache::put($key, $accessCount, $rule['time_window'] * 60);
 
         if ($accessCount >= $rule['threshold']) {
@@ -251,13 +250,13 @@ class SuspiciousActivityService
     }
 
     /**
-     * Check for admin actions
+     * Check for admin actions.
      */
     private function checkAdminActions(int $userId, array $data): array
     {
         $rule = $this->config['monitoring_rules']['admin_actions'];
-        
-        if (!$rule['enabled']) {
+
+        if (! $rule['enabled']) {
             return [];
         }
 
@@ -276,7 +275,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Process suspicious activity
+     * Process suspicious activity.
      */
     private function processSuspiciousActivity(array $activity): void
     {
@@ -292,7 +291,6 @@ class SuspiciousActivityService
 
             // Take automatic actions if needed
             $this->takeAutomaticActions($activity);
-
         } catch (Exception $e) {
             Log::error('Failed to process suspicious activity', [
                 'activity' => $activity,
@@ -302,7 +300,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Store suspicious activity
+     * Store suspicious activity.
      */
     private function storeSuspiciousActivity(array $activity): void
     {
@@ -312,7 +310,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Send notifications
+     * Send notifications.
      */
     private function sendNotifications(array $activity): void
     {
@@ -332,17 +330,17 @@ class SuspiciousActivityService
     }
 
     /**
-     * Send email notification
+     * Send email notification.
      */
     private function sendEmailNotification(array $activity): void
     {
         try {
             $adminEmails = config('app.admin_emails', []);
-            
-            if (!empty($adminEmails)) {
+
+            if (! empty($adminEmails)) {
                 $subject = "Suspicious Activity Alert - {$activity['type']}";
                 $message = $this->formatActivityMessage($activity);
-                
+
                 Mail::raw($message, function ($mail) use ($adminEmails, $subject) {
                     $mail->to($adminEmails)->subject($subject);
                 });
@@ -356,16 +354,16 @@ class SuspiciousActivityService
     }
 
     /**
-     * Send Slack notification
+     * Send Slack notification.
      */
     private function sendSlackNotification(array $activity): void
     {
         try {
             $webhookUrl = config('suspicious_activity.slack_webhook_url');
-            
+
             if ($webhookUrl) {
                 $message = $this->formatActivityMessage($activity);
-                
+
                 // Send to Slack webhook
                 // Implementation would go here
             }
@@ -378,13 +376,13 @@ class SuspiciousActivityService
     }
 
     /**
-     * Send webhook notification
+     * Send webhook notification.
      */
     private function sendWebhookNotification(array $activity): void
     {
         try {
             $webhookUrl = config('suspicious_activity.webhook_url');
-            
+
             if ($webhookUrl) {
                 // Send to webhook
                 // Implementation would go here
@@ -398,7 +396,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Take automatic actions
+     * Take automatic actions.
      */
     private function takeAutomaticActions(array $activity): void
     {
@@ -428,7 +426,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Lock user account
+     * Lock user account.
      */
     private function lockUserAccount(int $userId): void
     {
@@ -447,7 +445,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Suspend user account
+     * Suspend user account.
      */
     private function suspendUserAccount(int $userId): void
     {
@@ -466,7 +464,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Throttle user requests
+     * Throttle user requests.
      */
     private function throttleUserRequests(int $userId): void
     {
@@ -485,7 +483,7 @@ class SuspiciousActivityService
     }
 
     /**
-     * Format activity message
+     * Format activity message.
      */
     private function formatActivityMessage(array $activity): string
     {
@@ -497,12 +495,12 @@ class SuspiciousActivityService
         $message .= "Timestamp: {$activity['timestamp']}\n\n";
         $message .= "Details:\n";
         $message .= json_encode($activity['details'], JSON_PRETTY_PRINT);
-        
+
         return $message;
     }
 
     /**
-     * Get user's previous login locations
+     * Get user's previous login locations.
      */
     private function getUserPreviousLocations(int $userId): array
     {
@@ -512,52 +510,52 @@ class SuspiciousActivityService
     }
 
     /**
-     * Check if location is unusual
+     * Check if location is unusual.
      */
     private function isLocationUnusual(array $currentLocation, array $previousLocations): bool
     {
         // Simple distance-based check
         // In production, this would use more sophisticated geolocation analysis
-        
+
         $currentLat = $currentLocation['latitude'] ?? 0;
         $currentLng = $currentLocation['longitude'] ?? 0;
-        
+
         foreach ($previousLocations as $location) {
             $prevLat = $location['latitude'] ?? 0;
             $prevLng = $location['longitude'] ?? 0;
-            
+
             $distance = $this->calculateDistance($currentLat, $currentLng, $prevLat, $prevLng);
-            
+
             // If distance is less than 100km, it's not unusual
             if ($distance < 100) {
                 return false;
             }
         }
-        
+
         return true;
     }
 
     /**
-     * Calculate distance between two coordinates
+     * Calculate distance between two coordinates.
      */
     private function calculateDistance(float $lat1, float $lng1, float $lat2, float $lng2): float
     {
         $earthRadius = 6371; // km
-        
+
         $dLat = deg2rad($lat2 - $lat1);
         $dLng = deg2rad($lng2 - $lng1);
-        
-        $a = sin($dLat/2) * sin($dLat/2) +
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
              cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
-             sin($dLng/2) * sin($dLng/2);
-        
-        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
-        
+             sin($dLng / 2) * sin($dLng / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
         return $earthRadius * $c;
     }
 
     /**
-     * Get suspicious activity statistics
+     * Get suspicious activity statistics.
      */
     public function getStatistics(): array
     {

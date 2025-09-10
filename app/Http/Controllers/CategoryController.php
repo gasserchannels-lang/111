@@ -16,7 +16,10 @@ class CategoryController extends Controller
 
     public function show(string $slug): View
     {
-        $category = Category::query()->where('slug', $slug)->firstOrFail();
+        $category = Category::query()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
 
         $products = $category
             ->products()

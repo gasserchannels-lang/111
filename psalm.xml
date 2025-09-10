@@ -2,6 +2,19 @@
 <psalm
     errorLevel="1"
     resolveFromConfigFile="true"
+    findUnusedCode="true"
+    findUnusedBaselineEntry="true"
+    findUnusedVariablesAndParams="true"
+    ensureArrayStringOffsetsExist="true"
+    ensureArrayIntOffsetsExist="true"
+    checkForThrowsDocblock="true"
+    checkForThrowsInGlobalScope="true"
+    disableSuppressAll="true"
+    requireVoidReturnType="true"
+    memoizeMethodCallResults="true"
+    hoistConstants="true"
+    runTaintAnalysis="true"
+    cacheDirectory="storage/framework/cache/psalm"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -11,27 +24,48 @@
         <directory name="config" />
         <directory name="database" />
         <directory name="routes" />
+        <directory name="tests" />
         <ignoreFiles>
             <directory name="vendor" />
             <directory name="storage" />
             <directory name="bootstrap/cache" />
+            <file name="tests/Pest.php" />
         </ignoreFiles>
     </projectFiles>
+
+    <plugins>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin" />
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin" />
+    </plugins>
 
     <issueHandlers>
         <LessSpecificReturnType errorLevel="info" />
         <MoreSpecificReturnType errorLevel="info" />
-        <MixedAssignment errorLevel="info" />
-        <MixedArgument errorLevel="info" />
-        <MixedPropertyFetch errorLevel="info" />
-        <MixedMethodCall errorLevel="info" />
-        <MixedArrayAccess errorLevel="info" />
-        <MixedReturnStatement errorLevel="info" />
-        <MixedOperand errorLevel="info" />
-        <MixedPropertyAssignment errorLevel="info" />
-        <MixedArrayAssignment errorLevel="info" />
-        <MixedArrayOffset errorLevel="info" />
-        <MixedFunctionCall errorLevel="info" />
+        <MixedAssignment errorLevel="error" />
+        <MixedArgument errorLevel="error" />
+        <MixedPropertyFetch errorLevel="error" />
+        <MixedMethodCall errorLevel="error" />
+        <MixedArrayAccess errorLevel="error" />
+        <MixedReturnStatement errorLevel="error" />
+        <MixedOperand errorLevel="error" />
+        <MixedPropertyAssignment errorLevel="error" />
+        <MixedArrayAssignment errorLevel="error" />
+        <MixedArrayOffset errorLevel="error" />
+        <MixedFunctionCall errorLevel="error" />
+        <UndefinedMagicPropertyFetch errorLevel="info" />
+        <UndefinedMagicMethod errorLevel="info" />
+        <InvalidReturnType errorLevel="error" />
+        <InvalidNullableReturnType errorLevel="error" />
+        <InvalidFalsableReturnType errorLevel="error" />
+        <NullableReturnStatement errorLevel="error" />
+        <FalsableReturnStatement errorLevel="error" />
+        <UnusedVariable errorLevel="info" />
+        <UnusedParam errorLevel="info" />
     </issueHandlers>
+
+    <stubs>
+        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php" />
+        <file name="vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php" />
+    </stubs>
 
 </psalm>
