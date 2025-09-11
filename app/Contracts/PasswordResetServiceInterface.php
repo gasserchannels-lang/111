@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-interface PasswordResetServiceInterface
+interface PasswordResetService
 {
     /**
      * Send password reset email.
@@ -23,6 +23,8 @@ interface PasswordResetServiceInterface
 
     /**
      * Get reset token info.
+     *
+     * @return array<string, mixed>|null
      */
     public function getResetTokenInfo(string $email): ?array;
 
@@ -33,6 +35,8 @@ interface PasswordResetServiceInterface
 
     /**
      * Get password reset statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array;
 }

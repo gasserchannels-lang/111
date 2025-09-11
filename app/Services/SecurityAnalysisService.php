@@ -10,6 +10,8 @@ class SecurityAnalysisService
 {
     /**
      * Run comprehensive security analysis.
+     *
+     * @return array<string, mixed>
      */
     public function analyze(): array
     {
@@ -23,7 +25,7 @@ class SecurityAnalysisService
             $score += $this->checkHttpsConfiguration($issues);
             $score += $this->checkSecurityMiddleware($issues);
         } catch (\Exception $e) {
-            $issues[] = 'Security analysis failed: ' . $e->getMessage();
+            $issues[] = 'Security analysis failed: '.$e->getMessage();
         }
 
         return [
@@ -36,13 +38,15 @@ class SecurityAnalysisService
 
     /**
      * Check for outdated dependencies.
+     *
+     * @param  array<int|string, mixed>  $issues
      */
     private function checkDependencies(array &$issues): int
     {
         $process = new Process(['composer', 'outdated', '--direct']);
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             return 0;
         }
 
@@ -58,6 +62,8 @@ class SecurityAnalysisService
 
     /**
      * Check if .env.example file exists.
+     *
+     * @param  array<int|string, mixed>  $issues
      */
     private function checkEnvironmentFile(array &$issues): int
     {
@@ -72,6 +78,8 @@ class SecurityAnalysisService
 
     /**
      * Check if debug mode is disabled.
+     *
+     * @param  array<int|string, mixed>  $issues
      */
     private function checkDebugMode(array &$issues): int
     {
@@ -86,6 +94,8 @@ class SecurityAnalysisService
 
     /**
      * Check if HTTPS is configured.
+     *
+     * @param  array<int|string, mixed>  $issues
      */
     private function checkHttpsConfiguration(array &$issues): int
     {
@@ -100,6 +110,8 @@ class SecurityAnalysisService
 
     /**
      * Check if SecurityHeadersMiddleware is registered.
+     *
+     * @param  array<int|string, mixed>  $issues
      */
     private function checkSecurityMiddleware(array &$issues): int
     {
@@ -119,13 +131,13 @@ class SecurityAnalysisService
     {
         try {
             // Check if class exists first
-            if (!class_exists($middlewareClass)) {
+            if (! class_exists($middlewareClass)) {
                 return false;
             }
 
             // For Laravel 10+, we need to check the kernel file directly
             $kernelFile = app_path('Http/Kernel.php');
-            if (!file_exists($kernelFile)) {
+            if (! file_exists($kernelFile)) {
                 return false;
             }
 
@@ -133,8 +145,8 @@ class SecurityAnalysisService
             $shortClassName = class_basename($middlewareClass);
 
             // Check if middleware is registered in any of the arrays
-            return str_contains($kernelContent, $middlewareClass) ||
-                   str_contains($kernelContent, $shortClassName);
+            return str_contains($kernelContent ?: '', $middlewareClass) ||
+                   str_contains($kernelContent ?: '', $shortClassName);
         } catch (\Exception $e) {
             return false;
         }

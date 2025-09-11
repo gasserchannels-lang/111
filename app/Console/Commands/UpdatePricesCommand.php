@@ -64,8 +64,8 @@ class UpdatePricesCommand extends Command
             try {
                 $newPrice = $this->fetchPriceFromAPI($priceOffer);
 
-                if ($newPrice && $newPrice !== $priceOffer->price) {
-                    if (!$dryRun) {
+                if ($newPrice && $newPrice !== (float) $priceOffer->price) {
+                    if (! $dryRun) {
                         $priceOffer->update([
                             'price' => $newPrice,
                             'updated_at' => now(),
@@ -73,11 +73,15 @@ class UpdatePricesCommand extends Command
                     }
 
                     $updatedCount++;
-                    $this->line("\n💰 Updated {$priceOffer->product->name} at {$priceOffer->store->name}: {$priceOffer->price} → {$newPrice}");
+                    $productName = $priceOffer->product->name ?? 'Unknown Product';
+                    $storeName = $priceOffer->store->name ?? 'Unknown Store';
+                    $this->line("\n💰 Updated {$productName} at {$storeName}: {$priceOffer->price} → {$newPrice}");
                 }
             } catch (\Exception $e) {
                 $errorCount++;
-                $this->error("\n❌ Error updating {$priceOffer->product->name} at {$priceOffer->store->name}: " . $e->getMessage());
+                $productName = $priceOffer->product->name ?? 'Unknown Product';
+                $storeName = $priceOffer->store->name ?? 'Unknown Store';
+                $this->error("\n❌ Error updating {$productName} at {$storeName}: ".$e->getMessage());
             }
 
             $progressBar->advance();
@@ -99,8 +103,10 @@ class UpdatePricesCommand extends Command
 
     /**
      * Fetch price from external API (placeholder implementation).
+     *
+     * @param  \App\Models\PriceOffer<\Database\Factories\PriceOfferFactory>  $priceOffer
      */
-    private function fetchPriceFromAPI(PriceOffer $priceOffer): ?float
+    private function fetchPriceFromAPI(\App\Models\PriceOffer $priceOffer): ?float
     {
         // This is a placeholder implementation
         // In a real application, you would call the store's API here

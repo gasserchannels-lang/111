@@ -17,23 +17,23 @@ class SetLocaleAndCurrency
     /**
      * Handle an incoming request.
      *
-     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         // Set language/locale
-        $this->setLocale($request);
+        $this->configureLocale($request);
 
-        // Set currency
-        $this->setCurrency($request);
+        // Configure currency
+        $this->configureCurrency($request);
 
         return $next($request);
     }
 
     /**
-     * Set application locale based on user preference, session, or default.
+     * Configure application locale based on user preference, session, or default.
      */
-    private function setLocale(Request $request): void
+    private function configureLocale(Request $request): void
     {
         $locale = null;
 
@@ -43,22 +43,22 @@ class SetLocaleAndCurrency
         }
 
         // 2. Check session
-        if (!$locale && Session::has('locale')) {
+        if (! $locale && Session::has('locale')) {
             $locale = Session::get('locale');
         }
 
         // 3. Check URL parameter
-        if (!$locale && $request->has('lang')) {
+        if (! $locale && $request->has('lang')) {
             $locale = $request->get('lang');
         }
 
         // 4. Check Accept-Language header
-        if (!$locale) {
+        if (! $locale) {
             $locale = $request->getPreferredLanguage(['en', 'ar', 'es', 'fr', 'de']);
         }
 
         // 5. Use default from config
-        if (!$locale) {
+        if (! $locale) {
             $locale = config('coprra.default_language', 'en');
         }
 
@@ -81,9 +81,9 @@ class SetLocaleAndCurrency
     }
 
     /**
-     * Set currency based on user preference, session, or default.
+     * Configure currency based on user preference, session, or default.
      */
-    private function setCurrency(Request $request): void
+    private function configureCurrency(Request $request): void
     {
         $currency = null;
 
@@ -93,17 +93,17 @@ class SetLocaleAndCurrency
         }
 
         // 2. Check session
-        if (!$currency && Session::has('currency')) {
+        if (! $currency && Session::has('currency')) {
             $currency = Session::get('currency');
         }
 
         // 3. Check URL parameter
-        if (!$currency && $request->has('currency')) {
+        if (! $currency && $request->has('currency')) {
             $currency = $request->get('currency');
         }
 
         // 4. Use default from config
-        if (!$currency) {
+        if (! $currency) {
             $currency = config('coprra.default_currency', 'USD');
         }
 

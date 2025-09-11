@@ -24,7 +24,7 @@ class StoreModelTest extends TestCase
         ]);
 
         $productUrl = 'http://original-site.com/product/abc';
-        $expectedUrl = 'http://aff.example.com?ref=MY-CODE-123&product_url=' . urlencode($productUrl);
+        $expectedUrl = 'http://aff.example.com?ref=MY-CODE-123&product_url='.urlencode($productUrl);
 
         $this->assertEquals($expectedUrl, $store->generateAffiliateUrl($productUrl));
     }

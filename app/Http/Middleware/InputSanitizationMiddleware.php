@@ -51,6 +51,9 @@ class InputSanitizationMiddleware
 
     /**
      * Sanitize array recursively.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     private function sanitizeArray(array $data): array
     {

@@ -18,6 +18,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {
@@ -95,6 +97,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -122,6 +126,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
      */
     public function attributes(): array
     {
@@ -157,7 +163,7 @@ class ProductSearchRequest extends FormRequest
             $data['tags'] = array_map('trim', $this->tags);
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $this->merge($data);
         }
     }
@@ -208,6 +214,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Get search filters.
+     *
+     * @return array<string, mixed>
      */
     public function getFilters(): array
     {
@@ -254,6 +262,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Get pagination parameters.
+     *
+     * @return array<string, int>
      */
     public function getPagination(): array
     {
@@ -265,6 +275,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Get sorting parameters.
+     *
+     * @return array<string, string>
      */
     public function getSorting(): array
     {

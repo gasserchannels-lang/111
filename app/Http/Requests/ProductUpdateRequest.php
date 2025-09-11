@@ -197,7 +197,7 @@ class ProductUpdateRequest extends FormRequest
             $data['tags'] = array_map('trim', $this->tags);
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $this->merge($data);
         }
     }
@@ -229,7 +229,7 @@ class ProductUpdateRequest extends FormRequest
                     $changePercentage = abs(($newPrice - $oldPrice) / $oldPrice) * 100;
 
                     if ($changePercentage > 50) { // More than 50% change
-                        $validator->warnings()->add('price', 'تغيير السعر بنسبة ' . round($changePercentage, 2) . '% - يرجى التأكد من صحة السعر');
+                        $validator->warnings()->add('price', 'تغيير السعر بنسبة '.round($changePercentage, 2).'% - يرجى التأكد من صحة السعر');
                     }
                 }
             }

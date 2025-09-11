@@ -6,20 +6,26 @@ namespace App\Contracts;
 
 use Illuminate\Http\UploadedFile;
 
-interface FileSecurityServiceInterface
+interface FileSecurityService
 {
     /**
      * Scan uploaded file for security threats.
+     *
+     * @return array<string, mixed>
      */
     public function scanFile(UploadedFile $file): array;
 
     /**
      * Get allowed file extensions.
+     *
+     * @return list<string>
      */
     public function getAllowedExtensions(): array;
 
     /**
      * Get dangerous file extensions.
+     *
+     * @return list<string>
      */
     public function getDangerousExtensions(): array;
 
@@ -30,6 +36,8 @@ interface FileSecurityServiceInterface
 
     /**
      * Get file security statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array;
 }

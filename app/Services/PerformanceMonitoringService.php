@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class PerformanceMonitoringService
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $metrics = [];
 
     private float $startTime;
@@ -37,10 +40,12 @@ class PerformanceMonitoringService
 
     /**
      * End monitoring a specific operation.
+     *
+     * @return array<string, mixed>
      */
     public function endOperation(string $operation): array
     {
-        if (!isset($this->metrics[$operation])) {
+        if (! isset($this->metrics[$operation])) {
             return [];
         }
 
@@ -68,6 +73,8 @@ class PerformanceMonitoringService
 
     /**
      * Get overall performance metrics.
+     *
+     * @return array<string, mixed>
      */
     public function getOverallMetrics(): array
     {
@@ -87,6 +94,8 @@ class PerformanceMonitoringService
 
     /**
      * Monitor database performance.
+     *
+     * @return array<string, mixed>
      */
     public function monitorDatabase(): array
     {
@@ -118,6 +127,8 @@ class PerformanceMonitoringService
 
     /**
      * Monitor cache performance.
+     *
+     * @return array<string, mixed>
      */
     public function monitorCache(): array
     {
@@ -135,6 +146,8 @@ class PerformanceMonitoringService
 
     /**
      * Monitor memory usage.
+     *
+     * @return array<string, mixed>
      */
     public function monitorMemory(): array
     {
@@ -154,6 +167,8 @@ class PerformanceMonitoringService
 
     /**
      * Monitor storage usage.
+     *
+     * @return array<string, mixed>
      */
     public function monitorStorage(): array
     {
@@ -189,6 +204,8 @@ class PerformanceMonitoringService
 
     /**
      * Check performance thresholds.
+     *
+     * @param  array<string, mixed>  $metrics
      */
     private function checkThresholds(array $metrics): void
     {
@@ -250,7 +267,7 @@ class PerformanceMonitoringService
     {
         $limit = trim($limit);
         $last = strtolower($limit[strlen($limit) - 1]);
-        $limit = (int)$limit;
+        $limit = (int) $limit;
 
         switch ($last) {
             case 'g':

@@ -14,8 +14,14 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    /**
+     * @var array<int, class-string<\Throwable>>
+     */
     protected $dontReport = [];
 
+    /**
+     * @var array<int, string>
+     */
     protected $dontFlash = ['current_password', 'password', 'password_confirmation'];
 
     public function register(): void

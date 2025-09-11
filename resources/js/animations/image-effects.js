@@ -45,7 +45,7 @@ class ImageEffects {
                 scale: 1,
                 opacity: 1,
                 duration: 1.5,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -55,7 +55,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1.1,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
 
@@ -63,7 +63,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
         });
@@ -75,7 +75,7 @@ class ImageEffects {
             }, {
                 scale: 1,
                 duration: 2,
-                ease: "elastic.out(1, 0.3)"
+                ease: 'elastic.out(1, 0.3)'
             });
         });
     }
@@ -94,7 +94,7 @@ class ImageEffects {
                 x: 0,
                 opacity: 1,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -107,7 +107,7 @@ class ImageEffects {
                 y: 0,
                 opacity: 1,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -122,7 +122,7 @@ class ImageEffects {
                 y: 0,
                 opacity: 1,
                 duration: 1.2,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
     }
@@ -139,7 +139,7 @@ class ImageEffects {
             }, {
                 opacity: 1,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -152,7 +152,7 @@ class ImageEffects {
                 opacity: 1,
                 y: 0,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -165,7 +165,7 @@ class ImageEffects {
                 opacity: 1,
                 y: 0,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -178,7 +178,7 @@ class ImageEffects {
                 opacity: 1,
                 x: 0,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -191,7 +191,7 @@ class ImageEffects {
                 opacity: 1,
                 x: 0,
                 duration: 1,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
     }
@@ -210,7 +210,7 @@ class ImageEffects {
                 rotation: 0,
                 opacity: 1,
                 duration: 1.5,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
 
@@ -219,7 +219,7 @@ class ImageEffects {
             gsap.to(element, {
                 rotation: 360,
                 duration: 10,
-                ease: "none",
+                ease: 'none',
                 repeat: -1
             });
         });
@@ -235,7 +235,7 @@ class ImageEffects {
                 rotationY: 0,
                 opacity: 1,
                 duration: 2,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
     }
@@ -251,7 +251,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1.05,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
 
@@ -259,7 +259,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
         });
@@ -271,7 +271,7 @@ class ImageEffects {
                     rotation: 5,
                     scale: 1.1,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
 
@@ -280,7 +280,7 @@ class ImageEffects {
                     rotation: 0,
                     scale: 1,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
         });
@@ -292,7 +292,7 @@ class ImageEffects {
                     opacity: 0.8,
                     scale: 1.05,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
 
@@ -301,7 +301,7 @@ class ImageEffects {
                     opacity: 1,
                     scale: 1,
                     duration: 0.3,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
         });
@@ -318,7 +318,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 0.95,
                     duration: 0.1,
-                    ease: "power2.out",
+                    ease: 'power2.out',
                     yoyo: true,
                     repeat: 1
                 });
@@ -331,7 +331,7 @@ class ImageEffects {
                 gsap.to(element, {
                     rotation: 360,
                     duration: 0.5,
-                    ease: "power2.out"
+                    ease: 'power2.out'
                 });
             });
         });
@@ -342,7 +342,7 @@ class ImageEffects {
                 gsap.to(element, {
                     opacity: 0.5,
                     duration: 0.2,
-                    ease: "power2.out",
+                    ease: 'power2.out',
                     yoyo: true,
                     repeat: 1
                 });
@@ -357,117 +357,117 @@ class ImageEffects {
     applyEffect(element, effectType, options = {}) {
         const defaultOptions = {
             duration: 1,
-            ease: "power2.out",
+            ease: 'power2.out',
             delay: 0
         };
 
         const config = { ...defaultOptions, ...options };
 
         switch (effectType) {
-            case 'zoom':
-                gsap.fromTo(element, {
-                    scale: 0.8,
-                    opacity: 0.7
-                }, {
-                    scale: 1,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'zoom':
+            gsap.fromTo(element, {
+                scale: 0.8,
+                opacity: 0.7
+            }, {
+                scale: 1,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'fade':
-                gsap.fromTo(element, {
-                    opacity: 0
-                }, {
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'fade':
+            gsap.fromTo(element, {
+                opacity: 0
+            }, {
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'slide-left':
-                gsap.fromTo(element, {
-                    x: -100,
-                    opacity: 0
-                }, {
-                    x: 0,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'slide-left':
+            gsap.fromTo(element, {
+                x: -100,
+                opacity: 0
+            }, {
+                x: 0,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'slide-right':
-                gsap.fromTo(element, {
-                    x: 100,
-                    opacity: 0
-                }, {
-                    x: 0,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'slide-right':
+            gsap.fromTo(element, {
+                x: 100,
+                opacity: 0
+            }, {
+                x: 0,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'slide-up':
-                gsap.fromTo(element, {
-                    y: 100,
-                    opacity: 0
-                }, {
-                    y: 0,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'slide-up':
+            gsap.fromTo(element, {
+                y: 100,
+                opacity: 0
+            }, {
+                y: 0,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'slide-down':
-                gsap.fromTo(element, {
-                    y: -100,
-                    opacity: 0
-                }, {
-                    y: 0,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'slide-down':
+            gsap.fromTo(element, {
+                y: -100,
+                opacity: 0
+            }, {
+                y: 0,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'rotate':
-                gsap.fromTo(element, {
-                    rotation: -180,
-                    opacity: 0
-                }, {
-                    rotation: 0,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'rotate':
+            gsap.fromTo(element, {
+                rotation: -180,
+                opacity: 0
+            }, {
+                rotation: 0,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            case 'scale':
-                gsap.fromTo(element, {
-                    scale: 0,
-                    opacity: 0
-                }, {
-                    scale: 1,
-                    opacity: 1,
-                    duration: config.duration,
-                    ease: config.ease,
-                    delay: config.delay
-                });
-                break;
+        case 'scale':
+            gsap.fromTo(element, {
+                scale: 0,
+                opacity: 0
+            }, {
+                scale: 1,
+                opacity: 1,
+                duration: config.duration,
+                ease: config.ease,
+                delay: config.delay
+            });
+            break;
 
-            default:
-                console.warn(`Unknown effect type: ${effectType}`);
+        default:
+            console.warn(`Unknown effect type: ${effectType}`);
         }
     }
 
@@ -476,7 +476,7 @@ class ImageEffects {
      * Remove all effects
      */
     removeAllEffects() {
-        gsap.killTweensOf("*");
+        gsap.killTweensOf('*');
     }
 
     /**
@@ -484,8 +484,8 @@ class ImageEffects {
      * Reset all elements
      */
     resetAllElements() {
-        gsap.set("*", {
-            clearProps: "all"
+        gsap.set('*', {
+            clearProps: 'all'
         });
     }
 }

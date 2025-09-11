@@ -13,6 +13,10 @@ class AuditService
 {
     /**
      * Log an audit event.
+     *
+     * @param  array<string, mixed>|null  $oldValues
+     * @param  array<string, mixed>|null  $newValues
+     * @param  array<string, mixed>|null  $metadata
      */
     public function log(
         string $event,
@@ -42,6 +46,8 @@ class AuditService
 
     /**
      * Log model creation.
+     *
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logCreated(Model $model, ?array $metadata = null): void
     {
@@ -50,6 +56,9 @@ class AuditService
 
     /**
      * Log model update.
+     *
+     * @param  array<string, mixed>  $oldValues
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logUpdated(Model $model, array $oldValues, ?array $metadata = null): void
     {
@@ -58,6 +67,8 @@ class AuditService
 
     /**
      * Log model deletion.
+     *
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logDeleted(Model $model, ?array $metadata = null): void
     {
@@ -66,6 +77,8 @@ class AuditService
 
     /**
      * Log model viewing.
+     *
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logViewed(Model $model, ?array $metadata = null): void
     {
@@ -74,6 +87,8 @@ class AuditService
 
     /**
      * Log sensitive operations.
+     *
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logSensitiveOperation(
         string $operation,
@@ -85,6 +100,8 @@ class AuditService
 
     /**
      * Log authentication events.
+     *
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logAuthEvent(string $event, ?int $userId = null, ?array $metadata = null): void
     {
@@ -97,6 +114,8 @@ class AuditService
 
     /**
      * Log API access.
+     *
+     * @param  array<string, mixed>|null  $metadata
      */
     public function logApiAccess(
         string $endpoint,
@@ -116,35 +135,41 @@ class AuditService
 
     /**
      * Get audit logs for a model.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, AuditLog>
      */
     public function getModelLogs(Model $model, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
         return AuditLog::where('auditable_type', get_class($model))
             ->where('auditable_id', $model->getKey())
             ->orderBy('created_at', 'desc')
-            ->limit($limit)
+            ->limit($limit ?? 10)
             ->get();
     }
 
     /**
      * Get audit logs for a user.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, AuditLog>
      */
     public function getUserLogs(int $userId, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
         return AuditLog::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
-            ->limit($limit)
+            ->limit($limit ?? 10)
             ->get();
     }
 
     /**
      * Get audit logs by event.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, AuditLog>
      */
     public function getEventLogs(string $event, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
         return AuditLog::where('event', $event)
             ->orderBy('created_at', 'desc')
-            ->limit($limit)
+            ->limit($limit ?? 10)
             ->get();
     }
 

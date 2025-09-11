@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 class ProcessResult
@@ -7,17 +9,17 @@ class ProcessResult
     /**
      * The exit code of the process.
      */
-    public int $exitCode;
+    private int $exitCode;
 
     /**
      * The output of the process.
      */
-    public string $output;
+    private string $output;
 
     /**
      * The error output of the process.
      */
-    public string $errorOutput;
+    private string $errorOutput;
 
     /**
      * Create a new process result instance.
@@ -27,6 +29,30 @@ class ProcessResult
         $this->exitCode = $exitCode;
         $this->output = $output;
         $this->errorOutput = $errorOutput;
+    }
+
+    /**
+     * Get the exit code of the process.
+     */
+    public function getExitCode(): int
+    {
+        return $this->exitCode;
+    }
+
+    /**
+     * Get the output of the process.
+     */
+    public function getOutput(): string
+    {
+        return $this->output;
+    }
+
+    /**
+     * Get the error output of the process.
+     */
+    public function getErrorOutput(): string
+    {
+        return $this->errorOutput;
     }
 
     /**
@@ -42,7 +68,7 @@ class ProcessResult
      */
     public function failed(): bool
     {
-        return !$this->successful();
+        return ! $this->successful();
     }
 
     /**
@@ -50,6 +76,6 @@ class ProcessResult
      */
     public function getFullOutput(): string
     {
-        return $this->output . ($this->errorOutput ? "\n" . $this->errorOutput : '');
+        return $this->output.($this->errorOutput ? "\n".$this->errorOutput : '');
     }
 }

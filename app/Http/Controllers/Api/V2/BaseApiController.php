@@ -57,7 +57,7 @@ abstract class BaseApiController extends V1BaseController
             'timestamp' => now()->toISOString(),
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -84,7 +84,7 @@ abstract class BaseApiController extends V1BaseController
             $response['errors'] = $errors;
         }
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -124,7 +124,7 @@ abstract class BaseApiController extends V1BaseController
             'timestamp' => now()->toISOString(),
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -238,7 +238,7 @@ abstract class BaseApiController extends V1BaseController
         $sortMode = $request->get('sort_mode', 'default'); // default, natural, custom
 
         // Validate sort order
-        if (!in_array($sortOrder, ['asc', 'desc'])) {
+        if (! in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'desc';
         }
 

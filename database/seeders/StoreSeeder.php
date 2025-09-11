@@ -16,7 +16,7 @@ class StoreSeeder extends Seeder
 
         // Get USD currency ID
         $usdCurrency = Currency::where('code', 'USD')->first();
-        if (!$usdCurrency) {
+        if (! $usdCurrency) {
             $this->command->error('USD currency not found. Please run LanguagesAndCurrenciesSeeder first!');
 
             return;

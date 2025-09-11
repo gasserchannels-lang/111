@@ -38,6 +38,8 @@ class ViewServiceProvider extends ServiceProvider
 
     /**
      * Get breadcrumbs for current page.
+     *
+     * @return array<int, array<string, mixed>>
      */
     private function getBreadcrumbs(): array
     {
@@ -54,19 +56,25 @@ class ViewServiceProvider extends ServiceProvider
                 case 'products.show':
                     $product = $route->parameter('product');
                     $breadcrumbs[] = ['name' => 'Products', 'url' => route('products.index')];
-                    $breadcrumbs[] = ['name' => $product->name, 'url' => null];
+                    if ($product && isset($product->name)) {
+                        $breadcrumbs[] = ['name' => $product->name, 'url' => null];
+                    }
                     break;
 
                 case 'categories.show':
                     $category = $route->parameter('category');
                     $breadcrumbs[] = ['name' => 'Categories', 'url' => route('categories.index')];
-                    $breadcrumbs[] = ['name' => $category->name, 'url' => null];
+                    if ($category && isset($category->name)) {
+                        $breadcrumbs[] = ['name' => $category->name, 'url' => null];
+                    }
                     break;
 
                 case 'brands.show':
                     $brand = $route->parameter('brand');
                     $breadcrumbs[] = ['name' => 'Brands', 'url' => route('brands.index')];
-                    $breadcrumbs[] = ['name' => $brand->name, 'url' => null];
+                    if ($brand && isset($brand->name)) {
+                        $breadcrumbs[] = ['name' => $brand->name, 'url' => null];
+                    }
                     break;
             }
         }

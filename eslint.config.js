@@ -18,7 +18,13 @@ export default [
                 exports: 'readonly',
                 global: 'readonly',
                 window: 'readonly',
-                document: 'readonly'
+                document: 'readonly',
+                localStorage: 'readonly',
+                sessionStorage: 'readonly',
+                navigator: 'readonly',
+                fetch: 'readonly',
+                screen: 'readonly',
+                performance: 'readonly'
             }
         },
         rules: {

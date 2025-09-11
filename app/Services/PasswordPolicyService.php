@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 
 class PasswordPolicyService
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $config;
 
     public function __construct()
@@ -34,6 +37,8 @@ class PasswordPolicyService
 
     /**
      * Validate password against policy.
+     *
+     * @return array<string, mixed>
      */
     public function validatePassword(string $password, ?int $userId = null): array
     {
@@ -50,22 +55,22 @@ class PasswordPolicyService
         }
 
         // Check for uppercase letters
-        if ($this->config['require_uppercase'] && !preg_match('/[A-Z]/', $password)) {
+        if ($this->config['require_uppercase'] && ! preg_match('/[A-Z]/', $password)) {
             $errors[] = 'Password must contain at least one uppercase letter';
         }
 
         // Check for lowercase letters
-        if ($this->config['require_lowercase'] && !preg_match('/[a-z]/', $password)) {
+        if ($this->config['require_lowercase'] && ! preg_match('/[a-z]/', $password)) {
             $errors[] = 'Password must contain at least one lowercase letter';
         }
 
         // Check for numbers
-        if ($this->config['require_numbers'] && !preg_match('/[0-9]/', $password)) {
+        if ($this->config['require_numbers'] && ! preg_match('/[0-9]/', $password)) {
             $errors[] = 'Password must contain at least one number';
         }
 
         // Check for symbols
-        if ($this->config['require_symbols'] && !preg_match('/[^A-Za-z0-9]/', $password)) {
+        if ($this->config['require_symbols'] && ! preg_match('/[^A-Za-z0-9]/', $password)) {
             $errors[] = 'Password must contain at least one special character';
         }
 
@@ -92,6 +97,8 @@ class PasswordPolicyService
 
     /**
      * Check for common password patterns.
+     *
+     * @return list<string>
      */
     private function checkCommonPatterns(string $password): array
     {
@@ -218,6 +225,8 @@ class PasswordPolicyService
 
     /**
      * Get user's password history.
+     *
+     * @return list<string>
      */
     private function getUserPasswordHistory(int $userId, int $limit): array
     {
@@ -264,7 +273,7 @@ class PasswordPolicyService
             // For now, we'll simulate the check
             $lastPasswordChange = $this->getLastPasswordChange($userId);
 
-            if (!$lastPasswordChange) {
+            if (! $lastPasswordChange) {
                 return true; // No password set
             }
 
@@ -374,7 +383,7 @@ class PasswordPolicyService
         $numbers = '0123456789';
         $symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
-        $allChars = $uppercase . $lowercase . $numbers . $symbols;
+        $allChars = $uppercase.$lowercase.$numbers.$symbols;
 
         $password = '';
 
@@ -395,6 +404,8 @@ class PasswordPolicyService
 
     /**
      * Get password policy requirements.
+     *
+     * @return array<string, mixed>
      */
     public function getPolicyRequirements(): array
     {
@@ -412,6 +423,8 @@ class PasswordPolicyService
 
     /**
      * Update password policy.
+     *
+     * @param  array<string, mixed>  $newPolicy
      */
     public function updatePolicy(array $newPolicy): bool
     {
@@ -420,7 +433,7 @@ class PasswordPolicyService
 
             // Update config file
             $configPath = config_path('password_policy.php');
-            $configContent = "<?php\n\nreturn " . var_export($this->config, true) . ";\n";
+            $configContent = "<?php\n\nreturn ".var_export($this->config, true).";\n";
             file_put_contents($configPath, $configContent);
 
             Log::info('Password policy updated', $newPolicy);

@@ -8,7 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class UserBanService
+final class UserBanService
 {
     private const BAN_REASONS = [
         'spam' => 'إرسال رسائل مزعجة',
@@ -21,18 +21,20 @@ class UserBanService
 
     /**
      * Ban a user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function banUser(User $user, string $reason, ?string $description = null, ?Carbon $expiresAt = null): bool
     {
-        if (!array_key_exists($reason, self::BAN_REASONS)) {
+        if (! array_key_exists($reason, self::BAN_REASONS)) {
             $reason = 'other';
         }
 
         $user->is_blocked = true;
         $user->ban_reason = $reason;
         $user->ban_description = $description;
-        $user->banned_at = now();
-        $user->ban_expires_at = $expiresAt;
+        $user->banned_at = now()->toDateTimeString();
+        $user->ban_expires_at = $expiresAt?->toDateTimeString();
         $user->save();
 
         // Log ban action
@@ -50,6 +52,8 @@ class UserBanService
 
     /**
      * Unban a user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function unbanUser(User $user, ?string $reason = null): bool
     {
@@ -73,10 +77,12 @@ class UserBanService
 
     /**
      * Check if user is banned.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function isUserBanned(User $user): bool
     {
-        if (!$user->isBanned()) {
+        if (! $user->isBanned()) {
             return false;
         }
 
@@ -92,10 +98,13 @@ class UserBanService
 
     /**
      * Get ban information.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
+     * @return array<string, mixed>|null
      */
     public function getBanInfo(User $user): ?array
     {
-        if (!$user->isBanned()) {
+        if (! $user->isBanned()) {
             return null;
         }
 
@@ -103,8 +112,8 @@ class UserBanService
             'is_banned' => $user->isBanned(),
             'reason' => $user->ban_reason,
             'description' => $user->ban_description,
-            'banned_at' => $user->banned_at?->toISOString(),
-            'expires_at' => $user->ban_expires_at?->toISOString(),
+            'banned_at' => $user->banned_at ? Carbon::parse($user->banned_at)->toISOString() : null,
+            'expires_at' => $user->ban_expires_at ? Carbon::parse($user->ban_expires_at)->toISOString() : null,
             'is_permanent' => $user->ban_expires_at === null,
             'reason_text' => self::BAN_REASONS[$user->ban_reason] ?? 'غير محدد',
         ];
@@ -112,6 +121,8 @@ class UserBanService
 
     /**
      * Get all banned users.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, User<\Database\Factories\UserFactory>>
      */
     public function getBannedUsers(): \Illuminate\Database\Eloquent\Collection
     {
@@ -125,6 +136,8 @@ class UserBanService
 
     /**
      * Get users with expired bans.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, User<\Database\Factories\UserFactory>>
      */
     public function getUsersWithExpiredBans(): \Illuminate\Database\Eloquent\Collection
     {
@@ -155,6 +168,8 @@ class UserBanService
 
     /**
      * Get ban statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getBanStatistics(): array
     {
@@ -180,6 +195,8 @@ class UserBanService
 
     /**
      * Get ban reasons.
+     *
+     * @return array<string, string>
      */
     public function getBanReasons(): array
     {
@@ -188,6 +205,8 @@ class UserBanService
 
     /**
      * Check if user can be banned.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function canBanUser(User $user): bool
     {
@@ -206,6 +225,8 @@ class UserBanService
 
     /**
      * Check if user can be unbanned.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function canUnbanUser(User $user): bool
     {
@@ -215,6 +236,9 @@ class UserBanService
 
     /**
      * Get ban history for user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
+     * @return array<int, array<string, mixed>>
      */
     public function getBanHistory(User $user): array
     {
@@ -227,14 +251,16 @@ class UserBanService
 
     /**
      * Extend ban duration.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function extendBan(User $user, Carbon $newExpiresAt, ?string $reason = null): bool
     {
-        if (!$user->isBanned()) {
+        if (! $user->isBanned()) {
             return false;
         }
 
-        $user->ban_expires_at = $newExpiresAt;
+        $user->ban_expires_at = $newExpiresAt->toDateTimeString();
         $user->save();
 
         Log::info('Ban extended', [
@@ -250,14 +276,16 @@ class UserBanService
 
     /**
      * Reduce ban duration.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function reduceBan(User $user, Carbon $newExpiresAt, ?string $reason = null): bool
     {
-        if (!$user->isBanned()) {
+        if (! $user->isBanned()) {
             return false;
         }
 
-        $user->ban_expires_at = $newExpiresAt;
+        $user->ban_expires_at = $newExpiresAt->toDateTimeString();
         $user->save();
 
         Log::info('Ban reduced', [

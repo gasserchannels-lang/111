@@ -12,15 +12,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * @property int                 $id
- * @property string              $name
- * @property string              $email
- * @property string              $password
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
  * @property \Carbon\Carbon|null $email_verified_at
- * @property bool                $is_admin
- * @property bool                $is_blocked
- * @property string|null         $ban_reason
- * @property string|null         $ban_description
+ * @property bool $is_admin
+ * @property bool $is_active
+ * @property bool $is_blocked
+ * @property string|null $ban_reason
+ * @property string|null $ban_description
  * @property \Carbon\Carbon|null $banned_at
  * @property \Carbon\Carbon|null $ban_expires_at
  * @property-read bool $is_banned
@@ -53,6 +54,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_active',
         'is_blocked',
         'ban_reason',
         'ban_description',
@@ -71,6 +73,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'is_active' => 'boolean',
             'is_blocked' => 'boolean',
             'banned_at' => 'datetime',
             'ban_expires_at' => 'datetime',
@@ -78,7 +81,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<Review, User>
+     * @return HasMany<Review<\Database\Factories\ReviewFactory>, User<\Database\Factories\UserFactory>>
      */
     public function reviews(): HasMany
     {
@@ -88,7 +91,7 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: ElseExpression.
      *
-     * @return HasMany<Wishlist, User>
+     * @return HasMany<Wishlist<\Database\Factories\WishlistFactory>, User<\Database\Factories\UserFactory>>
      */
     public function wishlists(): HasMany
     {
@@ -98,7 +101,7 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: CamelCaseVariableName.
      *
-     * @return HasMany<PriceAlert, User>
+     * @return HasMany<PriceAlert<\Database\Factories\PriceAlertFactory>, User<\Database\Factories\UserFactory>>
      */
     public function priceAlerts(): HasMany
     {
@@ -114,7 +117,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasOne<UserLocaleSetting, User>
+     * @return HasOne<UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>, User<\Database\Factories\UserFactory>>
      */
     public function localeSetting(): HasOne
     {
@@ -142,10 +145,10 @@ class User extends Authenticatable
      */
     public function isBanExpired(): bool
     {
-        if (!$this->is_blocked) {
+        if (! $this->is_blocked) {
             return false;
         }
 
-        return $this->ban_expires_at && $this->ban_expires_at->isPast();
+        return $this->ban_expires_at && \Carbon\Carbon::parse($this->ban_expires_at)->isPast();
     }
 }

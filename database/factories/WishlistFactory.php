@@ -6,10 +6,19 @@ namespace Database\Factories;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Wishlist<\Database\Factories\WishlistFactory>>
+ */
 class WishlistFactory extends Factory
 {
+    protected $model = Wishlist::class;
+
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [

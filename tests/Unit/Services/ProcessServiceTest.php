@@ -13,7 +13,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_create_process_service_instance()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
 
         $this->assertInstanceOf(ProcessService::class, $service);
     }
@@ -21,7 +21,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_process_data()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $data = ['test' => 'data'];
 
         $result = $service->process($data);
@@ -34,7 +34,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_validate_data()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $validData = ['name' => 'Test', 'email' => 'test@example.com'];
 
         $result = $service->validate($validData);
@@ -45,7 +45,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_validate_invalid_data()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $invalidData = ['name' => '', 'email' => 'invalid-email'];
 
         $result = $service->validate($invalidData);
@@ -56,7 +56,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_get_validation_errors()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $invalidData = ['name' => '', 'email' => 'invalid-email'];
 
         $service->validate($invalidData);
@@ -69,7 +69,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_clean_data()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $dirtyData = ['name' => '  Test  ', 'email' => 'TEST@EXAMPLE.COM'];
 
         $result = $service->clean($dirtyData);
@@ -81,7 +81,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_transform_data()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $data = ['name' => 'test', 'value' => 100];
 
         $result = $service->transform($data);
@@ -94,7 +94,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_handle_processing_errors()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $invalidData = null;
 
         $result = $service->process($invalidData);
@@ -107,7 +107,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_get_processing_status()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
 
         $status = $service->getStatus();
 
@@ -118,7 +118,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_reset_service()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $service->process(['test' => 'data']);
 
         $service->reset();
@@ -129,7 +129,7 @@ class ProcessServiceTest extends TestCase
     /** @test */
     public function it_can_get_processing_metrics()
     {
-        $service = new ProcessService();
+        $service = new ProcessService;
         $service->process(['test' => 'data']);
 
         $metrics = $service->getMetrics();

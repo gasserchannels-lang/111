@@ -103,7 +103,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = (int)$request->get('per_page', 15);
+        $perPage = (int) $request->get('per_page', 15);
 
         $query = Product::query()
             ->select(['id', 'name', 'slug', 'price', 'category_id', 'brand_id'])
@@ -301,7 +301,7 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'slug' => 'sometimes|string|max:255|unique:products,slug,' . $id,
+            'slug' => 'sometimes|string|max:255|unique:products,slug,'.$id,
             'description' => 'nullable|string',
             'price' => 'sometimes|numeric|min:0',
             'image' => 'nullable|string',

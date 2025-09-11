@@ -44,7 +44,7 @@ class StoreTest extends TestCase
     /** @test */
     public function it_can_validate_required_fields()
     {
-        $store = new Store();
+        $store = new Store;
 
         $this->assertFalse($store->validate());
         $this->assertArrayHasKey('name', $store->getErrors());

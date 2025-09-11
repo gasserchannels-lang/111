@@ -38,7 +38,7 @@ class SecurityHeaders
         }
 
         // Force HTTPS in production
-        if (app()->environment('production') && !$request->secure()) {
+        if (app()->environment('production') && ! $request->secure()) {
             return redirect()->secure($request->getRequestUri());
         }
 

@@ -28,9 +28,7 @@ namespace App\Http\Controllers\Api\Schemas;
  *     @OA\Property(property="price_offers", type="array", @OA\Items(ref="#/components/schemas/PriceOffer"))
  * )
  */
-class ProductSchema
-{
-}
+final class ProductSchema {}
 
 /**
  * @OA\Schema(
@@ -47,9 +45,7 @@ class ProductSchema
  *     }
  * )
  */
-class ProductDetailSchema
-{
-}
+final class ProductDetailSchema {}
 
 /**
  * @OA\Schema(
@@ -70,9 +66,7 @@ class ProductDetailSchema
  *     @OA\Property(property="store_id", type="integer", example=1)
  * )
  */
-class ProductCreateRequestSchema
-{
-}
+final class ProductCreateRequestSchema {}
 
 /**
  * @OA\Schema(
@@ -92,9 +86,7 @@ class ProductCreateRequestSchema
  *     @OA\Property(property="store_id", type="integer", example=2)
  * )
  */
-class ProductUpdateRequestSchema
-{
-}
+final class ProductUpdateRequestSchema {}
 
 /**
  * @OA\Schema(
@@ -112,9 +104,7 @@ class ProductUpdateRequestSchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class BrandSchema
-{
-}
+final class BrandSchema {}
 
 /**
  * @OA\Schema(
@@ -132,9 +122,7 @@ class BrandSchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class CategorySchema
-{
-}
+final class CategorySchema {}
 
 /**
  * @OA\Schema(
@@ -161,64 +149,4 @@ class CategorySchema
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
  */
-class PriceOfferSchema
-{
-}
-
-/**
- * @OA\Schema(
- *     schema="Review",
- *     type="object",
- *     title="Review",
- *     description="Review model",
- *
- *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="product_id", type="integer", example=1),
- *     @OA\Property(property="user_id", type="integer", example=1),
- *     @OA\Property(property="rating", type="integer", minimum=1, maximum=5, example=5),
- *     @OA\Property(property="content", type="string", example="Great product, highly recommended!"),
- *     @OA\Property(property="is_verified_purchase", type="boolean", example=true),
- *     @OA\Property(property="is_approved", type="boolean", example=true),
- *     @OA\Property(property="created_at", type="string", format="date-time"),
- *     @OA\Property(property="updated_at", type="string", format="date-time")
- * )
- */
-class ReviewSchema
-{
-}
-
-/**
- * @OA\Schema(
- *     schema="PaginationLinks",
- *     type="object",
- *     title="Pagination Links",
- *     description="Pagination links for paginated responses",
- *
- *     @OA\Property(property="first", type="string", example="http://api.example.com/products?page=1"),
- *     @OA\Property(property="last", type="string", example="http://api.example.com/products?page=10"),
- *     @OA\Property(property="prev", type="string", nullable=true, example="http://api.example.com/products?page=1"),
- *     @OA\Property(property="next", type="string", nullable=true, example="http://api.example.com/products?page=3")
- * )
- */
-class PaginationLinksSchema
-{
-}
-
-/**
- * @OA\Schema(
- *     schema="PaginationMeta",
- *     type="object",
- *     title="Pagination Meta",
- *     description="Pagination metadata for paginated responses",
- *
- *     @OA\Property(property="current_page", type="integer", example=2),
- *     @OA\Property(property="from", type="integer", example=16),
- *     @OA\Property(property="last_page", type="integer", example=10),
- *     @OA\Property(property="per_page", type="integer", example=15),
- *     @OA\Property(property="to", type="integer", example=30),
- *     @OA\Property(property="total", type="integer", example=150)
- * )
- */
-class PaginationMetaSchema
-{
-}
+final class PriceOfferSchema {}

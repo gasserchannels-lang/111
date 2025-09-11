@@ -24,10 +24,13 @@ class FileSecurityService
 
     private const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-    private const SCAN_RESULT_CACHE_PREFIX = 'file_scan:';
+    // private const SCAN_RESULT_CACHE_PREFIX = 'file_scan:';
 
     /**
      * Scan uploaded file for security threats.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function scanFile(UploadedFile $file): array
     {
@@ -40,35 +43,35 @@ class FileSecurityService
 
         // Check file extension
         $extensionCheck = $this->checkFileExtension($file);
-        if (!$extensionCheck['is_safe']) {
+        if (! $extensionCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $extensionCheck['threats']);
         }
 
         // Check file size
         $sizeCheck = $this->checkFileSize($file);
-        if (!$sizeCheck['is_safe']) {
+        if (! $sizeCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $sizeCheck['threats']);
         }
 
         // Check file content
         $contentCheck = $this->checkFileContent($file);
-        if (!$contentCheck['is_safe']) {
+        if (! $contentCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $contentCheck['threats']);
         }
 
         // Check for malware signatures
         $malwareCheck = $this->checkMalwareSignatures($file);
-        if (!$malwareCheck['is_safe']) {
+        if (! $malwareCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $malwareCheck['threats']);
         }
 
         // Check file headers
         $headerCheck = $this->checkFileHeaders($file);
-        if (!$headerCheck['is_safe']) {
+        if (! $headerCheck['is_safe']) {
             $results['is_safe'] = false;
             $results['threats'] = array_merge($results['threats'], $headerCheck['threats']);
         }
@@ -82,6 +85,9 @@ class FileSecurityService
     /**
      * Check file extension.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function checkFileExtension(UploadedFile $file): array
     {
         $extension = strtolower($file->getClientOriginalExtension());
@@ -94,7 +100,7 @@ class FileSecurityService
         }
 
         // Check if extension is allowed
-        if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
+        if (! in_array($extension, self::ALLOWED_EXTENSIONS)) {
             $results['is_safe'] = false;
             $results['threats'][] = "File extension '{$extension}' is not allowed";
         }
@@ -105,13 +111,16 @@ class FileSecurityService
     /**
      * Check file size.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function checkFileSize(UploadedFile $file): array
     {
         $results = ['is_safe' => true, 'threats' => []];
 
         if ($file->getSize() > self::MAX_FILE_SIZE) {
             $results['is_safe'] = false;
-            $results['threats'][] = "File size ({$file->getSize()} bytes) exceeds maximum allowed size (" . self::MAX_FILE_SIZE . ' bytes)';
+            $results['threats'][] = "File size ({$file->getSize()} bytes) exceeds maximum allowed size (".self::MAX_FILE_SIZE.' bytes)';
         }
 
         return $results;
@@ -119,6 +128,9 @@ class FileSecurityService
 
     /**
      * Check file content.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function checkFileContent(UploadedFile $file): array
     {
@@ -142,20 +154,20 @@ class FileSecurityService
             ];
 
             foreach ($suspiciousPatterns as $pattern => $description) {
-                if (preg_match($pattern, $content)) {
+                if ($content !== false && preg_match($pattern, $content)) {
                     $results['is_safe'] = false;
                     $results['threats'][] = $description;
                 }
             }
 
             // Check for binary content in text files
-            if ($this->isTextFile($file) && $this->containsBinaryContent($content)) {
+            if ($this->isTextFile($file) && $content !== false && $this->containsBinaryContent($content)) {
                 $results['is_safe'] = false;
                 $results['threats'][] = 'Binary content detected in text file';
             }
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error reading file content: ' . $e->getMessage();
+            $results['threats'][] = 'Error reading file content: '.$e->getMessage();
         }
 
         return $results;
@@ -163,6 +175,9 @@ class FileSecurityService
 
     /**
      * Check for malware signatures.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function checkMalwareSignatures(UploadedFile $file): array
     {
@@ -189,14 +204,14 @@ class FileSecurityService
             ];
 
             foreach ($malwareSignatures as $signature => $description) {
-                if (strpos($content, $signature) !== false) {
+                if ($content !== false && strpos($content, $signature) !== false) {
                     $results['is_safe'] = false;
                     $results['threats'][] = "Malware signature detected: {$description}";
                 }
             }
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error scanning for malware: ' . $e->getMessage();
+            $results['threats'][] = 'Error scanning for malware: '.$e->getMessage();
         }
 
         return $results;
@@ -205,13 +220,16 @@ class FileSecurityService
     /**
      * Check file headers.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function checkFileHeaders(UploadedFile $file): array
     {
         $results = ['is_safe' => true, 'threats' => []];
 
         try {
             $handle = fopen($file->getPathname(), 'rb');
-            if (!$handle) {
+            if (! $handle) {
                 $results['is_safe'] = false;
                 $results['threats'][] = 'Cannot open file for header analysis';
 
@@ -234,14 +252,14 @@ class FileSecurityService
             ];
 
             foreach ($suspiciousHeaders as $headerSignature => $description) {
-                if (strpos($header, $headerSignature) === 0) {
+                if ($header !== false && strpos($header, $headerSignature) === 0) {
                     $results['is_safe'] = false;
                     $results['threats'][] = $description;
                 }
             }
         } catch (\Exception $e) {
             $results['is_safe'] = false;
-            $results['threats'][] = 'Error checking file headers: ' . $e->getMessage();
+            $results['threats'][] = 'Error checking file headers: '.$e->getMessage();
         }
 
         return $results;
@@ -249,6 +267,9 @@ class FileSecurityService
 
     /**
      * Get file information.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function getFileInfo(UploadedFile $file): array
     {
@@ -296,6 +317,9 @@ class FileSecurityService
     /**
      * Log scan results.
      */
+    /**
+     * @param  array<string, mixed>  $results
+     */
     private function logScanResults(UploadedFile $file, array $results): void
     {
         Log::info('File security scan completed', [
@@ -310,6 +334,9 @@ class FileSecurityService
     /**
      * Get allowed file extensions.
      */
+    /**
+     * @return list<string>
+     */
     public function getAllowedExtensions(): array
     {
         return self::ALLOWED_EXTENSIONS;
@@ -317,6 +344,9 @@ class FileSecurityService
 
     /**
      * Get dangerous file extensions.
+     */
+    /**
+     * @return list<string>
      */
     public function getDangerousExtensions(): array
     {
@@ -333,6 +363,9 @@ class FileSecurityService
 
     /**
      * Get file security statistics.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function getStatistics(): array
     {

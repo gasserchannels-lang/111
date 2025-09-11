@@ -20,7 +20,7 @@ class ProductControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new ProductController();
+        $this->controller = new ProductController;
     }
 
     /**

@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\Language;
 use Illuminate\View\View;
 
-class AppComposer
+final class AppComposer
 {
     /**
      * Bind data to the view.
@@ -30,6 +30,8 @@ class AppComposer
 
     /**
      * Get active languages.
+     *
+     * @return array<int, array<string, string|int|bool>>
      */
     private function getLanguages(): array
     {
@@ -52,6 +54,8 @@ class AppComposer
 
     /**
      * Get active categories.
+     *
+     * @return array<int, array<string, string|int|bool>>
      */
     private function getCategories(): array
     {
@@ -73,6 +77,8 @@ class AppComposer
 
     /**
      * Get active brands.
+     *
+     * @return array<int, array<string, string|int|bool|null>>
      */
     private function getBrands(): array
     {
@@ -85,7 +91,7 @@ class AppComposer
                         'id' => $brand->id,
                         'name' => $brand->name,
                         'slug' => $brand->slug,
-                        'logo' => $brand->logo,
+                        'logo' => $brand->logo_url ?? null,
                         'url' => route('brands.show', $brand->slug),
                     ];
                 })

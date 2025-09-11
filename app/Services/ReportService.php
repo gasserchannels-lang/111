@@ -18,6 +18,8 @@ class ReportService
 {
     /**
      * Generate product performance report.
+     *
+     * @return array<string, mixed>
      */
     public function generateProductPerformanceReport(int $productId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
@@ -26,7 +28,7 @@ class ReportService
 
         $product = Product::findOrFail($productId);
 
-        $report = [
+        return [
             'product' => [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -49,6 +51,8 @@ class ReportService
 
     /**
      * Generate user activity report.
+     *
+     * @return array<string, mixed>
      */
     public function generateUserActivityReport(int $userId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
@@ -57,12 +61,12 @@ class ReportService
 
         $user = User::findOrFail($userId);
 
-        $report = [
+        return [
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+                'created_at' => $user->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
             ],
             'period' => [
                 'start_date' => $startDate->format('Y-m-d'),
@@ -79,13 +83,15 @@ class ReportService
 
     /**
      * Generate system performance report.
+     *
+     * @return array<string, mixed>
      */
     public function generateSystemPerformanceReport(?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
         $startDate = $startDate ?? now()->subMonth();
         $endDate = $endDate ?? now();
 
-        $report = [
+        return [
             'period' => [
                 'start_date' => $startDate->format('Y-m-d'),
                 'end_date' => $endDate->format('Y-m-d'),
@@ -96,19 +102,19 @@ class ReportService
             'engagement_metrics' => $this->getEngagementMetrics($startDate, $endDate),
             'performance_metrics' => $this->getPerformanceMetrics($startDate, $endDate),
         ];
-
-        return $report;
     }
 
     /**
      * Generate sales report.
+     *
+     * @return array<string, mixed>
      */
     public function generateSalesReport(?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
         $startDate = $startDate ?? now()->subMonth();
         $endDate = $endDate ?? now();
 
-        $report = [
+        return [
             'period' => [
                 'start_date' => $startDate->format('Y-m-d'),
                 'end_date' => $endDate->format('Y-m-d'),
@@ -119,12 +125,12 @@ class ReportService
             'top_stores' => $this->getTopStores($startDate, $endDate),
             'price_trends' => $this->getPriceTrends($startDate, $endDate),
         ];
-
-        return $report;
     }
 
     /**
      * Get price analysis for a product.
+     *
+     * @return array<string, mixed>
      */
     private function getPriceAnalysis(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -152,8 +158,8 @@ class ReportService
         return [
             'total_offers' => $offers->count(),
             'price_range' => [
-                'min' => min($prices),
-                'max' => max($prices),
+                'min' => ! empty($prices) ? min($prices) : 0,
+                'max' => ! empty($prices) ? max($prices) : 0,
             ],
             'average_price' => array_sum($prices) / count($prices),
             'price_volatility' => count($priceChanges) > 0 ? array_sum($priceChanges) / count($priceChanges) : 0,
@@ -163,6 +169,8 @@ class ReportService
 
     /**
      * Get offer analysis for a product.
+     *
+     * @return array<string, mixed>
      */
     private function getOfferAnalysis(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -177,14 +185,16 @@ class ReportService
         return [
             'total_offers' => $offers->count(),
             'unique_stores' => $storeCounts->count(),
-            'available_offers' => $availabilityCounts->get(true, 0),
-            'unavailable_offers' => $availabilityCounts->get(false, 0),
+            'available_offers' => $availabilityCounts->get('1', 0),
+            'unavailable_offers' => $availabilityCounts->get('0', 0),
             'top_stores' => $storeCounts->sortDesc()->take(5)->toArray(),
         ];
     }
 
     /**
      * Get user engagement for a product.
+     *
+     * @return array<string, mixed>
      */
     private function getUserEngagement(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -210,6 +220,8 @@ class ReportService
 
     /**
      * Get reviews analysis for a product.
+     *
+     * @return array<string, mixed>
      */
     private function getReviewsAnalysis(int $productId, Carbon $startDate, Carbon $endDate): array
     {
@@ -239,6 +251,8 @@ class ReportService
 
     /**
      * Get user activity summary.
+     *
+     * @return array<string, mixed>
      */
     private function getUserActivitySummary(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -264,6 +278,8 @@ class ReportService
 
     /**
      * Get wishlist activity.
+     *
+     * @return array<string, mixed>
      */
     private function getWishlistActivity(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -276,10 +292,10 @@ class ReportService
             'total_items' => $wishlists->count(),
             'products' => $wishlists->map(function ($wishlist) {
                 return [
-                    'id' => $wishlist->product->id,
-                    'name' => $wishlist->product->name,
-                    'price' => $wishlist->product->price,
-                    'added_at' => $wishlist->created_at->format('Y-m-d H:i:s'),
+                    'id' => $wishlist->product->id ?? 0,
+                    'name' => $wishlist->product->name ?? 'Unknown Product',
+                    'price' => $wishlist->product->price ?? 0,
+                    'added_at' => $wishlist->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
                 ];
             })->toArray(),
         ];
@@ -287,6 +303,8 @@ class ReportService
 
     /**
      * Get price alerts activity.
+     *
+     * @return array<string, mixed>
      */
     private function getPriceAlertsActivity(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -301,10 +319,10 @@ class ReportService
             'alerts' => $alerts->map(function ($alert) {
                 return [
                     'id' => $alert->id,
-                    'product_name' => $alert->product->name,
+                    'product_name' => $alert->product->name ?? 'Unknown Product',
                     'target_price' => $alert->target_price,
-                    'current_price' => $alert->product->price,
-                    'created_at' => $alert->created_at->format('Y-m-d H:i:s'),
+                    'current_price' => $alert->product->price ?? 0,
+                    'created_at' => $alert->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
                 ];
             })->toArray(),
         ];
@@ -312,6 +330,8 @@ class ReportService
 
     /**
      * Get reviews activity.
+     *
+     * @return array<string, mixed>
      */
     private function getReviewsActivity(int $userId, Carbon $startDate, Carbon $endDate): array
     {
@@ -326,11 +346,11 @@ class ReportService
             'reviews' => $reviews->map(function ($review) {
                 return [
                     'id' => $review->id,
-                    'product_name' => $review->product->name,
+                    'product_name' => $review->product->name ?? 'Unknown Product',
                     'rating' => $review->rating,
                     'content' => $review->content,
                     'is_approved' => $review->is_approved,
-                    'created_at' => $review->created_at->format('Y-m-d H:i:s'),
+                    'created_at' => $review->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
                 ];
             })->toArray(),
         ];
@@ -338,6 +358,8 @@ class ReportService
 
     /**
      * Get system overview.
+     *
+     * @return array<string, mixed>
      */
     private function getSystemOverview(Carbon $startDate, Carbon $endDate): array
     {
@@ -355,6 +377,8 @@ class ReportService
 
     /**
      * Get user metrics.
+     *
+     * @return array<string, mixed>
      */
     private function getUserMetrics(Carbon $startDate, Carbon $endDate): array
     {
@@ -373,6 +397,8 @@ class ReportService
 
     /**
      * Get product metrics.
+     *
+     * @return array<string, mixed>
      */
     private function getProductMetrics(Carbon $startDate, Carbon $endDate): array
     {
@@ -393,6 +419,8 @@ class ReportService
 
     /**
      * Get engagement metrics.
+     *
+     * @return array<string, mixed>
      */
     private function getEngagementMetrics(Carbon $startDate, Carbon $endDate): array
     {
@@ -409,6 +437,8 @@ class ReportService
 
     /**
      * Get performance metrics.
+     *
+     * @return array<string, mixed>
      */
     private function getPerformanceMetrics(Carbon $startDate, Carbon $endDate): array
     {
@@ -422,6 +452,8 @@ class ReportService
 
     /**
      * Get price changes.
+     *
+     * @return array<string, mixed>
      */
     private function getPriceChanges(Carbon $startDate, Carbon $endDate): array
     {
@@ -440,6 +472,8 @@ class ReportService
 
     /**
      * Get top products.
+     *
+     * @return array<string, mixed>
      */
     private function getTopProducts(Carbon $startDate, Carbon $endDate): array
     {
@@ -465,6 +499,8 @@ class ReportService
 
     /**
      * Get top stores.
+     *
+     * @return array<string, mixed>
      */
     private function getTopStores(Carbon $startDate, Carbon $endDate): array
     {
@@ -481,6 +517,8 @@ class ReportService
 
     /**
      * Get price trends.
+     *
+     * @return array<string, mixed>
      */
     private function getPriceTrends(Carbon $startDate, Carbon $endDate): array
     {
@@ -501,6 +539,8 @@ class ReportService
 
     /**
      * Get most active users.
+     *
+     * @return array<string, mixed>
      */
     private function getMostActiveUsers(Carbon $startDate, Carbon $endDate): array
     {
@@ -526,6 +566,8 @@ class ReportService
 
     /**
      * Get most viewed products.
+     *
+     * @return array<string, mixed>
      */
     private function getMostViewedProducts(Carbon $startDate, Carbon $endDate): array
     {
@@ -551,6 +593,8 @@ class ReportService
 
     /**
      * Calculate price trend.
+     *
+     * @param  array<float>  $prices
      */
     private function calculatePriceTrend(array $prices): string
     {

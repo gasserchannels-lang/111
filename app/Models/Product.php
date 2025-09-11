@@ -13,15 +13,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int         $id
- * @property string      $name
- * @property string      $slug
- * @property string      $description
- * @property float       $price
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string $description
+ * @property float $price
  * @property string|null $image
- * @property bool        $is_active
- * @property int         $category_id
- * @property int         $brand_id
+ * @property bool $is_active
+ * @property bool $is_featured
+ * @property int $stock_quantity
+ * @property int $category_id
+ * @property int $brand_id
  * @property-read Category $category
  * @property-read Brand $brand
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
@@ -54,6 +56,8 @@ class Product extends Model
         'price',
         'image',
         'is_active',
+        'is_featured',
+        'stock_quantity',
         'category_id',
         'brand_id',
         'store_id',
@@ -62,13 +66,18 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+        'stock_quantity' => 'integer',
     ];
 
-    protected $errors = [];
+    /**
+     * @var array<string, string>|null
+     */
+    protected $errors = null;
 
     // --- العلاقات ---
     /**
-     * @return BelongsTo<Brand, Product>
+     * @return BelongsTo<Brand<\Database\Factories\BrandFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function brand(): BelongsTo
     {
@@ -76,7 +85,7 @@ class Product extends Model
     }
 
     /**
-     * @return BelongsTo<Category, Product>
+     * @return BelongsTo<Category<\Database\Factories\CategoryFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function category(): BelongsTo
     {
@@ -84,7 +93,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<PriceAlert, Product>
+     * @return HasMany<PriceAlert<\Database\Factories\PriceAlertFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function priceAlerts(): HasMany
     {
@@ -92,7 +101,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Review, Product>
+     * @return HasMany<Review<\Database\Factories\ReviewFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function reviews(): HasMany
     {
@@ -100,7 +109,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Wishlist, Product>
+     * @return HasMany<Wishlist<\Database\Factories\WishlistFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function wishlists(): HasMany
     {
@@ -108,7 +117,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<PriceOffer, Product>
+     * @return HasMany<PriceOffer<\Database\Factories\PriceOfferFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function priceOffers(): HasMany
     {
@@ -116,7 +125,7 @@ class Product extends Model
     }
 
     /**
-     * @return BelongsTo<Store, Product>
+     * @return BelongsTo<Store<\Database\Factories\StoreFactory>, Product<\Database\Factories\ProductFactory>>
      */
     public function store(): BelongsTo
     {
@@ -124,6 +133,9 @@ class Product extends Model
     }
 
     // --- قواعد التحقق ---
+    /**
+     * @var array<string, string>
+     */
     protected $rules = [
         'name' => 'required|string|max:255',
         'price' => 'required|numeric|min:0',
@@ -139,13 +151,13 @@ class Product extends Model
             $rules = explode('|', $rule);
             foreach ($rules as $singleRule) {
                 if ($singleRule === 'required' && empty($this->$field)) {
-                    $this->errors[$field] = ucfirst($field) . ' is required';
-                } elseif ($singleRule === 'numeric' && isset($this->$field) && !is_numeric($this->$field)) {
-                    $this->errors[$field] = ucfirst($field) . ' must be numeric';
+                    $this->errors[$field] = ucfirst($field).' is required';
+                } elseif ($singleRule === 'numeric' && isset($this->$field) && ! is_numeric($this->$field)) {
+                    $this->errors[$field] = ucfirst($field).' must be numeric';
                 } elseif (str_starts_with($singleRule, 'min:') && isset($this->$field)) {
-                    $min = (float)substr($singleRule, 4);
+                    $min = (float) substr($singleRule, 4);
                     if (is_numeric($this->$field) && $min > $this->$field) {
-                        $this->errors[$field] = ucfirst($field) . ' must be at least ' . $min;
+                        $this->errors[$field] = ucfirst($field).' must be at least '.$min;
                     }
                 }
             }
@@ -154,22 +166,37 @@ class Product extends Model
         return empty($this->errors);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getErrors(): array
     {
         return $this->errors ?? [];
     }
 
     // --- Scopes ---
+    /**
+     * @param  Builder<Product<\Database\Factories\ProductFactory>>  $query
+     * @return Builder<Product<\Database\Factories\ProductFactory>>
+     */
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
     }
 
+    /**
+     * @param  Builder<Product<\Database\Factories\ProductFactory>>  $query
+     * @return Builder<Product<\Database\Factories\ProductFactory>>
+     */
     public function scopeSearch(Builder $query, string $search): Builder
     {
         return $query->where('name', 'like', "%{$search}%");
     }
 
+    /**
+     * @param  Builder<Product<\Database\Factories\ProductFactory>>  $query
+     * @return Builder<Product<\Database\Factories\ProductFactory>>
+     */
     public function scopeWithReviewsCount(Builder $query): Builder
     {
         return $query->withCount('reviews');
@@ -178,7 +205,9 @@ class Product extends Model
     // --- طرق مساعدة ---
     public function getAverageRating(): float
     {
-        return $this->reviews()->avg('rating') ?? 0.0;
+        $avg = $this->reviews()->avg('rating');
+
+        return $avg ? (float) $avg : 0.0;
     }
 
     public function getTotalReviews(): int
@@ -193,12 +222,15 @@ class Product extends Model
 
     public function getCurrentPrice(): float
     {
-        $activeOffer = $this->priceOffers()->where('is_active', true)->latest()->first();
+        $activeOffer = $this->priceOffers()->where('is_available', true)->latest()->first();
 
         return $activeOffer ? $activeOffer->price : $this->price;
     }
 
-    public function getPriceHistory()
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, PriceOffer<\Database\Factories\PriceOfferFactory>>
+     */
+    public function getPriceHistory(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->priceOffers()->orderBy('created_at', 'desc')->get();
     }

@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 
 /**
- * @property int         $id
- * @property int|null    $user_id
+ * @property int $id
+ * @property int|null $user_id
  * @property string|null $session_id
- * @property int         $language_id
- * @property int         $currency_id
+ * @property int $language_id
+ * @property int $currency_id
  * @property string|null $ip_address
  * @property string|null $country_code
  * @property-read User|null $user
@@ -56,7 +56,7 @@ class UserLocaleSetting extends Model
     /**
      * المستخدم المرتبط بهذا الإعداد.
      *
-     * @return BelongsTo<User, UserLocaleSetting>
+     * @return BelongsTo<User<\Database\Factories\UserFactory>, UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
      */
     public function user(): BelongsTo
     {
@@ -66,7 +66,7 @@ class UserLocaleSetting extends Model
     /**
      * اللغة المحددة.
      *
-     * @return BelongsTo<Language, UserLocaleSetting>
+     * @return BelongsTo<Language<\Database\Factories\LanguageFactory>, UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
      */
     public function language(): BelongsTo
     {
@@ -76,7 +76,7 @@ class UserLocaleSetting extends Model
     /**
      * العملة المحددة.
      *
-     * @return BelongsTo<Currency, UserLocaleSetting>
+     * @return BelongsTo<Currency<\Database\Factories\CurrencyFactory>, UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
      */
     public function currency(): BelongsTo
     {
@@ -94,11 +94,11 @@ class UserLocaleSetting extends Model
             $query->where('user_id', $userId);
         }
 
-        if (!$userId && $sessionId) {
+        if (! $userId && $sessionId) {
             $query->where('session_id', $sessionId);
         }
 
-        if (!$userId && !$sessionId) {
+        if (! $userId && ! $sessionId) {
             return null;
         }
 

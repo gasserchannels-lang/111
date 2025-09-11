@@ -29,14 +29,13 @@
             <directory name="vendor" />
             <directory name="storage" />
             <directory name="bootstrap/cache" />
-            <file name="tests/Pest.php" />
         </ignoreFiles>
     </projectFiles>
 
-    <plugins>
+    <!-- <plugins>
         <pluginClass class="Psalm\LaravelPlugin\Plugin" />
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin" />
-    </plugins>
+    </plugins> -->
 
     <issueHandlers>
         <LessSpecificReturnType errorLevel="info" />
@@ -63,9 +62,6 @@
         <UnusedParam errorLevel="info" />
     </issueHandlers>
 
-    <stubs>
-        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php" />
-        <file name="vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php" />
-    </stubs>
+    
 
 </psalm>

@@ -13,27 +13,27 @@ class CloudStorageService
 {
     private string $disk;
 
-    private array $config;
-
     public function __construct()
     {
         $this->disk = config('filesystems.cloud_disk', 's3');
-        $this->config = config('filesystems.disks.' . $this->disk, []);
     }
 
     /**
      * Upload file to cloud storage.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function uploadFile(UploadedFile $file, string $path = 'images', ?string $filename = null): array
     {
         try {
             $filename = $filename ?? $this->generateUniqueFilename($file);
-            $fullPath = $path . '/' . $filename;
+            $fullPath = $path.'/'.$filename;
 
             // Upload to cloud storage
             $uploadedPath = Storage::disk($this->disk)->putFileAs($path, $file, $filename);
 
-            if (!$uploadedPath) {
+            if (! $uploadedPath) {
                 throw new Exception('Failed to upload file to cloud storage');
             }
 
@@ -72,6 +72,10 @@ class CloudStorageService
 
     /**
      * Upload multiple files to cloud storage.
+     */
+    /**
+     * @param  array<UploadedFile>  $files
+     * @return list<array<string, mixed>>
      */
     public function uploadMultipleFiles(array $files, string $path = 'images'): array
     {
@@ -120,6 +124,10 @@ class CloudStorageService
 
     /**
      * Delete multiple files from cloud storage.
+     */
+    /**
+     * @param  list<string>  $paths
+     * @return array<string, bool>
      */
     public function deleteMultipleFiles(array $paths): array
     {
@@ -201,6 +209,9 @@ class CloudStorageService
     /**
      * Get file metadata.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getFileMetadata(string $path): array
     {
         try {
@@ -241,18 +252,21 @@ class CloudStorageService
     /**
      * List files in directory.
      */
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function listFiles(string $path = ''): array
     {
         try {
             $files = Storage::disk($this->disk)->files($path);
 
-            return array_map(function ($file) {
+            return array_values(array_map(function ($file) {
                 return [
                     'path' => $file,
                     'url' => $this->getFileUrl($file),
                     'metadata' => $this->getFileMetadata($file),
                 ];
-            }, $files);
+            }, $files));
         } catch (Exception $e) {
             Log::error('Failed to list files', [
                 'error' => $e->getMessage(),
@@ -337,13 +351,17 @@ class CloudStorageService
         $extension = $file->getClientOriginalExtension();
         $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $timestamp = time();
-        $random = str_random(8);
+        $random = \Illuminate\Support\Str::random(8);
 
         return "{$name}_{$timestamp}_{$random}.{$extension}";
     }
 
     /**
      * Upload image with optimization.
+     */
+    /**
+     * @param  array<string, array<int>>  $sizes
+     * @return array<string, array<string, mixed>>
      */
     public function uploadOptimizedImage(UploadedFile $file, string $path = 'images', array $sizes = []): array
     {
@@ -365,9 +383,9 @@ class CloudStorageService
             // Create optimized versions
             foreach ($sizes as $sizeName => $dimensions) {
                 $optimizedFile = $this->createOptimizedImage($file, $dimensions[0], $dimensions[1]);
-                $optimizedPath = $path . '/optimized/' . $sizeName . '_' . $original['filename'];
+                $optimizedPath = $path.'/optimized/'.$sizeName.'_'.$original['filename'];
 
-                $optimized = $this->uploadFile($optimizedFile, $path . '/optimized', $sizeName . '_' . $original['filename']);
+                $optimized = $this->uploadFile($optimizedFile, $path.'/optimized', $sizeName.'_'.$original['filename']);
                 $results[$sizeName] = $optimized;
             }
 
@@ -395,6 +413,9 @@ class CloudStorageService
 
     /**
      * Get storage statistics.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function getStorageStats(): array
     {

@@ -91,10 +91,12 @@ class AdminController extends Controller
 
     /**
      * Toggle user admin status.
+     *
+     * @param  \App\Models\User<\Database\Factories\UserFactory>  $user
      */
-    public function toggleUserAdmin(User $user)
+    public function toggleUserAdmin(\App\Models\User $user): \Illuminate\Http\RedirectResponse
     {
-        $user->update(['is_admin' => !$user->is_admin]);
+        $user->update(['is_admin' => ! $user->is_admin]);
 
         return redirect()->back()
             ->with('success', 'User admin status updated successfully.');

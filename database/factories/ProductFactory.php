@@ -10,14 +10,22 @@ use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Product<\Database\Factories\ProductFactory>>
+ */
 class ProductFactory extends Factory
 {
     protected $model = Product::class;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
+        $words = $this->faker->unique()->words(3, true);
+
         return [
-            'name' => $this->faker->unique()->words(3, true) . ' Product',
+            'name' => $words.' Product',
             'slug' => $this->faker->unique()->slug(3),
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->randomFloat(2, 10, 1000),

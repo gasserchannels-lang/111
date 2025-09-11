@@ -7,7 +7,7 @@ namespace App\Services;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class TestAnalysisService
+final class TestAnalysisService
 {
     private bool $coverageEnabled;
 
@@ -28,6 +28,8 @@ class TestAnalysisService
 
     /**
      * Run comprehensive test analysis.
+     *
+     * @return array<string, mixed>
      */
     public function analyze(): array
     {
@@ -44,7 +46,7 @@ class TestAnalysisService
         } catch (ProcessFailedException $e) {
             $this->handleTestProcessException($e, $issues);
         } catch (\Exception $e) {
-            $issues[] = 'Test analysis failed: ' . $e->getMessage();
+            $issues[] = 'Test analysis failed: '.$e->getMessage();
         }
 
         return [
@@ -57,6 +59,8 @@ class TestAnalysisService
 
     /**
      * Build test command.
+     *
+     * @return array<string>
      */
     private function buildTestCommand(): array
     {
@@ -70,6 +74,8 @@ class TestAnalysisService
 
     /**
      * Run test process.
+     *
+     * @param  array<string>  $command
      */
     private function runTestProcess(array $command): Process
     {
@@ -82,10 +88,12 @@ class TestAnalysisService
 
     /**
      * Analyze test results.
+     *
+     * @param  array<string>  $issues
      */
     private function analyzeTestResults(Process $process, string $output, array &$issues): int
     {
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             $issues[] = 'Some tests failed or encountered errors.';
 
             return 0;
@@ -100,17 +108,19 @@ class TestAnalysisService
 
     /**
      * Analyze coverage.
+     *
+     * @param  array<string>  $issues
      */
     private function analyzeCoverage(string $output, array &$issues): int
     {
-        if (!$this->coverageEnabled) {
+        if (! $this->coverageEnabled) {
             return 0;
         }
 
         if (preg_match('/Lines:\s+(\d+\.\d+)%/', $output, $matches)) {
-            $coverage = (float)$matches[1];
+            $coverage = (float) $matches[1];
 
-            return (int)(($coverage / 100) * 30);
+            return (int) (($coverage / 100) * 30);
         }
 
         $issues[] = 'Code coverage information not available';
@@ -120,13 +130,19 @@ class TestAnalysisService
 
     /**
      * Handle test process exception.
+     *
+     * @param  array<string>  $issues
      */
     private function handleTestProcessException(ProcessFailedException $exception, array &$issues): void
     {
-        if ($exception->getProcess()->isTimedOut()) {
-            $issues[] = 'Test analysis failed: The process exceeded the timeout.';
+        $process = $exception->getProcess();
+        if ($process->getTimeout() > 0 && $process->getStartTime() > 0) {
+            $elapsed = microtime(true) - $process->getStartTime();
+            if ($elapsed >= $process->getTimeout()) {
+                $issues[] = 'Test analysis failed: The process exceeded the timeout.';
 
-            return;
+                return;
+            }
         }
 
         $issues[] = 'Test analysis failed with an error.';

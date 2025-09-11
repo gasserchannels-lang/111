@@ -8,6 +8,8 @@ class PerformanceAnalysisService
 {
     /**
      * Run comprehensive performance analysis.
+     *
+     * @return array<string, mixed>
      */
     public function analyze(): array
     {
@@ -20,7 +22,7 @@ class PerformanceAnalysisService
             $score += $this->checkAssetCompilation($issues);
             $score += $this->checkQueueConfiguration($issues);
         } catch (\Exception $e) {
-            $issues[] = 'Performance analysis failed: ' . $e->getMessage();
+            $issues[] = 'Performance analysis failed: '.$e->getMessage();
         }
 
         return [
@@ -33,6 +35,8 @@ class PerformanceAnalysisService
 
     /**
      * Check cache configuration.
+     *
+     * @param  array<string>  $issues
      */
     private function checkCacheConfiguration(array &$issues): int
     {
@@ -47,12 +51,18 @@ class PerformanceAnalysisService
 
     /**
      * Check database indexes.
+     *
+     * @param  array<string>  $issues
      */
     private function checkDatabaseIndexes(array &$issues): int
     {
         $migrationFiles = glob(database_path('migrations/*.php'));
+        if ($migrationFiles === false) {
+            $migrationFiles = [];
+        }
         foreach ($migrationFiles as $file) {
-            if (str_contains(file_get_contents($file), '->index(') || str_contains(file_get_contents($file), '->unique(')) {
+            $content = file_get_contents($file);
+            if ($content !== false && (str_contains($content, '->index(') || str_contains($content, '->unique('))) {
                 return 25;
             }
         }
@@ -64,6 +74,8 @@ class PerformanceAnalysisService
 
     /**
      * Check asset compilation.
+     *
+     * @param  array<string>  $issues
      */
     private function checkAssetCompilation(array &$issues): int
     {
@@ -78,6 +90,8 @@ class PerformanceAnalysisService
 
     /**
      * Check queue configuration.
+     *
+     * @param  array<string>  $issues
      */
     private function checkQueueConfiguration(array &$issues): int
     {

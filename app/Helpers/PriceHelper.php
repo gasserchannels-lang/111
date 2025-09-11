@@ -17,11 +17,11 @@ class PriceHelper
 
         $currency = Currency::where('code', $currencyCode)->first();
 
-        if (!$currency) {
-            return number_format($price, 2) . ' ' . $currencyCode;
+        if (! $currency) {
+            return number_format($price, 2).' '.$currencyCode;
         }
 
-        return $currency->symbol . number_format($price, 2);
+        return $currency->symbol.number_format($price, 2);
     }
 
     /**
@@ -44,9 +44,9 @@ class PriceHelper
         $difference = self::calculatePriceDifference($originalPrice, $comparePrice);
 
         if ($difference > 0) {
-            return '+' . number_format($difference, 1) . '%';
+            return '+'.number_format($difference, 1).'%';
         } elseif ($difference < 0) {
-            return number_format($difference, 1) . '%';
+            return number_format($difference, 1).'%';
         }
 
         return '0%';
@@ -54,6 +54,8 @@ class PriceHelper
 
     /**
      * Check if price is a good deal (below average).
+     *
+     * @param  array<float>  $allPrices
      */
     public static function isGoodDeal(float $price, array $allPrices): bool
     {
@@ -68,6 +70,8 @@ class PriceHelper
 
     /**
      * Get best price from array of prices.
+     *
+     * @param  array<float>  $prices
      */
     public static function getBestPrice(array $prices): ?float
     {
@@ -101,9 +105,9 @@ class PriceHelper
         $symbol = $currency ? $currency->symbol : $currencyCode;
 
         if ($minPrice === $maxPrice) {
-            return $symbol . number_format($minPrice, 2);
+            return $symbol.number_format($minPrice, 2);
         }
 
-        return $symbol . number_format($minPrice, 2) . ' - ' . $symbol . number_format($maxPrice, 2);
+        return $symbol.number_format($minPrice, 2).' - '.$symbol.number_format($maxPrice, 2);
     }
 }

@@ -45,7 +45,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      */
-    public function render($request, Throwable $e): JsonResponse|\Illuminate\Http\Response
+    public function render($request, Throwable $e): JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
     {
         // Handle API requests
         if ($request->is('api/*') || $request->expectsJson()) {
@@ -84,16 +84,16 @@ class GlobalExceptionHandler extends ExceptionHandler
             return $this->handleQueryException($e);
         }
 
-        if ($e instanceof HttpException) {
-            return $this->handleHttpException($e);
-        }
-
         if ($e instanceof NotFoundHttpException) {
             return $this->handleNotFoundHttpException($e);
         }
 
         if ($e instanceof MethodNotAllowedHttpException) {
             return $this->handleMethodNotAllowedHttpException($e);
+        }
+
+        if ($e instanceof HttpException) {
+            return $this->handleHttpException($e);
         }
 
         // Handle generic exceptions
@@ -103,7 +103,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     /**
      * Handle web exceptions.
      */
-    private function handleWebException(Request $request, Throwable $e): \Illuminate\Http\Response
+    private function handleWebException(Request $request, Throwable $e): \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $this->logException($e, $request);
 
@@ -177,6 +177,8 @@ class GlobalExceptionHandler extends ExceptionHandler
 
     /**
      * Handle model not found exceptions.
+     *
+     * @param  ModelNotFoundException<\Illuminate\Database\Eloquent\Model>  $e
      */
     private function handleModelNotFoundException(ModelNotFoundException $e): JsonResponse
     {
@@ -326,13 +328,13 @@ class GlobalExceptionHandler extends ExceptionHandler
         try {
             $adminEmails = config('app.admin_emails', []);
 
-            if (!empty($adminEmails)) {
+            if (! empty($adminEmails)) {
                 Mail::raw(
-                    "Critical error occurred in COPRRA application:\n\n" .
-                    'Error: ' . $e->getMessage() . "\n" .
-                    'File: ' . $e->getFile() . ':' . $e->getLine() . "\n" .
-                    'Time: ' . now()->toISOString() . "\n" .
-                    'URL: ' . request()->fullUrl(),
+                    "Critical error occurred in COPRRA application:\n\n".
+                    'Error: '.$e->getMessage()."\n".
+                    'File: '.$e->getFile().':'.$e->getLine()."\n".
+                    'Time: '.now()->toISOString()."\n".
+                    'URL: '.request()->fullUrl(),
                     function ($message) use ($adminEmails) {
                         $message->to($adminEmails)
                             ->subject('Critical Error Alert - COPRRA');

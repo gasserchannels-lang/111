@@ -8,14 +8,20 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @extends Factory<User<\Database\Factories\UserFactory>>
+ */
 class UserFactory extends Factory
 {
     protected $model = User::class;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [
-            'name' => 'User ' . $this->faker->unique()->numberBetween(1, 1000000),
+            'name' => 'User '.$this->faker->unique()->numberBetween(1, 1000000),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'),

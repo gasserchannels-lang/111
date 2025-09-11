@@ -6,7 +6,7 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class ProductUpdateException extends RuntimeException
+class ProductUpdate extends RuntimeException
 {
     // Add custom fields and methods if needed
 }

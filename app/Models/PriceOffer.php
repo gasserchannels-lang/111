@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int    $id
- * @property int    $product_id
- * @property int    $store_id
- * @property float  $price
+ * @property int $id
+ * @property int $product_id
+ * @property int $store_id
+ * @property float $price
  * @property string $url
- * @property bool   $in_stock
+ * @property bool $in_stock
  * @property-read Product $product
  * @property-read Store $store
  *
@@ -65,7 +65,7 @@ class PriceOffer extends Model
     ];
 
     /**
-     * @return BelongsTo<Product, PriceOffer>
+     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, PriceOffer<\Database\Factories\PriceOfferFactory>>
      */
     public function product(): BelongsTo
     {
@@ -73,7 +73,7 @@ class PriceOffer extends Model
     }
 
     /**
-     * @return BelongsTo<Store, PriceOffer>
+     * @return BelongsTo<Store<\Database\Factories\StoreFactory>, PriceOffer<\Database\Factories\PriceOfferFactory>>
      */
     public function store(): BelongsTo
     {
@@ -82,24 +82,33 @@ class PriceOffer extends Model
 
     /**
      * Scope a query to only include available offers.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>
      */
-    public function scopeAvailable($query)
+    public function scopeAvailable(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('is_available', true);
     }
 
     /**
      * Scope a query to only include offers for a specific product.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>
      */
-    public function scopeForProduct($query, $productId)
+    public function scopeForProduct(\Illuminate\Database\Eloquent\Builder $query, int $productId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('product_id', $productId);
     }
 
     /**
      * Scope a query to only include offers for a specific store.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>
      */
-    public function scopeForStore($query, $storeId)
+    public function scopeForStore(\Illuminate\Database\Eloquent\Builder $query, int $storeId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('store_id', $storeId);
     }
@@ -107,7 +116,7 @@ class PriceOffer extends Model
     /**
      * Get the lowest price for a product.
      */
-    public static function lowestPriceForProduct($productId)
+    public static function lowestPriceForProduct(int $productId): ?float
     {
         return static::where('product_id', $productId)
             ->where('is_available', true)
@@ -116,8 +125,10 @@ class PriceOffer extends Model
 
     /**
      * Get the best offer for a product.
+     *
+     * @return PriceOffer<\Database\Factories\PriceOfferFactory>|null
      */
-    public static function bestOfferForProduct($productId)
+    public static function bestOfferForProduct(int $productId): ?self
     {
         return static::where('product_id', $productId)
             ->where('is_available', true)
@@ -128,34 +139,34 @@ class PriceOffer extends Model
     /**
      * Mark the offer as unavailable.
      */
-    public function markAsUnavailable()
+    public function markAsUnavailable(): bool
     {
-        $this->update(['is_available' => false]);
+        return $this->update(['is_available' => false]);
     }
 
     /**
      * Mark the offer as available.
      */
-    public function markAsAvailable()
+    public function markAsAvailable(): bool
     {
-        $this->update(['is_available' => true]);
+        return $this->update(['is_available' => true]);
     }
 
     /**
      * Update the price of the offer.
      */
-    public function updatePrice($newPrice)
+    public function updatePrice(float $newPrice): bool
     {
-        $this->update(['price' => $newPrice]);
+        return $this->update(['price' => $newPrice]);
     }
 
     /**
      * Get the price difference from original price.
      */
-    public function getPriceDifferenceFromOriginal()
+    public function getPriceDifferenceFromOriginal(): float
     {
-        if (!$this->original_price) {
-            return 0;
+        if (! $this->original_price) {
+            return 0.0;
         }
 
         return $this->price - $this->original_price;
@@ -164,10 +175,10 @@ class PriceOffer extends Model
     /**
      * Get the price difference percentage from original price.
      */
-    public function getPriceDifferencePercentage()
+    public function getPriceDifferencePercentage(): float
     {
-        if (!$this->original_price || $this->original_price == 0) {
-            return 0;
+        if (! $this->original_price || (float) $this->original_price === 0.0) {
+            return 0.0;
         }
 
         return (($this->price - $this->original_price) / $this->original_price) * 100;

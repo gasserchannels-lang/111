@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class CDNService
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $config;
 
     private string $provider;
@@ -18,11 +21,14 @@ class CDNService
     public function __construct()
     {
         $this->provider = config('cdn.provider', 'cloudflare');
-        $this->config = config('cdn.providers.' . $this->provider, []);
+        $this->config = config('cdn.providers.'.$this->provider, []);
     }
 
     /**
      * Upload file to CDN.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function uploadFile(string $localPath, ?string $remotePath = null): array
     {
@@ -32,7 +38,7 @@ class CDNService
             $fileContent = Storage::disk('public')->get($localPath);
             $mimeType = Storage::disk('public')->mimeType($localPath);
 
-            $result = $this->uploadToCDN($fileContent, $remotePath, $mimeType);
+            $result = $this->uploadToCDN($fileContent ?? '', $remotePath, $mimeType ?: 'application/octet-stream');
 
             Log::info('File uploaded to CDN', [
                 'local_path' => $localPath,
@@ -56,6 +62,10 @@ class CDNService
 
     /**
      * Upload multiple files to CDN.
+     */
+    /**
+     * @param  array<string, string>  $files
+     * @return array<string, array<string, mixed>>
      */
     public function uploadMultipleFiles(array $files): array
     {
@@ -103,6 +113,9 @@ class CDNService
     /**
      * Purge CDN cache.
      */
+    /**
+     * @param  list<string>  $urls
+     */
     public function purgeCache(array $urls = []): bool
     {
         try {
@@ -132,7 +145,7 @@ class CDNService
     {
         $baseUrl = $this->config['base_url'] ?? '';
 
-        return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
+        return rtrim($baseUrl, '/').'/'.ltrim($path, '/');
     }
 
     /**
@@ -158,13 +171,16 @@ class CDNService
     /**
      * Get file metadata from CDN.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getFileMetadata(string $remotePath): array
     {
         try {
             $url = $this->getUrl($remotePath);
             $response = Http::head($url);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 throw new Exception('File not found on CDN');
             }
 
@@ -189,6 +205,9 @@ class CDNService
     /**
      * Upload to CDN based on provider.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function uploadToCDN(string $content, string $path, string $mimeType): array
     {
         switch ($this->provider) {
@@ -209,6 +228,9 @@ class CDNService
     /**
      * Upload to Cloudflare.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function uploadToCloudflare(string $content, string $path, string $mimeType): array
     {
         $apiToken = $this->config['api_token'];
@@ -218,10 +240,10 @@ class CDNService
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$apiToken}",
             'Content-Type' => $mimeType,
-        ])->put("https://api.cloudflare.com/client/v4/accounts/{$accountId}/images/v1/{$path}", $content);
+        ])->put("https://api.cloudflare.com/client/v4/accounts/{$accountId}/images/v1/{$path}", ['content' => $content]);
 
-        if (!$response->successful()) {
-            throw new Exception('Cloudflare upload failed: ' . $response->body());
+        if (! $response->successful()) {
+            throw new Exception('Cloudflare upload failed: '.$response->body());
         }
 
         $data = $response->json();
@@ -235,6 +257,9 @@ class CDNService
 
     /**
      * Upload to AWS S3.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function uploadToS3(string $content, string $path, string $mimeType): array
     {
@@ -254,6 +279,9 @@ class CDNService
 
     /**
      * Upload to Google Cloud Storage.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function uploadToGoogleCloud(string $content, string $path, string $mimeType): array
     {
@@ -326,6 +354,9 @@ class CDNService
     /**
      * Purge CDN cache based on provider.
      */
+    /**
+     * @param  list<string>  $urls
+     */
     private function purgeCDNCache(array $urls): bool
     {
         switch ($this->provider) {
@@ -346,6 +377,9 @@ class CDNService
     /**
      * Purge Cloudflare cache.
      */
+    /**
+     * @param  list<string>  $urls
+     */
     private function purgeCloudflareCache(array $urls): bool
     {
         $apiToken = $this->config['api_token'];
@@ -365,6 +399,9 @@ class CDNService
     /**
      * Purge S3 cache.
      */
+    /**
+     * @param  list<string>  $urls
+     */
     private function purgeS3Cache(array $urls): bool
     {
         // S3 doesn't have built-in cache purging
@@ -375,6 +412,9 @@ class CDNService
     /**
      * Purge Google Cloud cache.
      */
+    /**
+     * @param  list<string>  $urls
+     */
     private function purgeGoogleCloudCache(array $urls): bool
     {
         // This would use Google Cloud SDK in a real implementation
@@ -383,6 +423,9 @@ class CDNService
 
     /**
      * Get CDN statistics.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function getStatistics(): array
     {
@@ -413,6 +456,9 @@ class CDNService
     /**
      * Get Cloudflare statistics.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function getCloudflareStatistics(): array
     {
         $apiToken = $this->config['api_token'];
@@ -422,7 +468,7 @@ class CDNService
             'Authorization' => "Bearer {$apiToken}",
         ])->get("https://api.cloudflare.com/client/v4/zones/{$zoneId}/analytics/dashboard");
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new Exception('Failed to get Cloudflare statistics');
         }
 
@@ -432,6 +478,9 @@ class CDNService
     /**
      * Get S3 statistics.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function getS3Statistics(): array
     {
         // This would use AWS SDK in a real implementation
@@ -440,6 +489,9 @@ class CDNService
 
     /**
      * Get Google Cloud statistics.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function getGoogleCloudStatistics(): array
     {
@@ -454,7 +506,7 @@ class CDNService
     {
         try {
             $testPath = 'test/connection.txt';
-            $testContent = 'CDN connection test - ' . now();
+            $testContent = 'CDN connection test - '.now();
 
             $result = $this->uploadToCDN($testContent, $testPath, 'text/plain');
 

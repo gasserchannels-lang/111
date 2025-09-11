@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int    $id
- * @property int    $user_id
- * @property int    $product_id
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
  * @property string $title
  * @property string $content
- * @property int    $rating
- * @property bool   $is_verified_purchase
- * @property bool   $is_approved
- * @property array  $helpful_votes
- * @property int    $helpful_count
+ * @property int $rating
+ * @property bool $is_verified_purchase
+ * @property bool $is_approved
+ * @property array $helpful_votes
+ * @property int $helpful_count
  * @property-read User $user
  * @property-read Product $product
  *
@@ -39,6 +39,9 @@ class Review extends Model
      */
     use HasFactory;
 
+    /**
+     * @var list<string>
+     */
     protected $fillable = [
         'user_id',
         'product_id',
@@ -60,7 +63,7 @@ class Review extends Model
     ];
 
     /**
-     * @return BelongsTo<User, Review>
+     * @return BelongsTo<User<\Database\Factories\UserFactory>, Review<\Database\Factories\ReviewFactory>>
      */
     public function user(): BelongsTo
     {
@@ -68,7 +71,7 @@ class Review extends Model
     }
 
     /**
-     * @return BelongsTo<Product, Review>
+     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, Review<\Database\Factories\ReviewFactory>>
      */
     public function product(): BelongsTo
     {

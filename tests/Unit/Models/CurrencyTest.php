@@ -36,7 +36,7 @@ class CurrencyTest extends TestCase
      */
     public function it_can_validate_required_fields()
     {
-        $currency = new Currency();
+        $currency = new Currency;
 
         try {
             $currency->save();

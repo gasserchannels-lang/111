@@ -20,11 +20,11 @@ class ProcessHeavyOperation implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int $timeout = 300; // 5 minutes
+    private int $timeout = 300; // 5 minutes
 
-    public int $tries = 3;
+    private int $tries = 3;
 
-    public int $maxExceptions = 3;
+    private int $maxExceptions = 3;
 
     private string $operation;
 
@@ -258,7 +258,7 @@ class ProcessHeavyOperation implements ShouldQueue
         return [
             'format' => $format,
             'table' => $table,
-            'file_path' => "exports/{$table}_{$format}_" . time() . ".{$format}",
+            'file_path' => "exports/{$table}_{$format}_".time().".{$format}",
             'status' => 'completed',
         ];
     }

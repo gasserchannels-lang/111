@@ -2,18 +2,14 @@
 
 namespace App\Services;
 
-use Illuminate\Process\Factory;
 use Illuminate\Support\Facades\Process;
 
 class ProcessService
 {
     /**
-     * The process factory instance.
-     */
-    private Factory $processFactory;
-
-    /**
      * Processing metrics.
+     *
+     * @var array<string, int>
      */
     private array $metrics = [
         'processed_count' => 0,
@@ -22,6 +18,8 @@ class ProcessService
 
     /**
      * Validation errors.
+     *
+     * @var array<string, mixed>
      */
     private array $errors = [];
 
@@ -33,30 +31,28 @@ class ProcessService
     /**
      * Create a new process service instance.
      */
-    public function __construct(?Factory $processFactory = null)
+    public function __construct()
     {
-        $this->processFactory = $processFactory ?? Process::getFacadeRoot();
+        // Constructor for future configuration if needed
     }
 
     /**
      * Run a process command.
+     *
+     * @param  array<string>|string  $command
      */
-    public function run(string|array $command): ProcessResult
+    public function run(string|array $command): \Illuminate\Contracts\Process\ProcessResult
     {
-        $process = $this->processFactory->new($command);
-        $process->run();
-
-        return new ProcessResult(
-            $process->getExitCode(),
-            $process->getOutput(),
-            $process->getErrorOutput()
-        );
+        return Process::run($command);
     }
 
     /**
      * Process data.
+     *
+     * @param  array<string, mixed>|null  $data
+     * @return array<string, mixed>
      */
-    public function process($data): array
+    public function process(?array $data): array
     {
         try {
             $this->status = 'processing';
@@ -68,7 +64,7 @@ class ProcessService
             $cleanedData = $this->clean($data);
             $validated = $this->validate($cleanedData);
 
-            if (!$validated) {
+            if (! $validated) {
                 $this->metrics['error_count']++;
 
                 return ['error' => true, 'message' => 'Validation failed', 'errors' => $this->getErrors()];
@@ -89,6 +85,8 @@ class ProcessService
 
     /**
      * Validate data.
+     *
+     * @param  array<string, mixed>  $data
      */
     public function validate(array $data): bool
     {
@@ -98,7 +96,7 @@ class ProcessService
             $this->errors['name'] = 'Name is required';
         }
 
-        if (isset($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        if (isset($data['email']) && ! filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = 'Email is invalid';
         }
 
@@ -107,6 +105,8 @@ class ProcessService
 
     /**
      * Get validation errors.
+     *
+     * @return array<string, mixed>
      */
     public function getErrors(): array
     {
@@ -115,6 +115,9 @@ class ProcessService
 
     /**
      * Clean data.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function clean(array $data): array
     {
@@ -137,6 +140,9 @@ class ProcessService
 
     /**
      * Transform data.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function transform(array $data): array
     {
@@ -176,6 +182,8 @@ class ProcessService
 
     /**
      * Get processing metrics.
+     *
+     * @return array<string, int>
      */
     public function getMetrics(): array
     {

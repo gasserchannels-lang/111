@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<PriceAlert<\Database\Factories\PriceAlertFactory>>
+ */
 class PriceAlertFactory extends Factory
 {
+    protected $model = PriceAlert::class;
+
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [

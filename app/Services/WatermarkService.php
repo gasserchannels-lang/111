@@ -9,15 +9,15 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class WatermarkService
+final class WatermarkService
 {
+    /**
+     * @var array<string, string|int|float|bool>
+     */
     private array $config;
 
-    private CloudStorageService $cloudStorage;
-
-    public function __construct(CloudStorageService $cloudStorage)
+    public function __construct()
     {
-        $this->cloudStorage = $cloudStorage;
         $this->config = config('watermark', [
             'enabled' => true,
             'text' => 'COPRRA',
@@ -37,7 +37,7 @@ class WatermarkService
     public function addWatermark(UploadedFile $file, ?string $watermarkText = null): UploadedFile
     {
         try {
-            if (!$this->config['enabled']) {
+            if (! $this->config['enabled']) {
                 return $file;
             }
 
@@ -75,6 +75,9 @@ class WatermarkService
 
     /**
      * Add watermark to multiple images.
+     *
+     * @param  array<UploadedFile>  $files
+     * @return array<UploadedFile|array<string, mixed>>
      */
     public function addWatermarkToMultiple(array $files, ?string $watermarkText = null): array
     {
@@ -100,7 +103,7 @@ class WatermarkService
     public function addWatermarkToStoredImage(string $imagePath, ?string $watermarkText = null): string
     {
         try {
-            if (!$this->config['enabled']) {
+            if (! $this->config['enabled']) {
                 return $imagePath;
             }
 
@@ -116,6 +119,9 @@ class WatermarkService
 
             // Upload watermarked image back to storage
             $watermarkedContent = file_get_contents($watermarkedPath);
+            if ($watermarkedContent === false) {
+                throw new Exception('Failed to read watermarked image content');
+            }
             $watermarkedImagePath = str_replace('.', '_watermarked.', $imagePath);
             Storage::disk('public')->put($watermarkedImagePath, $watermarkedContent);
 
@@ -170,6 +176,9 @@ class WatermarkService
 
         // Get image info
         $imageInfo = getimagesize($imagePath);
+        if ($imageInfo === false) {
+            throw new Exception('Failed to get image information');
+        }
         $width = $imageInfo[0];
         $height = $imageInfo[1];
         $mimeType = $imageInfo['mime'];
@@ -177,7 +186,7 @@ class WatermarkService
         // Create image resource based on type
         $image = $this->createImageResource($imagePath, $mimeType);
 
-        if (!$image) {
+        if (! $image) {
             throw new Exception('Failed to create image resource');
         }
 
@@ -185,6 +194,9 @@ class WatermarkService
         $this->drawWatermark($image, $watermarkText, $width, $height);
 
         // Save watermarked image
+        if ($outputPath === false) {
+            throw new Exception('Failed to create output path');
+        }
         $this->saveImage($image, $outputPath, $mimeType);
 
         // Clean up image resource
@@ -195,6 +207,8 @@ class WatermarkService
 
     /**
      * Create image resource from file.
+     *
+     * @return \GdImage|false
      */
     private function createImageResource(string $imagePath, string $mimeType)
     {
@@ -208,49 +222,53 @@ class WatermarkService
             case 'image/webp':
                 return imagecreatefromwebp($imagePath);
             default:
-                throw new Exception('Unsupported image type: ' . $mimeType);
+                throw new Exception('Unsupported image type: '.$mimeType);
         }
     }
 
     /**
      * Draw watermark on image.
      */
-    private function drawWatermark($image, string $watermarkText, int $width, int $height): void
+    private function drawWatermark(\GdImage $image, string $watermarkText, int $width, int $height): void
     {
         // Calculate watermark position
         $position = $this->calculateWatermarkPosition($width, $height, $watermarkText);
 
         // Create watermark background
-        $watermarkWidth = $position['width'];
-        $watermarkHeight = $position['height'];
+        $watermarkWidth = max(1, $position['width']);
+        $watermarkHeight = max(1, $position['height']);
         $watermark = imagecreatetruecolor($watermarkWidth, $watermarkHeight);
 
         // Set background color with opacity
         $backgroundColor = $this->hexToRgb($this->config['background_color']);
         $bgColor = imagecolorallocatealpha(
             $watermark,
-            $backgroundColor['r'],
-            $backgroundColor['g'],
-            $backgroundColor['b'],
-            (1 - $this->config['opacity']) * 127
+            max(0, min(255, $backgroundColor['r'])),
+            max(0, min(255, $backgroundColor['g'])),
+            max(0, min(255, $backgroundColor['b'])),
+            max(0, min(127, (int) ((1 - $this->config['opacity']) * 127)))
         );
-        imagefill($watermark, 0, 0, $bgColor);
+        if ($bgColor !== false) {
+            imagefill($watermark, 0, 0, $bgColor);
+        }
 
         // Set text color
         $textColor = $this->hexToRgb($this->config['font_color']);
         $textColorResource = imagecolorallocate(
             $watermark,
-            $textColor['r'],
-            $textColor['g'],
-            $textColor['b']
+            max(0, min(255, $textColor['r'])),
+            max(0, min(255, $textColor['g'])),
+            max(0, min(255, $textColor['b']))
         );
 
         // Draw text
         $fontSize = $this->config['font_size'];
-        $textX = ($watermarkWidth - strlen($watermarkText) * $fontSize * 0.6) / 2;
-        $textY = ($watermarkHeight + $fontSize) / 2;
+        $textX = (int) (($watermarkWidth - strlen($watermarkText) * $fontSize * 0.6) / 2);
+        $textY = (int) (($watermarkHeight + $fontSize) / 2);
 
-        imagestring($watermark, 5, $textX, $textY, $watermarkText, $textColorResource);
+        if ($textColorResource !== false) {
+            imagestring($watermark, 5, $textX, $textY, $watermarkText, $textColorResource);
+        }
 
         // Merge watermark with original image
         imagecopymerge(
@@ -271,6 +289,8 @@ class WatermarkService
 
     /**
      * Calculate watermark position.
+     *
+     * @return array<string, int>
      */
     private function calculateWatermarkPosition(int $width, int $height, string $watermarkText): array
     {
@@ -309,17 +329,17 @@ class WatermarkService
         }
 
         return [
-            'x' => max(0, $x),
-            'y' => max(0, $y),
-            'width' => $watermarkWidth,
-            'height' => $watermarkHeight,
+            'x' => (int) max(0, $x),
+            'y' => (int) max(0, $y),
+            'width' => (int) $watermarkWidth,
+            'height' => (int) $watermarkHeight,
         ];
     }
 
     /**
      * Save image to file.
      */
-    private function saveImage($image, string $outputPath, string $mimeType): void
+    private function saveImage(\GdImage $image, string $outputPath, string $mimeType): void
     {
         switch ($mimeType) {
             case 'image/jpeg':
@@ -335,38 +355,34 @@ class WatermarkService
                 imagewebp($image, $outputPath, 90);
                 break;
             default:
-                throw new Exception('Unsupported output image type: ' . $mimeType);
+                throw new Exception('Unsupported output image type: '.$mimeType);
         }
     }
 
     /**
      * Convert hex color to RGB.
+     *
+     * @return array<string, int>
      */
     private function hexToRgb(string $hex): array
     {
         $hex = ltrim($hex, '#');
 
         if (strlen($hex) === 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
         }
 
         return [
-            'r' => hexdec(substr($hex, 0, 2)),
-            'g' => hexdec(substr($hex, 2, 2)),
-            'b' => hexdec(substr($hex, 4, 2)),
+            'r' => (int) hexdec(substr($hex, 0, 2)),
+            'g' => (int) hexdec(substr($hex, 2, 2)),
+            'b' => (int) hexdec(substr($hex, 4, 2)),
         ];
     }
 
     /**
-     * Update watermark configuration.
-     */
-    public function updateConfig(array $config): void
-    {
-        $this->config = array_merge($this->config, $config);
-    }
-
-    /**
      * Get watermark configuration.
+     *
+     * @return array<string, string|int|float|bool>
      */
     public function getConfig(): array
     {
@@ -398,57 +414,34 @@ class WatermarkService
     }
 
     /**
-     * Set watermark text.
+     * Update watermark configuration with validation.
+     *
+     * @param  array<string, string|int|float|bool>  $config
      */
-    public function setText(string $text): void
+    public function updateConfig(array $config): void
     {
-        $this->config['text'] = $text;
-    }
-
-    /**
-     * Set watermark position.
-     */
-    public function setPosition(string $position): void
-    {
-        $validPositions = ['top-left', 'top-right', 'bottom-left', 'bottom-right', 'center'];
-
-        if (!in_array($position, $validPositions)) {
-            throw new Exception('Invalid watermark position: ' . $position);
+        if (isset($config['opacity'])) {
+            $opacity = (float) $config['opacity'];
+            if ($opacity < 0 || $opacity > 1) {
+                throw new Exception('Opacity must be between 0 and 1');
+            }
+            $this->config['opacity'] = $opacity;
         }
 
-        $this->config['position'] = $position;
-    }
-
-    /**
-     * Set watermark opacity.
-     */
-    public function setOpacity(float $opacity): void
-    {
-        if ($opacity < 0 || $opacity > 1) {
-            throw new Exception('Opacity must be between 0 and 1');
+        if (isset($config['font_size'])) {
+            $fontSize = (int) $config['font_size'];
+            if ($fontSize < 8 || $fontSize > 72) {
+                throw new Exception('Font size must be between 8 and 72');
+            }
+            $this->config['font_size'] = $fontSize;
         }
 
-        $this->config['opacity'] = $opacity;
-    }
-
-    /**
-     * Set watermark font size.
-     */
-    public function setFontSize(int $fontSize): void
-    {
-        if ($fontSize < 8 || $fontSize > 72) {
-            throw new Exception('Font size must be between 8 and 72');
+        if (isset($config['font_color'])) {
+            $this->config['font_color'] = (string) $config['font_color'];
         }
 
-        $this->config['font_size'] = $fontSize;
-    }
-
-    /**
-     * Set watermark colors.
-     */
-    public function setColors(string $textColor, string $backgroundColor): void
-    {
-        $this->config['font_color'] = $textColor;
-        $this->config['background_color'] = $backgroundColor;
+        if (isset($config['background_color'])) {
+            $this->config['background_color'] = (string) $config['background_color'];
+        }
     }
 }

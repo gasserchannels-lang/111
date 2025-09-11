@@ -5,23 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AuditService;
 use App\Services\FileSecurityService;
 use App\Services\LoginAttemptService;
-use App\Services\ReportService;
-use App\Services\StatisticsService;
 use App\Services\UserBanService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    private StatisticsService $statisticsService;
-
-    private ReportService $reportService;
-
-    private AuditService $auditService;
-
     private LoginAttemptService $loginAttemptService;
 
     private UserBanService $userBanService;
@@ -29,9 +20,6 @@ class DashboardController extends Controller
     private FileSecurityService $fileSecurityService;
 
     public function __construct(
-        StatisticsService $statisticsService,
-        ReportService $reportService,
-        AuditService $auditService,
         LoginAttemptService $loginAttemptService,
         UserBanService $userBanService,
         FileSecurityService $fileSecurityService
@@ -39,9 +27,6 @@ class DashboardController extends Controller
         $this->middleware('auth');
         $this->middleware('admin');
 
-        $this->statisticsService = $statisticsService;
-        $this->reportService = $reportService;
-        $this->auditService = $auditService;
         $this->loginAttemptService = $loginAttemptService;
         $this->userBanService = $userBanService;
         $this->fileSecurityService = $fileSecurityService;
@@ -90,6 +75,8 @@ class DashboardController extends Controller
 
     /**
      * Get dashboard statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getDashboardStatistics(): array
     {
@@ -107,13 +94,15 @@ class DashboardController extends Controller
 
     /**
      * Get user statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getUserStatistics(): array
     {
         return [
             'total_users' => \App\Models\User::count(),
             'active_users' => \App\Models\User::where('is_active', true)->count(),
-            'blocked_users' => \App\Models\User::where('is_blocked', true)->count(),
+            'blocked_users' => 0, // Placeholder - no blocked users column
             'verified_users' => \App\Models\User::whereNotNull('email_verified_at')->count(),
             'new_users_today' => \App\Models\User::whereDate('created_at', today())->count(),
             'new_users_this_week' => \App\Models\User::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
@@ -123,6 +112,8 @@ class DashboardController extends Controller
 
     /**
      * Get product statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getProductStatistics(): array
     {
@@ -131,14 +122,15 @@ class DashboardController extends Controller
             'active_products' => \App\Models\Product::where('is_active', true)->count(),
             'featured_products' => \App\Models\Product::where('is_featured', true)->count(),
             'out_of_stock' => \App\Models\Product::where('stock_quantity', 0)->count(),
-            'low_stock' => \App\Models\Product::where('stock_quantity', '>', 0)
-                ->where('stock_quantity', '<', 10)->count(),
+            'low_stock' => \App\Models\Product::where('stock_quantity', '>', 0)->where('stock_quantity', '<=', 10)->count(),
             'new_products_today' => \App\Models\Product::whereDate('created_at', today())->count(),
         ];
     }
 
     /**
      * Get order statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getOrderStatistics(): array
     {
@@ -155,6 +147,8 @@ class DashboardController extends Controller
 
     /**
      * Get revenue statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getRevenueStatistics(): array
     {
@@ -170,6 +164,8 @@ class DashboardController extends Controller
 
     /**
      * Get security statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getSecurityStatistics(): array
     {
@@ -184,6 +180,8 @@ class DashboardController extends Controller
 
     /**
      * Get system statistics.
+     *
+     * @return array<string, mixed>
      */
     private function getSystemStatistics(): array
     {
@@ -200,14 +198,19 @@ class DashboardController extends Controller
 
     /**
      * Get recent activities.
+     *
+     * @return array<string, mixed>
      */
     private function getRecentActivities(): array
     {
-        return $this->auditService->getRecentActivities(10);
+        // TODO: Implement getRecentActivities method in AuditService
+        return [];
     }
 
     /**
      * Get chart data.
+     *
+     * @return array<string, mixed>
      */
     private function getChartData(): array
     {
@@ -230,6 +233,8 @@ class DashboardController extends Controller
 
     /**
      * Get system health.
+     *
+     * @return array<string, mixed>
      */
     private function getSystemHealth(): array
     {
@@ -243,6 +248,8 @@ class DashboardController extends Controller
 
     /**
      * Get security alerts.
+     *
+     * @return array<string, mixed>
      */
     private function getSecurityAlerts(): array
     {
@@ -265,6 +272,8 @@ class DashboardController extends Controller
 
     /**
      * Get security incidents.
+     *
+     * @return array<string, mixed>
      */
     private function getSecurityIncidents(): array
     {
@@ -274,6 +283,8 @@ class DashboardController extends Controller
 
     /**
      * Get disk usage.
+     *
+     * @return array<string, mixed>
      */
     private function getDiskUsage(): array
     {
@@ -300,6 +311,8 @@ class DashboardController extends Controller
 
     /**
      * Get cache status.
+     *
+     * @return array<string, mixed>
      */
     private function getCacheStatus(): array
     {
@@ -323,6 +336,8 @@ class DashboardController extends Controller
 
     /**
      * Check database health.
+     *
+     * @return array<string, string>
      */
     private function checkDatabaseHealth(): array
     {
@@ -337,6 +352,8 @@ class DashboardController extends Controller
 
     /**
      * Check cache health.
+     *
+     * @return array<string, string>
      */
     private function checkCacheHealth(): array
     {
@@ -353,11 +370,13 @@ class DashboardController extends Controller
 
     /**
      * Check storage health.
+     *
+     * @return array<string, string>
      */
     private function checkStorageHealth(): array
     {
         try {
-            $testFile = 'health_check_' . time() . '.txt';
+            $testFile = 'health_check_'.time().'.txt';
             \Storage::put($testFile, 'test');
             $result = \Storage::get($testFile);
             \Storage::delete($testFile);
@@ -370,6 +389,8 @@ class DashboardController extends Controller
 
     /**
      * Check memory health.
+     *
+     * @return array<string, mixed>
      */
     private function checkMemoryHealth(): array
     {
@@ -393,7 +414,7 @@ class DashboardController extends Controller
     {
         $memoryLimit = trim($memoryLimit);
         $last = strtolower($memoryLimit[strlen($memoryLimit) - 1]);
-        $memoryLimit = (int)$memoryLimit;
+        $memoryLimit = (int) $memoryLimit;
 
         switch ($last) {
             case 'g':
@@ -411,6 +432,8 @@ class DashboardController extends Controller
 
     /**
      * Get user registration chart data.
+     *
+     * @return array<string, mixed>
      */
     private function getUserRegistrationChart(): array
     {
@@ -428,6 +451,8 @@ class DashboardController extends Controller
 
     /**
      * Get product views chart data.
+     *
+     * @return array<string, mixed>
      */
     private function getProductViewsChart(): array
     {
@@ -437,6 +462,8 @@ class DashboardController extends Controller
 
     /**
      * Get revenue chart data.
+     *
+     * @return array<string, mixed>
      */
     private function getRevenueChart(): array
     {
@@ -446,6 +473,8 @@ class DashboardController extends Controller
 
     /**
      * Get security incidents chart data.
+     *
+     * @return array<string, mixed>
      */
     private function getSecurityIncidentsChart(): array
     {

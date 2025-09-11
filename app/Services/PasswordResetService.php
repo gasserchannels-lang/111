@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -26,7 +27,7 @@ class PasswordResetService
     {
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             Log::warning('Password reset requested for non-existent email', [
                 'email' => $email,
                 'ip' => request()->ip(),
@@ -84,7 +85,7 @@ class PasswordResetService
     public function resetPassword(string $email, string $token, string $newPassword): bool
     {
         // Validate token
-        if (!$this->validateResetToken($email, $token)) {
+        if (! $this->validateResetToken($email, $token)) {
             Log::warning('Invalid password reset token', [
                 'email' => $email,
                 'token' => $token,
@@ -96,7 +97,7 @@ class PasswordResetService
 
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -130,7 +131,7 @@ class PasswordResetService
      */
     private function storeResetToken(string $email, string $token): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
 
         $data = [
             'token' => $token,
@@ -146,10 +147,10 @@ class PasswordResetService
      */
     private function validateResetToken(string $email, string $token): bool
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
 
-        if (!$data) {
+        if (! $data) {
             return false;
         }
 
@@ -183,7 +184,7 @@ class PasswordResetService
      */
     private function clearResetToken(string $email): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         Cache::forget($key);
     }
 
@@ -192,20 +193,22 @@ class PasswordResetService
      */
     public function hasResetToken(string $email): bool
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
 
         return Cache::has($key);
     }
 
     /**
      * Get reset token info.
+     *
+     * @return array<string, mixed>|null
      */
     public function getResetTokenInfo(string $email): ?array
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
 
-        if (!$data) {
+        if (! $data) {
             return null;
         }
 
@@ -223,7 +226,7 @@ class PasswordResetService
     public function cleanupExpiredTokens(): int
     {
         $cleaned = 0;
-        $pattern = self::CACHE_PREFIX . '*';
+        $pattern = self::CACHE_PREFIX.'*';
 
         // This would need to be implemented based on your cache driver
         // For now, return 0
@@ -232,6 +235,8 @@ class PasswordResetService
 
     /**
      * Get password reset statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array
     {

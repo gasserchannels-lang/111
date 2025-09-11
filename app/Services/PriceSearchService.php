@@ -7,28 +7,26 @@ namespace App\Services;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Http\Request;
-use Illuminate\Log\LogManager;
 
 class PriceSearchService
 {
     private ValidationFactory $validationFactory;
 
-    private LogManager $log;
-
-    public function __construct(ValidationFactory $validationFactory, LogManager $log)
+    public function __construct(ValidationFactory $validationFactory)
     {
         $this->validationFactory = $validationFactory;
-        $this->log = $log;
     }
 
     /**
      * Find the best offer for a product in a specific country.
+     *
+     * @return array<string, mixed>
      */
     public function findBestOffer(string $productName, string $countryCode): array
     {
-        $product = Product::where('name', 'like', '%' . $productName . '%')->first();
+        $product = Product::where('name', 'like', '%'.$productName.'%')->first();
 
-        if (!$product) {
+        if (! $product) {
             return [
                 'success' => false,
                 'message' => 'Product not found.',
@@ -43,7 +41,7 @@ class PriceSearchService
             ->select('price_offers.*', 'stores.name as store_name', 'stores.country_code')
             ->first();
 
-        if (!$cheapestOffer) {
+        if (! $cheapestOffer) {
             return [
                 'success' => false,
                 'message' => 'No offers found for this product in the specified country.',
@@ -60,13 +58,16 @@ class PriceSearchService
 
     /**
      * Search for products with price comparison.
+     *
+     * @param  array<string, mixed>  $filters
+     * @return array<string, mixed>
      */
     public function searchProducts(array $filters): array
     {
         $query = Product::with(['priceOffers.store', 'brand', 'category']);
 
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
         if (isset($filters['brand_id'])) {
@@ -79,19 +80,19 @@ class PriceSearchService
 
         if (isset($filters['min_price'])) {
             $query->whereHas('priceOffers', function ($q) use ($filters) {
-                $q->where('price', '>=', $filters['min_price']);
+                $q->where('price_offers.price', '>=', $filters['min_price']);
             });
         }
 
         if (isset($filters['max_price'])) {
             $query->whereHas('priceOffers', function ($q) use ($filters) {
-                $q->where('price', '<=', $filters['max_price']);
+                $q->where('price_offers.price', '<=', $filters['max_price']);
             });
         }
 
         if (isset($filters['country_code'])) {
             $query->whereHas('priceOffers.store', function ($q) use ($filters) {
-                $q->where('country_code', $filters['country_code']);
+                $q->where('stores.country_code', $filters['country_code']);
             });
         }
 
@@ -107,12 +108,14 @@ class PriceSearchService
 
     /**
      * Get price history for a product.
+     *
+     * @return array<string, mixed>
      */
     public function getPriceHistory(int $productId, int $days = 30): array
     {
         $product = Product::find($productId);
 
-        if (!$product) {
+        if (! $product) {
             return [
                 'success' => false,
                 'message' => 'Product not found.',
@@ -131,7 +134,7 @@ class PriceSearchService
                     return [
                         'price' => $offer->price,
                         'currency' => $offer->currency,
-                        'date' => $offer->created_at->format('Y-m-d H:i:s'),
+                        'date' => $offer->created_at?->format('Y-m-d H:i:s') ?? '',
                         'in_stock' => $offer->in_stock,
                     ];
                 });
@@ -146,12 +149,15 @@ class PriceSearchService
 
     /**
      * Compare prices across multiple stores.
+     *
+     * @param  array<int>  $storeIds
+     * @return array<string, mixed>
      */
     public function comparePrices(int $productId, array $storeIds = []): array
     {
         $product = Product::find($productId);
 
-        if (!$product) {
+        if (! $product) {
             return [
                 'success' => false,
                 'message' => 'Product not found.',
@@ -161,7 +167,7 @@ class PriceSearchService
 
         $query = $product->priceOffers()->with('store');
 
-        if (!empty($storeIds)) {
+        if (! empty($storeIds)) {
             $query->whereIn('store_id', $storeIds);
         }
 
@@ -177,7 +183,7 @@ class PriceSearchService
 
         $comparison = $offers->map(function ($offer) {
             return [
-                'store_name' => $offer->store->name,
+                'store_name' => $offer->store->name ?? 'Unknown Store',
                 'price' => $offer->price,
                 'currency' => $offer->currency,
                 'in_stock' => $offer->in_stock,
@@ -208,6 +214,8 @@ class PriceSearchService
 
     /**
      * Validate search request.
+     *
+     * @return array<string, mixed>
      */
     public function validateSearchRequest(Request $request): array
     {

@@ -6,7 +6,7 @@ namespace App\Contracts;
 
 use Illuminate\Http\Request;
 
-interface LoginAttemptServiceInterface
+interface LoginAttemptService
 {
     /**
      * Record a failed login attempt.
@@ -60,6 +60,8 @@ interface LoginAttemptServiceInterface
 
     /**
      * Get login attempt statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array;
 }

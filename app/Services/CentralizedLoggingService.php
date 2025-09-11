@@ -62,6 +62,9 @@ class CentralizedLoggingService
     /**
      * Log application event.
      */
+    /**
+     * @param  array<string, mixed>  $context
+     */
     public function logApplication(string $level, string $message, array $context = []): void
     {
         $this->log('application', $level, $message, $context);
@@ -69,6 +72,9 @@ class CentralizedLoggingService
 
     /**
      * Log security event.
+     */
+    /**
+     * @param  array<string, mixed>  $context
      */
     public function logSecurity(string $level, string $message, array $context = []): void
     {
@@ -78,6 +84,9 @@ class CentralizedLoggingService
     /**
      * Log performance event.
      */
+    /**
+     * @param  array<string, mixed>  $context
+     */
     public function logPerformance(string $level, string $message, array $context = []): void
     {
         $this->log('performance', $level, $message, $context);
@@ -85,6 +94,9 @@ class CentralizedLoggingService
 
     /**
      * Log error event.
+     */
+    /**
+     * @param  array<string, mixed>  $context
      */
     public function logError(string $level, string $message, array $context = []): void
     {
@@ -94,6 +106,9 @@ class CentralizedLoggingService
     /**
      * Log audit event.
      */
+    /**
+     * @param  array<string, mixed>  $context
+     */
     public function logAudit(string $level, string $message, array $context = []): void
     {
         $this->log('audit', $level, $message, $context);
@@ -101,6 +116,9 @@ class CentralizedLoggingService
 
     /**
      * Log API event.
+     */
+    /**
+     * @param  array<string, mixed>  $context
      */
     public function logApi(string $level, string $message, array $context = []): void
     {
@@ -110,6 +128,9 @@ class CentralizedLoggingService
     /**
      * Log database event.
      */
+    /**
+     * @param  array<string, mixed>  $context
+     */
     public function logDatabase(string $level, string $message, array $context = []): void
     {
         $this->log('database', $level, $message, $context);
@@ -117,6 +138,9 @@ class CentralizedLoggingService
 
     /**
      * Log queue event.
+     */
+    /**
+     * @param  array<string, mixed>  $context
      */
     public function logQueue(string $level, string $message, array $context = []): void
     {
@@ -126,6 +150,9 @@ class CentralizedLoggingService
     /**
      * Log mail event.
      */
+    /**
+     * @param  array<string, mixed>  $context
+     */
     public function logMail(string $level, string $message, array $context = []): void
     {
         $this->log('mail', $level, $message, $context);
@@ -133,6 +160,9 @@ class CentralizedLoggingService
 
     /**
      * Log cache event.
+     */
+    /**
+     * @param  array<string, mixed>  $context
      */
     public function logCache(string $level, string $message, array $context = []): void
     {
@@ -142,10 +172,13 @@ class CentralizedLoggingService
     /**
      * Central logging method.
      */
+    /**
+     * @param  array<string, mixed>  $context
+     */
     private function log(string $channel, string $level, string $message, array $context = []): void
     {
         // Validate log level
-        if (!array_key_exists($level, self::LOG_LEVELS)) {
+        if (! array_key_exists($level, self::LOG_LEVELS)) {
             $level = 'info';
         }
 
@@ -167,6 +200,10 @@ class CentralizedLoggingService
 
     /**
      * Filter sensitive data from context.
+     */
+    /**
+     * @param  array<string, mixed>  $context
+     * @return array<string, mixed>
      */
     private function filterSensitiveData(array $context): array
     {
@@ -208,11 +245,15 @@ class CentralizedLoggingService
             return str_repeat('*', $length);
         }
 
-        return substr($value, 0, 2) . str_repeat('*', $length - 4) . substr($value, -2);
+        return substr($value, 0, 2).str_repeat('*', $length - 4).substr($value, -2);
     }
 
     /**
      * Add metadata to log context.
+     */
+    /**
+     * @param  array<string, mixed>  $context
+     * @return array<string, mixed>
      */
     private function addMetadata(array $context): array
     {
@@ -232,6 +273,9 @@ class CentralizedLoggingService
 
     /**
      * Store log in cache for real-time monitoring.
+     */
+    /**
+     * @param  array<string, mixed>  $context
      */
     private function storeInCache(string $channel, string $level, string $message, array $context): void
     {
@@ -262,7 +306,7 @@ class CentralizedLoggingService
     {
         $logPath = storage_path("logs/{$channel}.log");
 
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             return;
         }
 
@@ -298,12 +342,17 @@ class CentralizedLoggingService
      */
     private function compressLog(string $logPath): void
     {
-        $compressedPath = $logPath . '.gz';
+        $compressedPath = $logPath.'.gz';
 
         if (function_exists('gzopen')) {
             $fp = gzopen($compressedPath, 'w9');
-            gzwrite($fp, file_get_contents($logPath));
-            gzclose($fp);
+            if ($fp !== false) {
+                $content = file_get_contents($logPath);
+                if ($content !== false) {
+                    gzwrite($fp, $content);
+                }
+                gzclose($fp);
+            }
 
             unlink($logPath);
         }
@@ -317,6 +366,9 @@ class CentralizedLoggingService
         $logDir = storage_path('logs');
         $pattern = "{$logDir}/{$channel}-*.log*";
         $files = glob($pattern);
+        if ($files === false) {
+            $files = [];
+        }
 
         $cutoffDate = now()->subDays(self::LOG_ROTATION_DAYS);
 
@@ -329,6 +381,9 @@ class CentralizedLoggingService
 
     /**
      * Get recent logs from cache.
+     */
+    /**
+     * @return list<array<string, mixed>>
      */
     public function getRecentLogs(?string $channel = null, int $limit = 50): array
     {
@@ -356,6 +411,9 @@ class CentralizedLoggingService
     /**
      * Get log statistics.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getLogStatistics(): array
     {
         $stats = [];
@@ -373,7 +431,7 @@ class CentralizedLoggingService
             $stats[$channel] = [
                 'total' => count($logs),
                 'levels' => $levelCounts,
-                'last_log' => !empty($logs) ? end($logs)['timestamp'] : null,
+                'last_log' => ! empty($logs) ? end($logs)['timestamp'] : null,
             ];
         }
 
@@ -382,6 +440,9 @@ class CentralizedLoggingService
 
     /**
      * Search logs.
+     */
+    /**
+     * @return list<array<string, mixed>>
      */
     public function searchLogs(string $query, ?string $channel = null, ?string $level = null, int $limit = 100): array
     {
@@ -395,7 +456,7 @@ class CentralizedLoggingService
             }
 
             // Search in message and context
-            $searchText = strtolower($log['message'] . ' ' . json_encode($log['context']));
+            $searchText = strtolower($log['message'].' '.json_encode($log['context']));
 
             if (str_contains($searchText, strtolower($query))) {
                 $results[] = $log;
@@ -418,18 +479,25 @@ class CentralizedLoggingService
 
         switch ($format) {
             case 'json':
-                return json_encode($logs, JSON_PRETTY_PRINT);
+                $result = json_encode($logs, JSON_PRETTY_PRINT);
+
+                return $result !== false ? $result : '';
             case 'csv':
                 return $this->exportToCsv($logs);
             case 'txt':
                 return $this->exportToTxt($logs);
             default:
-                return json_encode($logs, JSON_PRETTY_PRINT);
+                $result = json_encode($logs, JSON_PRETTY_PRINT);
+
+                return $result !== false ? $result : '';
         }
     }
 
     /**
      * Export logs to CSV.
+     */
+    /**
+     * @param  list<array<string, mixed>>  $logs
      */
     private function exportToCsv(array $logs): string
     {
@@ -442,7 +510,7 @@ class CentralizedLoggingService
                 $log['channel'],
                 $log['level'],
                 str_replace(',', ';', $log['message']),
-                str_replace(',', ';', json_encode($log['context']))
+                str_replace(',', ';', json_encode($log['context']) ?: '')
             );
         }
 
@@ -451,6 +519,9 @@ class CentralizedLoggingService
 
     /**
      * Export logs to TXT.
+     */
+    /**
+     * @param  list<array<string, mixed>>  $logs
      */
     private function exportToTxt(array $logs): string
     {
@@ -488,6 +559,9 @@ class CentralizedLoggingService
 
     /**
      * Get log configuration.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function getLogConfiguration(): array
     {

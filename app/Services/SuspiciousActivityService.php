@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SuspiciousActivityService
+final class SuspiciousActivityService
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $config;
 
     public function __construct()
@@ -55,17 +58,18 @@ class SuspiciousActivityService
 
     /**
      * Monitor user activity.
+     *
+     * @param  array<string, mixed>  $data
      */
     public function monitorActivity(string $event, array $data): void
     {
-        if (!$this->config['enabled']) {
+        if (! $this->config['enabled']) {
             return;
         }
 
         try {
             $userId = $data['user_id'] ?? null;
             $ipAddress = $data['ip_address'] ?? null;
-            $userAgent = $data['user_agent'] ?? null;
             $location = $data['location'] ?? null;
 
             // Check for suspicious patterns
@@ -111,12 +115,14 @@ class SuspiciousActivityService
 
     /**
      * Check for multiple failed logins.
+     *
+     * @return list<array<string, mixed>>
      */
     private function checkMultipleFailedLogins(int $userId, string $ipAddress): array
     {
         $rule = $this->config['monitoring_rules']['multiple_failed_logins'];
 
-        if (!$rule['enabled']) {
+        if (! $rule['enabled']) {
             return [];
         }
 
@@ -145,12 +151,15 @@ class SuspiciousActivityService
 
     /**
      * Check for unusual login location.
+     *
+     * @param  array<string, mixed>  $location
+     * @return list<array<string, mixed>>
      */
     private function checkUnusualLoginLocation(int $userId, array $location, string $ipAddress): array
     {
         $rule = $this->config['monitoring_rules']['unusual_login_location'];
 
-        if (!$rule['enabled']) {
+        if (! $rule['enabled']) {
             return [];
         }
 
@@ -183,12 +192,14 @@ class SuspiciousActivityService
 
     /**
      * Check for rapid API requests.
+     *
+     * @return list<array<string, mixed>>
      */
     private function checkRapidApiRequests(int $userId, string $ipAddress): array
     {
         $rule = $this->config['monitoring_rules']['rapid_api_requests'];
 
-        if (!$rule['enabled']) {
+        if (! $rule['enabled']) {
             return [];
         }
 
@@ -217,12 +228,15 @@ class SuspiciousActivityService
 
     /**
      * Check for unusual data access.
+     *
+     * @param  array<string, mixed>  $data
+     * @return list<array<string, mixed>>
      */
     private function checkUnusualDataAccess(int $userId, array $data): array
     {
         $rule = $this->config['monitoring_rules']['unusual_data_access'];
 
-        if (!$rule['enabled']) {
+        if (! $rule['enabled']) {
             return [];
         }
 
@@ -251,12 +265,15 @@ class SuspiciousActivityService
 
     /**
      * Check for admin actions.
+     *
+     * @param  array<string, mixed>  $data
+     * @return list<array<string, mixed>>
      */
     private function checkAdminActions(int $userId, array $data): array
     {
         $rule = $this->config['monitoring_rules']['admin_actions'];
 
-        if (!$rule['enabled']) {
+        if (! $rule['enabled']) {
             return [];
         }
 
@@ -276,6 +293,8 @@ class SuspiciousActivityService
 
     /**
      * Process suspicious activity.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function processSuspiciousActivity(array $activity): void
     {
@@ -301,6 +320,8 @@ class SuspiciousActivityService
 
     /**
      * Store suspicious activity.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function storeSuspiciousActivity(array $activity): void
     {
@@ -311,6 +332,8 @@ class SuspiciousActivityService
 
     /**
      * Send notifications.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function sendNotifications(array $activity): void
     {
@@ -331,13 +354,15 @@ class SuspiciousActivityService
 
     /**
      * Send email notification.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function sendEmailNotification(array $activity): void
     {
         try {
             $adminEmails = config('app.admin_emails', []);
 
-            if (!empty($adminEmails)) {
+            if (! empty($adminEmails)) {
                 $subject = "Suspicious Activity Alert - {$activity['type']}";
                 $message = $this->formatActivityMessage($activity);
 
@@ -355,6 +380,8 @@ class SuspiciousActivityService
 
     /**
      * Send Slack notification.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function sendSlackNotification(array $activity): void
     {
@@ -362,8 +389,6 @@ class SuspiciousActivityService
             $webhookUrl = config('suspicious_activity.slack_webhook_url');
 
             if ($webhookUrl) {
-                $message = $this->formatActivityMessage($activity);
-
                 // Send to Slack webhook
                 // Implementation would go here
             }
@@ -377,6 +402,8 @@ class SuspiciousActivityService
 
     /**
      * Send webhook notification.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function sendWebhookNotification(array $activity): void
     {
@@ -397,6 +424,8 @@ class SuspiciousActivityService
 
     /**
      * Take automatic actions.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function takeAutomaticActions(array $activity): void
     {
@@ -484,6 +513,8 @@ class SuspiciousActivityService
 
     /**
      * Format activity message.
+     *
+     * @param  array<string, mixed>  $activity
      */
     private function formatActivityMessage(array $activity): string
     {
@@ -501,6 +532,8 @@ class SuspiciousActivityService
 
     /**
      * Get user's previous login locations.
+     *
+     * @return array<string, mixed>
      */
     private function getUserPreviousLocations(int $userId): array
     {
@@ -511,6 +544,9 @@ class SuspiciousActivityService
 
     /**
      * Check if location is unusual.
+     *
+     * @param  array<string, mixed>  $currentLocation
+     * @param  array<string, mixed>  $previousLocations
      */
     private function isLocationUnusual(array $currentLocation, array $previousLocations): bool
     {
@@ -556,6 +592,8 @@ class SuspiciousActivityService
 
     /**
      * Get suspicious activity statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array
     {

@@ -16,7 +16,7 @@ class CheckDeploymentReadiness extends Command
 
     protected $description = 'Check if the application is ready for deployment to Hostinger';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('Starting deployment readiness check...');
         $hasErrors = false;
@@ -24,32 +24,34 @@ class CheckDeploymentReadiness extends Command
         // 1. Environment Check
         $this->info('Checking environment configuration...');
         $envErrors = $this->checkEnvironment();
-        $hasErrors = $hasErrors || !empty($envErrors);
+        if (! empty($envErrors)) {
+            $hasErrors = true;
+        }
 
         // 2. Storage Permissions
         $this->info('Checking storage permissions...');
         $storageErrors = $this->checkStoragePermissions();
-        $hasErrors = $hasErrors || !empty($storageErrors);
+        $hasErrors = $hasErrors || ! empty($storageErrors);
 
         // 3. Database Configuration
         $this->info('Checking database configuration...');
         $dbErrors = $this->checkDatabase();
-        $hasErrors = $hasErrors || !empty($dbErrors);
+        $hasErrors = $hasErrors || ! empty($dbErrors);
 
         // 4. Cache Configuration
         $this->info('Checking cache configuration...');
         $cacheErrors = $this->checkCache();
-        $hasErrors = $hasErrors || !empty($cacheErrors);
+        $hasErrors = $hasErrors || ! empty($cacheErrors);
 
         // 5. Queue Configuration
         $this->info('Checking queue configuration...');
         $queueErrors = $this->checkQueue();
-        $hasErrors = $hasErrors || !empty($queueErrors);
+        $hasErrors = $hasErrors || ! empty($queueErrors);
 
         // 6. Logging Configuration
         $this->info('Checking logging configuration...');
         $logErrors = $this->checkLogging();
-        $hasErrors = $hasErrors || !empty($logErrors);
+        $hasErrors = $hasErrors || ! empty($logErrors);
 
         // Display Results
         $this->displayResults([
@@ -64,6 +66,9 @@ class CheckDeploymentReadiness extends Command
         return $hasErrors ? 1 : 0;
     }
 
+    /**
+     * @return list<string>
+     */
     private function checkEnvironment(): array
     {
         $errors = [];
@@ -81,22 +86,28 @@ class CheckDeploymentReadiness extends Command
         ];
 
         foreach ($requiredEnvVars as $var) {
-            if (empty(env($var))) {
+            if (empty(config('app.'.strtolower($var)))) {
                 $errors[] = "Missing required environment variable: {$var}";
             }
         }
 
-        if (env('APP_DEBUG') === true) {
+        if (config('app.debug') === true) {
             $errors[] = 'APP_DEBUG should be set to false in production';
         }
 
-        if (env('APP_ENV') !== 'production') {
+        if (config('app.env') !== 'production') {
             $errors[] = 'APP_ENV should be set to production';
         }
 
         return $errors;
     }
 
+    /**
+     * @return list<string>
+     */
+    /**
+     * @return list<string>
+     */
     private function checkStoragePermissions(): array
     {
         $errors = [];
@@ -110,7 +121,7 @@ class CheckDeploymentReadiness extends Command
         ];
 
         foreach ($paths as $path) {
-            if (!is_writable($path)) {
+            if (! is_writable($path)) {
                 $errors[] = "Directory not writable: {$path}";
             }
         }
@@ -118,6 +129,12 @@ class CheckDeploymentReadiness extends Command
         return $errors;
     }
 
+    /**
+     * @return list<string>
+     */
+    /**
+     * @return list<string>
+     */
     private function checkDatabase(): array
     {
         $errors = [];
@@ -140,6 +157,12 @@ class CheckDeploymentReadiness extends Command
         return $errors;
     }
 
+    /**
+     * @return list<string>
+     */
+    /**
+     * @return list<string>
+     */
     private function checkCache(): array
     {
         $errors = [];
@@ -154,20 +177,26 @@ class CheckDeploymentReadiness extends Command
         return $errors;
     }
 
+    /**
+     * @return list<string>
+     */
+    /**
+     * @return list<string>
+     */
     private function checkQueue(): array
     {
         $errors = [];
 
-        if (env('QUEUE_CONNECTION') === 'sync' && env('APP_ENV') === 'production') {
+        if (config('queue.default') === 'sync' && config('app.env') === 'production') {
             $errors[] = "Queue should not be set to 'sync' in production";
         }
 
         // Check if required queue tables exist when using database queue
-        if (env('QUEUE_CONNECTION') === 'database') {
-            if (!Schema::hasTable('jobs')) {
+        if (config('queue.default') === 'database') {
+            if (! Schema::hasTable('jobs')) {
                 $errors[] = "Missing required table 'jobs' for database queue";
             }
-            if (!Schema::hasTable('failed_jobs')) {
+            if (! Schema::hasTable('failed_jobs')) {
                 $errors[] = "Missing required table 'failed_jobs' for database queue";
             }
         }
@@ -175,12 +204,18 @@ class CheckDeploymentReadiness extends Command
         return $errors;
     }
 
+    /**
+     * @return list<string>
+     */
+    /**
+     * @return list<string>
+     */
     private function checkLogging(): array
     {
         $errors = [];
         $logPath = storage_path('logs');
 
-        if (!is_writable($logPath)) {
+        if (! is_writable($logPath)) {
             $errors[] = "Logs directory not writable: {$logPath}";
         }
 
@@ -199,6 +234,9 @@ class CheckDeploymentReadiness extends Command
         return $errors;
     }
 
+    /**
+     * @param  array<string, list<string>>  $checkResults
+     */
     private function displayResults(array $checkResults): void
     {
         $this->newLine();

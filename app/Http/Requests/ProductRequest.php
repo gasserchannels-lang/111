@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:products,slug,' . $this->route('product')],
+            'slug' => ['required', 'string', 'max:255', 'unique:products,slug,'.$this->route('product')],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'image' => ['nullable', 'image', 'max:2048'], // 2MB max
@@ -61,7 +61,7 @@ class ProductRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if ($this->has('name') && !$this->has('slug')) {
+        if ($this->has('name') && ! $this->has('slug')) {
             $this->merge([
                 'slug' => \Str::slug($this->name),
             ]);

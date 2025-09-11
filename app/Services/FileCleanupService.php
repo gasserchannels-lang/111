@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Storage;
 
 class FileCleanupService
 {
-    private array $config;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $config = [];
 
     public function __construct()
     {
@@ -27,6 +30,9 @@ class FileCleanupService
 
     /**
      * Clean up temporary files.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function cleanupTempFiles(): array
     {
@@ -68,6 +74,9 @@ class FileCleanupService
     /**
      * Clean up log files.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function cleanupLogFiles(): array
     {
         $results = [
@@ -81,7 +90,10 @@ class FileCleanupService
             $cutoffDate = Carbon::now()->subDays($this->config['log_files_retention_days']);
 
             if (is_dir($logDirectory)) {
-                $files = glob($logDirectory . '/*.log');
+                $files = glob($logDirectory.'/*.log');
+                if ($files === false) {
+                    $files = [];
+                }
 
                 foreach ($files as $file) {
                     if (filemtime($file) < $cutoffDate->timestamp) {
@@ -107,6 +119,9 @@ class FileCleanupService
 
     /**
      * Clean up cache files.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function cleanupCacheFiles(): array
     {
@@ -150,6 +165,9 @@ class FileCleanupService
     /**
      * Clean up backup files.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function cleanupBackupFiles(): array
     {
         $results = [
@@ -181,6 +199,9 @@ class FileCleanupService
 
     /**
      * Clean up uploaded files.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function cleanupUploadedFiles(): array
     {
@@ -218,6 +239,9 @@ class FileCleanupService
     /**
      * Perform complete cleanup.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function performCompleteCleanup(): array
     {
         $results = [
@@ -248,6 +272,9 @@ class FileCleanupService
     /**
      * Check storage usage.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function checkStorageUsage(): array
     {
         $storagePath = storage_path();
@@ -265,13 +292,16 @@ class FileCleanupService
     /**
      * Clean up directory based on age.
      */
+    /**
+     * @return array<string, int>
+     */
     private function cleanupDirectory(string $directory, int $retentionDays): array
     {
         $filesDeleted = 0;
         $sizeDeleted = 0;
         $cutoffDate = Carbon::now()->subDays($retentionDays);
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return ['files_deleted' => 0, 'size_deleted' => 0];
         }
 
@@ -303,7 +333,7 @@ class FileCleanupService
     {
         $size = 0;
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return $size;
         }
 
@@ -322,6 +352,9 @@ class FileCleanupService
 
     /**
      * Get cleanup statistics.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function getCleanupStatistics(): array
     {
@@ -343,7 +376,9 @@ class FileCleanupService
         $lastCleanupFile = storage_path('logs/last_cleanup.log');
 
         if (file_exists($lastCleanupFile)) {
-            return file_get_contents($lastCleanupFile);
+            $content = file_get_contents($lastCleanupFile);
+
+            return $content !== false ? $content : null;
         }
 
         return null;
@@ -356,10 +391,15 @@ class FileCleanupService
     {
         $lastCleanup = $this->getLastCleanupTime();
 
-        if ($lastCleanup) {
-            $lastCleanupDate = Carbon::parse($lastCleanup);
+        if ($lastCleanup !== null) {
+            try {
+                $lastCleanupDate = Carbon::parse($lastCleanup);
 
-            return $lastCleanupDate->addDay()->toISOString();
+                return $lastCleanupDate->addDay()->toISOString();
+            } catch (\Exception $e) {
+                // If parsing fails, fall back to default
+                return Carbon::now()->addDay()->toISOString();
+            }
         }
 
         return Carbon::now()->addDay()->toISOString();

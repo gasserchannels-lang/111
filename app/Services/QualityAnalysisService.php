@@ -10,6 +10,8 @@ class QualityAnalysisService
 {
     /**
      * Run comprehensive code quality analysis.
+     *
+     * @return array<string, mixed>
      */
     public function analyze(): array
     {
@@ -20,7 +22,7 @@ class QualityAnalysisService
             $score += $this->runPhpmdAnalysis($issues);
             $score += $this->runPhpcpdAnalysis($issues);
         } catch (\Exception $e) {
-            $issues[] = 'Code quality analysis failed: ' . $e->getMessage();
+            $issues[] = 'Code quality analysis failed: '.$e->getMessage();
         }
 
         return [
@@ -33,10 +35,12 @@ class QualityAnalysisService
 
     /**
      * Run PHPMD analysis.
+     *
+     * @param  array<string>  $issues
      */
     private function runPhpmdAnalysis(array &$issues): int
     {
-        if (!$this->commandExists('vendor/bin/phpmd')) {
+        if (! $this->commandExists('vendor/bin/phpmd')) {
             return 0;
         }
 
@@ -57,10 +61,12 @@ class QualityAnalysisService
 
     /**
      * Run PHPCPD analysis.
+     *
+     * @param  array<string>  $issues
      */
     private function runPhpcpdAnalysis(array &$issues): int
     {
-        if (!$this->commandExists('vendor/bin/phpcpd')) {
+        if (! $this->commandExists('vendor/bin/phpcpd')) {
             return 0;
         }
 
@@ -73,10 +79,10 @@ class QualityAnalysisService
         }
 
         preg_match('/(\d+\.\d+)\% duplicated lines/', $output, $matches);
-        $duplication = $matches[1] ?? 100;
+        $duplication = isset($matches[1]) ? (float) $matches[1] : 100.0;
         $issues[] = "PHPCPD found {$duplication}% duplicate code.";
 
-        return max(0, 50 - ($duplication * 5));
+        return max(0, 50 - (int) ($duplication * 5));
     }
 
     /**

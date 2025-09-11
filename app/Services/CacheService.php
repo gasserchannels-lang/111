@@ -11,24 +11,22 @@ use Illuminate\Support\Facades\Log;
 
 class CacheService
 {
-    private array $config;
-
-    private array $tags = [];
-
     public function __construct()
     {
-        $this->config = config('cache', []);
+        // Constructor for future configuration if needed
     }
 
     /**
      * Cache data with automatic invalidation.
+     *
+     * @param  array<string>  $tags
      */
     public function remember(string $key, int $ttl, callable $callback, array $tags = []): mixed
     {
         try {
             $cacheKey = $this->buildCacheKey($key);
 
-            return Cache::tags($tags)->remember($cacheKey, $ttl, function () use ($callback) {
+            return Cache::tags($tags)->remember($cacheKey, $ttl, function () use ($callback, $key) {
                 $startTime = microtime(true);
                 $result = $callback();
                 $executionTime = microtime(true) - $startTime;
@@ -53,6 +51,8 @@ class CacheService
 
     /**
      * Cache data permanently until manually invalidated.
+     *
+     * @param  array<string>  $tags
      */
     public function forever(string $key, mixed $value, array $tags = []): bool
     {
@@ -91,6 +91,8 @@ class CacheService
 
     /**
      * Store data in cache.
+     *
+     * @param  array<string>  $tags
      */
     public function put(string $key, mixed $value, int $ttl = 3600, array $tags = []): bool
     {
@@ -129,6 +131,8 @@ class CacheService
 
     /**
      * Invalidate cache by tags.
+     *
+     * @param  array<string>  $tags
      */
     public function forgetByTags(array $tags): bool
     {
@@ -175,6 +179,9 @@ class CacheService
     /**
      * Cache query results.
      */
+    /**
+     * @param  list<string>  $tags
+     */
     public function rememberQuery(string $key, callable $query, int $ttl = 1800, array $tags = []): mixed
     {
         return $this->remember($key, $ttl, $query, $tags);
@@ -183,9 +190,12 @@ class CacheService
     /**
      * Cache API responses.
      */
+    /**
+     * @param  array<string, mixed>  $params
+     */
     public function rememberApiResponse(string $endpoint, array $params, callable $callback, int $ttl = 300): mixed
     {
-        $key = 'api:' . $endpoint . ':' . md5(serialize($params));
+        $key = 'api:'.$endpoint.':'.md5(serialize($params));
         $tags = ['api', $endpoint];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -194,9 +204,12 @@ class CacheService
     /**
      * Cache search results.
      */
+    /**
+     * @param  array<string, mixed>  $filters
+     */
     public function rememberSearch(string $query, array $filters, callable $callback, int $ttl = 600): mixed
     {
-        $key = 'search:' . md5($query . serialize($filters));
+        $key = 'search:'.md5($query.serialize($filters));
         $tags = ['search', 'products'];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -271,6 +284,10 @@ class CacheService
     /**
      * Warm up cache.
      */
+    /**
+     * @param  array<string, callable>  $keys
+     * @return array<string, mixed>
+     */
     public function warmUp(array $keys): array
     {
         $results = [];
@@ -288,6 +305,8 @@ class CacheService
 
     /**
      * Get cache statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStats(): array
     {
@@ -320,6 +339,9 @@ class CacheService
 
     /**
      * Get model tags for cache invalidation.
+     *
+     *
+     * @return array<string>
      */
     private function getModelTags(Model $model): array
     {
@@ -330,12 +352,12 @@ class CacheService
         $tags[] = strtolower(class_basename($modelClass));
 
         // Add specific model tag
-        $tags[] = strtolower(class_basename($modelClass)) . ':' . $model->getKey();
+        $tags[] = strtolower(class_basename($modelClass)).':'.$model->getKey();
 
         // Add related model tags
         foreach ($model->getRelations() as $relation => $related) {
             if ($related instanceof Model) {
-                $tags[] = strtolower(class_basename(get_class($related))) . ':' . $related->getKey();
+                $tags[] = strtolower(class_basename(get_class($related))).':'.$related->getKey();
             }
         }
 
@@ -422,6 +444,9 @@ class CacheService
             }
 
             $decompressed = gzuncompress($compressed);
+            if ($decompressed === false) {
+                return $default;
+            }
 
             return unserialize($decompressed);
         } catch (Exception $e) {

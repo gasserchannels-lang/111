@@ -29,7 +29,7 @@ class ProductController extends Controller
     {
         $product = $this->productService->getBySlug($slug);
 
-        if (!$product) {
+        if (! $product) {
             abort(404);
         }
 

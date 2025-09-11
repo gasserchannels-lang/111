@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-use App\Models\User;
-
-interface EmailVerificationServiceInterface
+interface EmailVerificationService
 {
     /**
      * Send verification email.
+     *
+     * @param  \App\Models\User<\Database\Factories\UserFactory>  $user
      */
-    public function sendVerificationEmail(User $user): bool;
+    public function sendVerificationEmail(\App\Models\User $user): bool;
 
     /**
      * Verify email with token.
@@ -30,6 +30,8 @@ interface EmailVerificationServiceInterface
 
     /**
      * Get verification token info.
+     *
+     * @return array<string, mixed>|null
      */
     public function getVerificationTokenInfo(string $email): ?array;
 
@@ -40,6 +42,8 @@ interface EmailVerificationServiceInterface
 
     /**
      * Get email verification statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array;
 }

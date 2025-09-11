@@ -12,6 +12,8 @@ class InputSanitizerService
 {
     /**
      * HTML tags that are allowed.
+     *
+     * @var array<string>
      */
     private array $allowedHtmlTags = [
         'p', 'br', 'b', 'i', 'u', 'em', 'strong', 'a', 'ul', 'ol', 'li',
@@ -20,6 +22,8 @@ class InputSanitizerService
 
     /**
      * Attributes that are allowed on HTML tags.
+     *
+     * @var array<string>
      */
     private array $allowedAttributes = [
         'href', 'title', 'alt', 'class', 'id', 'name', 'rel', 'target',
@@ -34,11 +38,14 @@ class InputSanitizerService
         $input = preg_replace('/[\x00-\x1F\x7F]/u', '', $input);
 
         // Convert special characters to HTML entities
-        return htmlspecialchars($input, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return htmlspecialchars($input ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**
      * Sanitize an array input recursively.
+     *
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
      */
     public function sanitizeArray(array $input): array
     {
@@ -59,13 +66,15 @@ class InputSanitizerService
     public function sanitizeHtml(string $html): string
     {
         try {
-            $dom = new DOMDocument();
+            $dom = new DOMDocument;
             @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
             $this->removeDisallowedTags($dom);
             $this->removeDisallowedAttributes($dom);
 
-            return $dom->saveHTML();
+            $result = $dom->saveHTML();
+
+            return $result !== false ? $result : strip_tags($html);
         } catch (\Exception $e) {
             Log::error('HTML sanitization failed', [
                 'error' => $e->getMessage(),
@@ -87,7 +96,7 @@ class InputSanitizerService
 
         if ($nodes) {
             foreach ($nodes as $node) {
-                if (!in_array(strtolower($node->nodeName), $this->allowedHtmlTags)) {
+                if (! in_array(strtolower($node->nodeName), $this->allowedHtmlTags)) {
                     $node->parentNode?->removeChild($node);
                 }
             }
@@ -106,8 +115,10 @@ class InputSanitizerService
             foreach ($nodes as $node) {
                 if ($node->hasAttributes()) {
                     foreach ($node->attributes as $attr) {
-                        if (!in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
-                            $node->removeAttribute($attr->nodeName);
+                        if (! in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
+                            if ($node instanceof \DOMElement) {
+                                $node->removeAttribute($attr->nodeName);
+                            }
                         }
                     }
                 }
@@ -140,15 +151,18 @@ class InputSanitizerService
         $input = preg_replace($patterns, '', $input);
 
         // Escape special characters
-        return addslashes($input);
+        return addslashes($input ?? '');
     }
 
     /**
      * Validate and sanitize file upload.
+     *
+     * @param  array<string, mixed>  $file
+     * @return array<string, mixed>|null
      */
     public function sanitizeFileUpload(array $file): ?array
     {
-        if (!isset($file['name']) || !isset($file['type']) || !isset($file['tmp_name']) || !isset($file['error']) || !isset($file['size'])) {
+        if (! isset($file['name']) || ! isset($file['type']) || ! isset($file['tmp_name']) || ! isset($file['error']) || ! isset($file['size'])) {
             return null;
         }
 
@@ -162,10 +176,14 @@ class InputSanitizerService
 
         // Validate mime type
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo === false) {
+            return null;
+        }
+
         $mimeType = finfo_file($finfo, $file['tmp_name']);
         finfo_close($finfo);
 
-        if ($this->isAllowedMimeType($mimeType)) {
+        if ($mimeType !== false && $this->isAllowedMimeType($mimeType)) {
             return [
                 'name' => $safeName,
                 'type' => $mimeType,
@@ -190,12 +208,12 @@ class InputSanitizerService
         $filename = preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
 
         // Ensure safe extension
-        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        if (!$this->isAllowedExtension($extension)) {
-            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME)) . '.txt';
+        $extension = strtolower(pathinfo($filename ?? '', PATHINFO_EXTENSION));
+        if (! $this->isAllowedExtension($extension)) {
+            $filename = Str::slug(pathinfo($filename ?? '', PATHINFO_FILENAME)).'.txt';
         }
 
-        return $filename;
+        return $filename ?? '';
     }
 
     /**

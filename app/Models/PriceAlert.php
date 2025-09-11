@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int                 $id
- * @property int                 $user_id
- * @property int                 $product_id
- * @property float               $target_price
- * @property bool                $repeat_alert
- * @property bool                $is_active
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
+ * @property float $target_price
+ * @property bool $repeat_alert
+ * @property bool $is_active
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
@@ -70,7 +70,14 @@ class PriceAlert extends Model
     ];
 
     /**
-     * @return BelongsTo<User, PriceAlert>
+     * Validation errors.
+     *
+     * @var array<string, mixed>|null
+     */
+    protected $errors = null;
+
+    /**
+     * @return BelongsTo<User<\Database\Factories\UserFactory>, PriceAlert<\Database\Factories\PriceAlertFactory>>
      */
     public function user(): BelongsTo
     {
@@ -78,7 +85,7 @@ class PriceAlert extends Model
     }
 
     /**
-     * @return BelongsTo<Product, PriceAlert>
+     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, PriceAlert<\Database\Factories\PriceAlertFactory>>
      */
     public function product(): BelongsTo
     {
@@ -87,6 +94,9 @@ class PriceAlert extends Model
 
     /**
      * Scope a query to only include active alerts.
+     *
+     * @param  Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>  $query
+     * @return Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -95,6 +105,9 @@ class PriceAlert extends Model
 
     /**
      * Scope a query to only include alerts for a specific user.
+     *
+     * @param  Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>  $query
+     * @return Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>
      */
     public function scopeForUser(Builder $query, int $userId): Builder
     {
@@ -103,6 +116,9 @@ class PriceAlert extends Model
 
     /**
      * Scope a query to only include alerts for a specific product.
+     *
+     * @param  Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>  $query
+     * @return Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>
      */
     public function scopeForProduct(Builder $query, int $productId): Builder
     {
@@ -111,6 +127,8 @@ class PriceAlert extends Model
 
     /**
      * Get validation rules for the model.
+     *
+     * @return array<string, mixed>
      */
     public function getRules(): array
     {
@@ -135,6 +153,8 @@ class PriceAlert extends Model
 
     /**
      * Get validation errors.
+     *
+     * @return array<string, mixed>
      */
     public function getErrors(): array
     {

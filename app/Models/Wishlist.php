@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int                 $id
- * @property int                 $user_id
- * @property int                 $product_id
- * @property string|null         $notes
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
+ * @property string|null $notes
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
@@ -47,6 +47,11 @@ class Wishlist extends Model
     ];
 
     /**
+     * @var array<string, mixed>|null
+     */
+    protected $errors = null;
+
+    /**
      * The attributes that should be validated.
      *
      * @var array<string, string>
@@ -58,7 +63,7 @@ class Wishlist extends Model
     ];
 
     /**
-     * @return BelongsTo<User, Wishlist>
+     * @return BelongsTo<User<\Database\Factories\UserFactory>, Wishlist<\Database\Factories\WishlistFactory>>
      */
     public function user(): BelongsTo
     {
@@ -66,7 +71,7 @@ class Wishlist extends Model
     }
 
     /**
-     * @return BelongsTo<Product, Wishlist>
+     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, Wishlist<\Database\Factories\WishlistFactory>>
      */
     public function product(): BelongsTo
     {
@@ -75,6 +80,9 @@ class Wishlist extends Model
 
     /**
      * Scope a query to only include wishlist items for a specific user.
+     *
+     * @param  Builder<Wishlist<\Database\Factories\WishlistFactory>>  $query
+     * @return Builder<Wishlist<\Database\Factories\WishlistFactory>>
      */
     public function scopeForUser(Builder $query, int $userId): Builder
     {
@@ -83,6 +91,9 @@ class Wishlist extends Model
 
     /**
      * Scope a query to only include wishlist items for a specific product.
+     *
+     * @param  Builder<Wishlist<\Database\Factories\WishlistFactory>>  $query
+     * @return Builder<Wishlist<\Database\Factories\WishlistFactory>>
      */
     public function scopeForProduct(Builder $query, int $productId): Builder
     {
@@ -91,6 +102,8 @@ class Wishlist extends Model
 
     /**
      * Get validation rules for the model.
+     *
+     * @return array<string, mixed>
      */
     public function getRules(): array
     {
@@ -115,6 +128,8 @@ class Wishlist extends Model
 
     /**
      * Get validation errors.
+     *
+     * @return array<string, mixed>
      */
     public function getErrors(): array
     {
@@ -133,6 +148,8 @@ class Wishlist extends Model
 
     /**
      * Add a product to user's wishlist.
+     *
+     * @return Wishlist<\Database\Factories\WishlistFactory>
      */
     public static function addToWishlist(int $userId, int $productId, ?string $notes = null): self
     {

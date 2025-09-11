@@ -28,11 +28,11 @@ class LoginAttemptService
         $userAgent = $request->userAgent();
 
         // Record attempt by IP
-        $this->recordIpAttempt($ip);
+        $this->recordIpAttempt($ip ?? '');
 
         // Record attempt by email if provided
         if ($email) {
-            $this->recordEmailAttempt($email, $ip, $userAgent);
+            $this->recordEmailAttempt($email, $ip ?? '', $userAgent ?? '');
         }
 
         Log::warning('Failed login attempt', [
@@ -54,7 +54,7 @@ class LoginAttemptService
         $this->clearEmailAttempts($email);
 
         // Clear failed attempts for this IP
-        $this->clearIpAttempts($ip);
+        $this->clearIpAttempts($ip ?? '');
 
         Log::info('Successful login', [
             'ip' => $ip,
@@ -68,7 +68,7 @@ class LoginAttemptService
      */
     public function isEmailBlocked(string $email): bool
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
         return count($attempts) >= self::MAX_ATTEMPTS;
@@ -79,7 +79,7 @@ class LoginAttemptService
      */
     public function isIpBlocked(string $ip): bool
     {
-        $key = self::IP_PREFIX . md5($ip);
+        $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
         return count($attempts) >= self::MAX_ATTEMPTS;
@@ -90,7 +90,7 @@ class LoginAttemptService
      */
     public function getRemainingAttempts(string $email): int
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
         return max(0, self::MAX_ATTEMPTS - count($attempts));
@@ -101,7 +101,7 @@ class LoginAttemptService
      */
     public function getRemainingIpAttempts(string $ip): int
     {
-        $key = self::IP_PREFIX . md5($ip);
+        $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
         return max(0, self::MAX_ATTEMPTS - count($attempts));
@@ -112,7 +112,7 @@ class LoginAttemptService
      */
     public function getLockoutTimeRemaining(string $email): ?int
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
         if (count($attempts) >= self::MAX_ATTEMPTS) {
@@ -120,7 +120,7 @@ class LoginAttemptService
             $lockoutEnd = Carbon::parse($lastAttempt['timestamp'])->addMinutes(self::LOCKOUT_DURATION);
 
             if ($lockoutEnd->isFuture()) {
-                return $lockoutEnd->diffInSeconds(now());
+                return (int) $lockoutEnd->diffInSeconds(now());
             }
         }
 
@@ -132,7 +132,7 @@ class LoginAttemptService
      */
     public function getIpLockoutTimeRemaining(string $ip): ?int
     {
-        $key = self::IP_PREFIX . md5($ip);
+        $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
         if (count($attempts) >= self::MAX_ATTEMPTS) {
@@ -140,7 +140,7 @@ class LoginAttemptService
             $lockoutEnd = Carbon::parse($lastAttempt['timestamp'])->addMinutes(self::LOCKOUT_DURATION);
 
             if ($lockoutEnd->isFuture()) {
-                return $lockoutEnd->diffInSeconds(now());
+                return (int) $lockoutEnd->diffInSeconds(now());
             }
         }
 
@@ -152,7 +152,7 @@ class LoginAttemptService
      */
     private function recordIpAttempt(string $ip): void
     {
-        $key = self::IP_PREFIX . md5($ip);
+        $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
         $attempts[] = [
@@ -171,7 +171,7 @@ class LoginAttemptService
      */
     private function recordEmailAttempt(string $email, string $ip, string $userAgent): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
         $attempts[] = [
@@ -191,7 +191,7 @@ class LoginAttemptService
      */
     private function clearEmailAttempts(string $email): void
     {
-        $key = self::CACHE_PREFIX . md5($email);
+        $key = self::CACHE_PREFIX.md5($email);
         Cache::forget($key);
     }
 
@@ -200,17 +200,19 @@ class LoginAttemptService
      */
     private function clearIpAttempts(string $ip): void
     {
-        $key = self::IP_PREFIX . md5($ip);
+        $key = self::IP_PREFIX.md5($ip);
         Cache::forget($key);
     }
 
     /**
      * Get all blocked emails.
+     *
+     * @return list<string>
      */
     public function getBlockedEmails(): array
     {
         $blocked = [];
-        $pattern = self::CACHE_PREFIX . '*';
+        $pattern = self::CACHE_PREFIX.'*';
 
         // This would need to be implemented based on your cache driver
         // For now, return empty array
@@ -219,11 +221,13 @@ class LoginAttemptService
 
     /**
      * Get all blocked IPs.
+     *
+     * @return list<string>
      */
     public function getBlockedIps(): array
     {
         $blocked = [];
-        $pattern = self::IP_PREFIX . '*';
+        $pattern = self::IP_PREFIX.'*';
 
         // This would need to be implemented based on your cache driver
         // For now, return empty array
@@ -258,6 +262,8 @@ class LoginAttemptService
 
     /**
      * Get login attempt statistics.
+     *
+     * @return array<string, mixed>
      */
     public function getStatistics(): array
     {

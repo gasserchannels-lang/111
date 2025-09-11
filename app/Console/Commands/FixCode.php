@@ -19,10 +19,11 @@ class FixCode extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->phpPath = (new PhpExecutableFinder())->find(false);
-        if (!$this->phpPath) {
+        $phpPath = (new PhpExecutableFinder)->find(false);
+        if (! $phpPath) {
             throw new RuntimeException('PHP executable not found.');
         }
+        $this->phpPath = $phpPath;
     }
 
     public function handle(): int
@@ -40,6 +41,9 @@ class FixCode extends Command
         return self::SUCCESS;
     }
 
+    /**
+     * @param  array<string>  $command
+     */
     private function runTool(string $message, array $command): int
     {
         $this->line('');
@@ -60,7 +64,7 @@ class FixCode extends Command
 
             return self::SUCCESS;
         } catch (ProcessFailedException $exception) {
-            $this->error('❌ A fatal error occurred during: ' . $message);
+            $this->error('❌ A fatal error occurred during: '.$message);
             $this->error($exception->getProcess()->getErrorOutput());
 
             return self::FAILURE;

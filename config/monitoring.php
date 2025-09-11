@@ -131,7 +131,7 @@ return [
         'channels' => [
             'email' => [
                 'enabled' => env('ALERT_EMAIL_ENABLED', true),
-                'recipients' => explode(',', env('ALERT_EMAIL_RECIPIENTS', '')),
+                'recipients' => explode(',', (string) env('ALERT_EMAIL_RECIPIENTS', '')),
             ],
             'slack' => [
                 'enabled' => env('ALERT_SLACK_ENABLED', false),

@@ -13,20 +13,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int                 $id
- * @property string              $name
- * @property string              $slug
- * @property string|null         $description
- * @property string|null         $logo_url
- * @property string|null         $website_url
- * @property string|null         $country_code
- * @property array|null          $supported_countries
- * @property bool                $is_active
- * @property int                 $priority
- * @property string|null         $affiliate_base_url
- * @property string|null         $affiliate_code
- * @property array|null          $api_config
- * @property int|null            $currency_id
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $logo_url
+ * @property string|null $website_url
+ * @property string|null $country_code
+ * @property array|null $supported_countries
+ * @property bool $is_active
+ * @property int $priority
+ * @property string|null $affiliate_base_url
+ * @property string|null $affiliate_code
+ * @property array|null $api_config
+ * @property int|null $currency_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
@@ -52,6 +52,9 @@ class Store extends Model
 
     use SoftDeletes;
 
+    /**
+     * @var list<string>
+     */
     protected $fillable = [
         'name',
         'slug',
@@ -76,6 +79,11 @@ class Store extends Model
     ];
 
     /**
+     * @var array<string, mixed>|null
+     */
+    protected $errors = null;
+
+    /**
      * The attributes that should be validated.
      *
      * @var array<string, string>
@@ -97,7 +105,7 @@ class Store extends Model
     ];
 
     /**
-     * @return HasMany<PriceOffer, Store>
+     * @return HasMany<PriceOffer<\Database\Factories\PriceOfferFactory>, Store<\Database\Factories\StoreFactory>>
      */
     public function priceOffers(): HasMany
     {
@@ -105,7 +113,7 @@ class Store extends Model
     }
 
     /**
-     * @return HasMany<Product, Store>
+     * @return HasMany<Product<\Database\Factories\ProductFactory>, Store<\Database\Factories\StoreFactory>>
      */
     public function products(): HasMany
     {
@@ -113,7 +121,7 @@ class Store extends Model
     }
 
     /**
-     * @return BelongsTo<Currency, Store>
+     * @return BelongsTo<Currency<\Database\Factories\CurrencyFactory>, Store<\Database\Factories\StoreFactory>>
      */
     public function currency(): BelongsTo
     {
@@ -122,6 +130,9 @@ class Store extends Model
 
     /**
      * Scope a query to only include active stores.
+     *
+     * @param  Builder<Store<\Database\Factories\StoreFactory>>  $query
+     * @return Builder<Store<\Database\Factories\StoreFactory>>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -130,6 +141,9 @@ class Store extends Model
 
     /**
      * Scope a query to search stores by name.
+     *
+     * @param  Builder<Store<\Database\Factories\StoreFactory>>  $query
+     * @return Builder<Store<\Database\Factories\StoreFactory>>
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {
@@ -138,6 +152,8 @@ class Store extends Model
 
     /**
      * Get validation rules for the model.
+     *
+     * @return array<string, mixed>
      */
     public function getRules(): array
     {
@@ -162,6 +178,8 @@ class Store extends Model
 
     /**
      * Get validation errors.
+     *
+     * @return array<string, mixed>
      */
     public function getErrors(): array
     {
@@ -194,8 +212,8 @@ class Store extends Model
             return $productUrl;
         }
 
-        $affiliateCode = (string)$this->affiliate_code;
-        $affiliateBaseUrl = (string)$this->affiliate_base_url;
+        $affiliateCode = (string) $this->affiliate_code;
+        $affiliateBaseUrl = (string) $this->affiliate_base_url;
 
         $affiliateUrl = str_replace('{AFFILIATE_CODE}', $affiliateCode, $affiliateBaseUrl);
         $affiliateUrl = str_replace('{URL}', urlencode($productUrl), $affiliateUrl);

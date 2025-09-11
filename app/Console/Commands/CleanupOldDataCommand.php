@@ -31,7 +31,7 @@ class CleanupOldDataCommand extends Command
      */
     public function handle(): int
     {
-        $days = (int)$this->option('days');
+        $days = (int) $this->option('days');
         $dryRun = $this->option('dry-run');
 
         $this->info("🧹 Starting cleanup process for data older than {$days} days...");
@@ -51,7 +51,7 @@ class CleanupOldDataCommand extends Command
         if ($oldPriceOffersCount > 0) {
             $this->info("📊 Found {$oldPriceOffersCount} old out-of-stock price offers to clean up");
 
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $deleted = PriceOffer::where('updated_at', '<', $cutoffDate)
                     ->where('in_stock', false)
                     ->delete();
@@ -68,7 +68,7 @@ class CleanupOldDataCommand extends Command
         if ($oldReviewsCount > 0) {
             $this->info("📝 Found {$oldReviewsCount} old unapproved reviews to clean up");
 
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $deleted = Review::where('created_at', '<', $cutoffDate)
                     ->where('is_approved', false)
                     ->delete();
@@ -85,7 +85,7 @@ class CleanupOldDataCommand extends Command
         if ($expiredAlertsCount > 0) {
             $this->info("🔔 Found {$expiredAlertsCount} old inactive price alerts to clean up");
 
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $deleted = PriceAlert::where('created_at', '<', $cutoffDate)
                     ->where('is_active', false)
                     ->delete();
@@ -95,13 +95,13 @@ class CleanupOldDataCommand extends Command
         }
 
         // Clean up session data (Laravel handles this automatically, but we can force it)
-        if (!$dryRun) {
+        if (! $dryRun) {
             $this->call('session:gc');
             $this->line('✅ Cleaned up expired sessions');
         }
 
         // Clean up cache
-        if (!$dryRun) {
+        if (! $dryRun) {
             $this->call('cache:prune-stale-tags');
             $this->line('✅ Pruned stale cache tags');
         }

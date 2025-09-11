@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Currency;
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Store<\Database\Factories\StoreFactory>>
+ */
 class StoreFactory extends Factory
 {
+    protected $model = Store::class;
+
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->company . ' Store',
+            'name' => $this->faker->unique()->company.' Store',
             'slug' => $this->faker->unique()->slug(2),
             'description' => $this->faker->sentence(),
             'logo_url' => $this->faker->imageUrl(200, 200),

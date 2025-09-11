@@ -133,7 +133,7 @@ class PriceAlertController extends Controller
         }
 
         $priceAlert->update([
-            'is_active' => !$priceAlert->is_active,
+            'is_active' => ! $priceAlert->is_active,
         ]);
 
         return back()->with('success', 'Alert status updated!');

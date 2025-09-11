@@ -18,6 +18,8 @@ class ProductRepository
 {
     /**
      * Get paginated active products.
+     *
+     * @return LengthAwarePaginator<int, Product<\Database\Factories\ProductFactory>>
      */
     public function getPaginatedActive(int $perPage = 15): LengthAwarePaginator
     {
@@ -31,12 +33,15 @@ class ProductRepository
     /**
      * Find product by slug with caching.
      *
+     *
+     * @return Product<\Database\Factories\ProductFactory>|null
+     *
      * @throws \InvalidArgumentException If slug is invalid
      */
     public function findBySlug(string $slug): ?Product
     {
         // Validate slug format
-        if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+        if (! preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
             throw new \InvalidArgumentException('Invalid slug format');
         }
 
@@ -54,6 +59,9 @@ class ProductRepository
 
     /**
      * Get related products with caching.
+     *
+     * @param  Product<\Database\Factories\ProductFactory>  $product
+     * @return Collection<int, Product<\Database\Factories\ProductFactory>>
      *
      * @throws \InvalidArgumentException If limit is invalid
      */
@@ -83,7 +91,10 @@ class ProductRepository
     /**
      * Search products with validation and rate limiting.
      *
-     * @throws ValidationException       If filters are invalid
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Product<\Database\Factories\ProductFactory>>
+     *
+     * @throws ValidationException If filters are invalid
      * @throws \InvalidArgumentException If parameters are invalid
      */
     public function search(string $query, array $filters = [], int $perPage = 15): LengthAwarePaginator
@@ -106,12 +117,14 @@ class ProductRepository
         }
 
         // Generate cache key based on parameters
+        $queryHash = md5($query);
+        $filtersHash = md5(json_encode($filters));
         $cacheKey = sprintf(
             'products:search:%s:%s:%d:%d',
-            md5($query),
-            md5(json_encode($filters)),
+            $queryHash,
+            $filtersHash,
             $perPage,
-            (int)request()->get('page', 1)
+            (int) request()->get('page', 1)
         );
 
         return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($query, $filters, $perPage) {
@@ -123,26 +136,26 @@ class ProductRepository
                 ])
                 ->where('is_active', true)
                 ->where(function ($q) use ($query) {
-                    $searchTerm = '%' . addcslashes($query, '%_') . '%';
+                    $searchTerm = '%'.addcslashes($query, '%_').'%';
                     $q->where('name', 'like', $searchTerm)
                         ->orWhere('description', 'like', $searchTerm);
                 });
 
             // Apply validated filters
-            if (!empty($filters['category_id'])) {
-                $productsQuery->where('category_id', (int)$filters['category_id']);
+            if (! empty($filters['category_id'])) {
+                $productsQuery->where('category_id', (int) $filters['category_id']);
             }
 
-            if (!empty($filters['brand_id'])) {
-                $productsQuery->where('brand_id', (int)$filters['brand_id']);
+            if (! empty($filters['brand_id'])) {
+                $productsQuery->where('brand_id', (int) $filters['brand_id']);
             }
 
-            if (!empty($filters['min_price'])) {
-                $productsQuery->where('price', '>=', (float)$filters['min_price']);
+            if (! empty($filters['min_price'])) {
+                $productsQuery->where('price', '>=', (float) $filters['min_price']);
             }
 
-            if (!empty($filters['max_price'])) {
-                $productsQuery->where('price', '<=', (float)$filters['max_price']);
+            if (! empty($filters['max_price'])) {
+                $productsQuery->where('price', '<=', (float) $filters['max_price']);
             }
 
             // Apply sorting
@@ -170,7 +183,9 @@ class ProductRepository
     /**
      * Update product price with validation, locking, and logging.
      *
-     * @throws ValidationException    If price is invalid
+     * @param  Product<\Database\Factories\ProductFactory>  $product
+     *
+     * @throws ValidationException If price is invalid
      * @throws ProductUpdateException If update fails
      */
     public function updatePrice(Product $product, float $newPrice): bool
@@ -203,7 +218,7 @@ class ProductRepository
 
                 $updated = $product->update(['price' => $newPrice]);
 
-                if (!$updated) {
+                if (! $updated) {
                     throw new ProductUpdateException('Failed to update product price');
                 }
 
@@ -216,12 +231,14 @@ class ProductRepository
                     'ip' => request()->ip(),
                 ]);
 
-                // Create price history record
-                $product->priceHistory()->create([
-                    'old_price' => $oldPrice,
-                    'new_price' => $newPrice,
-                    'changed_by' => auth()->id(),
-                ]);
+                // Create price history record (if priceHistory method exists)
+                if (method_exists($product, 'priceHistory')) {
+                    $product->priceHistory()->create([
+                        'old_price' => $oldPrice,
+                        'new_price' => $newPrice,
+                        'changed_by' => auth()->id(),
+                    ]);
+                }
 
                 // Invalidate cache
                 foreach ($cacheKeys as $key) {

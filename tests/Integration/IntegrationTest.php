@@ -330,6 +330,6 @@ class IntegrationTest extends TestCase
         $totalTime = ($endTime - $startTime) * 1000;
 
         // Should complete within reasonable time
-        $this->assertLessThan(5000, $totalTime, 'Performance test failed: ' . $totalTime . 'ms');
+        $this->assertLessThan(5000, $totalTime, 'Performance test failed: '.$totalTime.'ms');
     }
 }

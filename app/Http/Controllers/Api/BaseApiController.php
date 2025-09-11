@@ -100,6 +100,8 @@ abstract class BaseApiController extends Controller
 
     /**
      * Success response.
+     *
+     * @param  array<string, mixed>  $meta
      */
     protected function successResponse(
         mixed $data = null,
@@ -113,7 +115,7 @@ abstract class BaseApiController extends Controller
             'data' => $data,
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -122,6 +124,8 @@ abstract class BaseApiController extends Controller
 
     /**
      * Error response.
+     *
+     * @param  array<string, mixed>  $meta
      */
     protected function errorResponse(
         string $message = 'Error',
@@ -138,7 +142,7 @@ abstract class BaseApiController extends Controller
             $response['errors'] = $errors;
         }
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -147,6 +151,8 @@ abstract class BaseApiController extends Controller
 
     /**
      * Validation error response.
+     *
+     * @param  array<string, mixed>  $errors
      */
     protected function validationErrorResponse(
         array $errors,
@@ -205,6 +211,8 @@ abstract class BaseApiController extends Controller
 
     /**
      * Paginated response.
+     *
+     * @param  array<string, mixed>  $meta
      */
     protected function paginatedResponse(
         mixed $data,
@@ -228,7 +236,7 @@ abstract class BaseApiController extends Controller
             'pagination' => $pagination,
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -237,6 +245,10 @@ abstract class BaseApiController extends Controller
 
     /**
      * Validate request data.
+     *
+     * @param  array<string, mixed>  $rules
+     * @param  array<string, mixed>  $messages
+     * @return array<string, mixed>
      */
     protected function validateRequest(
         Request $request,
@@ -254,13 +266,15 @@ abstract class BaseApiController extends Controller
 
     /**
      * Get pagination parameters.
+     *
+     * @return array<string, mixed>
      */
     protected function getPaginationParams(Request $request): array
     {
-        $page = max(1, (int)$request->get('page', 1));
+        $page = max(1, (int) $request->get('page', 1));
         $perPage = min(
             $this->maxPerPage,
-            max(1, (int)$request->get('per_page', $this->perPage))
+            max(1, (int) $request->get('per_page', $this->perPage))
         );
 
         return [
@@ -271,6 +285,8 @@ abstract class BaseApiController extends Controller
 
     /**
      * Get sorting parameters.
+     *
+     * @return array<string, mixed>
      */
     protected function getSortingParams(Request $request): array
     {
@@ -278,7 +294,7 @@ abstract class BaseApiController extends Controller
         $sortOrder = $request->get('sort_order', 'desc');
 
         // Validate sort order
-        if (!in_array($sortOrder, ['asc', 'desc'])) {
+        if (! in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'desc';
         }
 
@@ -290,6 +306,9 @@ abstract class BaseApiController extends Controller
 
     /**
      * Get filtering parameters.
+     */
+    /**
+     * @return array<string, mixed>
      */
     protected function getFilteringParams(Request $request): array
     {
@@ -303,6 +322,9 @@ abstract class BaseApiController extends Controller
 
     /**
      * Get search parameters.
+     */
+    /**
+     * @return array<string, mixed>
      */
     protected function getSearchParams(Request $request): array
     {
@@ -395,6 +417,9 @@ abstract class BaseApiController extends Controller
 
     /**
      * Get rate limit information.
+     */
+    /**
+     * @return array<string, mixed>
      */
     protected function getRateLimitInfo(): array
     {

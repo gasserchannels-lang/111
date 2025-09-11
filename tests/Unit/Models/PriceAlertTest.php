@@ -50,7 +50,7 @@ class PriceAlertTest extends TestCase
     /** @test */
     public function it_can_validate_required_fields()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
 
         $this->assertFalse($priceAlert->validate());
         $this->assertArrayHasKey('user_id', $priceAlert->getErrors());

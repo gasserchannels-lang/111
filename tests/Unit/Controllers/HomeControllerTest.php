@@ -21,7 +21,7 @@ class HomeControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new HomeController();
+        $this->controller = new HomeController;
     }
 
     /**

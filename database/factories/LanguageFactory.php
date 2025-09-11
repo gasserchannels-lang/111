@@ -7,16 +7,22 @@ namespace Database\Factories;
 use App\Models\Language;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Language<\Database\Factories\LanguageFactory>>
+ */
 class LanguageFactory extends Factory
 {
     protected $model = Language::class;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [
             'code' => $this->faker->unique()->randomElement(['en', 'ar', 'fr', 'de', 'es', 'it', 'pt', 'ru', 'ja', 'ko', 'zh', 'hi']),
-            'name' => $this->faker->unique()->randomElement(['English', 'Arabic', 'French', 'German', 'Spanish', 'Italian', 'Portuguese', 'Russian', 'Japanese', 'Korean', 'Chinese', 'Hindi']) . ' Language',
-            'native_name' => $this->faker->unique()->randomElement(['English', 'العربية', 'Français', 'Deutsch', 'Español', 'Italiano', 'Português', 'Русский', '日本語', '한국어', '中文', 'हिन्दी']) . ' Native',
+            'name' => $this->faker->unique()->randomElement(['English', 'Arabic', 'French', 'German', 'Spanish', 'Italian', 'Portuguese', 'Russian', 'Japanese', 'Korean', 'Chinese', 'Hindi']).' Language',
+            'native_name' => $this->faker->unique()->randomElement(['English', 'العربية', 'Français', 'Deutsch', 'Español', 'Italiano', 'Português', 'Русский', '日本語', '한국어', '中文', 'हिन्दी']).' Native',
             'direction' => $this->faker->randomElement(['ltr', 'rtl']),
             'is_active' => true,
             'sort_order' => $this->faker->numberBetween(1, 100),
