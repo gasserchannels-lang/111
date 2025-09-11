@@ -12,7 +12,7 @@ class PriceAlertTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create([
@@ -27,7 +27,7 @@ class PriceAlertTest extends TestCase
         $this->assertTrue($priceAlert->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_user_relationship()
     {
         $user = User::factory()->create();
@@ -37,7 +37,7 @@ class PriceAlertTest extends TestCase
         $this->assertEquals($user->id, $priceAlert->user->id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
         $product = Product::factory()->create();
@@ -47,7 +47,7 @@ class PriceAlertTest extends TestCase
         $this->assertEquals($product->id, $priceAlert->product->id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $priceAlert = new PriceAlert;
@@ -58,7 +58,7 @@ class PriceAlertTest extends TestCase
         $this->assertArrayHasKey('target_price', $priceAlert->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_target_price_is_numeric()
     {
         $priceAlert = PriceAlert::factory()->make(['target_price' => 'invalid']);
@@ -67,7 +67,7 @@ class PriceAlertTest extends TestCase
         $this->assertArrayHasKey('target_price', $priceAlert->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_target_price_is_positive()
     {
         $priceAlert = PriceAlert::factory()->make(['target_price' => -10.00]);
@@ -76,7 +76,7 @@ class PriceAlertTest extends TestCase
         $this->assertArrayHasKey('target_price', $priceAlert->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_alerts()
     {
         PriceAlert::factory()->create(['is_active' => true]);
@@ -88,7 +88,7 @@ class PriceAlertTest extends TestCase
         $this->assertTrue($activeAlerts->first()->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_alerts_for_user()
     {
         $user1 = User::factory()->create();
@@ -103,7 +103,7 @@ class PriceAlertTest extends TestCase
         $this->assertEquals($user1->id, $user1Alerts->first()->user_id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_alerts_for_product()
     {
         $product1 = Product::factory()->create();
@@ -118,7 +118,7 @@ class PriceAlertTest extends TestCase
         $this->assertEquals($product1->id, $product1Alerts->first()->product_id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_soft_delete_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create();
@@ -128,7 +128,7 @@ class PriceAlertTest extends TestCase
         $this->assertSoftDeleted('price_alerts', ['id' => $priceAlert->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_restore_soft_deleted_price_alert()
     {
         $priceAlert = PriceAlert::factory()->create();
@@ -142,7 +142,7 @@ class PriceAlertTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_check_if_price_target_reached()
     {
         $priceAlert = PriceAlert::factory()->create(['target_price' => 100.00]);
@@ -151,7 +151,7 @@ class PriceAlertTest extends TestCase
         $this->assertFalse($priceAlert->isPriceTargetReached(110.00));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_activate_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['is_active' => false]);
@@ -161,7 +161,7 @@ class PriceAlertTest extends TestCase
         $this->assertTrue($priceAlert->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_deactivate_alert()
     {
         $priceAlert = PriceAlert::factory()->create(['is_active' => true]);

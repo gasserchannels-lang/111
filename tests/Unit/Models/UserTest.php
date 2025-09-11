@@ -12,9 +12,7 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_user()
     {
         $user = User::factory()->create([
@@ -27,9 +25,7 @@ class UserTest extends TestCase
         $this->assertEquals('test@example.com', $user->email);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_check_if_user_is_admin()
     {
         $adminUser = User::factory()->create(['is_admin' => true]);
@@ -39,36 +35,28 @@ class UserTest extends TestCase
         $this->assertFalse($regularUser->isAdmin());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_wishlist_relationship()
     {
         $user = User::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $user->wishlists());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_reviews_relationship()
     {
         $user = User::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $user->reviews());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_price_alerts_relationship()
     {
         $user = User::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $user->priceAlerts());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_locale_setting_relationship()
     {
         $user = User::factory()->create();

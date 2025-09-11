@@ -11,7 +11,7 @@ class BrandTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_brand()
     {
         $brand = Brand::factory()->create([
@@ -30,7 +30,7 @@ class BrandTest extends TestCase
         $this->assertTrue($brand->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_products_relationship()
     {
         $brand = Brand::factory()->create();
@@ -41,7 +41,7 @@ class BrandTest extends TestCase
         $this->assertTrue($brand->products->contains($product));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $brand = new Brand;
@@ -50,7 +50,7 @@ class BrandTest extends TestCase
         $this->assertArrayHasKey('name', $brand->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_name_length()
     {
         $brand = Brand::factory()->make(['name' => str_repeat('a', 256)]);
@@ -59,7 +59,7 @@ class BrandTest extends TestCase
         $this->assertArrayHasKey('name', $brand->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_website_url_format()
     {
         $brand = Brand::factory()->make(['website_url' => 'invalid-url']);
@@ -68,7 +68,7 @@ class BrandTest extends TestCase
         $this->assertArrayHasKey('website_url', $brand->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_logo_url_format()
     {
         $brand = Brand::factory()->make(['logo_url' => 'invalid-url']);
@@ -77,7 +77,7 @@ class BrandTest extends TestCase
         $this->assertArrayHasKey('logo_url', $brand->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_brands()
     {
         Brand::factory()->create(['is_active' => true]);
@@ -89,7 +89,7 @@ class BrandTest extends TestCase
         $this->assertTrue($activeBrands->first()->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_brands_by_name()
     {
         Brand::factory()->create(['name' => 'Apple']);
@@ -102,7 +102,7 @@ class BrandTest extends TestCase
         $this->assertEquals('Apple', $results->first()->name);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_brand_with_products_count()
     {
         $brand = Brand::factory()->create();
@@ -113,7 +113,7 @@ class BrandTest extends TestCase
         $this->assertEquals(3, $brandWithCount->products_count);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_soft_delete_brand()
     {
         $brand = Brand::factory()->create();
@@ -123,7 +123,7 @@ class BrandTest extends TestCase
         $this->assertSoftDeleted('brands', ['id' => $brand->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_restore_soft_deleted_brand()
     {
         $brand = Brand::factory()->create();

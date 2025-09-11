@@ -16,9 +16,7 @@ class HomeControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_home_page()
     {
         $response = $this->get('/');
@@ -27,9 +25,7 @@ class HomeControllerTest extends TestCase
         $response->assertViewIs('home');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_displays_featured_products()
     {
         $currency = Currency::factory()->create();
@@ -54,9 +50,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(5, $featuredProducts);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_displays_categories()
     {
         $categories = Category::factory()->count(3)->create(['is_active' => true]);
@@ -70,9 +64,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(3, $viewCategories);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_displays_brands()
     {
         $brands = Brand::factory()->count(3)->create(['is_active' => true]);
@@ -86,9 +78,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(3, $viewBrands);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_limits_featured_products_to_eight()
     {
         $currency = Currency::factory()->create();
@@ -110,9 +100,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(8, $featuredProducts);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_limits_categories_to_six()
     {
         Category::factory()->count(8)->create(['is_active' => true]);
@@ -124,9 +112,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(6, $categories);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_limits_brands_to_eight()
     {
         Brand::factory()->count(10)->create(['is_active' => true]);
@@ -138,9 +124,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(8, $brands);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_active_products()
     {
         $currency = Currency::factory()->create();
@@ -173,9 +157,7 @@ class HomeControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_active_categories()
     {
         Category::factory()->count(3)->create(['is_active' => true]);
@@ -192,9 +174,7 @@ class HomeControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_active_brands()
     {
         Brand::factory()->count(3)->create(['is_active' => true]);
@@ -211,9 +191,7 @@ class HomeControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_data_gracefully()
     {
         $response = $this->get('/');

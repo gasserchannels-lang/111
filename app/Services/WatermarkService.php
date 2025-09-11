@@ -41,7 +41,7 @@ final class WatermarkService
                 return $file;
             }
 
-            $watermarkText = $watermarkText ?? $this->config['text'];
+            $watermarkText = (string) ($watermarkText ?? $this->config['text']);
 
             // Create watermarked image
             $watermarkedPath = $this->createWatermarkedImage($file, $watermarkText);
@@ -107,7 +107,7 @@ final class WatermarkService
                 return $imagePath;
             }
 
-            $watermarkText = $watermarkText ?? $this->config['text'];
+            $watermarkText = (string) ($watermarkText ?? $this->config['text']);
 
             // Download image from storage
             $imageContent = Storage::disk('public')->get($imagePath);
@@ -240,20 +240,20 @@ final class WatermarkService
         $watermark = imagecreatetruecolor($watermarkWidth, $watermarkHeight);
 
         // Set background color with opacity
-        $backgroundColor = $this->hexToRgb($this->config['background_color']);
+        $backgroundColor = $this->hexToRgb((string) $this->config['background_color']);
         $bgColor = imagecolorallocatealpha(
             $watermark,
             max(0, min(255, $backgroundColor['r'])),
             max(0, min(255, $backgroundColor['g'])),
             max(0, min(255, $backgroundColor['b'])),
-            max(0, min(127, (int) ((1 - $this->config['opacity']) * 127)))
+            max(0, min(127, (int) ((1 - (float) $this->config['opacity']) * 127)))
         );
         if ($bgColor !== false) {
             imagefill($watermark, 0, 0, $bgColor);
         }
 
         // Set text color
-        $textColor = $this->hexToRgb($this->config['font_color']);
+        $textColor = $this->hexToRgb((string) $this->config['font_color']);
         $textColorResource = imagecolorallocate(
             $watermark,
             max(0, min(255, $textColor['r'])),
@@ -262,7 +262,7 @@ final class WatermarkService
         );
 
         // Draw text
-        $fontSize = $this->config['font_size'];
+        $fontSize = (int) $this->config['font_size'];
         $textX = (int) (($watermarkWidth - strlen($watermarkText) * $fontSize * 0.6) / 2);
         $textY = (int) (($watermarkHeight + $fontSize) / 2);
 
@@ -280,7 +280,7 @@ final class WatermarkService
             0,
             $watermarkWidth,
             $watermarkHeight,
-            $this->config['opacity'] * 100
+            (float) $this->config['opacity'] * 100
         );
 
         // Clean up watermark resource
@@ -294,15 +294,15 @@ final class WatermarkService
      */
     private function calculateWatermarkPosition(int $width, int $height, string $watermarkText): array
     {
-        $fontSize = $this->config['font_size'];
-        $margin = $this->config['margin'];
+        $fontSize = (int) $this->config['font_size'];
+        $margin = (int) $this->config['margin'];
 
         // Calculate watermark dimensions
         $watermarkWidth = strlen($watermarkText) * $fontSize * 0.6 + $margin * 2;
         $watermarkHeight = $fontSize + $margin * 2;
 
         // Calculate position based on config
-        $position = $this->config['position'];
+        $position = (string) $this->config['position'];
 
         switch ($position) {
             case 'top-left':

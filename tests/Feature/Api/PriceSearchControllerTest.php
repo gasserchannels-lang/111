@@ -17,9 +17,7 @@ class PriceSearchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_prices_by_product_name()
     {
         $currency = Currency::factory()->create();
@@ -70,9 +68,7 @@ class PriceSearchControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_empty_results_for_non_existent_product()
     {
         $response = $this->getJson('/api/price-search?q=NonExistentProduct');
@@ -83,9 +79,7 @@ class PriceSearchControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_search_query()
     {
         $response = $this->getJson('/api/price-search?q=');

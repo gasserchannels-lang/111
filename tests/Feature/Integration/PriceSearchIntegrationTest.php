@@ -18,9 +18,7 @@ class PriceSearchIntegrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_prices_with_full_workflow()
     {
         // Create test data
@@ -94,9 +92,7 @@ class PriceSearchIntegrationTest extends TestCase
         $this->assertCount(2, $prices);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_handle_user_wishlist_integration()
     {
         $user = User::factory()->create();
@@ -131,9 +127,7 @@ class PriceSearchIntegrationTest extends TestCase
         $wishlistIndexResponse->assertStatus(200);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_handle_price_alerts_integration()
     {
         $user = User::factory()->create();
@@ -177,9 +171,7 @@ class PriceSearchIntegrationTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_handle_multi_language_integration()
     {
         $currency = Currency::factory()->create();

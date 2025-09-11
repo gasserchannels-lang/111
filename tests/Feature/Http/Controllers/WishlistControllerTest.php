@@ -24,9 +24,7 @@ class WishlistControllerTest extends TestCase
         $this->actingAs(User::factory()->create());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_wishlist_index()
     {
         $response = $this->get('/wishlist');
@@ -35,9 +33,7 @@ class WishlistControllerTest extends TestCase
         $response->assertViewIs('wishlist.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication_to_view_wishlist()
     {
         auth()->logout();
@@ -47,9 +43,7 @@ class WishlistControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_add_product_to_wishlist()
     {
         $currency = Currency::factory()->create();
@@ -80,9 +74,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication_to_add_to_wishlist()
     {
         auth()->logout();
@@ -94,9 +86,7 @@ class WishlistControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_product_id_when_adding()
     {
         $response = $this->post('/wishlist', []);
@@ -105,9 +95,7 @@ class WishlistControllerTest extends TestCase
         $response->assertSessionHasErrors(['product_id']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_product_exists_when_adding()
     {
         $response = $this->post('/wishlist', [
@@ -118,9 +106,7 @@ class WishlistControllerTest extends TestCase
         $response->assertSessionHasErrors(['product_id']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_exists_status_when_product_already_in_wishlist()
     {
         $currency = Currency::factory()->create();
@@ -150,9 +136,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_remove_product_from_wishlist()
     {
         $currency = Currency::factory()->create();
@@ -187,9 +171,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication_to_remove_from_wishlist()
     {
         auth()->logout();
@@ -201,9 +183,7 @@ class WishlistControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_not_found_when_removing_non_existent_wishlist_item()
     {
         $response = $this->delete('/wishlist/999999', [
@@ -214,9 +194,7 @@ class WishlistControllerTest extends TestCase
         $response->assertSessionHasErrors(['product_id']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_toggle_product_in_wishlist_add()
     {
         $currency = Currency::factory()->create();
@@ -247,9 +225,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_toggle_product_in_wishlist_remove()
     {
         $currency = Currency::factory()->create();
@@ -284,9 +260,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication_to_toggle_wishlist()
     {
         auth()->logout();
@@ -298,9 +272,7 @@ class WishlistControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_product_id_when_toggling()
     {
         $response = $this->post('/wishlist/toggle', []);
@@ -309,9 +281,7 @@ class WishlistControllerTest extends TestCase
         $response->assertSessionHasErrors(['product_id']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_product_relationship_in_index()
     {
         $currency = Currency::factory()->create();
@@ -341,9 +311,7 @@ class WishlistControllerTest extends TestCase
         $this->assertNotNull($wishlistItems->first()->product);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_current_user_wishlist_items()
     {
         $currency = Currency::factory()->create();

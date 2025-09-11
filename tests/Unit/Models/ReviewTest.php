@@ -11,9 +11,7 @@ use Tests\TestCase;
 
 class ReviewTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_review()
     {
         $user = User::factory()->create();
@@ -37,9 +35,7 @@ class ReviewTest extends TestCase
         $this->assertTrue($review->is_verified_purchase);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_user_relationship()
     {
         $user = User::factory()->create();
@@ -58,9 +54,7 @@ class ReviewTest extends TestCase
         $this->assertEquals($user->id, $review->user->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
         $user = User::factory()->create();
@@ -79,9 +73,7 @@ class ReviewTest extends TestCase
         $this->assertEquals($product->id, $review->product->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $review = new Review;
@@ -94,9 +86,7 @@ class ReviewTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_review_with_factory()
     {
         $review = Review::factory()->create();
@@ -109,9 +99,7 @@ class ReviewTest extends TestCase
         $this->assertNotNull($review->content);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_set_rating()
     {
         $review = Review::factory()->create(['rating' => 4]);
@@ -119,9 +107,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(4, $review->rating);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_set_verified_purchase()
     {
         $review = Review::factory()->create(['is_verified_purchase' => true]);
@@ -129,9 +115,7 @@ class ReviewTest extends TestCase
         $this->assertTrue($review->is_verified_purchase);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_set_helpful_votes()
     {
         $review = Review::factory()->create([
@@ -143,9 +127,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(2, $review->helpful_count);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_review_text_attribute()
     {
         $review = Review::factory()->create([
@@ -155,9 +137,7 @@ class ReviewTest extends TestCase
         $this->assertEquals('This is the review content', $review->getReviewTextAttribute());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_query_reviews_by_rating()
     {
         Review::factory()->create(['rating' => 5]);
@@ -169,9 +149,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(5, $fiveStarReviews->first()->rating);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_query_reviews_by_product()
     {
         $product = Product::factory()->create();
@@ -184,9 +162,7 @@ class ReviewTest extends TestCase
         $this->assertCount(2, $productReviews);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_query_verified_purchase_reviews()
     {
         Review::factory()->create(['is_verified_purchase' => true]);
@@ -198,9 +174,7 @@ class ReviewTest extends TestCase
         $this->assertTrue($verifiedReviews->first()->is_verified_purchase);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_calculate_average_rating()
     {
         $product = Product::factory()->create();
@@ -220,9 +194,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(4.0, $averageRating);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_count_reviews_by_rating()
     {
         $product = Product::factory()->create();
@@ -238,9 +210,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(2, $fiveStarCount);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_recent_reviews()
     {
         Review::factory()->create(['created_at' => now()->subDays(5)]);

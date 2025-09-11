@@ -18,18 +18,14 @@ class StatsCommandTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_stats_command()
     {
         $this->artisan('coprra:stats')
             ->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_displays_correct_statistics()
     {
         // Create test data
@@ -58,9 +54,7 @@ class StatsCommandTest extends TestCase
             ->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_database()
     {
         $this->artisan('coprra:stats')

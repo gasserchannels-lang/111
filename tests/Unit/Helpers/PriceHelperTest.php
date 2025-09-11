@@ -13,9 +13,7 @@ class PriceHelperTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_format_price_with_currency_symbol(): void
     {
         $currency = Currency::factory()->create([
@@ -28,9 +26,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('$99.99', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_formats_price_with_default_currency_when_none_specified(): void
     {
         config(['coprra.default_currency' => 'USD']);
@@ -45,9 +41,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('$150.50', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_formats_price_with_currency_code_when_currency_not_found(): void
     {
         $result = PriceHelper::formatPrice(75.25, 'XYZ');
@@ -55,9 +49,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('75.25 XYZ', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_formats_price_with_two_decimal_places(): void
     {
         $currency = Currency::factory()->create([
@@ -70,9 +62,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('€100.00', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_calculate_price_difference_percentage(): void
     {
         $difference = PriceHelper::calculatePriceDifference(100.0, 120.0);
@@ -80,9 +70,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(20.0, $difference);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_calculates_negative_price_difference(): void
     {
         $difference = PriceHelper::calculatePriceDifference(100.0, 80.0);
@@ -90,9 +78,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(-20.0, $difference);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_zero_for_same_prices(): void
     {
         $difference = PriceHelper::calculatePriceDifference(100.0, 100.0);
@@ -100,9 +86,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(0.0, $difference);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_zero_for_zero_original_price(): void
     {
         $difference = PriceHelper::calculatePriceDifference(0.0, 50.0);
@@ -110,9 +94,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(0.0, $difference);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_zero_for_negative_original_price(): void
     {
         $difference = PriceHelper::calculatePriceDifference(-10.0, 50.0);
@@ -120,9 +102,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(0.0, $difference);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_string_positive(): void
     {
         $result = PriceHelper::getPriceDifferenceString(100.0, 125.0);
@@ -130,9 +110,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('+25.0%', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_string_negative(): void
     {
         $result = PriceHelper::getPriceDifferenceString(100.0, 75.0);
@@ -140,9 +118,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('-25.0%', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_string_zero(): void
     {
         $result = PriceHelper::getPriceDifferenceString(100.0, 100.0);
@@ -150,9 +126,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('0%', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_formats_price_difference_with_one_decimal(): void
     {
         $result = PriceHelper::getPriceDifferenceString(100.0, 133.33);
@@ -160,9 +134,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('+33.3%', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_identify_good_deal(): void
     {
         $allPrices = [100.0, 110.0, 120.0, 130.0]; // Average: 115
@@ -173,9 +145,7 @@ class PriceHelperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_identify_not_good_deal(): void
     {
         $allPrices = [100.0, 110.0, 120.0, 130.0]; // Average: 115
@@ -186,9 +156,7 @@ class PriceHelperTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_false_for_good_deal_with_empty_prices(): void
     {
         $result = PriceHelper::isGoodDeal(50.0, []);
@@ -196,9 +164,7 @@ class PriceHelperTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_best_price_from_array(): void
     {
         $prices = [150.0, 99.99, 200.0, 75.50, 125.0];
@@ -208,9 +174,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(75.50, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_null_for_best_price_with_empty_array(): void
     {
         $result = PriceHelper::getBestPrice([]);
@@ -218,9 +182,7 @@ class PriceHelperTest extends TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_best_price_with_single_price(): void
     {
         $result = PriceHelper::getBestPrice([99.99]);
@@ -228,9 +190,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(99.99, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_convert_usd_to_eur(): void
     {
         // Mock exchange rates
@@ -242,9 +202,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(85.0, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_convert_eur_to_usd(): void
     {
         // Mock exchange rates
@@ -256,9 +214,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(100.0, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_same_amount_for_same_currency(): void
     {
         $result = PriceHelper::convertCurrency(100.0, 'USD', 'USD');
@@ -266,9 +222,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(100.0, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_unknown_currency_conversion(): void
     {
         $result = PriceHelper::convertCurrency(100.0, 'XYZ', 'ABC');
@@ -276,9 +230,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(100.0, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_convert_to_egyptian_pounds(): void
     {
         // Mock exchange rates
@@ -290,9 +242,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(3090.0, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_format_price_range_with_different_prices(): void
     {
         $currency = Currency::factory()->create([
@@ -305,9 +255,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('$99.99 - $199.99', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_format_price_range_with_same_prices(): void
     {
         $currency = Currency::factory()->create([
@@ -320,9 +268,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('$99.99', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_formats_price_range_with_currency_code_when_not_found(): void
     {
         $result = PriceHelper::formatPriceRange(50.0, 100.0, 'XYZ');
@@ -330,9 +276,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('XYZ50.00 - XYZ100.00', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_formats_price_range_with_default_currency(): void
     {
         config(['coprra.default_currency' => 'EUR']);
@@ -347,9 +291,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('€25.00 - €75.00', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_precise_calculations(): void
     {
         $difference = PriceHelper::calculatePriceDifference(33.33, 66.66);
@@ -357,9 +299,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals(100.0, round($difference, 2));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_very_small_prices(): void
     {
         $currency = Currency::factory()->create([
@@ -372,9 +312,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('$0.01', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_large_prices(): void
     {
         $currency = Currency::factory()->create([
@@ -387,9 +325,7 @@ class PriceHelperTest extends TestCase
         $this->assertEquals('$1,234,567.89', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_calculates_good_deal_threshold_correctly(): void
     {
         $allPrices = [100.0]; // Average: 100

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use RuntimeException;
+use Exception;
 
-class ProductUpdate extends RuntimeException
+class ProductUpdateException extends Exception
 {
-    // Add custom fields and methods if needed
+    public function __construct(string $message = 'Product update failed', int $code = 0, ?\Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
 }

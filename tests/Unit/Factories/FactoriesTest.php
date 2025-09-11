@@ -20,9 +20,7 @@ use Tests\TestCase;
 
 class FactoriesTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_user_with_factory()
     {
         $user = User::factory()->create();
@@ -37,9 +35,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_multiple_users()
     {
         $users = User::factory()->count(3)->create();
@@ -50,9 +46,7 @@ class FactoriesTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_brand_with_factory()
     {
         $brand = Brand::factory()->create();
@@ -67,9 +61,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_category_with_factory()
     {
         $category = Category::factory()->create();
@@ -84,9 +76,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_currency_with_factory()
     {
         $currency = Currency::factory()->create();
@@ -102,9 +92,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_language_with_factory()
     {
         $language = Language::factory()->create();
@@ -121,9 +109,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_store_with_factory()
     {
         $currency = Currency::factory()->create();
@@ -140,9 +126,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_product_with_factory()
     {
         $currency = Currency::factory()->create();
@@ -167,9 +151,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_price_offer_with_factory()
     {
         $currency = Currency::factory()->create();
@@ -196,9 +178,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_review_with_factory()
     {
         $user = User::factory()->create();
@@ -227,9 +207,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_wishlist_with_factory()
     {
         $user = User::factory()->create();
@@ -255,9 +233,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_price_alert_with_factory()
     {
         $user = User::factory()->create();
@@ -284,9 +260,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_user_locale_setting_with_factory()
     {
         $user = User::factory()->create();
@@ -306,9 +280,7 @@ class FactoriesTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_factories_with_states()
     {
         // Test creating languages with specific attributes instead of states
@@ -328,9 +300,7 @@ class FactoriesTest extends TestCase
         $this->assertTrue($defaultLanguage->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_factories_with_custom_attributes()
     {
         $customBrand = Brand::factory()->create([
@@ -342,9 +312,7 @@ class FactoriesTest extends TestCase
         $this->assertFalse($customBrand->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_unique_values_for_unique_fields()
     {
         $brand1 = Brand::factory()->create();
@@ -354,9 +322,7 @@ class FactoriesTest extends TestCase
         $this->assertNotEquals($brand1->name, $brand2->name);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_related_models_together()
     {
         $currency = Currency::factory()->create();
@@ -375,9 +341,7 @@ class FactoriesTest extends TestCase
         $this->assertInstanceOf(Store::class, $product->store);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_valid_data_types()
     {
         $currency = Currency::factory()->create();
@@ -397,9 +361,7 @@ class FactoriesTest extends TestCase
         $this->assertIsBool($product->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_valid_email_addresses()
     {
         $user = User::factory()->create();
@@ -409,9 +371,7 @@ class FactoriesTest extends TestCase
         $this->assertTrue(filter_var($user->email, FILTER_VALIDATE_EMAIL) !== false);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_valid_urls()
     {
         $brand = Brand::factory()->create();
@@ -425,9 +385,7 @@ class FactoriesTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_valid_price_ranges()
     {
         $currency = Currency::factory()->create();
@@ -445,9 +403,7 @@ class FactoriesTest extends TestCase
         $this->assertLessThan(10000, $product->price);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_valid_rating_ranges()
     {
         $user = User::factory()->create();

@@ -11,9 +11,7 @@ use Tests\TestCase;
 
 class PriceOfferTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_offer()
     {
         $product = Product::factory()->create();
@@ -35,9 +33,7 @@ class PriceOfferTest extends TestCase
         $this->assertTrue($priceOffer->is_available);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
         $product = Product::factory()->create();
@@ -55,9 +51,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals($product->id, $priceOffer->product->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_store_relationship()
     {
         $product = Product::factory()->create();
@@ -75,9 +69,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals($store->id, $priceOffer->store->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $priceOffer = new PriceOffer;
@@ -90,9 +82,7 @@ class PriceOfferTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_price_is_numeric()
     {
         $product = Product::factory()->create();
@@ -112,9 +102,7 @@ class PriceOfferTest extends TestCase
         $this->assertIsNumeric($priceOffer->price);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_price_is_positive()
     {
         $product = Product::factory()->create();
@@ -133,9 +121,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals(-10.00, $priceOffer->price);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_url_format()
     {
         $product = Product::factory()->create();
@@ -154,9 +140,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals('invalid_url', $priceOffer->product_url);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_available_offers()
     {
         $product = Product::factory()->create();
@@ -184,9 +168,7 @@ class PriceOfferTest extends TestCase
         $this->assertTrue($availableOffers->first()->is_available);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_offers_for_product()
     {
         $product1 = Product::factory()->create();
@@ -215,9 +197,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals($product1->id, $product1Offers->first()->product_id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_offers_for_store()
     {
         $product = Product::factory()->create();
@@ -246,9 +226,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals($store1->id, $store1Offers->first()->store_id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_lowest_price_for_product()
     {
         $product = Product::factory()->create();
@@ -276,9 +254,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals(89.99, $lowestPrice);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_best_offer_for_product()
     {
         $product = Product::factory()->create();
@@ -308,9 +284,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals($store2->id, $bestOffer->store_id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_mark_as_unavailable()
     {
         $product = Product::factory()->create();
@@ -329,9 +303,7 @@ class PriceOfferTest extends TestCase
         $this->assertFalse($priceOffer->fresh()->is_available);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_mark_as_available()
     {
         $product = Product::factory()->create();
@@ -350,9 +322,7 @@ class PriceOfferTest extends TestCase
         $this->assertTrue($priceOffer->fresh()->is_available);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_price()
     {
         $product = Product::factory()->create();
@@ -371,9 +341,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals(79.99, $priceOffer->fresh()->price);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_from_original()
     {
         $product = Product::factory()->create();
@@ -395,9 +363,7 @@ class PriceOfferTest extends TestCase
         $this->assertEquals(-20.00, $difference);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_percentage()
     {
         $product = Product::factory()->create();

@@ -13,9 +13,7 @@ class SecurityTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_sql_injection_in_search()
     {
         // Create test data first
@@ -28,9 +26,7 @@ class SecurityTest extends TestCase
         $this->assertDatabaseHas('products', ['name' => 'Test Product']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_xss_attacks()
     {
         $response = $this->getJson('/api/price-search?q=<script>alert("xss")</script>');
@@ -39,18 +35,14 @@ class SecurityTest extends TestCase
         $response->assertDontSee('<script>');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication_for_protected_routes()
     {
         $response = $this->getJson('/wishlist');
         $response->assertStatus(401);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_csrf_attacks()
     {
         $user = User::factory()->create();
@@ -74,9 +66,7 @@ class SecurityTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_input_sanitization()
     {
         $response = $this->getJson('/api/price-search?q=test%20%3Cscript%3Ealert%281%29%3C%2Fscript%3E');
@@ -85,9 +75,7 @@ class SecurityTest extends TestCase
         $response->assertDontSee('<script>');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_mass_assignment()
     {
         $user = User::factory()->create();
@@ -108,9 +96,7 @@ class SecurityTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_rate_limiting()
     {
         // Make multiple requests quickly
@@ -127,9 +113,7 @@ class SecurityTest extends TestCase
         $this->assertTrue(in_array($response->status(), [200, 429]));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_directory_traversal()
     {
         $response = $this->getJson('/api/price-search?q=../../../etc/passwd');
@@ -138,9 +122,7 @@ class SecurityTest extends TestCase
         $response->assertDontSee('root:');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_file_upload_security()
     {
         $user = User::factory()->create();
@@ -157,9 +139,7 @@ class SecurityTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_unauthorized_access_to_admin_routes()
     {
         $user = User::factory()->create(['is_admin' => false]);
@@ -169,9 +149,7 @@ class SecurityTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_session_security()
     {
         $user = User::factory()->create();

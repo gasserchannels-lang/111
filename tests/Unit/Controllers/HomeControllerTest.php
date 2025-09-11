@@ -24,9 +24,7 @@ class HomeControllerTest extends TestCase
         $this->controller = new HomeController;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_home_page(): void
     {
         // Create test data
@@ -40,9 +38,7 @@ class HomeControllerTest extends TestCase
         $this->assertEquals('home', $response->getName());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_featured_products(): void
     {
         // Create active and inactive products
@@ -58,9 +54,7 @@ class HomeControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_active_categories_with_product_count(): void
     {
         // Create categories with products
@@ -78,9 +72,7 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(5, $categories->first()->products_count);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_active_brands_with_product_count(): void
     {
         // Create brands with products
@@ -98,9 +90,7 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(7, $brands->first()->products_count);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_limits_featured_products_to_eight(): void
     {
         Product::factory()->count(15)->create(['is_active' => true]);
@@ -111,9 +101,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(8, $featuredProducts);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_limits_categories_to_six(): void
     {
         Category::factory()->count(10)->create(['is_active' => true]);
@@ -124,9 +112,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(6, $categories);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_limits_brands_to_eight(): void
     {
         Brand::factory()->count(12)->create(['is_active' => true]);
@@ -137,9 +123,7 @@ class HomeControllerTest extends TestCase
         $this->assertCount(8, $brands);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_orders_categories_by_products_count_desc(): void
     {
         $category1 = Category::factory()->create(['is_active' => true]);
@@ -155,9 +139,7 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(3, $categories->last()->products_count);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_orders_brands_by_products_count_desc(): void
     {
         $brand1 = Brand::factory()->create(['is_active' => true]);
@@ -173,9 +155,7 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(4, $brands->last()->products_count);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_category_and_brand_relationships_for_products(): void
     {
         Product::factory()->count(3)->create(['is_active' => true]);

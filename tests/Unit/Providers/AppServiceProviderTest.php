@@ -9,36 +9,28 @@ use Tests\TestCase;
 
 class AppServiceProviderTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_be_instantiated()
     {
         $provider = new AppServiceProvider(app());
         $this->assertInstanceOf(AppServiceProvider::class, $provider);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_register_method()
     {
         $provider = new AppServiceProvider(app());
         $this->assertTrue(method_exists($provider, 'register'));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_boot_method()
     {
         $provider = new AppServiceProvider(app());
         $this->assertTrue(method_exists($provider, 'boot'));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_register_services()
     {
         $app = app();
@@ -49,9 +41,7 @@ class AppServiceProviderTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_boot_services()
     {
         $app = app();

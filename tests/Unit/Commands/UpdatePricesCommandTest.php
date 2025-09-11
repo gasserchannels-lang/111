@@ -17,18 +17,14 @@ class UpdatePricesCommandTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_update_prices_command()
     {
         $this->artisan('coprra:update-prices')
             ->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_updates_prices_for_products()
     {
         $currency = Currency::factory()->create();
@@ -57,18 +53,14 @@ class UpdatePricesCommandTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_products_gracefully()
     {
         $this->artisan('coprra:update-prices')
             ->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_with_verbose_output()
     {
         $this->artisan('coprra:update-prices --verbose')

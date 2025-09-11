@@ -13,9 +13,7 @@ use Tests\TestCase;
 
 class AdminMiddlewareTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_admin_users()
     {
         $user = User::factory()->create(['is_admin' => true]);
@@ -31,9 +29,7 @@ class AdminMiddlewareTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_blocks_non_admin_users()
     {
         $user = User::factory()->create(['is_admin' => false]);
@@ -50,9 +46,7 @@ class AdminMiddlewareTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_redirects_guests()
     {
         Auth::logout();

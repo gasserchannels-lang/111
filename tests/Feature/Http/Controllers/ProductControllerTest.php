@@ -16,9 +16,7 @@ class ProductControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_products_index()
     {
         $response = $this->get('/products');
@@ -27,9 +25,7 @@ class ProductControllerTest extends TestCase
         $response->assertViewIs('products.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_product_by_slug()
     {
         $currency = Currency::factory()->create();
@@ -56,9 +52,7 @@ class ProductControllerTest extends TestCase
         $this->assertEquals('test-product', $viewProduct->slug);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_product()
     {
         $response = $this->get('/products/non-existent-product');
@@ -66,9 +60,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_inactive_product()
     {
         $currency = Currency::factory()->create();
@@ -89,9 +81,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_product_relationships()
     {
         $currency = Currency::factory()->create();
@@ -117,9 +107,7 @@ class ProductControllerTest extends TestCase
         $this->assertNotNull($viewProduct->store);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_products()
     {
         $currency = Currency::factory()->create();
@@ -149,9 +137,7 @@ class ProductControllerTest extends TestCase
         $response->assertViewIs('products.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_products_by_category()
     {
         $currency = Currency::factory()->create();
@@ -180,9 +166,7 @@ class ProductControllerTest extends TestCase
         $response->assertViewIs('products.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_products_by_brand()
     {
         $currency = Currency::factory()->create();
@@ -211,9 +195,7 @@ class ProductControllerTest extends TestCase
         $response->assertViewIs('products.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_sort_products_by_price()
     {
         $currency = Currency::factory()->create();
@@ -243,9 +225,7 @@ class ProductControllerTest extends TestCase
         $response->assertViewIs('products.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_sort_products_by_name()
     {
         $currency = Currency::factory()->create();
@@ -275,9 +255,7 @@ class ProductControllerTest extends TestCase
         $response->assertViewIs('products.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_paginates_products()
     {
         $currency = Currency::factory()->create();

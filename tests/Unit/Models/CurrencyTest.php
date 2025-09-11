@@ -12,9 +12,7 @@ class CurrencyTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_currency()
     {
         $currency = Currency::factory()->create([
@@ -31,9 +29,7 @@ class CurrencyTest extends TestCase
         $this->assertTrue($currency->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $currency = new Currency;
@@ -46,9 +42,7 @@ class CurrencyTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_currencies()
     {
         $activeCurrency = Currency::factory()->create(['is_active' => true]);
@@ -60,9 +54,7 @@ class CurrencyTest extends TestCase
         $this->assertFalse($activeCurrencies->contains($inactiveCurrency));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_currencies_by_code()
     {
         $usdCurrency = Currency::factory()->create(['code' => 'USD']);
@@ -74,9 +66,7 @@ class CurrencyTest extends TestCase
         $this->assertFalse($searchResults->contains($eurCurrency));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_currencies_by_name()
     {
         $usdCurrency = Currency::factory()->create(['name' => 'US Dollar']);
@@ -88,9 +78,7 @@ class CurrencyTest extends TestCase
         $this->assertFalse($searchResults->contains($eurCurrency));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_currency_by_code()
     {
         $currency = Currency::factory()->create(['code' => 'USD']);
@@ -101,9 +89,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals('USD', $foundCurrency->code);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_default_currency()
     {
         $defaultCurrency = Currency::factory()->create(['is_default' => true]);
@@ -115,9 +101,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals(1, $foundDefault->is_default);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_format_amount()
     {
         $currency = Currency::factory()->create([
@@ -131,9 +115,7 @@ class CurrencyTest extends TestCase
         $this->assertIsNumeric($currency->decimal_places);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_convert_to_another_currency()
     {
         $usd = Currency::factory()->create(['code' => 'USD', 'exchange_rate' => 1.0]);
@@ -146,9 +128,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals(0.85, $eur->exchange_rate);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_soft_delete_currency()
     {
         $currency = Currency::factory()->create();
@@ -162,9 +142,7 @@ class CurrencyTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_restore_soft_deleted_currency()
     {
         $currency = Currency::factory()->create();
@@ -177,9 +155,7 @@ class CurrencyTest extends TestCase
         $this->assertNotNull($newCurrency);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_exchange_rate()
     {
         $currency = Currency::factory()->create(['exchange_rate' => 1.25]);
@@ -187,9 +163,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals(1.25, $currency->exchange_rate);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_set_exchange_rate()
     {
         $currency = Currency::factory()->create();
@@ -199,9 +173,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals(1.30, $currency->fresh()->exchange_rate);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_check_if_currency_is_active()
     {
         $activeCurrency = Currency::factory()->create(['is_active' => true]);
@@ -211,9 +183,7 @@ class CurrencyTest extends TestCase
         $this->assertFalse($inactiveCurrency->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_activate_currency()
     {
         $currency = Currency::factory()->create(['is_active' => false]);
@@ -223,9 +193,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals(1, $currency->fresh()->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_deactivate_currency()
     {
         $currency = Currency::factory()->create(['is_active' => true]);

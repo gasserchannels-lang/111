@@ -16,9 +16,7 @@ class ProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_product()
     {
         $currency = Currency::factory()->create();
@@ -39,63 +37,49 @@ class ProductTest extends TestCase
         $this->assertTrue($product->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_brand_relationship()
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $product->brand());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_category_relationship()
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $product->category());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_store_relationship()
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $product->store());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_price_offers_relationship()
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $product->priceOffers());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_reviews_relationship()
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $product->reviews());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_wishlist_relationship()
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $product->wishlists());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_products()
     {
         $activeProduct = Product::factory()->create(['is_active' => true]);
@@ -107,9 +91,7 @@ class ProductTest extends TestCase
         $this->assertFalse($activeProducts->contains($inactiveProduct));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_products_by_brand()
     {
         $brand = Brand::factory()->create();
@@ -124,9 +106,7 @@ class ProductTest extends TestCase
         $this->assertFalse($brandProducts->contains($product3));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_products_by_category()
     {
         $category = Category::factory()->create();

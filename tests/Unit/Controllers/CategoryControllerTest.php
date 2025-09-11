@@ -24,9 +24,7 @@ class CategoryControllerTest extends TestCase
         $this->controller = new CategoryController;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_categories_index(): void
     {
         $response = $this->controller->index();
@@ -35,9 +33,7 @@ class CategoryControllerTest extends TestCase
         $this->assertEquals('categories.index', $response->getName());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_category_by_slug(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
@@ -56,9 +52,7 @@ class CategoryControllerTest extends TestCase
         $this->assertCount(5, $viewData['products']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_exception_for_non_existent_category(): void
     {
         $this->expectException(ModelNotFoundException::class);
@@ -66,9 +60,7 @@ class CategoryControllerTest extends TestCase
         $this->controller->show('non-existent-category');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_active_products_in_category(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
@@ -92,9 +84,7 @@ class CategoryControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_orders_products_by_latest(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
@@ -118,9 +108,7 @@ class CategoryControllerTest extends TestCase
         $this->assertEquals($oldProduct->id, $products->last()->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_paginates_products_with_twelve_per_page(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
@@ -137,9 +125,7 @@ class CategoryControllerTest extends TestCase
         $this->assertEquals(3, $products->lastPage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_view_data_structure(): void
     {
         $category = Category::factory()->create(['slug' => 'test-category']);
@@ -156,9 +142,7 @@ class CategoryControllerTest extends TestCase
         $this->assertInstanceOf(Category::class, $viewData['category']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_category_products(): void
     {
         $category = Category::factory()->create(['slug' => 'empty-category']);
@@ -171,9 +155,7 @@ class CategoryControllerTest extends TestCase
         $this->assertEquals(0, $products->total());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_finds_category_by_exact_slug_match(): void
     {
         $category1 = Category::factory()->create(['slug' => 'electronics']);

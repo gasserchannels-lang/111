@@ -23,9 +23,7 @@ class ProductControllerTest extends TestCase
         $this->controller = new ProductController;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_products_index(): void
     {
         $response = $this->controller->index();
@@ -34,9 +32,7 @@ class ProductControllerTest extends TestCase
         $this->assertEquals('products.index', $response->getName());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_product_by_slug(): void
     {
         $product = Product::factory()->create(['slug' => 'test-product']);
@@ -51,9 +47,7 @@ class ProductControllerTest extends TestCase
         $this->assertEquals('test-product', $viewData['product']->slug);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_exception_for_non_existent_product(): void
     {
         $this->expectException(ModelNotFoundException::class);
@@ -61,9 +55,7 @@ class ProductControllerTest extends TestCase
         $this->controller->show('non-existent-product');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_view_data_structure(): void
     {
         $product = Product::factory()->create(['slug' => 'test-product']);
@@ -75,9 +67,7 @@ class ProductControllerTest extends TestCase
         $this->assertInstanceOf(Product::class, $viewData['product']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_finds_product_by_exact_slug_match(): void
     {
         $product1 = Product::factory()->create(['slug' => 'laptop']);
@@ -90,9 +80,7 @@ class ProductControllerTest extends TestCase
         $this->assertEquals('laptop', $viewData['product']->slug);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_products_with_special_characters_in_slug(): void
     {
         $product = Product::factory()->create(['slug' => 'product-with-special-chars-123']);
@@ -104,9 +92,7 @@ class ProductControllerTest extends TestCase
         $this->assertEquals('product-with-special-chars-123', $viewData['product']->slug);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_case_sensitive_slug_search(): void
     {
         $product = Product::factory()->create(['slug' => 'test-product']);
@@ -117,9 +103,7 @@ class ProductControllerTest extends TestCase
         $this->assertEquals($product->id, $viewData['product']->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_product_with_all_attributes(): void
     {
         $product = Product::factory()->create([

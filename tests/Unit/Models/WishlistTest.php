@@ -12,7 +12,7 @@ class WishlistTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_wishlist_item()
     {
         $wishlist = Wishlist::factory()->create([
@@ -25,7 +25,7 @@ class WishlistTest extends TestCase
         $this->assertEquals('Test notes', $wishlist->notes);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_user_relationship()
     {
         $user = User::factory()->create();
@@ -35,7 +35,7 @@ class WishlistTest extends TestCase
         $this->assertEquals($user->id, $wishlist->user->id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
         $product = Product::factory()->create();
@@ -45,7 +45,7 @@ class WishlistTest extends TestCase
         $this->assertEquals($product->id, $wishlist->product->id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $wishlist = new Wishlist;
@@ -55,7 +55,7 @@ class WishlistTest extends TestCase
         $this->assertArrayHasKey('product_id', $wishlist->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_notes_length()
     {
         $wishlist = Wishlist::factory()->make(['notes' => str_repeat('a', 1001)]);
@@ -64,7 +64,7 @@ class WishlistTest extends TestCase
         $this->assertArrayHasKey('notes', $wishlist->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_wishlist_for_user()
     {
         $user1 = User::factory()->create();
@@ -79,7 +79,7 @@ class WishlistTest extends TestCase
         $this->assertEquals($user1->id, $user1Wishlist->first()->user_id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_wishlist_for_product()
     {
         $product1 = Product::factory()->create();
@@ -94,7 +94,7 @@ class WishlistTest extends TestCase
         $this->assertEquals($product1->id, $product1Wishlist->first()->product_id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_soft_delete_wishlist_item()
     {
         $wishlist = Wishlist::factory()->create();
@@ -104,7 +104,7 @@ class WishlistTest extends TestCase
         $this->assertSoftDeleted('wishlists', ['id' => $wishlist->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_restore_soft_deleted_wishlist_item()
     {
         $wishlist = Wishlist::factory()->create();
@@ -118,7 +118,7 @@ class WishlistTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_check_if_product_is_in_wishlist()
     {
         $user = User::factory()->create();
@@ -135,7 +135,7 @@ class WishlistTest extends TestCase
         $this->assertFalse(Wishlist::isProductInWishlist($user->id, $anotherProduct->id));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_add_product_to_wishlist()
     {
         $user = User::factory()->create();
@@ -149,7 +149,7 @@ class WishlistTest extends TestCase
         $this->assertEquals('Test notes', $wishlist->notes);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_remove_product_from_wishlist()
     {
         $user = User::factory()->create();
@@ -166,7 +166,7 @@ class WishlistTest extends TestCase
         $this->assertFalse(Wishlist::isProductInWishlist($user->id, $product->id));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_wishlist_count_for_user()
     {
         $user = User::factory()->create();

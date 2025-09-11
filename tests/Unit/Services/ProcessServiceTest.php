@@ -10,7 +10,7 @@ class ProcessServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_process_service_instance()
     {
         $service = new ProcessService;
@@ -18,7 +18,7 @@ class ProcessServiceTest extends TestCase
         $this->assertInstanceOf(ProcessService::class, $service);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_process_data()
     {
         $service = new ProcessService;
@@ -31,7 +31,7 @@ class ProcessServiceTest extends TestCase
         $this->assertTrue($result['processed']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_data()
     {
         $service = new ProcessService;
@@ -42,7 +42,7 @@ class ProcessServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_invalid_data()
     {
         $service = new ProcessService;
@@ -53,7 +53,7 @@ class ProcessServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_validation_errors()
     {
         $service = new ProcessService;
@@ -66,7 +66,7 @@ class ProcessServiceTest extends TestCase
         $this->assertNotEmpty($errors);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_clean_data()
     {
         $service = new ProcessService;
@@ -78,7 +78,7 @@ class ProcessServiceTest extends TestCase
         $this->assertEquals('test@example.com', $result['email']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_transform_data()
     {
         $service = new ProcessService;
@@ -91,7 +91,7 @@ class ProcessServiceTest extends TestCase
         $this->assertArrayHasKey('value', $result);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_handle_processing_errors()
     {
         $service = new ProcessService;
@@ -104,7 +104,7 @@ class ProcessServiceTest extends TestCase
         $this->assertTrue($result['error']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_processing_status()
     {
         $service = new ProcessService;
@@ -115,7 +115,7 @@ class ProcessServiceTest extends TestCase
         $this->assertNotEmpty($status);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_reset_service()
     {
         $service = new ProcessService;
@@ -126,7 +126,7 @@ class ProcessServiceTest extends TestCase
         $this->assertEmpty($service->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_processing_metrics()
     {
         $service = new ProcessService;

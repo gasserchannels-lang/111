@@ -11,7 +11,7 @@ class CategoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_category()
     {
         $category = Category::factory()->create([
@@ -28,7 +28,7 @@ class CategoryTest extends TestCase
         $this->assertTrue($category->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_products_relationship()
     {
         $category = Category::factory()->create();
@@ -39,7 +39,7 @@ class CategoryTest extends TestCase
         $this->assertTrue($category->products->contains($product));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_required_fields()
     {
         $category = new Category;
@@ -48,7 +48,7 @@ class CategoryTest extends TestCase
         $this->assertArrayHasKey('name', $category->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_name_length()
     {
         $category = Category::factory()->make(['name' => str_repeat('a', 256)]);
@@ -57,7 +57,7 @@ class CategoryTest extends TestCase
         $this->assertArrayHasKey('name', $category->getErrors());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_categories()
     {
         Category::factory()->create(['is_active' => true]);
@@ -69,7 +69,7 @@ class CategoryTest extends TestCase
         $this->assertTrue($activeCategories->first()->is_active);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_categories_by_name()
     {
         Category::factory()->create(['name' => 'Electronics']);
@@ -82,7 +82,7 @@ class CategoryTest extends TestCase
         $this->assertEquals('Electronics', $results->first()->name);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_category_with_products_count()
     {
         $category = Category::factory()->create();
@@ -93,7 +93,7 @@ class CategoryTest extends TestCase
         $this->assertEquals(3, $categoryWithCount->products_count);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_soft_delete_category()
     {
         $category = Category::factory()->create();
@@ -103,7 +103,7 @@ class CategoryTest extends TestCase
         $this->assertSoftDeleted('categories', ['id' => $category->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_restore_soft_deleted_category()
     {
         $category = Category::factory()->create();
@@ -117,7 +117,7 @@ class CategoryTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_auto_generates_slug_from_name()
     {
         $category = Category::factory()->create(['name' => 'Test Category Name']);
@@ -127,7 +127,7 @@ class CategoryTest extends TestCase
         $this->assertIsString($category->slug);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_updates_slug_when_name_changes()
     {
         $category = Category::factory()->create(['name' => 'Old Name']);

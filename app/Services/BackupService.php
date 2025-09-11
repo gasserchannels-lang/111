@@ -346,7 +346,7 @@ class BackupService
         $result = Process::run($command);
 
         if (! $result->successful()) {
-            throw new Exception('Database backup failed: '.$result->getErrorOutput());
+            throw new Exception('Database backup failed: '.$result->errorOutput());
         }
 
         return [
@@ -466,7 +466,7 @@ class BackupService
         $result = Process::run($command);
 
         if (! $result->successful()) {
-            throw new Exception('Backup compression failed: '.$result->getErrorOutput());
+            throw new Exception('Backup compression failed: '.$result->errorOutput());
         }
 
         // Remove uncompressed directory
@@ -530,7 +530,7 @@ class BackupService
         $result = Process::run($command);
 
         if (! $result->successful()) {
-            throw new Exception('Database restore failed: '.$result->getErrorOutput());
+            throw new Exception('Database restore failed: '.$result->errorOutput());
         }
 
         return [

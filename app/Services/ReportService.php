@@ -45,8 +45,6 @@ class ReportService
             'user_engagement' => $this->getUserEngagement($productId, $startDate, $endDate),
             'reviews_analysis' => $this->getReviewsAnalysis($productId, $startDate, $endDate),
         ];
-
-        return $report;
     }
 
     /**
@@ -77,8 +75,6 @@ class ReportService
             'price_alerts' => $this->getPriceAlertsActivity($userId, $startDate, $endDate),
             'reviews_activity' => $this->getReviewsActivity($userId, $startDate, $endDate),
         ];
-
-        return $report;
     }
 
     /**

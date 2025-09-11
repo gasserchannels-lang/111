@@ -10,9 +10,7 @@ use Tests\TestCase;
 
 class LanguageTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_language()
     {
         $language = Language::create([
@@ -33,9 +31,7 @@ class LanguageTest extends TestCase
         $this->assertEquals(1, $language->sort_order);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_language_with_factory()
     {
         $language = Language::factory()->create();
@@ -49,9 +45,7 @@ class LanguageTest extends TestCase
         $this->assertNotNull($language->sort_order);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_check_if_rtl()
     {
         $rtlLanguage = Language::factory()->create(['direction' => 'rtl']);
@@ -61,9 +55,7 @@ class LanguageTest extends TestCase
         $this->assertFalse($ltrLanguage->isRtl());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_find_by_code()
     {
         $language = Language::factory()->create(['code' => 'ar']);
@@ -74,9 +66,7 @@ class LanguageTest extends TestCase
         $this->assertEquals($language->id, $foundLanguage->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_null_when_code_not_found()
     {
         $foundLanguage = Language::findByCode('nonexistent');
@@ -84,9 +74,7 @@ class LanguageTest extends TestCase
         $this->assertNull($foundLanguage);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_languages()
     {
         Language::factory()->create(['is_active' => true]);
@@ -98,9 +86,7 @@ class LanguageTest extends TestCase
         $this->assertTrue($activeLanguages->first()->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_ordered_languages()
     {
         Language::factory()->create(['sort_order' => 3, 'name' => 'C']);
@@ -114,9 +100,7 @@ class LanguageTest extends TestCase
         $this->assertEquals('C', $orderedLanguages->last()->name);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_have_currencies_relationship()
     {
         $language = Language::factory()->create();
@@ -127,9 +111,7 @@ class LanguageTest extends TestCase
         $this->assertTrue($language->currencies->contains($currency));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_default_currency()
     {
         $language = Language::factory()->create();
@@ -143,9 +125,7 @@ class LanguageTest extends TestCase
         $this->assertEquals($currency->id, $defaultCurrency->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_null_when_no_default_currency()
     {
         $language = Language::factory()->create();
@@ -155,9 +135,7 @@ class LanguageTest extends TestCase
         $this->assertNull($defaultCurrency);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_have_user_locale_settings()
     {
         $language = Language::factory()->create();
@@ -165,9 +143,7 @@ class LanguageTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $language->userLocaleSettings());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_english_language()
     {
         $language = Language::factory()->english()->create();
@@ -177,9 +153,7 @@ class LanguageTest extends TestCase
         $this->assertEquals('English', $language->native_name);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_default_language()
     {
         $language = Language::factory()->default()->create();
@@ -187,9 +161,7 @@ class LanguageTest extends TestCase
         $this->assertTrue($language->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_set_direction()
     {
         $language = Language::factory()->create(['direction' => 'rtl']);
@@ -197,9 +169,7 @@ class LanguageTest extends TestCase
         $this->assertEquals('rtl', $language->direction);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_set_sort_order()
     {
         $language = Language::factory()->create(['sort_order' => 10]);
@@ -207,9 +177,7 @@ class LanguageTest extends TestCase
         $this->assertEquals(10, $language->sort_order);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_toggle_active_status()
     {
         $language = Language::factory()->create(['is_active' => false]);

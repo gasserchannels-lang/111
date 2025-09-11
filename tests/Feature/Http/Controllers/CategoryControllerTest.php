@@ -16,9 +16,7 @@ class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_categories_index()
     {
         $response = $this->get('/categories');
@@ -27,9 +25,7 @@ class CategoryControllerTest extends TestCase
         $response->assertViewIs('categories.index');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_category_by_slug()
     {
         $category = Category::factory()->create([
@@ -49,9 +45,7 @@ class CategoryControllerTest extends TestCase
         $this->assertEquals('test-category', $viewCategory->slug);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_category()
     {
         $response = $this->get('/categories/non-existent-category');
@@ -59,9 +53,7 @@ class CategoryControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_inactive_category()
     {
         Category::factory()->create([
@@ -74,9 +66,7 @@ class CategoryControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_shows_products_in_category()
     {
         $currency = Currency::factory()->create();
@@ -101,9 +91,7 @@ class CategoryControllerTest extends TestCase
         $this->assertCount(3, $viewProducts);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_active_products_in_category()
     {
         $currency = Currency::factory()->create();
@@ -139,9 +127,7 @@ class CategoryControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_orders_products_by_latest()
     {
         $currency = Currency::factory()->create();
@@ -177,9 +163,7 @@ class CategoryControllerTest extends TestCase
         $this->assertEquals($newProduct->id, $viewProducts->first()->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_paginates_products_in_category()
     {
         $currency = Currency::factory()->create();
@@ -204,9 +188,7 @@ class CategoryControllerTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $viewProducts);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_products_by_price_range()
     {
         $currency = Currency::factory()->create();
@@ -239,9 +221,7 @@ class CategoryControllerTest extends TestCase
         $response->assertViewIs('category-show');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_sort_products_by_price()
     {
         $currency = Currency::factory()->create();
@@ -274,9 +254,7 @@ class CategoryControllerTest extends TestCase
         $response->assertViewIs('category-show');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_products_in_category()
     {
         $currency = Currency::factory()->create();
@@ -309,9 +287,7 @@ class CategoryControllerTest extends TestCase
         $response->assertViewIs('category-show');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_category_gracefully()
     {
         $category = Category::factory()->create([

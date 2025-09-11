@@ -17,9 +17,7 @@ class PerformanceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_large_dataset_efficiently()
     {
         $currency = Currency::factory()->create();
@@ -56,9 +54,7 @@ class PerformanceTest extends TestCase
         $this->assertLessThan(2.0, $executionTime, 'Search should complete within 2 seconds');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_concurrent_requests()
     {
         $currency = Currency::factory()->create();
@@ -99,9 +95,7 @@ class PerformanceTest extends TestCase
         $this->assertLessThan(5.0, $executionTime, 'Concurrent requests should complete within 5 seconds');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_memory_efficiently()
     {
         $currency = Currency::factory()->create();
@@ -128,9 +122,7 @@ class PerformanceTest extends TestCase
         $this->assertLessThan(50 * 1024 * 1024, $memoryUsed, 'Memory usage should be less than 50MB');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_database_query_optimization()
     {
         $currency = Currency::factory()->create();
@@ -164,9 +156,7 @@ class PerformanceTest extends TestCase
         $this->assertLessThan(10, count($queries), 'Should use less than 10 database queries');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_pagination_performance()
     {
         $currency = Currency::factory()->create();
@@ -193,9 +183,7 @@ class PerformanceTest extends TestCase
         $this->assertLessThan(1.0, $executionTime, 'Pagination should complete within 1 second');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_cache_performance()
     {
         $currency = Currency::factory()->create();

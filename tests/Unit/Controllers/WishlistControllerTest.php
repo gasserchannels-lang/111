@@ -43,9 +43,7 @@ class WishlistControllerTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_wishlist_index(): void
     {
         $product = Product::factory()->create();
@@ -64,9 +62,7 @@ class WishlistControllerTest extends TestCase
         $this->assertEquals($product->id, $wishlistItems->first()->product_id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_add_product_to_wishlist(): void
     {
         $product = Product::factory()->create();
@@ -89,9 +85,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_exists_status_when_product_already_in_wishlist(): void
     {
         $product = Product::factory()->create();
@@ -113,9 +107,7 @@ class WishlistControllerTest extends TestCase
         $this->assertEquals('Product is already in your wishlist.', $responseData['message']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_product_id_when_storing(): void
     {
         $request = Request::create('/wishlist', 'POST', []);
@@ -125,9 +117,7 @@ class WishlistControllerTest extends TestCase
         $this->controller->store($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_product_exists_when_storing(): void
     {
         $request = Request::create('/wishlist', 'POST', [
@@ -139,9 +129,7 @@ class WishlistControllerTest extends TestCase
         $this->controller->store($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_remove_product_from_wishlist(): void
     {
         $product = Product::factory()->create();
@@ -167,9 +155,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_not_found_when_removing_non_existent_wishlist_item(): void
     {
         $product = Product::factory()->create();
@@ -188,9 +174,7 @@ class WishlistControllerTest extends TestCase
         $this->assertEquals('Product not found in wishlist.', $responseData['message']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_toggle_product_in_wishlist_add(): void
     {
         $product = Product::factory()->create();
@@ -213,9 +197,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_toggle_product_in_wishlist_remove(): void
     {
         $product = Product::factory()->create();
@@ -241,9 +223,7 @@ class WishlistControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_product_relationship_in_index(): void
     {
         $product = Product::factory()->create();
@@ -259,9 +239,7 @@ class WishlistControllerTest extends TestCase
         $this->assertEquals($product->id, $wishlistItems->first()->product->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_current_user_wishlist_items(): void
     {
         $otherUser = User::factory()->create();

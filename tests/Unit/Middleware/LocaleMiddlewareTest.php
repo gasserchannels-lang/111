@@ -12,9 +12,7 @@ use Tests\TestCase;
 
 class LocaleMiddlewareTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_sets_locale_from_request_header()
     {
         // Create Arabic language in database
@@ -38,9 +36,7 @@ class LocaleMiddlewareTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_uses_default_locale_when_no_header()
     {
         $middleware = app(LocaleMiddleware::class);
@@ -54,9 +50,7 @@ class LocaleMiddlewareTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_invalid_locale()
     {
         $middleware = app(LocaleMiddleware::class);

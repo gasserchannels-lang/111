@@ -25,9 +25,7 @@ class BrandControllerTest extends TestCase
         $this->controller = new BrandController;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_brands_index(): void
     {
         Brand::factory()->count(5)->create();
@@ -41,9 +39,7 @@ class BrandControllerTest extends TestCase
         $this->assertCount(5, $brands);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_paginates_brands_with_twenty_per_page(): void
     {
         Brand::factory()->count(25)->create();
@@ -56,9 +52,7 @@ class BrandControllerTest extends TestCase
         $this->assertEquals(2, $brands->lastPage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_products_relationship_in_index(): void
     {
         $brand = Brand::factory()->create();
@@ -70,9 +64,7 @@ class BrandControllerTest extends TestCase
         $this->assertTrue($brands->first()->relationLoaded('products'));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_create_form(): void
     {
         $response = $this->controller->create();
@@ -81,9 +73,7 @@ class BrandControllerTest extends TestCase
         $this->assertEquals('brands.create', $response->getName());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_store_new_brand(): void
     {
         $request = Request::create('/brands', 'POST', [
@@ -106,9 +96,7 @@ class BrandControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_required_fields_when_storing(): void
     {
         $request = Request::create('/brands', 'POST', []);
@@ -118,9 +106,7 @@ class BrandControllerTest extends TestCase
         $this->controller->store($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_unique_name_when_storing(): void
     {
         Brand::factory()->create(['name' => 'Existing Brand']);
@@ -135,9 +121,7 @@ class BrandControllerTest extends TestCase
         $this->controller->store($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_unique_slug_when_storing(): void
     {
         Brand::factory()->create(['slug' => 'existing-slug']);
@@ -152,9 +136,7 @@ class BrandControllerTest extends TestCase
         $this->controller->store($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_brand_with_products(): void
     {
         $brand = Brand::factory()->create();
@@ -171,9 +153,7 @@ class BrandControllerTest extends TestCase
         $this->assertCount(3, $viewBrand->products);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_edit_form(): void
     {
         $brand = Brand::factory()->create();
@@ -187,9 +167,7 @@ class BrandControllerTest extends TestCase
         $this->assertEquals($brand->id, $viewBrand->id);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_brand(): void
     {
         $brand = Brand::factory()->create([
@@ -215,9 +193,7 @@ class BrandControllerTest extends TestCase
         $this->assertFalse($brand->is_active);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_unique_name_when_updating_excluding_current_brand(): void
     {
         $brand1 = Brand::factory()->create(['name' => 'Brand One']);
@@ -234,9 +210,7 @@ class BrandControllerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_unique_slug_when_updating_excluding_current_brand(): void
     {
         $brand1 = Brand::factory()->create(['slug' => 'brand-one']);
@@ -253,9 +227,7 @@ class BrandControllerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_delete_brand(): void
     {
         $brand = Brand::factory()->create();
@@ -268,9 +240,7 @@ class BrandControllerTest extends TestCase
         $this->assertDatabaseMissing('brands', ['id' => $brand->id]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_force_deletes_brand(): void
     {
         $brand = Brand::factory()->create();
@@ -285,9 +255,7 @@ class BrandControllerTest extends TestCase
         $this->assertNull(Brand::withTrashed()->find($brandId));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_url_formats(): void
     {
         $request = Request::create('/brands', 'POST', [
@@ -302,9 +270,7 @@ class BrandControllerTest extends TestCase
         $this->controller->store($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_optional_fields(): void
     {
         $request = Request::create('/brands', 'POST', [
