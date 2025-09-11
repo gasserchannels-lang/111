@@ -280,7 +280,7 @@ final class WatermarkService
             0,
             $watermarkWidth,
             $watermarkHeight,
-            (float) $this->config['opacity'] * 100
+            (int) ((float) $this->config['opacity'] * 100)
         );
 
         // Clean up watermark resource
