@@ -259,6 +259,64 @@ test_integration:
     reports:
       junit: storage/logs/integration-tests.xml
 
+test_e2e:
+  stage: test
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip chromium
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    DB_HOST: mysql
+    APP_URL: http://localhost:8000
+  needs:
+    - job: auto_fix_dependencies
+      artifacts: true
+  script:
+    - echo "🌐 Running E2E Tests..."
+    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
+    - php artisan migrate --force
+    - php artisan serve --host=0.0.0.0 --port=8000 &
+    - sleep 10
+    - php artisan dusk --configuration=phpunit.testing.xml --log-junit=storage/logs/e2e-tests.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/e2e-tests.xml
+
+test_links:
+  stage: test
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    DB_HOST: mysql
+  needs:
+    - job: auto_fix_dependencies
+      artifacts: true
+  script:
+    - echo "🔗 Running Link Checker Tests..."
+    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
+    - php artisan migrate --force
+    - php artisan test tests/Feature/LinkCheckerTest.php --configuration=phpunit.testing.xml --log-junit=storage/logs/link-checker-tests.xml
+    - php artisan links:check --all
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/link-checker-tests.xml
+    paths:
+      - storage/logs/link-check-report.json
+
 # ========================================
 # ✅ مرحلة التحقق النهائي
 # ========================================
