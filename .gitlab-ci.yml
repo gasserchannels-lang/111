@@ -18,11 +18,13 @@ build_job:
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - cp .env.example .env
-    - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip
+    - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
     - echo "Composer install completed"
     - ls -la vendor/ || echo "Vendor directory check"
     - test -f vendor/autoload.php || echo "autoload.php check"
     - php artisan key:generate
+    - php artisan config:cache
+    - php artisan package:discover --ansi
     - npm install
     - npm run build
   artifacts:
