@@ -1,0 +1,81 @@
+# Optimized COPRRA CI/CD Pipeline for GitLab
+
+# Define the stages of the pipeline
+stages:
+  - build
+  - analyze
+  - test
+
+# Define a global cache for dependencies
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+    - node_modules/
+
+#
+# BUILD STAGE
+#
+build_job:
+  stage: build
+  # Use a Docker image pre-built for Laravel applications
+  image: thecodingmachine/php:8.2-v4-node18-laravel
+  script:
+    # Install PHP and JS dependencies
+    - composer install --prefer-dist --no-progress --no-ansi
+    - npm install
+    - npm run build
+    # Copy the .env file for subsequent jobs
+    - cp .env.example .env
+    - php artisan key:generate
+  artifacts:
+    # Pass these files and directories to the next stages
+    paths:
+      - vendor/
+      - node_modules/
+      - public/
+      - .env
+
+#
+# ANALYZE STAGE
+#
+analyze_job:
+  stage: analyze
+  image: thecodingmachine/php:8.2-v4-node18-laravel
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Static Analysis and Code Style Checks..."
+    - composer audit
+    - vendor/bin/phpstan analyse
+    - vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+    - vendor/bin/pint --test
+
+#
+# TEST STAGE
+#
+test_job:
+  stage: test
+  image: thecodingmachine/php:8.2-v4-node18-laravel
+  # Define the MySQL service needed for this job
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    # Tell Laravel how to connect to the service.
+    # The values for DB_DATABASE, DB_USERNAME, DB_PASSWORD are taken from the GitLab CI/CD settings.
+    DB_HOST: mysql
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Database Migrations and Tests..."
+    # Wait for MySQL to be ready
+    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
+    - php artisan migrate --force
+    - php artisan test --without-brave
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/junit.xml
