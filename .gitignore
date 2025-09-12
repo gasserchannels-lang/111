@@ -1,109 +1,67 @@
-# Dependencies
-/node_modules
-/vendor
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
-/.nyc_output
-.phpunit.result.cache
-.phpunit.cache
-
-# Production
-/build
-/public/build
+# Laravel Framework
+/vendor/
+/node_modules/
+.env
+.env.*
+!.env.example
+!.env.testing
+/public/build/
 /public/hot
 /public/storage
 /storage/*.key
-
-# Laravel storage and cache
-/storage/framework/cache/*
-!/storage/framework/cache/.gitkeep
-/storage/framework/sessions/*
-!/storage/framework/sessions/.gitkeep
-/storage/framework/views/*
-!/storage/framework/views/.gitkeep
-/storage/logs/*.log
-!/storage/logs/.gitkeep
-/storage/app/public/*
-!/storage/app/public/.gitkeep
-/bootstrap/cache/*
-!/bootstrap/cache/.gitkeep
-
-# Environment files
-.env
-.env*.local
-.env.backup
-.env.production
-.env.test
-.env.testing
-
-# IDE
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.scannerwork/
-
-# OS files
-.DS_Store
-Thumbs.db
+/storage/app/*.key
+/storage/framework/
+/storage/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *.log
-*.tmp
-*.temp
 
-# Development tools
-*.sublime-project
-*.sublime-workspace
-.php_cs.cache
+# IDEs and Caches
+.idea/
+.vscode/
+.phpunit.cache/
+.blackfire.yml
+.deptrac.cache
 .php-cs-fixer.cache
-.phpstorm.meta.php
 _ide_helper.php
 _ide_helper_models.php
+.phpstorm.meta.php
 
-# Sentry configuration
-sentry.properties
-
-# Docker compose override
-docker-compose.override.yml
-
-# Hostinger specific
-public/.user.ini
-hostinger-deployment.md
-
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Temporary files
-*.swp
-*.swo
-*~
-
-# Coverage reports
-coverage/
-.nyc_output/
-
-# Static analysis
-.phpstan/
-.psalm/
+# Generated Reports & Documentation (Keep only source files)
+*.json
+*.txt
+*.xml
+*.md
+!README.md
+!CONTRIBUTING.md
+!CHANGELOG.md
+!LICENSE.md
+cs_fixer_report.json
+cs_fixer_report.txt
+test_results.xml
+phpstan_report.json
 phpstan-baseline.neon
-psalm-baseline.xml
+phpmetrics.json
+codecov.yml
+sonar-project.properties
+lighthouserc.js
 
-# Performance monitoring
-clockwork.json
-telescope/
+# OS Files
+.DS_Store
+Thumbs.db
 
-# Security
-*.pem
-*.key
-*.crt
-*.csr
+# Deployment/Build artifacts
+deploy.sh
+setup_hostinger.sh
+test_deployment.sh
+crontab.txt
+Dockerfile
+docker-compose.yml
+nginx.conf
+php.ini
 
-# Documentation
-docs/build/
+# Other specific files
+*.lock
+!composer.lock
+!package-lock.json

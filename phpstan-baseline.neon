@@ -1,7 +1,0 @@
-parameters:
-	ignoreErrors:
-		-
-			message: '#^Anonymous function should return array\{id\: int, name\: string, description\: string\|null, slug\: string, brand\: string\|null, category\: string\|null, price_offers\: Illuminate\\Support\\Collection\<int, array\{id\: int, price\: string, url\: mixed, store\: string\|null, is_available\: bool\}\>\} but returns array\{id\: int, name\: string, description\: string\|null, slug\: string, brand\: string\|null, category\: string\|null, price_offers\: Illuminate\\Support\\Collection\<int, array\{id\: int, price\: string, url\: mixed, store\: string\|null, is_available\: bool\}\>\}\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Api/PriceSearchController.php
