@@ -310,6 +310,7 @@ test_links:
     - php artisan migrate --force
     - php artisan test tests/Feature/LinkCheckerTest.php --configuration=phpunit.strict.xml --log-junit=storage/logs/link-checker-tests.xml
     - php artisan links:check --all
+    - php artisan ai:test-quality-system --full
   artifacts:
     when: always
     reports:
