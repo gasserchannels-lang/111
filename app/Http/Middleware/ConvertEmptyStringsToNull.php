@@ -20,6 +20,10 @@ class ConvertEmptyStringsToNull
         return $next($request);
     }
 
+    /**
+     * @param  mixed  $input
+     * @return mixed
+     */
     private function convertEmptyStringsToNull($input)
     {
         foreach ($input as $key => $value) {

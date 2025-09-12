@@ -7,14 +7,11 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ReviewControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private User $user;
 
     protected function setUp(): void

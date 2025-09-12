@@ -3,13 +3,10 @@
 namespace Tests\Unit;
 
 use App\Console\Commands\AgentProposeFixCommand;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AgentProposeFixCommandTest extends TestCase
 {
-    use RefreshDatabase;
-
     private AgentProposeFixCommand $command;
 
     protected function setUp(): void

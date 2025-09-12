@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Coprra'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,6 +31,51 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | CDN Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the CDN URL for static assets. Set this in your
+    | ".env" file for production deployment.
+    |
+    */
+
+    'cdn_url' => env('CDN_URL', 'https://coprra.com.cdn.hstgr.net'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | PHP Configuration
+    |--------------------------------------------------------------------------
+    |
+    | These values are optimized for Hostinger hosting environment.
+    | Based on the current PHP configuration in Hostinger.
+    |
+    */
+
+    'php_memory_limit' => '2048M',
+    'php_max_execution_time' => 360,
+    'php_upload_max_filesize' => '2048M',
+    'php_post_max_size' => '2048M',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Deployment Configuration
+    |--------------------------------------------------------------------------
+    |
+    | These values are used for deployment to Hostinger.
+    |
+    */
+
+    'deployment' => [
+        'ssh_host' => env('SSH_HOST'),
+        'ssh_port' => env('SSH_PORT'),
+        'ssh_username' => env('SSH_USERNAME'),
+        'ssh_path' => env('SSH_PATH'),
+        'backup_enabled' => env('BACKUP_ENABLED', true),
+        'backup_path' => env('BACKUP_PATH'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -58,7 +103,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://coprra.com'),
 
     /*
     |--------------------------------------------------------------------------

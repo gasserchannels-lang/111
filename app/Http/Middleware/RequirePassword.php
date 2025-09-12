@@ -13,12 +13,15 @@ class RequirePassword
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->password_confirmed_at) {
-            $lastConfirmation = auth()->user()->password_confirmed_at;
-            $timeout = config('auth.password_timeout', 10800); // 3 hours default
+        if (auth()->check()) {
+            $user = auth()->user();
+            if ($user && isset($user->password_confirmed_at) && $user->password_confirmed_at) {
+                $lastConfirmation = $user->password_confirmed_at;
+                $timeout = config('auth.password_timeout', 10800); // 3 hours default
 
-            if (time() - $lastConfirmation->timestamp <= $timeout) {
-                return $next($request);
+                if (time() - $lastConfirmation->timestamp <= $timeout) {
+                    return $next($request);
+                }
             }
         }
 

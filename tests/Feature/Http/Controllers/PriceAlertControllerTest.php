@@ -7,7 +7,6 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,8 +14,6 @@ use Tests\TestCase;
 
 class PriceAlertControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private User $user;
 
     private User $anotherUser;

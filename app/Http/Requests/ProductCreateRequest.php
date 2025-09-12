@@ -18,6 +18,8 @@ class ProductCreateRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {
@@ -121,6 +123,8 @@ class ProductCreateRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -155,6 +159,8 @@ class ProductCreateRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
      */
     public function attributes(): array
     {
@@ -191,6 +197,8 @@ class ProductCreateRequest extends FormRequest
 
     /**
      * Configure the validator instance.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      */
     public function withValidator($validator): void
     {

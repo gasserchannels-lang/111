@@ -13,7 +13,7 @@ class EnsureEmailIsVerified
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && ! auth()->user()->hasVerifiedEmail()) {
+        if (auth()->check() && ! auth()->user()?->hasVerifiedEmail()) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Email verification required'], 403);
             }

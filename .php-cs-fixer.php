@@ -26,9 +26,9 @@ $config
             'statements' => ['return', 'throw', 'try'],
         ],
         'braces' => true,
-        'cast_spaces' => ['space' => 'none'],
+        'cast_spaces' => ['space' => 'single'],
         'class_attributes_separation' => true,
-        'concat_space' => ['spacing' => 'one'],
+        'concat_space' => ['spacing' => 'none'],
         'constant_case' => ['case' => 'lower'],
         'declare_equal_normalize' => ['space' => 'none'],
         'elseif' => true,
@@ -108,9 +108,14 @@ $config
         'ternary_operator_spaces' => true,
         'trailing_comma_in_multiline' => true,
         'trim_array_spaces' => true,
-        'unary_operator_spaces' => true,
+        'unary_operator_spaces' => false,
         'visibility_required' => true,
         'whitespace_after_comma_in_array' => true,
+        'new_with_parentheses' => false,
+        'not_operator_with_successor_space' => false,
+        'single_line_empty_body' => false,
+        'class_definition' => false,
+        'braces_position' => false,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

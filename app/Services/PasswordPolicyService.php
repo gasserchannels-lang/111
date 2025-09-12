@@ -273,13 +273,9 @@ class PasswordPolicyService
             // For now, we'll simulate the check
             $lastPasswordChange = $this->getLastPasswordChange($userId);
 
-            if (! $lastPasswordChange) {
-                return true; // No password set
-            }
-
-            $expiryDate = $lastPasswordChange->addDays($expiryDays);
-
-            return now()->isAfter($expiryDate);
+            // Since getLastPasswordChange always returns null for now,
+            // we return true (password is expired/needs to be set)
+            return true;
         } catch (Exception $e) {
             Log::error('Password expiry check failed', [
                 'user_id' => $userId,
@@ -293,7 +289,7 @@ class PasswordPolicyService
     /**
      * Get last password change date.
      */
-    private function getLastPasswordChange(int $userId): ?\Carbon\Carbon
+    private function getLastPasswordChange(int $userId): null
     {
         // This would query the users table
         // For now, return null

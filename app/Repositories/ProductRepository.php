@@ -19,7 +19,7 @@ class ProductRepository
     /**
      * Get paginated active products.
      *
-     * @return LengthAwarePaginator<int, Product<\Database\Factories\ProductFactory>>
+     * @return LengthAwarePaginator<int, Product>
      */
     public function getPaginatedActive(int $perPage = 15): LengthAwarePaginator
     {
@@ -32,6 +32,24 @@ class ProductRepository
 
     /**
      * Find product by slug with caching.
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      *
      *
      * @return Product<\Database\Factories\ProductFactory>|null
@@ -92,7 +110,7 @@ class ProductRepository
      * Search products with validation and rate limiting.
      *
      * @param  array<string, mixed>  $filters
-     * @return LengthAwarePaginator<int, Product<\Database\Factories\ProductFactory>>
+     * @return LengthAwarePaginator<int, Product>
      *
      * @throws ValidationException If filters are invalid
      * @throws \InvalidArgumentException If parameters are invalid

@@ -122,7 +122,7 @@ final class UserBanService
     /**
      * Get all banned users.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, User<\Database\Factories\UserFactory>>
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>
      */
     public function getBannedUsers(): \Illuminate\Database\Eloquent\Collection
     {
@@ -137,7 +137,7 @@ final class UserBanService
     /**
      * Get users with expired bans.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, User<\Database\Factories\UserFactory>>
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>
      */
     public function getUsersWithExpiredBans(): \Illuminate\Database\Eloquent\Collection
     {

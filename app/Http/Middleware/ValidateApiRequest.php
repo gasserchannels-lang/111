@@ -44,6 +44,8 @@ class ValidateApiRequest
 
     /**
      * Get validation rules from config.
+     *
+     * @return array<string, array<int, string>>
      */
     private function getValidationRules(string $rules): array
     {

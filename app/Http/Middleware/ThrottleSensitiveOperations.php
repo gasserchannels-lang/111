@@ -21,8 +21,10 @@ class ThrottleSensitiveOperations
 
         // Define rate limits for different operations
         $limits = $this->getRateLimits($operation);
+        $maxAttempts = $limits['max_attempts'];
+        $decaySeconds = $limits['decay_seconds'];
 
-        if (RateLimiter::tooManyAttempts($key, $limits['max_attempts'])) {
+        if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($key);
 
             Log::warning('Rate limit exceeded', [
@@ -38,7 +40,7 @@ class ThrottleSensitiveOperations
             ], 429);
         }
 
-        RateLimiter::hit($key, $limits['decay_seconds']);
+        RateLimiter::hit($key, $decaySeconds);
 
         return $next($request);
     }
@@ -60,6 +62,8 @@ class ThrottleSensitiveOperations
 
     /**
      * Get rate limits for different operations.
+     *
+     * @return array{max_attempts: int, decay_seconds: int}
      */
     protected function getRateLimits(string $operation): array
     {

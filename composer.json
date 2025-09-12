@@ -77,9 +77,9 @@
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "pre-commit": [
-            "@php artisan test --parallel",
+            "@php artisan test",
             "@php ./vendor/bin/phpstan analyse",
-            "@php ./vendor/bin/php-cs-fixer fix --dry-run"
+            "@php ./vendor/bin/pint --test"
         ],
         "format": [
             "@php ./vendor/bin/php-cs-fixer fix"
@@ -107,7 +107,8 @@
             "@php artisan key:generate --ansi"
         ],
         "test": [
-            "@php artisan test"
+            "@php artisan config:clear",
+            "@php artisan test --without-brave"
         ],
         "test:coverage": [
             "@php artisan test --coverage"

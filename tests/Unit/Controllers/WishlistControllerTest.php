@@ -9,7 +9,6 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,8 +17,6 @@ use Tests\TestCase;
 
 class WishlistControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private WishlistController $controller;
 
     private Guard $mockAuth;

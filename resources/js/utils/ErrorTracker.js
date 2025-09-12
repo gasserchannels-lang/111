@@ -99,7 +99,7 @@ class ErrorTracker {
         
         // Log to console in development
         if (process.env.NODE_ENV === 'development') {
-            console.error('Error tracked:', error);
+            // console.error('Error tracked:', error);
         }
     }
 
@@ -124,8 +124,8 @@ class ErrorTracker {
             // Update rate limit
             this.rateLimit.requests.push(Date.now());
             
-        } catch (err) {
-            console.error('Failed to report error:', err);
+        } catch {
+            // console.error('Failed to report error:', err);
         }
     }
 
@@ -304,8 +304,8 @@ class ErrorTracker {
                 this.errors = errors;
                 return true;
             }
-        } catch (err) {
-            console.error('Failed to import errors:', err);
+        } catch {
+            // console.error('Failed to import errors:', err);
         }
         return false;
     }

@@ -7,7 +7,6 @@ namespace App\Http\Middleware;
 use App\Models\Language;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +15,7 @@ class LocaleMiddleware
 {
     public function __construct(
         private Guard $auth,
-        private Session $session,
-        private Application $app
+        private Session $session
     ) {}
 
     public function handle(Request $request, Closure $next): Response
@@ -30,7 +28,7 @@ class LocaleMiddleware
             // في حالة حدوث أي خطأ غير متوقع، اعتمد على القيمة الافتراضية الآمنة
         }
 
-        $this->app->setLocale($languageCode);
+        app()->setLocale($languageCode);
 
         return $next($request);
     }
@@ -38,8 +36,11 @@ class LocaleMiddleware
     private function determineLanguage(Request $request): string
     {
         // 1. تحقق من المستخدم المسجل
-        if ($this->auth->check() && optional($this->auth->user()->localeSetting)->language) {
-            return $this->auth->user()->localeSetting->language->code;
+        if ($this->auth->check()) {
+            $user = $this->auth->user();
+            if ($user && $user->localeSetting && $user->localeSetting->language) {
+                return $user->localeSetting->language->code;
+            }
         }
 
         // 2. تحقق من الجلسة

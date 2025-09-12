@@ -5,13 +5,10 @@ namespace Tests\Unit\Models;
 use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PriceAlertTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_alert()
     {

@@ -6,13 +6,10 @@ namespace Tests\Unit\Helpers;
 
 use App\Helpers\PriceHelper;
 use App\Models\Currency;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PriceHelperTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_format_price_with_currency_symbol(): void
     {

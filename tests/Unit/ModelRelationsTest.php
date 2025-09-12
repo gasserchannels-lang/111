@@ -17,14 +17,11 @@ use App\Models\User;
 use App\Models\UserLocaleSetting;
 use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class ModelRelationsTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[DataProvider('modelRelationsProvider')]
     public function test_model_relations_exist(Model $model, array $relations): void
     {

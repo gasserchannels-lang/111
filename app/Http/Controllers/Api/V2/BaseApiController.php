@@ -187,6 +187,9 @@ abstract class BaseApiController extends V1BaseController
     /**
      * Get include parameters for relationships.
      */
+    /**
+     * @return array<string, mixed>
+     */
     protected function getIncludeParams(Request $request): array
     {
         $include = $request->get('include', '');
@@ -200,6 +203,9 @@ abstract class BaseApiController extends V1BaseController
 
     /**
      * Get fields parameter for field selection.
+     */
+    /**
+     * @return array<string, mixed>
      */
     protected function getFieldsParams(Request $request): array
     {
@@ -275,6 +281,9 @@ abstract class BaseApiController extends V1BaseController
 
     /**
      * Get API deprecation notices.
+     */
+    /**
+     * @return array<string, mixed>
      */
     protected function getApiDeprecationNotices(): array
     {

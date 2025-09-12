@@ -99,7 +99,7 @@ class PriceSearchController extends Controller
                             'store' => $offer->store ? $offer->store->name : null,
                             'is_available' => $offer->is_available,
                         ];
-                    }),
+                    })->values(),
                 ];
             });
 

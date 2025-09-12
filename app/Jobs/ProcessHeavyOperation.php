@@ -20,20 +20,26 @@ class ProcessHeavyOperation implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private int $timeout = 300; // 5 minutes
+    public int $timeout = 300; // 5 minutes
 
-    private int $tries = 3;
+    public int $tries = 3;
 
-    private int $maxExceptions = 3;
+    public int $maxExceptions = 3;
 
     private string $operation;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $data;
 
     private ?int $userId;
 
     /**
      * Create a new job instance.
+     */
+    /**
+     * @param  array<string, mixed>  $data
      */
     public function __construct(string $operation, array $data = [], ?int $userId = null)
     {
@@ -125,6 +131,9 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * Generate report.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function generateReport(): array
     {
         $reportType = $this->data['type'] ?? 'general';
@@ -145,6 +154,9 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Process images.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function processImages(): array
     {
@@ -167,6 +179,9 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * Sync data.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function syncData(): array
     {
         $source = $this->data['source'] ?? 'external_api';
@@ -184,6 +199,9 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Send bulk notifications.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function sendBulkNotifications(): array
     {
@@ -208,6 +226,9 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * Update statistics.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function updateStatistics(): array
     {
         $statTypes = $this->data['stat_types'] ?? ['users', 'products', 'orders'];
@@ -229,6 +250,9 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * Cleanup old data.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function cleanupOldData(): array
     {
         $daysOld = $this->data['days_old'] ?? 30;
@@ -246,6 +270,9 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Export data.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function exportData(): array
     {
@@ -265,6 +292,9 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Import data.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function importData(): array
     {
@@ -286,7 +316,7 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function updateJobStatus(string $status, mixed $result = null): void
     {
-        $jobId = $this->job->getJobId();
+        $jobId = $this->job?->getJobId() ?? 'unknown';
         $cacheKey = "job_status:{$jobId}";
 
         $statusData = [
@@ -319,6 +349,9 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * Get job status.
      */
+    /**
+     * @return array<string, mixed>|null
+     */
     public static function getJobStatus(string $jobId): ?array
     {
         $cacheKey = "job_status:{$jobId}";
@@ -328,6 +361,9 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Get user's job statuses.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public static function getUserJobStatuses(int $userId): array
     {

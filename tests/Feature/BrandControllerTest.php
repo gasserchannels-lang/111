@@ -7,14 +7,11 @@ namespace Tests\Feature;
 use App\Models\Brand;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class BrandControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[Test]
     public function index_displays_brands(): void
     {

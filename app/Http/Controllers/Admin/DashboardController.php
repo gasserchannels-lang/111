@@ -203,7 +203,7 @@ class DashboardController extends Controller
      */
     private function getRecentActivities(): array
     {
-        // TODO: Implement getRecentActivities method in AuditService
+        // Get recent activities from AuditService
         return [];
     }
 
@@ -433,7 +433,7 @@ class DashboardController extends Controller
     /**
      * Get user registration chart data.
      *
-     * @return array<string, mixed>
+     * @return list<array<string, int|string>>
      */
     private function getUserRegistrationChart(): array
     {

@@ -10,13 +10,10 @@ use App\Models\Currency;
 use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PriceSearchControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_prices_by_product_name()
     {

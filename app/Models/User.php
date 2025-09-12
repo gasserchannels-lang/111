@@ -24,6 +24,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $ban_description
  * @property \Carbon\Carbon|null $banned_at
  * @property \Carbon\Carbon|null $ban_expires_at
+ * @property string|null $session_id
  * @property-read bool $is_banned
  * @property-read bool $is_ban_expired
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
@@ -60,6 +61,7 @@ class User extends Authenticatable
         'ban_description',
         'banned_at',
         'ban_expires_at',
+        'session_id',
     ];
 
     protected $hidden = [

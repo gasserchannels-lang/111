@@ -17,7 +17,7 @@ class AuthenticateSession
             $user = auth()->user();
             $sessionId = $request->session()->getId();
 
-            if ($user->session_id && $user->session_id !== $sessionId) {
+            if ($user?->session_id && $user->session_id !== $sessionId) {
                 auth()->logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();

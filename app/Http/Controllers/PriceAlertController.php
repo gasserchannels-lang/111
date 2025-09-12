@@ -15,7 +15,7 @@ class PriceAlertController extends Controller
 
     public function index(Guard $auth): \Illuminate\View\View
     {
-        $priceAlerts = $auth->user()->priceAlerts()->with('product')->latest()->paginate(10);
+        $priceAlerts = $auth->user()?->priceAlerts()->with('product')->latest()->paginate(10) ?? collect();
 
         return view('price-alerts.index', ['priceAlerts' => $priceAlerts]);
     }
@@ -30,7 +30,7 @@ class PriceAlertController extends Controller
         return view('price-alerts.create', ['product' => $product]);
     }
 
-    public function store(Request $request, Guard $auth)
+    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -38,7 +38,7 @@ class PriceAlertController extends Controller
             'repeat_alert' => 'nullable|boolean',
         ]);
 
-        $created = $auth->user()->priceAlerts()->create([
+        $created = $auth->user()?->priceAlerts()->create([
             'product_id' => $request->product_id,
             'target_price' => $request->target_price,
             'repeat_alert' => $request->boolean('repeat_alert'),
@@ -48,7 +48,7 @@ class PriceAlertController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'status' => 'created',
-                'price_alert_id' => $created->id,
+                'price_alert_id' => $created?->id,
             ], 201);
         }
 
@@ -58,6 +58,9 @@ class PriceAlertController extends Controller
 
     /**
      * Display the specified resource.
+     */
+    /**
+     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
      */
     public function show(PriceAlert $priceAlert, Guard $auth): \Illuminate\View\View
     {
@@ -76,6 +79,9 @@ class PriceAlertController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    /**
+     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
+     */
     public function edit(PriceAlert $priceAlert, Guard $auth): \Illuminate\View\View
     {
         if ($priceAlert->user_id !== $auth->id()) {
@@ -87,6 +93,9 @@ class PriceAlertController extends Controller
 
     /**
      * Update the specified resource in storage.
+     */
+    /**
+     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
      */
     public function update(Request $request, PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
@@ -111,6 +120,9 @@ class PriceAlertController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    /**
+     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
+     */
     public function destroy(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         if ($priceAlert->user_id !== $auth->id()) {
@@ -125,6 +137,9 @@ class PriceAlertController extends Controller
 
     /**
      * Toggle alert status.
+     */
+    /**
+     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
      */
     public function toggle(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {

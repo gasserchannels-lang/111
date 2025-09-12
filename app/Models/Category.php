@@ -30,16 +30,36 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static CategoryFactory factory(...$parameters)
  *
  * @mixin \Eloquent
- */
-/**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
+ *
+ * @template TFactory of CategoryFactory
  *
  * @mixin TFactory
  */
 class Category extends Model
 {
-    use HasFactory;
+    /** @use HasFactory<TFactory> */
+    use HasFactory {
+        factory as baseFactory;
+    }
+
     use SoftDeletes;
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @param  array<string, mixed>  $state
+     */
+    public static function factory(?int $count = null, array $state = []): CategoryFactory
+    {
+        return static::baseFactory($count, $state)->connection('testing');
+    }
+
+    /**
+     * Validation errors.
+     *
+     * @var array<string, mixed>
+     */
+    protected array $errors = [];
 
     /**
      * @var list<string>
@@ -109,6 +129,9 @@ class Category extends Model
 
     /**
      * Scope a query to only include active categories.
+     *
+     * @param  Builder<Category>  $query
+     * @return Builder<Category>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -117,6 +140,9 @@ class Category extends Model
 
     /**
      * Scope a query to search categories by name.
+     *
+     * @param  Builder<Category>  $query
+     * @return Builder<Category>
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {
@@ -125,6 +151,9 @@ class Category extends Model
 
     /**
      * Get validation rules for the model.
+     */
+    /**
+     * @return array<string, string>
      */
     public function getRules(): array
     {
@@ -149,6 +178,9 @@ class Category extends Model
 
     /**
      * Get validation errors.
+     */
+    /**
+     * @return array<string, string>
      */
     public function getErrors(): array
     {

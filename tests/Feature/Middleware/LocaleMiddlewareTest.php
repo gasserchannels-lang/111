@@ -8,14 +8,11 @@ use App\Models\Currency;
 use App\Models\Language;
 use App\Models\User;
 use App\Models\UserLocaleSetting;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class LocaleMiddlewareTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

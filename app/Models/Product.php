@@ -45,9 +45,21 @@ class Product extends Model
     /**
      * @use HasFactory<ProductFactory>
      */
-    use HasFactory;
+    use HasFactory {
+        factory as baseFactory;
+    }
 
     use SoftDeletes;
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @param  array<string, mixed>  $state
+     */
+    public static function factory(?int $count = null, array $state = []): ProductFactory
+    {
+        return static::baseFactory($count, $state)->connection('testing');
+    }
 
     protected $fillable = [
         'name',
@@ -224,11 +236,11 @@ class Product extends Model
     {
         $activeOffer = $this->priceOffers()->where('is_available', true)->latest()->first();
 
-        return $activeOffer ? $activeOffer->price : $this->price;
+        return $activeOffer ? (float) $activeOffer->price : (float) $this->price;
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, PriceOffer<\Database\Factories\PriceOfferFactory>>
+     * @return \Illuminate\Database\Eloquent\Collection<int, PriceOffer>
      */
     public function getPriceHistory(): \Illuminate\Database\Eloquent\Collection
     {

@@ -41,9 +41,15 @@ class ProcessService
      *
      * @param  array<string>|string  $command
      */
-    public function run(string|array $command): \Illuminate\Contracts\Process\ProcessResult
+    public function run(string|array $command): ProcessResult
     {
-        return Process::run($command);
+        $result = Process::run($command);
+
+        return new ProcessResult(
+            $result->exitCode() ?? 0,
+            $result->output(),
+            $result->errorOutput()
+        );
     }
 
     /**

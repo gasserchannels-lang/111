@@ -37,7 +37,7 @@ class ProductService
      *
      * @return Product<\Database\Factories\ProductFactory>
      */
-    public function getBySlug(string $slug): Product
+    public function getBySlug(string $slug): ?Product
     {
         return $this->cache->remember(
             'product.slug.'.$slug,

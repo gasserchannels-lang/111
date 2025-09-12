@@ -26,7 +26,7 @@ class WishlistController extends Controller
      */
     public function index(): \Illuminate\View\View
     {
-        $wishlistItems = $this->auth->user()->wishlists()->with('product')->get();
+        $wishlistItems = $this->auth->user()?->wishlists()->with('product')->get() ?? collect();
 
         return view('wishlist.index', ['wishlistItems' => $wishlistItems]);
     }
@@ -41,7 +41,7 @@ class WishlistController extends Controller
         ]);
 
         // التحقق من أن المنتج ليس في المفضلة بالفعل
-        $existingWishlist = $this->auth->user()->wishlists()
+        $existingWishlist = $this->auth->user()?->wishlists()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -52,7 +52,7 @@ class WishlistController extends Controller
             ]);
         }
 
-        $this->auth->user()->wishlists()->create([
+        $this->auth->user()?->wishlists()->create([
             'product_id' => $request->product_id,
         ]);
 
@@ -71,7 +71,7 @@ class WishlistController extends Controller
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
-        $wishlist = $this->auth->user()->wishlists()
+        $wishlist = $this->auth->user()?->wishlists()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -99,7 +99,7 @@ class WishlistController extends Controller
             'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
         ]);
 
-        $wishlist = $this->auth->user()->wishlists()
+        $wishlist = $this->auth->user()?->wishlists()
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -111,7 +111,7 @@ class WishlistController extends Controller
         }
 
         // إذا لم يكن موجودًا، قم بإضافته
-        $this->auth->user()->wishlists()->create([
+        $this->auth->user()?->wishlists()->create([
             'product_id' => $request->product_id,
         ]);
 

@@ -11,13 +11,10 @@ use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StatsCommandTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_stats_command()
     {

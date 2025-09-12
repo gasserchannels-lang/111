@@ -13,6 +13,8 @@ class SecurityHeaders
 {
     /**
      * Security headers that should be applied.
+     *
+     * @var array<string, string>
      */
     private array $securityHeaders = [
         'X-Frame-Options' => 'SAMEORIGIN',
@@ -103,7 +105,7 @@ class SecurityHeaders
             'drop database',
         ];
 
-        $input = strtolower(json_encode($request->all()));
+        $input = strtolower(json_encode($request->all()) ?: '');
         foreach ($sqlPatterns as $pattern) {
             if (str_contains($input, $pattern)) {
                 return true;
@@ -130,8 +132,22 @@ class SecurityHeaders
         if ($request->hasFile('*')) {
             $suspiciousExtensions = ['.php', '.phtml', '.phar', '.htaccess', '.env'];
             foreach ($request->allFiles() as $file) {
-                if (str_contains(strtolower($file->getClientOriginalName()), $suspiciousExtensions)) {
-                    return true;
+                if (is_array($file)) {
+                    foreach ($file as $singleFile) {
+                        $fileName = strtolower($singleFile->getClientOriginalName());
+                        foreach ($suspiciousExtensions as $ext) {
+                            if (str_contains($fileName, $ext)) {
+                                return true;
+                            }
+                        }
+                    }
+                } else {
+                    $fileName = strtolower($file->getClientOriginalName());
+                    foreach ($suspiciousExtensions as $ext) {
+                        if (str_contains($fileName, $ext)) {
+                            return true;
+                        }
+                    }
                 }
             }
         }

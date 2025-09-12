@@ -170,6 +170,8 @@ class ProductSearchRequest extends FormRequest
 
     /**
      * Configure the validator instance.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      */
     public function withValidator($validator): void
     {

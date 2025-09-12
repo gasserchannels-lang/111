@@ -3,13 +3,10 @@
 namespace Tests\Unit\Services;
 
 use App\Services\ProcessService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ProcessServiceTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_process_service_instance()
     {

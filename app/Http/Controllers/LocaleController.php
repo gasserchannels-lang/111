@@ -51,17 +51,19 @@ class LocaleController extends Controller
 
             if ($this->auth->check()) {
                 $user = $this->auth->user();
-                $userLocale = $user->localeSetting()->firstOrNew();
-                $userLocale->language_id = $language->id;
-                // إذا لم يكن هناك عملة محددة، استخدم العملة الافتراضية للغة الجديدة
-                if (! $userLocale->currency_id) {
-                    $defaultCurrency = $language->currencies()->wherePivot('is_default', true)->first();
-                    if ($defaultCurrency) {
-                        $userLocale->currency_id = $defaultCurrency->id;
-                        $this->session->put('locale_currency', $defaultCurrency->code);
+                $userLocale = $user?->localeSetting()->firstOrNew();
+                if ($userLocale) {
+                    $userLocale->language_id = $language->id;
+                    // إذا لم يكن هناك عملة محددة، استخدم العملة الافتراضية للغة الجديدة
+                    if (! $userLocale->currency_id) {
+                        $defaultCurrency = $language->currencies()->wherePivot('is_default', true)->first();
+                        if ($defaultCurrency) {
+                            $userLocale->currency_id = $defaultCurrency->id;
+                            $this->session->put('locale_currency', $defaultCurrency->code);
+                        }
                     }
+                    $userLocale->save();
                 }
-                $userLocale->save();
             }
         }
 
@@ -78,18 +80,20 @@ class LocaleController extends Controller
 
             if ($this->auth->check()) {
                 $user = $this->auth->user();
-                $userLocale = $user->localeSetting()->firstOrNew();
-                $userLocale->currency_id = $currency->id;
-                // إذا لم تكن هناك لغة محددة، استخدم اللغة الافتراضية
-                if (! $userLocale->language_id) {
-                    $defaultLanguage = Language::where('is_default', true)->first();
-                    if ($defaultLanguage) {
-                        $userLocale->language_id = $defaultLanguage->id;
-                        $this->session->put('locale_language', $defaultLanguage->code);
-                        $this->app->setLocale($defaultLanguage->code);
+                $userLocale = $user?->localeSetting()->firstOrNew();
+                if ($userLocale) {
+                    $userLocale->currency_id = $currency->id;
+                    // إذا لم تكن هناك لغة محددة، استخدم اللغة الافتراضية
+                    if (! $userLocale->language_id) {
+                        $defaultLanguage = Language::where('is_default', true)->first();
+                        if ($defaultLanguage) {
+                            $userLocale->language_id = $defaultLanguage->id;
+                            $this->session->put('locale_language', $defaultLanguage->code);
+                            $this->app->setLocale($defaultLanguage->code);
+                        }
                     }
+                    $userLocale->save();
                 }
-                $userLocale->save();
             }
         }
 

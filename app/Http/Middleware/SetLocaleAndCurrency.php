@@ -38,8 +38,8 @@ class SetLocaleAndCurrency
         $locale = null;
 
         // 1. Check if user is authenticated and has language preference
-        if ($request->user() && $request->user()->language) {
-            $locale = $request->user()->language;
+        if ($request->user() && $request->user()->localeSetting && $request->user()->localeSetting->language) {
+            $locale = $request->user()->localeSetting->language->code;
         }
 
         // 2. Check session
@@ -88,8 +88,8 @@ class SetLocaleAndCurrency
         $currency = null;
 
         // 1. Check if user is authenticated and has currency preference
-        if ($request->user() && $request->user()->currency) {
-            $currency = $request->user()->currency;
+        if ($request->user() && $request->user()->localeSetting && $request->user()->localeSetting->currency) {
+            $currency = $request->user()->localeSetting->currency->code;
         }
 
         // 2. Check session

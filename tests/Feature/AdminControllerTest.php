@@ -9,14 +9,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdminControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private User $adminUser;
 
     private User $regularUser;

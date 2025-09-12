@@ -23,7 +23,7 @@ class AdminMiddleware
             return redirect()->route('login');
         }
 
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()?->isAdmin()) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }

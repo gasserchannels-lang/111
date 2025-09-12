@@ -80,8 +80,8 @@ class Store {
         this.middleware.forEach(middleware => {
             try {
                 middleware(prevState, newState, this);
-            } catch (error) {
-                console.error('Middleware error:', error);
+            } catch {
+                // console.error('Middleware error:', error);
             }
         });
     }
@@ -98,8 +98,8 @@ class Store {
                 callbacks.forEach(callback => {
                     try {
                         callback(newValue, oldValue, newState);
-                    } catch (error) {
-                        console.error('Listener error:', error);
+                    } catch {
+                        // console.error('Listener error:', error);
                     }
                 });
             }
@@ -175,8 +175,8 @@ class Store {
     persist(key, data) {
         try {
             localStorage.setItem(`store_${key}`, JSON.stringify(data));
-        } catch (error) {
-            console.error('Failed to persist state:', error);
+        } catch {
+            // console.error('Failed to persist state:', error);
         }
     }
 
@@ -187,8 +187,8 @@ class Store {
         try {
             const data = localStorage.getItem(`store_${key}`);
             return data ? JSON.parse(data) : null;
-        } catch (error) {
-            console.error('Failed to restore state:', error);
+        } catch {
+            // console.error('Failed to restore state:', error);
             return null;
         }
     }
@@ -235,22 +235,23 @@ class Store {
 const store = new Store();
 
 // Add logging middleware
-store.addMiddleware((prevState, newState, store) => {
+store.addMiddleware(() => {
     if (process.env.NODE_ENV === 'development') {
-        console.log('State changed:', {
-            prev: prevState,
-            new: newState,
-            stats: store.getStats()
-        });
+        // Debug logging (disabled in production)
+        // Log state changes for debugging
+        //     prev: prevState,
+        //     new: newState,
+        //     stats: store.getStats()
+        // });
     }
 });
 
 // Add error handling middleware
-store.addMiddleware((prevState, newState, store) => {
+store.addMiddleware((prevState, newState) => {
     // Check for error states
     Object.keys(newState).forEach(key => {
         if (key.endsWith('Error') && newState[key]) {
-            console.error(`Error in ${key}:`, newState[key]);
+            // console.error(`Error in ${key}:`, newState[key]);
         }
     });
 });

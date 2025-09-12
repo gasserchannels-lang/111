@@ -7,14 +7,11 @@ namespace Tests\Unit\Controllers;
 use App\Http\Controllers\ProductController;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\View\View;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private ProductController $controller;
 
     protected function setUp(): void

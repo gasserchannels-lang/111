@@ -68,6 +68,9 @@ class ErrorController extends Controller
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function getRecentErrors(int $limit = 50): array
     {
         try {
@@ -75,9 +78,9 @@ class ErrorController extends Controller
             $logFiles = glob(storage_path('logs/*.log'));
             $errors = [];
 
-            foreach ($logFiles as $logFile) {
+            foreach ($logFiles ?: [] as $logFile) {
                 $content = file_get_contents($logFile);
-                $lines = explode("\n", $content);
+                $lines = explode("\n", $content ?: '');
 
                 foreach ($lines as $line) {
                     if (strpos($line, 'ERROR') !== false || strpos($line, 'CRITICAL') !== false) {
@@ -104,6 +107,9 @@ class ErrorController extends Controller
     /**
      * Get error statistics.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getErrorStatistics(): array
     {
         try {
@@ -116,9 +122,9 @@ class ErrorController extends Controller
                 'errors_by_day' => [],
             ];
 
-            foreach ($logFiles as $logFile) {
+            foreach ($logFiles ?: [] as $logFile) {
                 $content = file_get_contents($logFile);
-                $lines = explode("\n", $content);
+                $lines = explode("\n", $content ?: '');
 
                 foreach ($lines as $line) {
                     if (strpos($line, 'ERROR') !== false || strpos($line, 'CRITICAL') !== false) {
@@ -164,6 +170,9 @@ class ErrorController extends Controller
     /**
      * Get system health.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getSystemHealth(): array
     {
         try {
@@ -207,15 +216,18 @@ class ErrorController extends Controller
     /**
      * Get error by ID.
      */
+    /**
+     * @return array<string, mixed>|null
+     */
     private function getErrorById(string $id): ?array
     {
         // This would typically query a database or log storage
         // For now, we'll search through log files
         $logFiles = glob(storage_path('logs/*.log'));
 
-        foreach ($logFiles as $logFile) {
+        foreach ($logFiles ?: [] as $logFile) {
             $content = file_get_contents($logFile);
-            $lines = explode("\n", $content);
+            $lines = explode("\n", $content ?: '');
 
             foreach ($lines as $line) {
                 if (strpos($line, $id) !== false) {
@@ -230,6 +242,9 @@ class ErrorController extends Controller
     /**
      * Parse log line.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function parseLogLine(string $line): array
     {
         // Basic log parsing - this would be more sophisticated in production
@@ -237,7 +252,7 @@ class ErrorController extends Controller
 
         return [
             'id' => uniqid(),
-            'timestamp' => $parts[0] ?? now()->toISOString(),
+            'timestamp' => $parts[0],
             'level' => $parts[1] ?? 'ERROR',
             'type' => $this->extractErrorType($line),
             'message' => $parts[3] ?? $line,
@@ -272,6 +287,9 @@ class ErrorController extends Controller
     /**
      * Extract context from log line.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function extractContext(string $line): array
     {
         // Extract JSON context if present
@@ -287,6 +305,9 @@ class ErrorController extends Controller
     /**
      * Check database health.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function checkDatabaseHealth(): array
     {
         try {
@@ -300,6 +321,9 @@ class ErrorController extends Controller
 
     /**
      * Check cache health.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function checkCacheHealth(): array
     {
@@ -321,6 +345,9 @@ class ErrorController extends Controller
 
     /**
      * Check storage health.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function checkStorageHealth(): array
     {
@@ -346,6 +373,9 @@ class ErrorController extends Controller
     /**
      * Check memory health.
      */
+    /**
+     * @return array<string, mixed>
+     */
     private function checkMemoryHealth(): array
     {
         $memoryUsage = memory_get_usage(true);
@@ -364,6 +394,9 @@ class ErrorController extends Controller
 
     /**
      * Check disk space health.
+     */
+    /**
+     * @return array<string, mixed>
      */
     private function checkDiskSpaceHealth(): array
     {

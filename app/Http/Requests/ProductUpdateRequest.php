@@ -21,10 +21,13 @@ class ProductUpdateRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
+     * @return array<string, list<string|\Illuminate\Validation\Rules\Unique>>
      */
     public function rules(): array
     {
-        $productId = $this->route('product')?->id;
+        $product = $this->route('product');
+        $productId = $product instanceof \App\Models\Product ? $product->id : $product;
 
         return [
             'name' => [
@@ -126,6 +129,8 @@ class ProductUpdateRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -153,6 +158,8 @@ class ProductUpdateRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
      */
     public function attributes(): array
     {
@@ -204,6 +211,8 @@ class ProductUpdateRequest extends FormRequest
 
     /**
      * Configure the validator instance.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      */
     public function withValidator($validator): void
     {
@@ -222,7 +231,7 @@ class ProductUpdateRequest extends FormRequest
             // Check if price change is significant
             if ($this->has('price')) {
                 $product = $this->route('product');
-                $oldPrice = $product->price;
+                $oldPrice = $product instanceof \App\Models\Product ? $product->price : null;
                 $newPrice = $this->input('price');
 
                 if ($oldPrice && $newPrice) {

@@ -13,7 +13,7 @@ class Authorize
      */
     public function handle(Request $request, Closure $next, string $ability): Response
     {
-        if (auth()->check() && auth()->user()->can($ability)) {
+        if (auth()->check() && auth()->user()?->can($ability)) {
             return $next($request);
         }
 

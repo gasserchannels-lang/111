@@ -467,7 +467,7 @@ class ImageEffects {
             break;
 
         default:
-            console.warn(`Unknown effect type: ${effectType}`);
+            // console.warn(`Unknown effect type: ${effectType}`);
         }
     }
 

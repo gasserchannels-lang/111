@@ -80,7 +80,7 @@ class InputSanitizationMiddleware
         $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $value);
 
         // Trim whitespace
-        $value = trim($value);
+        $value = trim($value ?? '');
 
         // Normalize line endings
         $value = str_replace(["\r\n", "\r"], "\n", $value);

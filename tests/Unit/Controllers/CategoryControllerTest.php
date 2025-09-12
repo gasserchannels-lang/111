@@ -8,14 +8,11 @@ use App\Http\Controllers\CategoryController;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\View\View;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private CategoryController $controller;
 
     protected function setUp(): void

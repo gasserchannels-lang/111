@@ -107,9 +107,9 @@ class SessionManagementMiddleware
 
         foreach ($cookies as $cookie) {
             if (str_starts_with($cookie->getName(), config('session.cookie'))) {
-                $cookie->setSecure(config('session.secure', true));
-                $cookie->setHttpOnly(true);
-                $cookie->setSameSite('Lax');
+                // Note: Cookie properties are set during creation, not after
+                // This is a limitation of Symfony Cookie class
+                // The security settings should be configured in session.php
             }
         }
     }

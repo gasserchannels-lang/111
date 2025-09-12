@@ -9,8 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ */
 class AuditLog extends Model
 {
+    /** @use HasFactory<TFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -35,6 +39,8 @@ class AuditLog extends Model
 
     /**
      * Get the user who performed the action.
+     *
+     * @return BelongsTo<User, AuditLog>
      */
     public function user(): BelongsTo
     {
@@ -43,6 +49,8 @@ class AuditLog extends Model
 
     /**
      * Get the auditable model.
+     *
+     * @return MorphTo<Model, AuditLog>
      */
     public function auditable(): MorphTo
     {
@@ -51,6 +59,9 @@ class AuditLog extends Model
 
     /**
      * Scope for specific events.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
     public function scopeEvent($query, string $event)
     {
@@ -59,6 +70,9 @@ class AuditLog extends Model
 
     /**
      * Scope for specific user.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
     public function scopeForUser($query, int $userId)
     {
@@ -67,6 +81,9 @@ class AuditLog extends Model
 
     /**
      * Scope for specific model type.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
     public function scopeForModel($query, string $modelType)
     {
@@ -75,6 +92,11 @@ class AuditLog extends Model
 
     /**
      * Scope for date range.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @param  \Carbon\Carbon|string  $startDate
+     * @param  \Carbon\Carbon|string  $endDate
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
     public function scopeDateRange($query, $startDate, $endDate)
     {

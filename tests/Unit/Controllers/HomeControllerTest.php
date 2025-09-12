@@ -8,14 +8,11 @@ use App\Http\Controllers\HomeController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\View\View;
 use Tests\TestCase;
 
 class HomeControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private HomeController $controller;
 
     protected function setUp(): void

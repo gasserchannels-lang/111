@@ -35,12 +35,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Brand extends Model
 {
-    /**
-     * @use HasFactory<BrandFactory>
-     */
-    use HasFactory;
+    /** @use HasFactory<TFactory> */
+    use HasFactory {
+        factory as baseFactory;
+    }
 
     use SoftDeletes;
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @param  int|null  $count
+     * @param  array<string, mixed>  $state
+     * @return BrandFactory
+     */
+    public static function factory($count = null, $state = [])
+    {
+        return static::baseFactory($count, $state)->connection('testing');
+    }
+
+    /**
+     * Validation errors.
+     *
+     * @var array<string, mixed>
+     */
+    protected array $errors = [];
 
     /**
      * Mass assignable attributes.
@@ -91,6 +110,9 @@ class Brand extends Model
 
     /**
      * Scope a query to only include active brands.
+     *
+     * @param  Builder<Brand>  $query
+     * @return Builder<Brand>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -99,6 +121,9 @@ class Brand extends Model
 
     /**
      * Scope a query to search brands by name.
+     *
+     * @param  Builder<Brand>  $query
+     * @return Builder<Brand>
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {
@@ -107,6 +132,9 @@ class Brand extends Model
 
     /**
      * Get validation rules for the model.
+     */
+    /**
+     * @return array<string, string>
      */
     public function getRules(): array
     {
@@ -131,6 +159,9 @@ class Brand extends Model
 
     /**
      * Get validation errors.
+     */
+    /**
+     * @return array<string, string>
      */
     public function getErrors(): array
     {

@@ -33,9 +33,19 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => env('SESSION_LIFETIME', 1440), // 24 hours (Hostinger optimized)
 
     'expire_on_close' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Security (Hostinger optimized)
+    |--------------------------------------------------------------------------
+    |
+    | These settings are optimized for Hostinger hosting environment.
+    | Moved to their proper sections below.
+    |
+    */
 
     /*
     |--------------------------------------------------------------------------
@@ -170,7 +180,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -183,7 +193,7 @@ return [
     |
     */
 
-    'http_only' => true,
+    'http_only' => env('SESSION_HTTP_ONLY', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -198,7 +208,7 @@ return [
     |
     */
 
-    'same_site' => 'lax',
+    'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
     /*
     |--------------------------------------------------------------------------

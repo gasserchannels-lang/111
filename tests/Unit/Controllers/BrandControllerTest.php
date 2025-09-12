@@ -7,7 +7,6 @@ namespace Tests\Unit\Controllers;
 use App\Http\Controllers\BrandController;
 use App\Models\Brand;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,8 +14,6 @@ use Tests\TestCase;
 
 class BrandControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private BrandController $controller;
 
     protected function setUp(): void

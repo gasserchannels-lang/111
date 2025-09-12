@@ -25,8 +25,12 @@ class CacheService
     {
         try {
             $cacheKey = $this->buildCacheKey($key);
+            $cache = Cache::getFacadeRoot();
+            if (! empty($tags) && method_exists($cache->getStore(), 'tags')) {
+                $cache = $cache->tags($tags);
+            }
 
-            return Cache::tags($tags)->remember($cacheKey, $ttl, function () use ($callback, $key) {
+            return $cache->remember($cacheKey, $ttl, function () use ($callback, $key) {
                 $startTime = microtime(true);
                 $result = $callback();
                 $executionTime = microtime(true) - $startTime;
@@ -58,8 +62,12 @@ class CacheService
     {
         try {
             $cacheKey = $this->buildCacheKey($key);
+            $cache = Cache::getFacadeRoot();
+            if (! empty($tags) && method_exists($cache->getStore(), 'tags')) {
+                $cache = $cache->tags($tags);
+            }
 
-            return Cache::tags($tags)->forever($cacheKey, $value);
+            return $cache->forever($cacheKey, $value);
         } catch (Exception $e) {
             Log::error('Cache forever error', [
                 'key' => $key,
@@ -98,8 +106,12 @@ class CacheService
     {
         try {
             $cacheKey = $this->buildCacheKey($key);
+            $cache = Cache::getFacadeRoot();
+            if (! empty($tags) && method_exists($cache->getStore(), 'tags')) {
+                $cache = $cache->tags($tags);
+            }
 
-            return Cache::tags($tags)->put($cacheKey, $value, $ttl);
+            return $cache->put($cacheKey, $value, $ttl);
         } catch (Exception $e) {
             Log::error('Cache put error', [
                 'key' => $key,
@@ -137,7 +149,12 @@ class CacheService
     public function forgetByTags(array $tags): bool
     {
         try {
-            return Cache::tags($tags)->flush();
+            $cache = Cache::getFacadeRoot();
+            if (method_exists($cache->getStore(), 'tags')) {
+                return $cache->tags($tags)->flush();
+            }
+
+            return true;
         } catch (Exception $e) {
             Log::error('Cache forget by tags error', [
                 'tags' => $tags,
