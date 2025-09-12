@@ -21,8 +21,9 @@ build_job:
   # Use a Docker image pre-built for Laravel applications
   image: php:8.2-fpm
   before_script:
-    # Install Node.js, npm, and Composer
-    - apt-get update && apt-get install -y curl unzip
+    # Install Node.js, npm, Composer, and PHP extensions
+    - apt-get update && apt-get install -y curl unzip libzip-dev
+    - docker-php-ext-install zip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
     # Install Composer
@@ -50,8 +51,9 @@ analyze_job:
   stage: analyze
   image: php:8.2-fpm
   before_script:
-    # Install Node.js, npm, and Composer
-    - apt-get update && apt-get install -y curl unzip
+    # Install Node.js, npm, Composer, and PHP extensions
+    - apt-get update && apt-get install -y curl unzip libzip-dev
+    - docker-php-ext-install zip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
     # Install Composer
@@ -73,8 +75,9 @@ test_job:
   stage: test
   image: php:8.2-fpm
   before_script:
-    # Install Node.js, npm, and Composer
-    - apt-get update && apt-get install -y curl unzip
+    # Install Node.js, npm, Composer, and PHP extensions
+    - apt-get update && apt-get install -y curl unzip libzip-dev
+    - docker-php-ext-install zip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
     # Install Composer
