@@ -18,7 +18,7 @@ variables:
   COMPOSER_MEMORY_LIMIT: 1G
 
 # ========================================
-# Analysis Stage
+# مرحلة التحليل والاكتشاف
 # ========================================
 analyze_code_quality:
   stage: analyze
@@ -90,7 +90,7 @@ analyze_performance:
     expire_in: 1 hour
 
 # ========================================
-# Report Generation Stage
+# مرحلة كتابة التقارير
 # ========================================
 generate_reports:
   stage: report
@@ -134,7 +134,7 @@ generate_reports:
     expire_in: 1 day
 
 # ========================================
-# Auto-Fix Stage
+# مرحلة الإصلاح التلقائي
 # ========================================
 auto_fix_code_style:
   stage: fix
@@ -189,7 +189,7 @@ auto_fix_dependencies:
     expire_in: 1 hour
 
 # ========================================
-# Testing Stage
+# مرحلة الاختبار والتجربة
 # ========================================
 test_unit:
   stage: test
@@ -322,7 +322,7 @@ test_links:
       - storage/logs/link-check-report.json
 
 # ========================================
-# Verification Stage
+# مرحلة التحقق النهائي
 # ========================================
 verify_quality:
   stage: verify
@@ -383,7 +383,7 @@ verify_security:
     expire_in: 1 day
 
 # ========================================
-# Deployment Stage
+# مرحلة النشر (اختيارية)
 # ========================================
 deploy_staging:
   stage: deploy
