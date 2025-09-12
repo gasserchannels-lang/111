@@ -33,6 +33,10 @@ build_job:
     - php artisan key:generate
     # Install PHP and JS dependencies
     - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip
+    - echo "Composer install exit code: $?"
+    - ls -la vendor/ || echo "Vendor directory not found"
+    - test -f vendor/autoload.php || echo "autoload.php not found"
+    - composer dump-autoload || echo "Dump autoload failed"
     - npm install
     - npm run build
   artifacts:
