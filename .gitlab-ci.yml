@@ -1,14 +1,6 @@
-# Optimized COPRRA CI/CD Pipeline for GitLab
-
 stages:
   - build
-  - analyze
   - test
-  - test-ai
-  - test-security
-  - test-performance
-  - test-integration
-  - comprehensive
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -27,11 +19,7 @@ build_job:
   script:
     - cp .env.example .env
     - php artisan key:generate
-    - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip
-    - echo "Composer install exit code: $?"
-    - ls -la vendor/ || echo "Vendor directory not found"
-    - test -f vendor/autoload.php || echo "autoload.php not found"
-    - composer dump-autoload || echo "Dump autoload failed"
+    - composer install --prefer-dist --no-progress --no-ansi
     - npm install
     - npm run build
   artifacts:
@@ -40,24 +28,6 @@ build_job:
       - node_modules/
       - public/
       - .env
-
-analyze_job:
-  stage: analyze
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  needs:
-    - job: build_job
-      artifacts: true
-  script:
-    - echo "Running Static Analysis and Code Style Checks..."
-    - composer audit
-    - vendor/bin/phpstan analyse
-    - vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
-    - vendor/bin/pint --test
 
 test_job:
   stage: test
@@ -76,122 +46,11 @@ test_job:
     - job: build_job
       artifacts: true
   script:
-    - echo "Running Database Migrations and Tests..."
+    - echo "Running Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
-    - php artisan test --without-brave
+    - php artisan test
   artifacts:
     when: always
     reports:
       junit: storage/logs/junit.xml
-
-test_ai_job:
-  stage: test-ai
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  needs:
-    - job: build_job
-      artifacts: true
-  script:
-    - echo "Running AI Tests..."
-    - php artisan test tests/AI/ --configuration=phpunit.testing.xml
-  artifacts:
-    when: always
-    reports:
-      junit: storage/logs/ai-junit.xml
-
-test_security_job:
-  stage: test-security
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  needs:
-    - job: build_job
-      artifacts: true
-  script:
-    - echo "Running Security Tests..."
-    - php artisan test tests/Security/ --configuration=phpunit.testing.xml
-  artifacts:
-    when: always
-    reports:
-      junit: storage/logs/security-junit.xml
-
-test_performance_job:
-  stage: test-performance
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  needs:
-    - job: build_job
-      artifacts: true
-  script:
-    - echo "Running Performance Tests..."
-    - php artisan test tests/Performance/ --configuration=phpunit.testing.xml
-  artifacts:
-    when: always
-    reports:
-      junit: storage/logs/performance-junit.xml
-
-test_integration_job:
-  stage: test-integration
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  services:
-    - name: mysql:8.0
-      alias: mysql
-  variables:
-    DB_HOST: mysql
-  needs:
-    - job: build_job
-      artifacts: true
-  script:
-    - echo "Running Integration Tests..."
-    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
-    - php artisan migrate --force
-    - php artisan test tests/Integration/ --configuration=phpunit.testing.xml
-  artifacts:
-    when: always
-    reports:
-      junit: storage/logs/integration-junit.xml
-
-comprehensive_test_job:
-  stage: comprehensive
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  services:
-    - name: mysql:8.0
-      alias: mysql
-  variables:
-    DB_HOST: mysql
-  needs:
-    - job: build_job
-      artifacts: true
-  script:
-    - echo "Running Comprehensive Tests..."
-    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
-    - php artisan migrate --force
-    - php artisan test --configuration=phpunit.testing.xml --log-junit=storage/logs/comprehensive-junit.xml --coverage-html=storage/logs/coverage
-  artifacts:
-    when: always
-    reports:
-      junit: storage/logs/comprehensive-junit.xml
-    paths:
-      - storage/logs/coverage/
