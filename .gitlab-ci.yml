@@ -28,13 +28,13 @@ build_job:
     # Install Composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
+    # Copy the .env file first
+    - cp .env.example .env
+    - php artisan key:generate
     # Install PHP and JS dependencies
     - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip
     - npm install
     - npm run build
-    # Copy the .env file for subsequent jobs
-    - cp .env.example .env
-    - php artisan key:generate
   artifacts:
     # Pass these files and directories to the next stages
     paths:
