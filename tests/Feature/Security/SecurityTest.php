@@ -26,6 +26,9 @@ class SecurityTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_xss_attacks()
     {
+        // Add delay to avoid rate limiting
+        usleep(300000); // 0.3 second
+
         $response = $this->getJson('/api/price-search?q=<script>alert("xss")</script>');
 
         $response->assertStatus(200);
@@ -66,6 +69,9 @@ class SecurityTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_input_sanitization()
     {
+        // Add delay to avoid rate limiting
+        usleep(1000000); // 1 second
+
         $response = $this->getJson('/api/price-search?q=test%20%3Cscript%3Ealert%281%29%3C%2Fscript%3E');
 
         $response->assertStatus(200);
@@ -78,13 +84,16 @@ class SecurityTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
+        $this->startSession();
+
         // Create a product first
         $product = \App\Models\Product::factory()->create();
 
-        $response = $this->postJson('/wishlist', [
+        $response = $this->post('/wishlist', [
             'product_id' => $product->id,
             'is_admin' => true,
             'created_at' => '2023-01-01',
+            '_token' => csrf_token(),
         ]);
 
         $response->assertStatus(200);

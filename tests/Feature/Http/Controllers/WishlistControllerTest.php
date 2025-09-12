@@ -272,7 +272,11 @@ class WishlistControllerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_product_id_when_toggling()
     {
-        $response = $this->post('/wishlist/toggle', []);
+        $this->startSession();
+
+        $response = $this->post('/wishlist/toggle', [
+            '_token' => csrf_token(),
+        ]);
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['product_id']);

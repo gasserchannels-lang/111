@@ -12,7 +12,14 @@ class LocaleControllerTest extends TestCase
     #[Test]
     public function can_switch_language(): void
     {
-        $response = $this->post('/locale/language', ['language' => 'ar']);
+        // Start a session to get a valid CSRF token
+        $this->startSession();
+
+        $response = $this->post('/locale/language', [
+            'language' => 'ar',
+            '_token' => csrf_token(),
+        ]);
+
         $this->assertTrue($response->isRedirection() || $response->isSuccessful());
     }
 }

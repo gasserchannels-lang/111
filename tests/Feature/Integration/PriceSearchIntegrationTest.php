@@ -115,8 +115,14 @@ class PriceSearchIntegrationTest extends TestCase
             'is_available' => true,
         ]);
 
+        // Start session for CSRF token
+        $this->startSession();
+
         // Add to wishlist
-        $wishlistResponse = $this->postJson('/wishlist', ['product_id' => $product->id]);
+        $wishlistResponse = $this->postJson('/wishlist', [
+            'product_id' => $product->id,
+            '_token' => csrf_token(),
+        ]);
         $wishlistResponse->assertStatus(200);
 
         // Verify wishlist
@@ -151,10 +157,13 @@ class PriceSearchIntegrationTest extends TestCase
         ]);
 
         // Create price alert
+        $this->startSession();
+
         $alertData = [
             'product_id' => $product->id,
             'target_price' => 150.00,
             'is_active' => true,
+            '_token' => csrf_token(),
         ];
 
         $alertResponse = $this->postJson('/price-alerts', $alertData);

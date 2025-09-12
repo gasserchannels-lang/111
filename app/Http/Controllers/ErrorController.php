@@ -32,7 +32,10 @@ class ErrorController extends Controller
             ]);
         }
 
-        return view('errors.dashboard', compact('errors', 'errorStats', 'systemHealth'));
+        /** @var view-string $view */
+        $view = 'errors.dashboard';
+
+        return view($view, compact('errors', 'errorStats', 'systemHealth'));
     }
 
     /**
@@ -60,7 +63,10 @@ class ErrorController extends Controller
             ]);
         }
 
-        return view('errors.details', compact('error'));
+        /** @var view-string $view */
+        $view = 'errors.details';
+
+        return view($view, compact('error'));
     }
 
     /**

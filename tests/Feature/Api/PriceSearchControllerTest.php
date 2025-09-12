@@ -37,6 +37,9 @@ class PriceSearchControllerTest extends TestCase
             'is_available' => true,
         ]);
 
+        // Add delay to avoid rate limiting
+        usleep(2000000); // 2 seconds
+
         $response = $this->getJson('/api/price-search?q=Test Product');
 
         $response->assertStatus(200);
@@ -79,6 +82,9 @@ class PriceSearchControllerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_empty_search_query()
     {
+        // Add delay to avoid rate limiting
+        usleep(2000000); // 2 seconds
+
         $response = $this->getJson('/api/price-search?q=');
 
         $response->assertStatus(400);

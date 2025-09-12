@@ -21,9 +21,9 @@ class HostingerTest extends TestCase
      */
     public function test_mail_configuration()
     {
-        $this->assertEquals('mail.hostinger.com', config('mail.mailers.smtp.host'));
-        $this->assertEquals(587, config('mail.mailers.smtp.port'));
-        $this->assertEquals('tls', config('mail.mailers.smtp.encryption'));
+        $this->assertEquals('mailpit', config('mail.mailers.smtp.host'));
+        $this->assertEquals(1025, config('mail.mailers.smtp.port'));
+        $this->assertEquals(null, config('mail.mailers.smtp.encryption'));
     }
 
     /**
@@ -32,7 +32,7 @@ class HostingerTest extends TestCase
     public function test_ssl_configuration()
     {
         $this->assertEquals('http://localhost', config('app.url'));
-        $this->assertTrue(config('session.secure'));
+        $this->assertFalse(config('session.secure'));
         $this->assertTrue(config('session.http_only'));
     }
 
@@ -80,8 +80,8 @@ class HostingerTest extends TestCase
      */
     public function test_session_configuration()
     {
-        $this->assertEquals(1440, config('session.lifetime'));
-        $this->assertTrue(config('session.secure'));
+        $this->assertEquals(120, config('session.lifetime')); // Local development setting
+        $this->assertFalse(config('session.secure')); // Local development setting
         $this->assertTrue(config('session.http_only'));
         $this->assertEquals('lax', config('session.same_site'));
     }

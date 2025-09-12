@@ -6,35 +6,14 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# Set default permissions to read-only for better security
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  static-analysis:
+  build-and-test:
     runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
-        tools: composer
-
-    - name: Install Composer Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-    - name: Run PHPStan
-      run: vendor/bin/phpstan analyse --memory-limit=256M
-
-    - name: Run PHPMD
-      run: vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode --ignore-violations-on-exit
-
-  test-analyze-and-fix:
-    runs-on: ubuntu-latest
     services:
       mysql:
         image: mysql:8.0
@@ -49,8 +28,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -70,7 +47,7 @@ jobs:
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
     - name: Install Composer Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist
 
     - name: Generate key
       run: php artisan key:generate
@@ -80,10 +57,18 @@ jobs:
 
     - name: Build assets
       run: npm run build
-      working-directory: .
 
-    - name: Run Laravel Pint (Auto-fix)
-      run: ./vendor/bin/pint
+    - name: Run Composer Security Audit
+      run: composer audit
+
+    - name: Run PHPStan Static Analysis (Max Level)
+      run: vendor/bin/phpstan analyse
+
+    - name: Run PHPMD (Strict)
+      run: vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+
+    - name: Run Laravel Pint (Code Style Check)
+      run: ./vendor/bin/pint --test
 
     - name: Run Migrations
       env:
@@ -103,22 +88,4 @@ jobs:
         DB_DATABASE: coprra_test
         DB_USERNAME: root
         DB_PASSWORD: root
-      run: composer test
-
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, dom, fileinfo, pdo_mysql, curl, zip, bcmath
-
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-    - name: Run Composer Security Audit
-      run: composer audit
+      run: php artisan test --without-brave

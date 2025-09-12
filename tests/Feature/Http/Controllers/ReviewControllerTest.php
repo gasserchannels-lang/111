@@ -46,7 +46,11 @@ class ReviewControllerTest extends TestCase
     #[Test]
     public function store_validates_required_fields(): void
     {
-        $response = $this->actingAs($this->user)->post(route('reviews.store'), []);
+        $this->startSession();
+
+        $response = $this->actingAs($this->user)->post(route('reviews.store'), [], [
+            'X-CSRF-TOKEN' => csrf_token(),
+        ]);
         $response->assertSessionHasErrors(['product_id', 'title', 'content', 'rating']);
     }
 
@@ -55,11 +59,14 @@ class ReviewControllerTest extends TestCase
     {
         $product = Product::factory()->create();
 
+        $this->startSession();
+
         $reviewData = [
             'product_id' => $product->id,
             'title' => 'Test Review',
             'content' => 'Test content',
             'rating' => 6, // Invalid rating
+            '_token' => csrf_token(),
         ];
 
         $response = $this->actingAs($this->user)->post(route('reviews.store'), $reviewData);

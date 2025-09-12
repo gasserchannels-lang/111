@@ -218,7 +218,11 @@ class AdminControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->post("/admin/users/{$user->id}/toggle-admin");
+        $this->startSession();
+
+        $response = $this->post("/admin/users/{$user->id}/toggle-admin", [
+            '_token' => csrf_token(),
+        ]);
 
         $response->assertRedirect('/login');
     }
@@ -229,7 +233,11 @@ class AdminControllerTest extends TestCase
         $this->actingAs($this->regularUser);
         $user = User::factory()->create();
 
-        $response = $this->post("/admin/users/{$user->id}/toggle-admin");
+        $this->startSession();
+
+        $response = $this->post("/admin/users/{$user->id}/toggle-admin", [
+            '_token' => csrf_token(),
+        ]);
 
         $response->assertRedirect('/');
     }
@@ -240,7 +248,11 @@ class AdminControllerTest extends TestCase
         $this->actingAs($this->adminUser);
         $user = User::factory()->create(['is_admin' => false]);
 
-        $response = $this->post("/admin/users/{$user->id}/toggle-admin");
+        $this->startSession();
+
+        $response = $this->post("/admin/users/{$user->id}/toggle-admin", [
+            '_token' => csrf_token(),
+        ]);
 
         $response->assertRedirect();
         $this->assertTrue($user->fresh()->is_admin);

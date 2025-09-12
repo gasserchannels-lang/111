@@ -137,9 +137,13 @@ class BrandControllerTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
+        $this->startSession();
+
         $brand = Brand::factory()->create();
 
-        $response = $this->delete("/brands/{$brand->id}");
+        $response = $this->delete("/brands/{$brand->id}", [
+            '_token' => csrf_token(),
+        ]);
 
         $response->assertRedirect('/brands');
         $this->assertDatabaseMissing('brands', ['id' => $brand->id]);

@@ -198,6 +198,8 @@ class PriceAlertControllerTest extends TestCase
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'is_active' => true]);
 
+        $this->startSession();
+
         $this->actingAs($this->user)
             ->patch(route('price-alerts.toggle', $priceAlert))
             ->assertRedirect()
@@ -213,6 +215,8 @@ class PriceAlertControllerTest extends TestCase
     public function it_cannot_toggle_another_users_price_alert(): void
     {
         $priceAlert = PriceAlert::factory()->create(['user_id' => $this->anotherUser->id]);
+
+        $this->startSession();
 
         $this->actingAs($this->user)
             ->patch(route('price-alerts.toggle', $priceAlert))
@@ -245,6 +249,8 @@ class PriceAlertControllerTest extends TestCase
     #[Test]
     public function destroy_returns_404_for_non_existing_alert(): void
     {
+        $this->startSession();
+
         $this->actingAs($this->user)
             ->delete(route('price-alerts.destroy', 999))
             ->assertNotFound();
@@ -259,9 +265,10 @@ class PriceAlertControllerTest extends TestCase
     #[Group('security')]
     public function a_guest_is_redirected_to_login_from_all_protected_routes(string $method, string $routeName): void
     {
-        $priceAlert = PriceAlert::factory()->createQuietly();
+        // Use a mock ID instead of creating a real record
+        $priceAlertId = 1;
 
-        $route = route($routeName, $priceAlert);
+        $route = route($routeName, $priceAlertId);
 
         $this->{$method}($route)->assertRedirect(route('login'));
     }

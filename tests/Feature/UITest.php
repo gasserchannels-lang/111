@@ -229,8 +229,11 @@ class UITest extends TestCase
         $user = User::factory()->create();
         $product = Product::factory()->create();
 
+        $this->startSession();
+
         $response = $this->actingAs($user)->post('/wishlist/toggle', [
             'product_id' => $product->id,
+            '_token' => csrf_token(),
         ]);
 
         $response->assertStatus(200);
@@ -244,9 +247,12 @@ class UITest extends TestCase
         $user = User::factory()->create();
         $product = Product::factory()->create();
 
+        $this->startSession();
+
         $response = $this->actingAs($user)->post('/price-alerts', [
             'product_id' => $product->id,
             'target_price' => 50.00,
+            '_token' => csrf_token(),
         ]);
 
         $response->assertRedirect();
@@ -260,11 +266,14 @@ class UITest extends TestCase
         $user = User::factory()->create();
         $product = Product::factory()->create();
 
+        $this->startSession();
+
         $response = $this->actingAs($user)->post('/reviews', [
             'product_id' => $product->id,
             'title' => 'Great Product!', // Add required title field
             'rating' => 5,
             'content' => 'Great product!',
+            '_token' => csrf_token(),
         ]);
 
         $response->assertStatus(302); // Redirect after review submission

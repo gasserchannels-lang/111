@@ -83,7 +83,7 @@ class PriceSearchController extends Controller
                 ->limit(20)
                 ->get();
 
-            $results = $products->map(function ($product) {
+            $results = $products->map(function (Product $product) {
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
@@ -91,7 +91,7 @@ class PriceSearchController extends Controller
                     'slug' => $product->slug,
                     'brand' => $product->brand ? $product->brand->name : null,
                     'category' => $product->category ? $product->category->name : null,
-                    'price_offers' => $product->priceOffers->map(function ($offer) {
+                    'price_offers' => $product->priceOffers->map(function (\App\Models\PriceOffer $offer) {
                         return [
                             'id' => $offer->id,
                             'price' => $offer->price,

@@ -30,10 +30,10 @@
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
+        "nikic/php-parser": "^5.0",
         "nunomaduro/collision": "^7.0|^8.0",
         "nunomaduro/phpinsights": "^2.13",
-        
-        "nikic/php-parser": "^5.0",
+        "phpmd/phpmd": "^2.15",
         "phpunit/phpunit": "^11.5",
         "rector/rector": "^2.1",
         "roave/security-advisories": "dev-latest",
@@ -79,6 +79,7 @@
         "pre-commit": [
             "@php artisan test",
             "@php ./vendor/bin/phpstan analyse",
+            "@php ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode",
             "@php ./vendor/bin/pint --test"
         ],
         "format": [
@@ -86,6 +87,7 @@
         ],
         "analyse": [
             "@php ./vendor/bin/phpstan analyse",
+            "@php ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode",
             "@php artisan test --parallel"
         ],
         "clear-all": [
