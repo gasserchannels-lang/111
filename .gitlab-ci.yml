@@ -22,7 +22,8 @@ build_job:
   image: php:8.2-fpm
   before_script:
     # Install Node.js, npm, Composer, and PHP extensions
-    - apt-get update && apt-get install -y curl unzip libzip-dev
+    - apt-get update && apt-get install -y curl unzip libzip-dev zlib1g-dev
+    - docker-php-ext-configure zip --with-libzip
     - docker-php-ext-install zip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
@@ -30,7 +31,7 @@ build_job:
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     # Install PHP and JS dependencies
-    - composer install --prefer-dist --no-progress --no-ansi
+    - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip
     - npm install
     - npm run build
     # Copy the .env file for subsequent jobs
@@ -52,7 +53,8 @@ analyze_job:
   image: php:8.2-fpm
   before_script:
     # Install Node.js, npm, Composer, and PHP extensions
-    - apt-get update && apt-get install -y curl unzip libzip-dev
+    - apt-get update && apt-get install -y curl unzip libzip-dev zlib1g-dev
+    - docker-php-ext-configure zip --with-libzip
     - docker-php-ext-install zip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
@@ -76,7 +78,8 @@ test_job:
   image: php:8.2-fpm
   before_script:
     # Install Node.js, npm, Composer, and PHP extensions
-    - apt-get update && apt-get install -y curl unzip libzip-dev
+    - apt-get update && apt-get install -y curl unzip libzip-dev zlib1g-dev
+    - docker-php-ext-configure zip --with-libzip
     - docker-php-ext-install zip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
