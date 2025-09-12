@@ -13,7 +13,7 @@ class LinkCheckerTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
-     * Test all internal links are working
+     * Test all internal links are working.
      */
     public function test_internal_links_are_working()
     {
@@ -39,7 +39,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test main navigation links
+     * Test main navigation links.
      */
     public function test_main_navigation_links()
     {
@@ -59,7 +59,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test API endpoints are accessible
+     * Test API endpoints are accessible.
      */
     public function test_api_endpoints_are_accessible()
     {
@@ -77,7 +77,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test static assets are accessible
+     * Test static assets are accessible.
      */
     public function test_static_assets_are_accessible()
     {
@@ -94,7 +94,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test external links (if any) are working
+     * Test external links (if any) are working.
      */
     public function test_external_links_are_working()
     {
@@ -110,7 +110,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test image links are working
+     * Test image links are working.
      */
     public function test_image_links_are_working()
     {
@@ -128,7 +128,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test redirects are working correctly
+     * Test redirects are working correctly.
      */
     public function test_redirects_are_working()
     {
@@ -146,7 +146,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test sitemap is accessible
+     * Test sitemap is accessible.
      */
     public function test_sitemap_is_accessible()
     {
@@ -159,7 +159,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test robots.txt is accessible
+     * Test robots.txt is accessible.
      */
     public function test_robots_txt_is_accessible()
     {
@@ -168,7 +168,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test all form action URLs are working
+     * Test all form action URLs are working.
      */
     public function test_form_action_urls_are_working()
     {
@@ -186,7 +186,7 @@ class LinkCheckerTest extends TestCase
     }
 
     /**
-     * Test pagination links are working
+     * Test pagination links are working.
      */
     public function test_pagination_links_are_working()
     {

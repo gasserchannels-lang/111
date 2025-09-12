@@ -11,7 +11,7 @@ class E2ETest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * Test complete user journey from homepage to product purchase
+     * Test complete user journey from homepage to product purchase.
      */
     public function test_complete_user_journey()
     {
@@ -50,7 +50,7 @@ class E2ETest extends DuskTestCase
     }
 
     /**
-     * Test responsive design on different screen sizes
+     * Test responsive design on different screen sizes.
      */
     public function test_responsive_design()
     {
@@ -73,7 +73,7 @@ class E2ETest extends DuskTestCase
     }
 
     /**
-     * Test form submissions and validations
+     * Test form submissions and validations.
      */
     public function test_form_validations()
     {
@@ -93,7 +93,7 @@ class E2ETest extends DuskTestCase
     }
 
     /**
-     * Test navigation and menu functionality
+     * Test navigation and menu functionality.
      */
     public function test_navigation()
     {
@@ -111,7 +111,7 @@ class E2ETest extends DuskTestCase
     }
 
     /**
-     * Test language switching
+     * Test language switching.
      */
     public function test_language_switching()
     {
@@ -130,7 +130,7 @@ class E2ETest extends DuskTestCase
     }
 
     /**
-     * Test user authentication flow
+     * Test user authentication flow.
      */
     public function test_user_authentication()
     {

@@ -22,7 +22,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Initialize all quality control stages
+     * Initialize all quality control stages.
      */
     private function initializeStages(): void
     {
@@ -110,7 +110,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Execute all quality control stages
+     * Execute all quality control stages.
      */
     public function executeAllStages(): array
     {
@@ -148,7 +148,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Execute a single stage
+     * Execute a single stage.
      */
     private function executeStage(string $stageId, array $stage): array
     {
@@ -171,7 +171,6 @@ class StrictQualityAgent
                 'duration' => $duration,
                 'timestamp' => now()->toISOString(),
             ];
-
         } catch (\Exception $e) {
             $this->errors[$stageId] = $e->getMessage();
 
@@ -186,7 +185,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Execute file-based stage (like syntax check)
+     * Execute file-based stage (like syntax check).
      */
     private function executeFileBasedStage(array $stage): array
     {
@@ -211,7 +210,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Execute command-based stage
+     * Execute command-based stage.
      */
     private function executeCommandStage(array $stage): array
     {
@@ -225,7 +224,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Get all PHP files in the project
+     * Get all PHP files in the project.
      */
     private function getPhpFiles(): array
     {
@@ -247,7 +246,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Auto-fix issues when possible
+     * Auto-fix issues when possible.
      */
     public function autoFixIssues(): array
     {
@@ -290,7 +289,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Generate comprehensive report
+     * Generate comprehensive report.
      */
     private function generateFinalReport(bool $overallSuccess): void
     {
@@ -312,7 +311,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Log messages
+     * Log messages.
      */
     private function log(string $message): void
     {
@@ -321,7 +320,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Get stage status
+     * Get stage status.
      */
     public function getStageStatus(string $stageId): ?array
     {
@@ -329,7 +328,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Get all results
+     * Get all results.
      */
     public function getAllResults(): array
     {
@@ -337,7 +336,7 @@ class StrictQualityAgent
     }
 
     /**
-     * Get errors summary
+     * Get errors summary.
      */
     public function getErrorsSummary(): array
     {

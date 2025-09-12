@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | View Storage Paths
@@ -44,5 +43,4 @@ return [
     |
     */
     'cache' => env('VIEW_CACHE', true),
-
 ];

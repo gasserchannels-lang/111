@@ -20,7 +20,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Initialize monitoring rules
+     * Initialize monitoring rules.
      */
     private function initializeMonitoringRules(): void
     {
@@ -59,7 +59,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Start continuous monitoring
+     * Start continuous monitoring.
      */
     public function startMonitoring(): void
     {
@@ -72,7 +72,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Perform quality check
+     * Perform quality check.
      */
     public function performQualityCheck(): array
     {
@@ -104,7 +104,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Check a specific rule
+     * Check a specific rule.
      */
     private function checkRule(string $ruleId, array $rule): array
     {
@@ -128,7 +128,6 @@ class ContinuousQualityMonitor
                 'timestamp' => now()->toISOString(),
                 'critical' => $rule['critical'],
             ];
-
         } catch (\Exception $e) {
             return [
                 'name' => $rule['name'],
@@ -144,7 +143,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Calculate health score based on rule type
+     * Calculate health score based on rule type.
      */
     private function calculateHealthScore(string $ruleId, $result, array $rule): int
     {
@@ -174,7 +173,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Calculate code quality score
+     * Calculate code quality score.
      */
     private function calculateCodeQualityScore(string $output): int
     {
@@ -194,7 +193,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Calculate test coverage score
+     * Calculate test coverage score.
      */
     private function calculateTestCoverageScore(string $output): int
     {
@@ -207,7 +206,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Calculate security score
+     * Calculate security score.
      */
     private function calculateSecurityScore(string $output): int
     {
@@ -223,7 +222,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Calculate performance score
+     * Calculate performance score.
      */
     private function calculatePerformanceScore(string $output): int
     {
@@ -236,7 +235,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Calculate memory usage score
+     * Calculate memory usage score.
      */
     private function calculateMemoryScore(string $output): int
     {
@@ -253,7 +252,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Trigger critical alert
+     * Trigger critical alert.
      */
     private function triggerCriticalAlert(string $ruleId, array $result): void
     {
@@ -273,7 +272,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Trigger warning alert
+     * Trigger warning alert.
      */
     private function triggerWarningAlert(string $ruleId, array $result): void
     {
@@ -290,7 +289,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Update health status
+     * Update health status.
      */
     private function updateHealthStatus(int $overallHealth, array $results): void
     {
@@ -302,7 +301,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Send notification
+     * Send notification.
      */
     private function sendNotification(array $alert): void
     {
@@ -311,7 +310,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Get current health status
+     * Get current health status.
      */
     public function getHealthStatus(): array
     {
@@ -324,7 +323,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Get alerts summary
+     * Get alerts summary.
      */
     public function getAlertsSummary(): array
     {
@@ -340,7 +339,7 @@ class ContinuousQualityMonitor
     }
 
     /**
-     * Clear alerts
+     * Clear alerts.
      */
     public function clearAlerts(): void
     {

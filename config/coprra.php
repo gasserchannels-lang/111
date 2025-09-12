@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | COPRRA Application Configuration
@@ -151,5 +150,4 @@ return [
         'enable_view_caching' => env('ENABLE_VIEW_CACHING', true),
         'enable_compression' => env('ENABLE_COMPRESSION', true),
     ],
-
 ];

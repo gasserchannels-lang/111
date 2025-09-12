@@ -11,7 +11,6 @@ use Monolog\Processor\PsrLogMessageProcessor;
 $logPath = storage_path('logs/laravel.log');
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Log Channel
@@ -132,5 +131,4 @@ return [
             'path' => $logPath, // تم استخدام المتغير هنا
         ],
     ],
-
 ];

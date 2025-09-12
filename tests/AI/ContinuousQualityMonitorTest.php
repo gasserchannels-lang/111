@@ -87,21 +87,27 @@ class ContinuousQualityMonitorTest extends TestCase
         $method->setAccessible(true);
 
         // Test code quality score
-        $codeQualityScore = $method->invoke($this->monitor, 'code_quality',
+        $codeQualityScore = $method->invoke(
+            $this->monitor,
+            'code_quality',
             Process::result(exitCode: 0, output: 'No errors'),
             ['threshold' => 95, 'critical' => true]
         );
         $this->assertEquals(100, $codeQualityScore);
 
         // Test test coverage score
-        $coverageScore = $method->invoke($this->monitor, 'test_coverage',
+        $coverageScore = $method->invoke(
+            $this->monitor,
+            'test_coverage',
             Process::result(exitCode: 0, output: 'Lines: 95%'),
             ['threshold' => 90, 'critical' => true]
         );
         $this->assertEquals(95, $coverageScore);
 
         // Test security score
-        $securityScore = $method->invoke($this->monitor, 'security_scan',
+        $securityScore = $method->invoke(
+            $this->monitor,
+            'security_scan',
             Process::result(exitCode: 0, output: 'No security vulnerabilities'),
             ['threshold' => 100, 'critical' => true]
         );

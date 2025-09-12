@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Facade;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -317,5 +316,4 @@ return [
     */
 
     // Removed duplicate aliases definition; using legacy 'aliases' array above
-
 ];
