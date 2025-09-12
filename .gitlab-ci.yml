@@ -19,7 +19,7 @@ cache:
 build_job:
   stage: build
   # Use a Docker image pre-built for Laravel applications
-  image: thecodingmachine/php:8.2-v4-node18-laravel
+  image: thecodingmachine/php:8.2-v4-laravel
   script:
     # Install PHP and JS dependencies
     - composer install --prefer-dist --no-progress --no-ansi
@@ -41,7 +41,7 @@ build_job:
 #
 analyze_job:
   stage: analyze
-  image: thecodingmachine/php:8.2-v4-node18-laravel
+  image: thecodingmachine/php:8.2-v4-laravel
   needs:
     - job: build_job
       artifacts: true
@@ -57,7 +57,7 @@ analyze_job:
 #
 test_job:
   stage: test
-  image: thecodingmachine/php:8.2-v4-node18-laravel
+  image: thecodingmachine/php:8.2-v4-laravel
   # Define the MySQL service needed for this job
   services:
     - name: mysql:8.0
