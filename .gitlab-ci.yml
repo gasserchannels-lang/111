@@ -1,6 +1,11 @@
 stages:
   - build
+  - analyze
   - test
+  - test-ai
+  - test-security
+  - test-performance
+  - test-integration
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -34,6 +39,24 @@ build_job:
       - public/
       - .env
 
+analyze_job:
+  stage: analyze
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Code Analysis..."
+    - composer audit
+    - ./vendor/bin/phpstan analyse --memory-limit=1G
+    - ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+    - ./vendor/bin/pint --test
+
 test_job:
   stage: test
   image: php:8.2-cli
@@ -51,11 +74,94 @@ test_job:
     - job: build_job
       artifacts: true
   script:
-    - echo "Running Tests..."
+    - echo "Running Unit Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
-    - php artisan test
+    - php artisan test tests/Unit/ --configuration=phpunit.testing.xml
   artifacts:
     when: always
     reports:
-      junit: storage/logs/junit.xml
+      junit: storage/logs/unit-junit.xml
+
+test_ai_job:
+  stage: test-ai
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running AI Tests..."
+    - php artisan test tests/AI/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/ai-junit.xml
+
+test_security_job:
+  stage: test-security
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Security Tests..."
+    - php artisan test tests/Security/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/security-junit.xml
+
+test_performance_job:
+  stage: test-performance
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Performance Tests..."
+    - php artisan test tests/Performance/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/performance-junit.xml
+
+test_integration_job:
+  stage: test-integration
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    DB_HOST: mysql
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Integration Tests..."
+    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
+    - php artisan migrate --force
+    - php artisan test tests/Integration/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/integration-junit.xml
