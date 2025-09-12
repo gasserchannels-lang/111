@@ -36,7 +36,7 @@ analyze_code_quality:
     - php artisan package:discover --ansi
     - npm install
     - npm run build
-    - echo "🔍 Starting Code Quality Analysis..."
+    - echo "Starting Code Quality Analysis..."
     - composer audit --format=json > storage/logs/composer-audit.json || true
     - ./vendor/bin/phpstan analyse --memory-limit=1G --error-format=json --configuration=phpstan.strict.neon > storage/logs/phpstan.json
     - ./vendor/bin/phpmd app xml phpmd.strict.xml --reportfile storage/logs/phpmd.xml
@@ -62,7 +62,7 @@ analyze_security:
     - job: analyze_code_quality
       artifacts: true
   script:
-    - echo "🔒 Starting Security Analysis..."
+    - echo "Starting Security Analysis..."
     - composer audit --format=json > storage/logs/security-audit.json || true
     - php artisan test tests/Security/ --configuration=phpunit.strict.xml --log-junit=storage/logs/security-tests.xml || true
   artifacts:
@@ -82,7 +82,7 @@ analyze_performance:
     - job: analyze_code_quality
       artifacts: true
   script:
-    - echo "⚡ Starting Performance Analysis..."
+    - echo "Starting Performance Analysis..."
     - php artisan test tests/Performance/ --configuration=phpunit.testing.xml --log-junit=storage/logs/performance-tests.xml || true
   artifacts:
     paths:
@@ -108,22 +108,22 @@ generate_reports:
     - job: analyze_performance
       artifacts: true
   script:
-    - echo "📊 Generating Comprehensive Reports..."
+    - echo "Generating Comprehensive Reports..."
     - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
     - php artisan key:generate
     - php artisan config:cache
     - php artisan package:discover --ansi
     - mkdir -p reports
-    - echo "# 📊 تقرير التحليل الشامل" > reports/analysis-report.md
-    - echo "## 🔍 تحليل جودة الكود" >> reports/analysis-report.md
+    - echo "# Analysis Report" > reports/analysis-report.md
+    - echo "## Code Quality Analysis" >> reports/analysis-report.md
     - echo "- PHPStan: $(cat storage/logs/phpstan.json | jq '.totals.errors' 2>/dev/null || echo 'N/A')" >> reports/analysis-report.md
     - echo "- PHPMD: $(cat storage/logs/phpmd.xml | grep -c 'violation' 2>/dev/null || echo 'N/A')" >> reports/analysis-report.md
     - echo "- Laravel Pint: $(cat storage/logs/pint.json | jq '.changes' 2>/dev/null || echo 'N/A')" >> reports/analysis-report.md
-    - echo "## 🔒 تحليل الأمان" >> reports/analysis-report.md
+    - echo "## Security Analysis" >> reports/analysis-report.md
     - echo "- Composer Audit: $(cat storage/logs/composer-audit.json | jq '.advisories | length' 2>/dev/null || echo 'N/A')" >> reports/analysis-report.md
-    - echo "## ⚡ تحليل الأداء" >> reports/analysis-report.md
+    - echo "## Performance Analysis" >> reports/analysis-report.md
     - echo "- Performance Tests: $(cat storage/logs/performance-tests.xml | grep -c 'testcase' 2>/dev/null || echo 'N/A')" >> reports/analysis-report.md
-    - echo "📋 Reports generated successfully"
+    - echo "Reports generated successfully"
   artifacts:
     paths:
       - storage/logs/
@@ -145,14 +145,14 @@ auto_fix_code_style:
     - job: generate_reports
       artifacts: true
   script:
-    - echo "🔧 Starting Auto-Fix Process..."
+    - echo "Starting Auto-Fix Process..."
     - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
     - php artisan key:generate
     - php artisan config:cache
     - php artisan package:discover --ansi
-    - echo "🎨 Auto-fixing code style with Laravel Pint..."
+    - echo "Auto-fixing code style with Laravel Pint..."
     - ./vendor/bin/pint --dirty
-    - echo "✅ Code style auto-fix completed"
+    - echo "Code style auto-fix completed"
   artifacts:
     paths:
       - vendor/
@@ -173,10 +173,10 @@ auto_fix_dependencies:
     - job: auto_fix_code_style
       artifacts: true
   script:
-    - echo "📦 Auto-fixing dependencies..."
+    - echo "Auto-fixing dependencies..."
     - composer update --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
     - composer audit --fix || true
-    - echo "✅ Dependencies auto-fix completed"
+    - echo "Dependencies auto-fix completed"
   artifacts:
     paths:
       - vendor/
@@ -205,7 +205,7 @@ test_unit:
     - job: auto_fix_dependencies
       artifacts: true
   script:
-    - echo "🧪 Running Unit Tests..."
+    - echo "Running Unit Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
     - php artisan test tests/Unit/ --configuration=phpunit.strict.xml --log-junit=storage/logs/unit-tests.xml
@@ -226,7 +226,7 @@ test_ai:
     - job: auto_fix_dependencies
       artifacts: true
   script:
-    - echo "🤖 Running AI Tests..."
+    - echo "Running AI Tests..."
     - php artisan test tests/AI/ --configuration=phpunit.strict.xml --log-junit=storage/logs/ai-tests.xml
   artifacts:
     when: always
@@ -250,7 +250,7 @@ test_integration:
     - job: auto_fix_dependencies
       artifacts: true
   script:
-    - echo "🔗 Running Integration Tests..."
+    - echo "Running Integration Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
     - php artisan test tests/Integration/ --configuration=phpunit.strict.xml --log-junit=storage/logs/integration-tests.xml
@@ -277,7 +277,7 @@ test_e2e:
     - job: auto_fix_dependencies
       artifacts: true
   script:
-    - echo "🌐 Running E2E Tests..."
+    - echo "Running E2E Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
     - php artisan serve --host=0.0.0.0 --port=8000 &
@@ -305,7 +305,7 @@ test_links:
     - job: auto_fix_dependencies
       artifacts: true
   script:
-    - echo "🔗 Running Link Checker Tests..."
+    - echo "Running Link Checker Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
     - php artisan test tests/Feature/LinkCheckerTest.php --configuration=phpunit.strict.xml --log-junit=storage/logs/link-checker-tests.xml
@@ -337,17 +337,17 @@ verify_quality:
     - job: test_integration
       artifacts: true
   script:
-    - echo "✅ Final Quality Verification..."
+    - echo "Final Quality Verification..."
     - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
     - php artisan key:generate
     - php artisan config:cache
     - php artisan package:discover --ansi
-    - echo "🔍 Re-running quality checks..."
+    - echo "Re-running quality checks..."
     - ./vendor/bin/phpstan analyse --memory-limit=1G --configuration=phpstan.strict.neon
     - ./vendor/bin/phpmd app xml phpmd.strict.xml
     - ./vendor/bin/pint --test --config=pint.strict.json
     - composer audit
-    - echo "🎉 All quality checks passed!"
+    - echo "All quality checks passed!"
   artifacts:
     paths:
       - storage/logs/
@@ -365,15 +365,15 @@ verify_security:
     - job: verify_quality
       artifacts: true
   script:
-    - echo "🔒 Final Security Verification..."
+    - echo "Final Security Verification..."
     - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
     - php artisan key:generate
     - php artisan config:cache
     - php artisan package:discover --ansi
-    - echo "🛡️ Re-running security tests..."
+    - echo "Re-running security tests..."
     - php artisan test tests/Security/ --configuration=phpunit.strict.xml
     - composer audit
-    - echo "🎉 All security checks passed!"
+    - echo "All security checks passed!"
   artifacts:
     paths:
       - storage/logs/
@@ -394,9 +394,9 @@ deploy_staging:
     - job: verify_security
       artifacts: true
   script:
-    - echo "🚀 Deploying to Staging..."
-    - echo "✅ All stages completed successfully!"
-    - echo "🎉 Project is ready for deployment!"
+    - echo "Deploying to Staging..."
+    - echo "All stages completed successfully!"
+    - echo "Project is ready for deployment!"
   when: manual
   only:
     - main
