@@ -5,6 +5,11 @@ stages:
   - build
   - analyze
   - test
+  - test-ai
+  - test-security
+  - test-performance
+  - test-integration
+  - comprehensive
 
 # Define a global cache for dependencies
 cache:
@@ -96,3 +101,129 @@ test_job:
     when: always
     reports:
       junit: storage/logs/junit.xml
+
+#
+# AI TESTS STAGE
+#
+test_ai_job:
+  stage: test-ai
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running AI Tests..."
+    - php artisan test tests/AI/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/ai-junit.xml
+
+#
+# SECURITY TESTS STAGE
+#
+test_security_job:
+  stage: test-security
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Security Tests..."
+    - php artisan test tests/Security/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/security-junit.xml
+
+#
+# PERFORMANCE TESTS STAGE
+#
+test_performance_job:
+  stage: test-performance
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Performance Tests..."
+    - php artisan test tests/Performance/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/performance-junit.xml
+
+#
+# INTEGRATION TESTS STAGE
+#
+test_integration_job:
+  stage: test-integration
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    DB_HOST: mysql
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Integration Tests..."
+    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
+    - php artisan migrate --force
+    - php artisan test tests/Integration/ --configuration=phpunit.testing.xml
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/integration-junit.xml
+
+#
+# COMPREHENSIVE TESTS STAGE
+#
+comprehensive_test_job:
+  stage: comprehensive
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  variables:
+    DB_HOST: mysql
+  needs:
+    - job: build_job
+      artifacts: true
+  script:
+    - echo "Running Comprehensive Tests..."
+    - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
+    - php artisan migrate --force
+    - php artisan test --configuration=phpunit.testing.xml --log-junit=storage/logs/comprehensive-junit.xml --coverage-html=storage/logs/coverage
+  artifacts:
+    when: always
+    reports:
+      junit: storage/logs/comprehensive-junit.xml
+    paths:
+      - storage/logs/coverage/

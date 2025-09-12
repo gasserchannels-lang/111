@@ -1,0 +1,207 @@
+<?php
+
+namespace Tests\Security;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class CSRFTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /** @test */
+    public function post_requests_require_csrf_token()
+    {
+        $response = $this->post('/api/products', [
+            'name' => 'Test Product',
+            'price' => 100,
+        ]);
+
+        // Should fail without CSRF token
+        $this->assertEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function put_requests_require_csrf_token()
+    {
+        $response = $this->put('/api/products/1', [
+            'name' => 'Updated Product',
+        ]);
+
+        // Should fail without CSRF token
+        $this->assertEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function delete_requests_require_csrf_token()
+    {
+        $response = $this->delete('/api/products/1');
+
+        // Should fail without CSRF token
+        $this->assertEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function patch_requests_require_csrf_token()
+    {
+        $response = $this->patch('/api/products/1', [
+            'name' => 'Patched Product',
+        ]);
+
+        // Should fail without CSRF token
+        $this->assertEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function get_requests_do_not_require_csrf_token()
+    {
+        $response = $this->get('/api/products');
+
+        // GET requests should work without CSRF token
+        $this->assertNotEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function api_routes_with_csrf_protection_work_with_valid_token()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Get CSRF token
+        $tokenResponse = $this->get('/api/csrf-token');
+        $token = $tokenResponse->json('token');
+
+        $response = $this->postJson('/api/products', [
+            'name' => 'Test Product',
+            'price' => 100,
+            '_token' => $token,
+        ]);
+
+        // Should work with valid CSRF token
+        $this->assertNotEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function csrf_token_is_unique_per_session()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Get first token
+        $response1 = $this->get('/api/csrf-token');
+        $token1 = $response1->json('token');
+
+        // Get second token
+        $response2 = $this->get('/api/csrf-token');
+        $token2 = $response2->json('token');
+
+        // Tokens should be different
+        $this->assertNotEquals($token1, $token2);
+    }
+
+    /** @test */
+    public function csrf_token_expires_after_use()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Get CSRF token
+        $tokenResponse = $this->get('/api/csrf-token');
+        $token = $tokenResponse->json('token');
+
+        // Use token once
+        $response1 = $this->postJson('/api/products', [
+            'name' => 'Test Product 1',
+            'price' => 100,
+            '_token' => $token,
+        ]);
+
+        // Try to use same token again
+        $response2 = $this->postJson('/api/products', [
+            'name' => 'Test Product 2',
+            'price' => 200,
+            '_token' => $token,
+        ]);
+
+        // Second request should fail with expired token
+        $this->assertEquals(419, $response2->status());
+    }
+
+    /** @test */
+    public function csrf_protection_works_with_form_data()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Get CSRF token
+        $tokenResponse = $this->get('/api/csrf-token');
+        $token = $tokenResponse->json('token');
+
+        $response = $this->post('/api/products', [
+            'name' => 'Test Product',
+            'price' => 100,
+            '_token' => $token,
+        ]);
+
+        // Should work with valid CSRF token
+        $this->assertNotEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function csrf_protection_works_with_json_data()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Get CSRF token
+        $tokenResponse = $this->get('/api/csrf-token');
+        $token = $tokenResponse->json('token');
+
+        $response = $this->postJson('/api/products', [
+            'name' => 'Test Product',
+            'price' => 100,
+            '_token' => $token,
+        ]);
+
+        // Should work with valid CSRF token
+        $this->assertNotEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function csrf_token_is_required_for_admin_actions()
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $this->actingAs($admin);
+
+        $response = $this->post('/api/admin/users', [
+            'name' => 'New User',
+            'email' => 'newuser@example.com',
+        ]);
+
+        // Should fail without CSRF token
+        $this->assertEquals(419, $response->status());
+    }
+
+    /** @test */
+    public function csrf_protection_works_with_file_uploads()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Get CSRF token
+        $tokenResponse = $this->get('/api/csrf-token');
+        $token = $tokenResponse->json('token');
+
+        $file = \Illuminate\Http\UploadedFile::fake()->image('test.jpg');
+
+        $response = $this->post('/api/upload', [
+            'file' => $file,
+            '_token' => $token,
+        ]);
+
+        // Should work with valid CSRF token
+        $this->assertNotEquals(419, $response->status());
+    }
+}

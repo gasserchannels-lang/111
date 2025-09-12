@@ -1,0 +1,363 @@
+name: Comprehensive Tests - Cobra Project
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *' # Run daily at 2 AM
+
+jobs:
+  # Build and setup
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+          
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip
+        
+      - name: Install NPM dependencies
+        run: npm install
+        
+      - name: Build assets
+        run: npm run build
+        
+      - name: Setup Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan config:cache
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            vendor/
+            node_modules/
+            public/
+            .env
+
+  # Code style and static analysis
+  analyze:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
+        
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyse --memory-limit=1G
+        
+      - name: Run PHPMD
+        run: ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+        
+      - name: Run Composer Audit
+        run: composer audit
+
+  # Unit tests
+  test-unit:
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        php-version: ['8.2']
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Run Unit Tests
+        run: php artisan test --testsuite=Unit --configuration=phpunit.testing.xml --log-junit=storage/logs/unit-junit.xml --coverage-html=storage/logs/coverage-unit
+          
+      - name: Upload Unit Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit-test-results
+          path: storage/logs/unit-junit.xml
+
+  # Feature tests
+  test-feature:
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        php-version: ['8.2']
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Run Feature Tests
+        run: php artisan test --testsuite=Feature --configuration=phpunit.testing.xml --log-junit=storage/logs/feature-junit.xml --coverage-html=storage/logs/coverage-feature
+          
+      - name: Upload Feature Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: feature-test-results
+          path: storage/logs/feature-junit.xml
+
+  # AI tests
+  test-ai:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Run AI Tests
+        run: php artisan test tests/AI/ --configuration=phpunit.testing.xml --log-junit=storage/logs/ai-junit.xml --coverage-html=storage/logs/coverage-ai
+          
+      - name: Upload AI Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ai-test-results
+          path: storage/logs/ai-junit.xml
+
+  # Security tests
+  test-security:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Run Security Tests
+        run: php artisan test tests/Security/ --configuration=phpunit.testing.xml --log-junit=storage/logs/security-junit.xml --coverage-html=storage/logs/coverage-security
+          
+      - name: Upload Security Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-test-results
+          path: storage/logs/security-junit.xml
+
+  # Performance tests
+  test-performance:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Run Performance Tests
+        run: php artisan test tests/Performance/ --configuration=phpunit.testing.xml --log-junit=storage/logs/performance-junit.xml --coverage-html=storage/logs/coverage-performance
+          
+      - name: Upload Performance Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-test-results
+          path: storage/logs/performance-junit.xml
+
+  # Integration tests
+  test-integration:
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Setup Database
+        run: |
+          php artisan migrate --force
+          php artisan db:seed
+          
+      - name: Run Integration Tests
+        run: php artisan test tests/Integration/ --configuration=phpunit.testing.xml --log-junit=storage/logs/integration-junit.xml --coverage-html=storage/logs/coverage-integration
+          
+      - name: Upload Integration Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-results
+          path: storage/logs/integration-junit.xml
+
+  # Comprehensive tests
+  test-comprehensive:
+    runs-on: ubuntu-latest
+    needs: [build, analyze, test-unit, test-feature, test-ai, test-security, test-performance, test-integration]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, zip
+          coverage: xdebug
+          
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          
+      - name: Setup Database
+        run: |
+          php artisan migrate --force
+          php artisan db:seed
+          
+      - name: Run Comprehensive Tests
+        run: php artisan test --configuration=phpunit.testing.xml --log-junit=storage/logs/comprehensive-junit.xml --coverage-html=storage/logs/coverage
+          
+      - name: Upload Comprehensive Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: comprehensive-test-results
+          path: storage/logs/comprehensive-junit.xml
+          
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: storage/logs/coverage/
+
+  # Generate final report
+  generate-report:
+    runs-on: ubuntu-latest
+    needs: [test-comprehensive]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download all test results
+        uses: actions/download-artifact@v3
+        with:
+          path: test-results
+          
+      - name: Generate Test Summary
+        run: |
+          echo "# Test Results Summary" > test-summary.md
+          echo "Generated: $(date)" >> test-summary.md
+          echo "" >> test-summary.md
+          echo "## Test Suites" >> test-summary.md
+          echo "- Unit Tests: ${{ needs.test-unit.result }}" >> test-summary.md
+          echo "- Feature Tests: ${{ needs.test-feature.result }}" >> test-summary.md
+          echo "- AI Tests: ${{ needs.test-ai.result }}" >> test-summary.md
+          echo "- Security Tests: ${{ needs.test-security.result }}" >> test-summary.md
+          echo "- Performance Tests: ${{ needs.test-performance.result }}" >> test-summary.md
+          echo "- Integration Tests: ${{ needs.test-integration.result }}" >> test-summary.md
+          echo "- Comprehensive Tests: ${{ needs.test-comprehensive.result }}" >> test-summary.md
+          
+      - name: Upload Test Summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-summary
+          path: test-summary.md
