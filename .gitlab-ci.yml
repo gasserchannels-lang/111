@@ -108,15 +108,18 @@ generate_reports:
     - php artisan config:cache
     - php artisan package:discover --ansi
     - mkdir -p reports
-    - echo "Analysis Report" > reports/analysis-report.md
-    - echo "Code Quality Analysis" >> reports/analysis-report.md
-    - echo "PHPStan: N/A" >> reports/analysis-report.md
-    - echo "PHPMD: N/A" >> reports/analysis-report.md
-    - echo "Laravel Pint: N/A" >> reports/analysis-report.md
-    - echo "Security Analysis" >> reports/analysis-report.md
-    - echo "Composer Audit: N/A" >> reports/analysis-report.md
-    - echo "Performance Analysis" >> reports/analysis-report.md
-    - echo "Performance Tests: N/A" >> reports/analysis-report.md
+    - |
+      cat > reports/analysis-report.md << 'EOF'
+      # Analysis Report
+      ## Code Quality Analysis
+      - PHPStan: N/A
+      - PHPMD: N/A
+      - Laravel Pint: N/A
+      ## Security Analysis
+      - Composer Audit: N/A
+      ## Performance Analysis
+      - Performance Tests: N/A
+      EOF
     - echo "Reports generated successfully"
   artifacts:
     paths:
