@@ -30,6 +30,11 @@ _ide_helper_models.php
 
 # Generated Reports & Documentation (Keep only source files)
 *.json
+!composer.json
+!package.json
+!tsconfig.json
+!pint.json
+!.stylelintrc.json
 *.txt
 *.xml
 *.md
