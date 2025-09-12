@@ -38,9 +38,9 @@ analyze_code_quality:
     - npm run build
     - echo "🔍 Starting Code Quality Analysis..."
     - composer audit --format=json > storage/logs/composer-audit.json || true
-    - ./vendor/bin/phpstan analyse --memory-limit=1G --error-format=json > storage/logs/phpstan.json || true
-    - ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode --reportfile storage/logs/phpmd.xml || true
-    - ./vendor/bin/pint --test --json > storage/logs/pint.json || true
+    - ./vendor/bin/phpstan analyse --memory-limit=1G --error-format=json --configuration=phpstan.strict.neon > storage/logs/phpstan.json
+    - ./vendor/bin/phpmd app xml phpmd.strict.xml --reportfile storage/logs/phpmd.xml
+    - ./vendor/bin/pint --test --json --config=pint.strict.json > storage/logs/pint.json
   artifacts:
     paths:
       - vendor/
@@ -64,7 +64,7 @@ analyze_security:
   script:
     - echo "🔒 Starting Security Analysis..."
     - composer audit --format=json > storage/logs/security-audit.json || true
-    - php artisan test tests/Security/ --configuration=phpunit.testing.xml --log-junit=storage/logs/security-tests.xml || true
+    - php artisan test tests/Security/ --configuration=phpunit.strict.xml --log-junit=storage/logs/security-tests.xml || true
   artifacts:
     paths:
       - storage/logs/
@@ -208,7 +208,7 @@ test_unit:
     - echo "🧪 Running Unit Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
-    - php artisan test tests/Unit/ --configuration=phpunit.testing.xml --log-junit=storage/logs/unit-tests.xml
+    - php artisan test tests/Unit/ --configuration=phpunit.strict.xml --log-junit=storage/logs/unit-tests.xml
   artifacts:
     when: always
     reports:
@@ -227,7 +227,7 @@ test_ai:
       artifacts: true
   script:
     - echo "🤖 Running AI Tests..."
-    - php artisan test tests/AI/ --configuration=phpunit.testing.xml --log-junit=storage/logs/ai-tests.xml
+    - php artisan test tests/AI/ --configuration=phpunit.strict.xml --log-junit=storage/logs/ai-tests.xml
   artifacts:
     when: always
     reports:
@@ -253,7 +253,7 @@ test_integration:
     - echo "🔗 Running Integration Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
-    - php artisan test tests/Integration/ --configuration=phpunit.testing.xml --log-junit=storage/logs/integration-tests.xml
+    - php artisan test tests/Integration/ --configuration=phpunit.strict.xml --log-junit=storage/logs/integration-tests.xml
   artifacts:
     when: always
     reports:
@@ -308,7 +308,7 @@ test_links:
     - echo "🔗 Running Link Checker Tests..."
     - until mysqladmin ping -h mysql --silent; do echo "Waiting for MySQL..."; sleep 2; done
     - php artisan migrate --force
-    - php artisan test tests/Feature/LinkCheckerTest.php --configuration=phpunit.testing.xml --log-junit=storage/logs/link-checker-tests.xml
+    - php artisan test tests/Feature/LinkCheckerTest.php --configuration=phpunit.strict.xml --log-junit=storage/logs/link-checker-tests.xml
     - php artisan links:check --all
   artifacts:
     when: always
@@ -342,9 +342,9 @@ verify_quality:
     - php artisan config:cache
     - php artisan package:discover --ansi
     - echo "🔍 Re-running quality checks..."
-    - ./vendor/bin/phpstan analyse --memory-limit=1G
-    - ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
-    - ./vendor/bin/pint --test
+    - ./vendor/bin/phpstan analyse --memory-limit=1G --configuration=phpstan.strict.neon
+    - ./vendor/bin/phpmd app xml phpmd.strict.xml
+    - ./vendor/bin/pint --test --config=pint.strict.json
     - composer audit
     - echo "🎉 All quality checks passed!"
   artifacts:
@@ -370,7 +370,7 @@ verify_security:
     - php artisan config:cache
     - php artisan package:discover --ansi
     - echo "🛡️ Re-running security tests..."
-    - php artisan test tests/Security/ --configuration=phpunit.testing.xml
+    - php artisan test tests/Security/ --configuration=phpunit.strict.xml
     - composer audit
     - echo "🎉 All security checks passed!"
   artifacts:
