@@ -21,10 +21,12 @@ build_job:
   # Use a Docker image pre-built for Laravel applications
   image: php:8.2-fpm
   before_script:
-    # Install Node.js and npm
-    - apt-get update && apt-get install -y curl
+    # Install Node.js, npm, and Composer
+    - apt-get update && apt-get install -y curl unzip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
+    # Install Composer
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     # Install PHP and JS dependencies
     - composer install --prefer-dist --no-progress --no-ansi
@@ -48,10 +50,12 @@ analyze_job:
   stage: analyze
   image: php:8.2-fpm
   before_script:
-    # Install Node.js and npm
-    - apt-get update && apt-get install -y curl
+    # Install Node.js, npm, and Composer
+    - apt-get update && apt-get install -y curl unzip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
+    # Install Composer
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   needs:
     - job: build_job
       artifacts: true
@@ -69,10 +73,12 @@ test_job:
   stage: test
   image: php:8.2-fpm
   before_script:
-    # Install Node.js and npm
-    - apt-get update && apt-get install -y curl
+    # Install Node.js, npm, and Composer
+    - apt-get update && apt-get install -y curl unzip
     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
     - apt-get install -y nodejs
+    # Install Composer
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   # Define the MySQL service needed for this job
   services:
     - name: mysql:8.0
