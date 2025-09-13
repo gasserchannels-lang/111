@@ -103,7 +103,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = (int) $request->get('per_page', 15);
+        $perPage = is_numeric($request->get('per_page', 15)) ? (int) $request->get('per_page', 15) : 15;
 
         $query = Product::query()
             ->select(['id', 'name', 'slug', 'price', 'category_id', 'brand_id'])
@@ -115,7 +115,10 @@ class ProductController extends Controller
 
         // Apply filters
         if ($request->filled('search')) {
-            $query->search($request->search);
+            $searchTerm = $request->search;
+            if (is_string($searchTerm)) {
+                $query->search($searchTerm);
+            }
         }
 
         if ($request->filled('category_id')) {
