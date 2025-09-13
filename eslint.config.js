@@ -50,6 +50,23 @@ export default [
         },
     },
     {
+        files: ['public/sw.js'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'module',
+            globals: {
+                self: 'readonly',
+                console: 'readonly',
+                caches: 'readonly',
+                URL: 'readonly',
+                location: 'readonly',
+                fetch: 'readonly',
+                Response: 'readonly',
+                clients: 'readonly',
+            },
+        },
+    },
+    {
         ignores: ['vendor/', 'public/build/'],
     },
 ];

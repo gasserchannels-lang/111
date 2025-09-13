@@ -1,5 +1,4 @@
 /* eslint-env serviceworker */
-/* global self, console, caches, URL, location, fetch, clients, Response */
 // Service Worker for COPRRA
 // Version 1.0.0
 
