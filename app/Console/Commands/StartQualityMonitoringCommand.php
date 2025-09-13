@@ -87,17 +87,21 @@ class StartQualityMonitoringCommand extends Command
     {
         $this->info('🔍 إجراء فحص الجودة...');
 
+        /** @var array<string, mixed> $results */
         $results = $this->monitor->performQualityCheck();
 
         $this->displayResults($results);
 
         if ($results['overall_health'] < 80) {
-            $this->error("⚠️ تحذير: صحة الجودة منخفضة ({$results['overall_health']}%)");
+            $this->error('⚠️ تحذير: صحة الجودة منخفضة ('.$results['overall_health'].'%)');
         } else {
-            $this->info("✅ صحة الجودة جيدة ({$results['overall_health']}%)");
+            $this->info('✅ صحة الجودة جيدة ('.$results['overall_health'].'%)');
         }
     }
 
+    /**
+     * @param  array<string, mixed>  $results
+     */
     private function displayResults(array $results): void
     {
         $this->newLine();
@@ -105,14 +109,17 @@ class StartQualityMonitoringCommand extends Command
         $this->info('=====================');
 
         $table = [];
-        foreach ($results['rules'] as $ruleId => $result) {
-            $status = $result['health_score'] >= 80 ? '✅' : '❌';
-            $table[] = [
-                $result['name'],
-                $status,
-                $result['health_score'].'%',
-                $result['duration'].'s',
-            ];
+        if (isset($results['rules']) && is_array($results['rules'])) {
+            foreach ($results['rules'] as $ruleId => $result) {
+                /** @var array<string, mixed> $result */
+                $status = ($result['health_score'] ?? 0) >= 80 ? '✅' : '❌';
+                $table[] = [
+                    (string) $result['name'],
+                    $status,
+                    (string) $result['health_score'].'%',
+                    (string) $result['duration'].'s',
+                ];
+            }
         }
 
         $this->table(['القاعدة', 'الحالة', 'النقاط', 'المدة'], $table);
@@ -120,7 +127,7 @@ class StartQualityMonitoringCommand extends Command
         $alerts = $this->monitor->getAlertsSummary();
         if ($alerts['total'] > 0) {
             $this->newLine();
-            $this->warn("🚨 التنبيهات: {$alerts['total']} (حرجة: {$alerts['critical']}, تحذيرات: {$alerts['warnings']})");
+            $this->warn('🚨 التنبيهات: '.$alerts['total'].' (حرجة: '.$alerts['critical'].', تحذيرات: '.$alerts['warnings'].')');
         }
     }
 }

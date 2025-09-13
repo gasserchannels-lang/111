@@ -11,7 +11,7 @@ class GenerateAnalysisReport extends Command
 
     protected $description = 'Generate comprehensive analysis report from CI/CD pipeline results';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('📊 Generating Comprehensive Analysis Report...');
 
@@ -35,9 +35,11 @@ class GenerateAnalysisReport extends Command
 
         $this->info('✅ Analysis reports generated successfully!');
         $this->info("📁 Reports location: {$reportsDir}");
+
+        return Command::SUCCESS;
     }
 
-    private function generateMainReport($reportsDir)
+    private function generateMainReport(string $reportsDir): void
     {
         $report = "# 📊 تقرير التحليل الشامل - مشروع كوبرا\n\n";
         $report .= '**تاريخ التوليد:** '.now()->format('Y-m-d H:i:s')."\n\n";
@@ -49,30 +51,39 @@ class GenerateAnalysisReport extends Command
         // قراءة نتائج PHPStan
         $phpstanFile = storage_path('logs/phpstan.json');
         if (File::exists($phpstanFile)) {
+            /** @var array<string, mixed> $phpstanData */
             $phpstanData = json_decode(File::get($phpstanFile), true);
-            $errors = $phpstanData['totals']['errors'] ?? 0;
-            $warnings = $phpstanData['totals']['warnings'] ?? 0;
-            $status = $errors === 0 ? '✅' : '❌';
-            $report .= "| PHPStan Errors | {$errors} | {$status} |\n";
-            $report .= "| PHPStan Warnings | {$warnings} | {$status} |\n";
+            if (is_array($phpstanData) && isset($phpstanData['totals']) && is_array($phpstanData['totals'])) {
+                $errors = (int) ($phpstanData['totals']['errors'] ?? 0);
+                $warnings = (int) ($phpstanData['totals']['warnings'] ?? 0);
+                $status = $errors === 0 ? '✅' : '❌';
+                $report .= "| PHPStan Errors | {$errors} | {$status} |\n";
+                $report .= "| PHPStan Warnings | {$warnings} | {$status} |\n";
+            }
         }
 
         // قراءة نتائج Composer Audit
         $auditFile = storage_path('logs/composer-audit.json');
         if (File::exists($auditFile)) {
+            /** @var array<string, mixed> $auditData */
             $auditData = json_decode(File::get($auditFile), true);
-            $advisories = count($auditData['advisories'] ?? []);
-            $status = $advisories === 0 ? '✅' : '⚠️';
-            $report .= "| Security Advisories | {$advisories} | {$status} |\n";
+            if (is_array($auditData) && isset($auditData['advisories'])) {
+                $advisories = count((array) $auditData['advisories']);
+                $status = $advisories === 0 ? '✅' : '⚠️';
+                $report .= "| Security Advisories | {$advisories} | {$status} |\n";
+            }
         }
 
         // قراءة نتائج Laravel Pint
         $pintFile = storage_path('logs/pint.json');
         if (File::exists($pintFile)) {
+            /** @var array<string, mixed> $pintData */
             $pintData = json_decode(File::get($pintFile), true);
-            $changes = $pintData['changes'] ?? 0;
-            $status = $changes === 0 ? '✅' : '🔧';
-            $report .= "| Code Style Issues | {$changes} | {$status} |\n";
+            if (is_array($pintData) && isset($pintData['changes'])) {
+                $changes = (int) $pintData['changes'];
+                $status = $changes === 0 ? '✅' : '🔧';
+                $report .= "| Code Style Issues | {$changes} | {$status} |\n";
+            }
         }
 
         $report .= "\n## 📈 التوصيات\n\n";
@@ -95,7 +106,7 @@ class GenerateAnalysisReport extends Command
         File::put($reportsDir.'/main-analysis-report.md', $report);
     }
 
-    private function generateSecurityReport($reportsDir)
+    private function generateSecurityReport(string $reportsDir): void
     {
         $report = "# 🔒 تقرير الأمان - مشروع كوبرا\n\n";
         $report .= '**تاريخ التوليد:** '.now()->format('Y-m-d H:i:s')."\n\n";
@@ -105,18 +116,24 @@ class GenerateAnalysisReport extends Command
         // قراءة نتائج Composer Audit
         $auditFile = storage_path('logs/composer-audit.json');
         if (File::exists($auditFile)) {
+            /** @var array<string, mixed> $auditData */
             $auditData = json_decode(File::get($auditFile), true);
-            $advisories = $auditData['advisories'] ?? [];
+            if (is_array($auditData) && isset($auditData['advisories']) && is_array($auditData['advisories'])) {
+                /** @var array<string, mixed> $advisories */
+                $advisories = $auditData['advisories'];
 
-            if (empty($advisories)) {
-                $report .= "✅ **لا توجد ثغرات أمنية في التبعيات**\n\n";
-            } else {
-                $report .= '⚠️ **تم اكتشاف '.count($advisories)." ثغرة أمنية:**\n\n";
-                foreach ($advisories as $package => $advisory) {
-                    $report .= "### 📦 {$package}\n";
-                    $report .= "- **الخطورة:** {$advisory['severity']}\n";
-                    $report .= "- **الوصف:** {$advisory['title']}\n";
-                    $report .= "- **الإصلاح:** {$advisory['remediation']}\n\n";
+                if (empty($advisories)) {
+                    $report .= "✅ **لا توجد ثغرات أمنية في التبعيات**\n\n";
+                } else {
+                    $report .= '⚠️ **تم اكتشاف '.count($advisories)." ثغرة أمنية:**\n\n";
+                    foreach ($advisories as $package => $advisory) {
+                        if (is_array($advisory)) {
+                            $report .= '### 📦 '.(string) $package."\n";
+                            $report .= '- **الخطورة:** '.(string) ($advisory['severity'] ?? 'unknown')."\n";
+                            $report .= '- **الوصف:** '.(string) ($advisory['title'] ?? 'unknown')."\n";
+                            $report .= '- **الإصلاح:** '.(string) ($advisory['remediation'] ?? 'unknown')."\n\n";
+                        }
+                    }
                 }
             }
         }
@@ -124,22 +141,25 @@ class GenerateAnalysisReport extends Command
         // قراءة نتائج اختبارات الأمان
         $securityTestsFile = storage_path('logs/security-tests.xml');
         if (File::exists($securityTestsFile)) {
+            /** @var \SimpleXMLElement|false $xml */
             $xml = simplexml_load_file($securityTestsFile);
-            $totalTests = (int) $xml['tests'];
-            $failures = (int) $xml['failures'];
-            $errors = (int) $xml['errors'];
+            if ($xml !== false) {
+                $totalTests = (int) ($xml['tests'] ?? 0);
+                $failures = (int) ($xml['failures'] ?? 0);
+                $errors = (int) ($xml['errors'] ?? 0);
 
-            $report .= "## 🧪 اختبارات الأمان\n\n";
-            $report .= "| المؤشر | القيمة |\n";
-            $report .= "|--------|--------|\n";
-            $report .= "| إجمالي الاختبارات | {$totalTests} |\n";
-            $report .= "| الاختبارات الفاشلة | {$failures} |\n";
-            $report .= "| الأخطاء | {$errors} |\n\n";
+                $report .= "## 🧪 اختبارات الأمان\n\n";
+                $report .= "| المؤشر | القيمة |\n";
+                $report .= "|--------|--------|\n";
+                $report .= "| إجمالي الاختبارات | {$totalTests} |\n";
+                $report .= "| الاختبارات الفاشلة | {$failures} |\n";
+                $report .= "| الأخطاء | {$errors} |\n\n";
 
-            if ($failures === 0 && $errors === 0) {
-                $report .= "✅ **جميع اختبارات الأمان نجحت**\n\n";
-            } else {
-                $report .= "❌ **هناك مشاكل في اختبارات الأمان**\n\n";
+                if ($failures === 0 && $errors === 0) {
+                    $report .= "✅ **جميع اختبارات الأمان نجحت**\n\n";
+                } else {
+                    $report .= "❌ **هناك مشاكل في اختبارات الأمان**\n\n";
+                }
             }
         }
 
@@ -153,7 +173,7 @@ class GenerateAnalysisReport extends Command
         File::put($reportsDir.'/security-report.md', $report);
     }
 
-    private function generatePerformanceReport($reportsDir)
+    private function generatePerformanceReport(string $reportsDir): void
     {
         $report = "# ⚡ تقرير الأداء - مشروع كوبرا\n\n";
         $report .= '**تاريخ التوليد:** '.now()->format('Y-m-d H:i:s')."\n\n";
@@ -163,25 +183,28 @@ class GenerateAnalysisReport extends Command
         // قراءة نتائج اختبارات الأداء
         $performanceTestsFile = storage_path('logs/performance-tests.xml');
         if (File::exists($performanceTestsFile)) {
+            /** @var \SimpleXMLElement|false $xml */
             $xml = simplexml_load_file($performanceTestsFile);
-            $totalTests = (int) $xml['tests'];
-            $failures = (int) $xml['failures'];
-            $errors = (int) $xml['errors'];
+            if ($xml !== false) {
+                $totalTests = (int) ($xml['tests'] ?? 0);
+                $failures = (int) ($xml['failures'] ?? 0);
+                $errors = (int) ($xml['errors'] ?? 0);
 
-            $report .= "| المؤشر | القيمة |\n";
-            $report .= "|--------|--------|\n";
-            $report .= "| إجمالي اختبارات الأداء | {$totalTests} |\n";
-            $report .= "| الاختبارات الفاشلة | {$failures} |\n";
-            $report .= "| الأخطاء | {$errors} |\n\n";
+                $report .= "| المؤشر | القيمة |\n";
+                $report .= "|--------|--------|\n";
+                $report .= "| إجمالي اختبارات الأداء | {$totalTests} |\n";
+                $report .= "| الاختبارات الفاشلة | {$failures} |\n";
+                $report .= "| الأخطاء | {$errors} |\n\n";
 
-            if ($failures === 0 && $errors === 0) {
-                $report .= "✅ **جميع اختبارات الأداء نجحت**\n\n";
-            } else {
-                $report .= "⚠️ **هناك مشاكل في الأداء**\n\n";
+                if ($failures === 0 && $errors === 0) {
+                    $report .= "✅ **جميع اختبارات الأداء نجحت**\n\n";
+                } else {
+                    $report .= "⚠️ **هناك مشاكل في الأداء**\n\n";
+                }
             }
         }
 
-        $report .= "## 🚀 توصيات تحسين الأداء\n\n";
+        $report .= "\n## 🚀 توصيات تحسين الأداء\n\n";
         $report .= "### 1. تحسين قاعدة البيانات\n";
         $report .= "- إضافة فهارس للاستعلامات البطيئة\n";
         $report .= "- تحسين استعلامات Eloquent\n";
@@ -205,7 +228,7 @@ class GenerateAnalysisReport extends Command
         File::put($reportsDir.'/performance-report.md', $report);
     }
 
-    private function generateQualityReport($reportsDir)
+    private function generateQualityReport(string $reportsDir): void
     {
         $report = "# 🎯 تقرير الجودة - مشروع كوبرا\n\n";
         $report .= '**تاريخ التوليد:** '.now()->format('Y-m-d H:i:s')."\n\n";
@@ -215,9 +238,10 @@ class GenerateAnalysisReport extends Command
         // قراءة نتائج PHPStan
         $phpstanFile = storage_path('logs/phpstan.json');
         if (File::exists($phpstanFile)) {
+            /** @var array<string, mixed> $phpstanData */
             $phpstanData = json_decode(File::get($phpstanFile), true);
-            $errors = $phpstanData['totals']['errors'] ?? 0;
-            $warnings = $phpstanData['totals']['warnings'] ?? 0;
+            $errors = (int) ($phpstanData['totals']['errors'] ?? 0);
+            $warnings = (int) ($phpstanData['totals']['warnings'] ?? 0);
 
             $report .= "### 🔍 PHPStan (التحليل الثابت)\n";
             $report .= "| المؤشر | القيمة |\n";
@@ -235,26 +259,31 @@ class GenerateAnalysisReport extends Command
         // قراءة نتائج PHPMD
         $phpmdFile = storage_path('logs/phpmd.xml');
         if (File::exists($phpmdFile)) {
+            /** @var \SimpleXMLElement|false $xml */
             $xml = simplexml_load_file($phpmdFile);
-            $violations = count($xml->xpath('//violation'));
+            if ($xml !== false) {
+                /** @var int $violations */
+                $violations = count($xml->xpath('//violation'));
 
-            $report .= "### 🔧 PHPMD (جودة الكود)\n";
-            $report .= "| المؤشر | القيمة |\n";
-            $report .= "|--------|--------|\n";
-            $report .= "| انتهاكات القواعد | {$violations} |\n\n";
+                $report .= "### 🔧 PHPMD (جودة الكود)\n";
+                $report .= "| المؤشر | القيمة |\n";
+                $report .= "|--------|--------|\n";
+                $report .= "| انتهاكات القواعد | {$violations} |\n\n";
 
-            if ($violations === 0) {
-                $report .= "✅ **PHPMD: الكود نظيف**\n\n";
-            } else {
-                $report .= "⚠️ **PHPMD: يحتاج تحسين**\n\n";
+                if ($violations === 0) {
+                    $report .= "✅ **PHPMD: الكود نظيف**\n\n";
+                } else {
+                    $report .= "⚠️ **PHPMD: يحتاج تحسين**\n\n";
+                }
             }
         }
 
         // قراءة نتائج Laravel Pint
         $pintFile = storage_path('logs/pint.json');
         if (File::exists($pintFile)) {
+            /** @var array<string, mixed> $pintData */
             $pintData = json_decode(File::get($pintFile), true);
-            $changes = $pintData['changes'] ?? 0;
+            $changes = (int) ($pintData['changes'] ?? 0);
 
             $report .= "### 🎨 Laravel Pint (تنسيق الكود)\n";
             $report .= "| المؤشر | القيمة |\n";

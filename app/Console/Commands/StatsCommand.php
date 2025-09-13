@@ -80,14 +80,14 @@ class StatsCommand extends Command
         $this->info('📈 Detailed Statistics');
 
         // Price statistics
-        $avgPrice = PriceOffer::avg('price');
-        $minPrice = PriceOffer::min('price');
-        $maxPrice = PriceOffer::max('price');
+        $avgPrice = PriceOffer::avg('price') ?? 0.0;
+        $minPrice = PriceOffer::min('price') ?? 0.0;
+        $maxPrice = PriceOffer::max('price') ?? 0.0;
 
         $this->table(['Price Metric', 'Value'], [
-            ['Average Price', '$'.number_format((float) $avgPrice, 2)],
-            ['Minimum Price', '$'.number_format((float) $minPrice, 2)],
-            ['Maximum Price', '$'.number_format((float) $maxPrice, 2)],
+            ['Average Price', '$'.number_format($avgPrice, 2)],
+            ['Minimum Price', '$'.number_format($minPrice, 2)],
+            ['Maximum Price', '$'.number_format($maxPrice, 2)],
         ]);
 
         // Top categories by product count

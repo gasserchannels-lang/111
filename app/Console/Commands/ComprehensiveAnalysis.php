@@ -77,7 +77,7 @@ class ComprehensiveAnalysis extends Command
         $this->info('✅ All direct dependencies are up to date');
 
         $issues = [];
-        if (is_array($result['issues'])) {
+        if (isset($result['issues']) && is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 $issues[] = (string) $issue;
             }
@@ -119,7 +119,7 @@ class ComprehensiveAnalysis extends Command
         $this->info('✅ PHPCPD found no duplicate code.');
 
         $issues = [];
-        if (is_array($result['issues'])) {
+        if (isset($result['issues']) && is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 $issues[] = (string) $issue;
             }
@@ -165,7 +165,7 @@ class ComprehensiveAnalysis extends Command
         }
 
         $issues = [];
-        if (is_array($result['issues'])) {
+        if (isset($result['issues']) && is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 $issues[] = (string) $issue;
             }
@@ -188,7 +188,7 @@ class ComprehensiveAnalysis extends Command
         $result = $performanceService->analyze();
 
         $issues = [];
-        if (is_array($result['issues'])) {
+        if (isset($result['issues']) && is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
                 $issues[] = (string) $issue;
             }

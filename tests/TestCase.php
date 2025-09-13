@@ -24,6 +24,9 @@ abstract class TestCase extends BaseTestCase
             'foreign_key_constraints' => true,
         ]);
 
+        // إزالة إعدادات MySQL لضمان عدم استخدامها
+        $this->app['config']->set('database.connections.mysql', null);
+
         // تعيين الاتصال الافتراضي
         DB::setDefaultConnection('testing');
 
