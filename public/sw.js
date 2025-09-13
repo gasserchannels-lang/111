@@ -1,3 +1,4 @@
+/* eslint-env serviceworker */
 // Service Worker for COPRRA
 // Version 1.0.0
 
