@@ -16,12 +16,13 @@ const STATIC_FILES = [
 ];
 
 // Install event
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
     console.log('Service Worker: Installing...');
-    
+
     event.waitUntil(
-        caches.open(STATIC_CACHE)
-            .then((cache) => {
+        caches
+            .open(STATIC_CACHE)
+            .then(cache => {
                 console.log('Service Worker: Caching static files');
                 return cache.addAll(STATIC_FILES);
             })
@@ -29,23 +30,30 @@ self.addEventListener('install', (event) => {
                 console.log('Service Worker: Installation complete');
                 return self.skipWaiting();
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Service Worker: Installation failed', error);
             })
     );
 });
 
 // Activate event
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
     console.log('Service Worker: Activating...');
-    
+
     event.waitUntil(
-        caches.keys()
-            .then((cacheNames) => {
+        caches
+            .keys()
+            .then(cacheNames => {
                 return Promise.all(
-                    cacheNames.map((cacheName) => {
-                        if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-                            console.log('Service Worker: Deleting old cache', cacheName);
+                    cacheNames.map(cacheName => {
+                        if (
+                            cacheName !== STATIC_CACHE &&
+                            cacheName !== DYNAMIC_CACHE
+                        ) {
+                            console.log(
+                                'Service Worker: Deleting old cache',
+                                cacheName
+                            );
                             return caches.delete(cacheName);
                         }
                     })
@@ -59,7 +67,7 @@ self.addEventListener('activate', (event) => {
 });
 
 // Fetch event
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
     const { request } = event;
     const url = new URL(request.url);
 
@@ -86,7 +94,9 @@ self.addEventListener('fetch', (event) => {
 // Check if request is for static asset
 function isStaticAsset(request) {
     const url = new URL(request.url);
-    return url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/);
+    return url.pathname.match(
+        /\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/
+    );
 }
 
 // Check if request is for API
@@ -100,17 +110,17 @@ async function handleStaticAsset(request) {
     try {
         const cache = await caches.open(STATIC_CACHE);
         const cachedResponse = await cache.match(request);
-        
+
         if (cachedResponse) {
             return cachedResponse;
         }
-        
+
         const networkResponse = await fetch(request);
-        
+
         if (networkResponse.ok) {
             cache.put(request, networkResponse.clone());
         }
-        
+
         return networkResponse;
     } catch (error) {
         console.error('Service Worker: Error handling static asset', error);
@@ -123,31 +133,34 @@ async function handleAPIRequest(request) {
     try {
         // Try network first for API requests
         const networkResponse = await fetch(request);
-        
+
         if (networkResponse.ok) {
             const cache = await caches.open(DYNAMIC_CACHE);
             cache.put(request, networkResponse.clone());
         }
-        
+
         return networkResponse;
     } catch (error) {
         console.error('Service Worker: Error handling API request', error);
-        
+
         // Try to return cached response
         const cache = await caches.open(DYNAMIC_CACHE);
         const cachedResponse = await cache.match(request);
-        
+
         if (cachedResponse) {
             return cachedResponse;
         }
-        
-        return new Response(JSON.stringify({
-            error: 'Network error',
-            message: 'Please check your internet connection'
-        }), {
-            status: 503,
-            headers: { 'Content-Type': 'application/json' }
-        });
+
+        return new Response(
+            JSON.stringify({
+                error: 'Network error',
+                message: 'Please check your internet connection',
+            }),
+            {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
@@ -155,38 +168,38 @@ async function handleAPIRequest(request) {
 async function handlePageRequest(request) {
     try {
         const networkResponse = await fetch(request);
-        
+
         if (networkResponse.ok) {
             const cache = await caches.open(DYNAMIC_CACHE);
             cache.put(request, networkResponse.clone());
         }
-        
+
         return networkResponse;
     } catch (error) {
         console.error('Service Worker: Error handling page request', error);
-        
+
         // Try to return cached response
         const cache = await caches.open(DYNAMIC_CACHE);
         const cachedResponse = await cache.match(request);
-        
+
         if (cachedResponse) {
             return cachedResponse;
         }
-        
+
         // Return offline page
         const offlineResponse = await cache.match('/offline.html');
         if (offlineResponse) {
             return offlineResponse;
         }
-        
+
         return new Response('Offline', { status: 503 });
     }
 }
 
 // Background sync for offline actions
-self.addEventListener('sync', (event) => {
+self.addEventListener('sync', event => {
     console.log('Service Worker: Background sync', event.tag);
-    
+
     if (event.tag === 'price-alert') {
         event.waitUntil(syncPriceAlerts());
     } else if (event.tag === 'wishlist') {
@@ -199,7 +212,7 @@ async function syncPriceAlerts() {
     try {
         // Get pending price alerts from IndexedDB
         const pendingAlerts = await getPendingPriceAlerts();
-        
+
         for (const alert of pendingAlerts) {
             try {
                 const response = await fetch('/api/price-alerts', {
@@ -208,14 +221,17 @@ async function syncPriceAlerts() {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': alert.csrf_token,
                     },
-                    body: JSON.stringify(alert.data)
+                    body: JSON.stringify(alert.data),
                 });
-                
+
                 if (response.ok) {
                     await removePendingPriceAlert(alert.id);
                 }
             } catch (error) {
-                console.error('Service Worker: Error syncing price alert', error);
+                console.error(
+                    'Service Worker: Error syncing price alert',
+                    error
+                );
             }
         }
     } catch (error) {
@@ -228,22 +244,28 @@ async function syncWishlist() {
     try {
         // Get pending wishlist actions from IndexedDB
         const pendingActions = await getPendingWishlistActions();
-        
+
         for (const action of pendingActions) {
             try {
-                const response = await fetch(`/api/wishlist/${action.product_id}`, {
-                    method: action.method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': action.csrf_token,
+                const response = await fetch(
+                    `/api/wishlist/${action.product_id}`,
+                    {
+                        method: action.method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': action.csrf_token,
+                        },
                     }
-                });
-                
+                );
+
                 if (response.ok) {
                     await removePendingWishlistAction(action.id);
                 }
             } catch (error) {
-                console.error('Service Worker: Error syncing wishlist action', error);
+                console.error(
+                    'Service Worker: Error syncing wishlist action',
+                    error
+                );
             }
         }
     } catch (error) {
@@ -271,9 +293,9 @@ async function removePendingWishlistAction(id) {
 }
 
 // Push notification handling
-self.addEventListener('push', (event) => {
+self.addEventListener('push', event => {
     console.log('Service Worker: Push notification received');
-    
+
     const options = {
         body: event.data ? event.data.text() : 'New notification from COPRRA',
         icon: '/icon-192x192.png',
@@ -281,43 +303,37 @@ self.addEventListener('push', (event) => {
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
-            primaryKey: 1
+            primaryKey: 1,
         },
         actions: [
             {
                 action: 'explore',
                 title: 'View Details',
-                icon: '/icon-192x192.png'
+                icon: '/icon-192x192.png',
             },
             {
                 action: 'close',
                 title: 'Close',
-                icon: '/icon-192x192.png'
-            }
-        ]
+                icon: '/icon-192x192.png',
+            },
+        ],
     };
-    
-    event.waitUntil(
-        self.registration.showNotification('COPRRA', options)
-    );
+
+    event.waitUntil(self.registration.showNotification('COPRRA', options));
 });
 
 // Notification click handling
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
     console.log('Service Worker: Notification clicked');
-    
+
     event.notification.close();
-    
+
     if (event.action === 'explore') {
-        event.waitUntil(
-            clients.openWindow('/')
-        );
+        event.waitUntil(clients.openWindow('/'));
     } else if (event.action === 'close') {
         // Just close the notification
     } else {
         // Default action
-        event.waitUntil(
-            clients.openWindow('/')
-        );
+        event.waitUntil(clients.openWindow('/'));
     }
 });

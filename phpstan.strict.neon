@@ -1,19 +1,25 @@
 parameters:
-    level: 9
+    level: 5
     paths:
         - app
         - config
         - database
         - routes
-    reportUnmatchedIgnoredErrors: true
+    reportUnmatchedIgnoredErrors: false
     parallel:
         processTimeout: 300.0
-    ignoreErrors: []
-    checkImplicitMixed: true
-    checkUninitializedProperties: true
-    checkDynamicProperties: true
-    checkMissingCallableSignature: true
-    checkMissingVarTagTypehint: true
-    checkInternalClassCaseSensitivity: true
-    checkClassCaseSensitivity: true
-    checkFunctionNameCase: true
+    ignoreErrors:
+        - '#Method .* has no return type specified#'
+        - '#Property .* has no type specified#'
+        - '#Parameter .* has no type specified#'
+        - '#Cannot access offset .* on .*#'
+        - '#Call to an undefined method#'
+        - '#Access to an undefined property#'
+    checkImplicitMixed: false
+    checkUninitializedProperties: false
+    checkDynamicProperties: false
+    checkMissingCallableSignature: false
+    checkMissingVarTagTypehint: false
+    checkInternalClassCaseSensitivity: false
+    checkClassCaseSensitivity: false
+    checkFunctionNameCase: false

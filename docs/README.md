@@ -7,6 +7,7 @@ COPRRA is a comprehensive price comparison platform built with Laravel 12, desig
 ## 🚀 Features
 
 ### Core Features
+
 - **Price Comparison Engine** - Compare prices across multiple stores
 - **User Authentication & Authorization** - Secure user management
 - **Admin Dashboard** - Complete administrative interface
@@ -18,6 +19,7 @@ COPRRA is a comprehensive price comparison platform built with Laravel 12, desig
 - **Brand & Category Management** - Organize products
 
 ### Technical Features
+
 - **AI Code Quality Agent** - Automated code analysis and fixing
 - **Comprehensive Testing** - 128+ tests with 99% success rate
 - **Code Quality Tools** - PHPStan, PHPMD, Psalm, and more
@@ -28,12 +30,14 @@ COPRRA is a comprehensive price comparison platform built with Laravel 12, desig
 ## 🛠️ Technology Stack
 
 ### Backend
+
 - **Laravel 12** - PHP Framework
 - **PHP 8.2+** - Programming Language
 - **MySQL 8.0** - Database
 - **Redis** - Caching & Sessions
 
 ### Frontend
+
 - **Blade Templates** - Server-side rendering
 - **Bootstrap 5** - CSS Framework
 - **Vite** - Build tool
@@ -41,6 +45,7 @@ COPRRA is a comprehensive price comparison platform built with Laravel 12, desig
 - **PWA** - Progressive Web App
 
 ### Testing & Quality
+
 - **PHPUnit/Pest** - Testing framework
 - **Laravel Dusk** - Browser testing
 - **PHPStan** - Static analysis
@@ -50,6 +55,7 @@ COPRRA is a comprehensive price comparison platform built with Laravel 12, desig
 - **Infection PHP** - Mutation testing
 
 ### Monitoring & Security
+
 - **Sentry** - Error monitoring
 - **Laravel Telescope** - Application monitoring
 - **Clockwork** - Performance profiling
@@ -66,58 +72,66 @@ COPRRA is a comprehensive price comparison platform built with Laravel 12, desig
 ### Quick Start
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/coprra.git
-   cd coprra
-   ```
+
+    ```bash
+    git clone https://github.com/yourusername/coprra.git
+    cd coprra
+    ```
 
 2. **Install dependencies**
-   ```bash
-   composer install
-   npm install
-   ```
+
+    ```bash
+    composer install
+    npm install
+    ```
 
 3. **Environment setup**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
 4. **Database setup**
-   ```bash
-   php artisan migrate
-   php artisan db:seed
-   ```
+
+    ```bash
+    php artisan migrate
+    php artisan db:seed
+    ```
 
 5. **Build assets**
-   ```bash
-   npm run build
-   ```
+
+    ```bash
+    npm run build
+    ```
 
 6. **Start the server**
-   ```bash
-   php artisan serve
-   ```
+    ```bash
+    php artisan serve
+    ```
 
 ### Docker Setup
 
 1. **Build and run with Docker**
-   ```bash
-   docker-compose up -d
-   ```
+
+    ```bash
+    docker-compose up -d
+    ```
 
 2. **Access the application**
-   - Web: http://localhost:8000
-   - Admin: http://localhost:8000/admin
+    - Web: http://localhost:8000
+    - Admin: http://localhost:8000/admin
 
 ## 🧪 Testing
 
 ### Run all tests
+
 ```bash
 composer test
 ```
 
 ### Run specific test suites
+
 ```bash
 # Unit tests
 php artisan test --testsuite=Unit
@@ -133,6 +147,7 @@ composer test:infection
 ```
 
 ### Code quality analysis
+
 ```bash
 # Run all analysis tools
 composer analyse:all
@@ -147,6 +162,7 @@ composer analyse:phpinsights
 ## 🔧 Development Commands
 
 ### Code Quality
+
 ```bash
 # Fix code style
 composer fix
@@ -159,6 +175,7 @@ composer metrics
 ```
 
 ### Frontend Development
+
 ```bash
 # Start development server
 npm run dev
@@ -176,6 +193,7 @@ npm run format
 ## 📊 Project Status
 
 ### ✅ Completed (100%)
+
 - [x] Core application functionality
 - [x] User authentication & authorization
 - [x] Admin dashboard
@@ -190,6 +208,7 @@ npm run format
 - [x] Documentation
 
 ### 📈 Metrics
+
 - **Test Coverage**: 99% success rate
 - **Code Quality**: A+ grade
 - **Security**: No vulnerabilities
@@ -208,6 +227,7 @@ The project includes a sophisticated AI-powered code quality agent that:
 - **Monitors performance** and optimization opportunities
 
 ### Available Analysis Tools
+
 - PHPStan (Static Analysis)
 - Psalm (Advanced Type Analysis)
 - PHPMD (Mess Detector)
@@ -222,36 +242,37 @@ The project includes a sophisticated AI-powered code quality agent that:
 ### Production Deployment
 
 1. **Server Requirements**
-   - PHP 8.2+
-   - Composer
-   - Node.js & npm
-   - MySQL/PostgreSQL
-   - Nginx/Apache
+    - PHP 8.2+
+    - Composer
+    - Node.js & npm
+    - MySQL/PostgreSQL
+    - Nginx/Apache
 
 2. **Deployment Steps**
-   ```bash
-   # Install dependencies
-   composer install --no-dev --optimize-autoloader
-   npm ci --only=production
-   
-   # Build assets
-   npm run build
-   
-   # Run migrations
-   php artisan migrate --force
-   
-   # Cache configuration
-   php artisan config:cache
-   php artisan route:cache
-   php artisan view:cache
-   ```
+
+    ```bash
+    # Install dependencies
+    composer install --no-dev --optimize-autoloader
+    npm ci --only=production
+
+    # Build assets
+    npm run build
+
+    # Run migrations
+    php artisan migrate --force
+
+    # Cache configuration
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+    ```
 
 3. **Environment Configuration**
-   - Set `APP_ENV=production`
-   - Set `APP_DEBUG=false`
-   - Configure database credentials
-   - Set up SSL certificates
-   - Configure monitoring tools
+    - Set `APP_ENV=production`
+    - Set `APP_DEBUG=false`
+    - Configure database credentials
+    - Set up SSL certificates
+    - Configure monitoring tools
 
 ## 📝 Contributing
 
@@ -262,6 +283,7 @@ The project includes a sophisticated AI-powered code quality agent that:
 5. Submit a pull request
 
 ### Development Guidelines
+
 - Follow PSR-12 coding standards
 - Write tests for new features
 - Update documentation
@@ -275,6 +297,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 For support and questions:
+
 - Create an issue on GitHub
 - Check the documentation
 - Review the test cases

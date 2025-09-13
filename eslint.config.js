@@ -24,17 +24,32 @@ export default [
                 navigator: 'readonly',
                 fetch: 'readonly',
                 screen: 'readonly',
-                performance: 'readonly'
-            }
+                performance: 'readonly',
+                $: 'readonly',
+                jQuery: 'readonly',
+                d3: 'readonly',
+                fastdom: 'readonly',
+                hljs: 'readonly',
+                Telescope: 'readonly',
+                SwaggerUIBundle: 'readonly',
+                SwaggerUIStandalonePreset: 'readonly',
+                Sfdump: 'readonly',
+                PhpDebugBar: 'readonly',
+                Livewire: 'readonly',
+                Alpine: 'readonly',
+            },
         },
         rules: {
-            'indent': ['error', 4],
+            indent: ['error', 4],
             'linebreak-style': ['error', 'unix'],
-            'quotes': ['error', 'single'],
-            'semi': ['error', 'always'],
+            quotes: ['error', 'single'],
+            semi: ['error', 'always'],
             'no-unused-vars': 'warn',
             'no-console': 'warn',
-            'no-debugger': 'error'
-        }
-    }
+            'no-debugger': 'error',
+        },
+    },
+    {
+        ignores: ['vendor/', 'public/build/'],
+    },
 ];

@@ -13,13 +13,15 @@ class LinkCheckerCommand extends Command
 
     protected $description = 'Check all links for broken URLs and accessibility issues';
 
-    private $brokenLinks = [];
+    /** @var array<array<string, string|int|null>> */
+    private array $brokenLinks = [];
 
-    private $workingLinks = [];
+    /** @var array<array<string, string|int|null>> */
+    private array $workingLinks = [];
 
-    private $totalChecked = 0;
+    private int $totalChecked = 0;
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🔗 Starting comprehensive link checking...');
 
@@ -36,15 +38,17 @@ class LinkCheckerCommand extends Command
         return $this->brokenLinks ? 1 : 0;
     }
 
-    private function checkInternalLinks()
+    private function checkInternalLinks(): void
     {
         $this->info('🔍 Checking internal links...');
 
+        /** @var \Illuminate\Routing\RouteCollection $routes */
         $routes = Route::getRoutes();
-        $progressBar = $this->output->createProgressBar(count($routes));
+        $progressBar = $this->output->createProgressBar(count((array) $routes));
 
-        foreach ($routes as $route) {
+        foreach ((array) $routes as $route) {
             if ($route->methods()[0] === 'GET' && ! str_contains($route->uri(), '{')) {
+                // @phpstan-ignore-next-line
                 $this->checkLink(url($route->uri()), $route->getName());
             }
             $progressBar->advance();
@@ -54,10 +58,11 @@ class LinkCheckerCommand extends Command
         $this->newLine();
     }
 
-    private function checkExternalLinks()
+    private function checkExternalLinks(): void
     {
         $this->info('🌐 Checking external links...');
 
+        /** @var array<array<string, string>> $externalLinks */
         $externalLinks = $this->getExternalLinks();
         $progressBar = $this->output->createProgressBar(count($externalLinks));
 
@@ -70,7 +75,7 @@ class LinkCheckerCommand extends Command
         $this->newLine();
     }
 
-    private function checkLink($url, $name = null)
+    private function checkLink(string $url, ?string $name = null): void
     {
         $this->totalChecked++;
 
@@ -104,7 +109,7 @@ class LinkCheckerCommand extends Command
         }
     }
 
-    private function getLinkType($url)
+    private function getLinkType(string $url): string
     {
         if (str_starts_with($url, url('/'))) {
             return 'internal';
@@ -113,28 +118,33 @@ class LinkCheckerCommand extends Command
         return 'external';
     }
 
-    private function getExternalLinks()
+    /** @return array<array<string, string>> */
+    private function getExternalLinks(): array
     {
         // Get external links from various sources
         $links = [];
 
         // From configuration
         $configLinks = config('app.external_links', []);
-        foreach ($configLinks as $name => $url) {
-            $links[] = ['name' => $name, 'url' => $url];
+        if (is_array($configLinks)) {
+            foreach ($configLinks as $name => $url) {
+                $links[] = ['name' => $name, 'url' => $url];
+            }
         }
 
         // From database (if any)
         // You can add database queries here to get external links
 
         // From static files
+        /** @var array<array<string, string>> $staticLinks */
         $staticLinks = $this->getLinksFromStaticFiles();
         $links = array_merge($links, $staticLinks);
 
         return $links;
     }
 
-    private function getLinksFromStaticFiles()
+    /** @return array<array<string, string>> */
+    private function getLinksFromStaticFiles(): array
     {
         $links = [];
 
@@ -143,15 +153,17 @@ class LinkCheckerCommand extends Command
         foreach ($viewFiles as $file) {
             $content = File::get($file->getPathname());
             preg_match_all('/href=["\'](https?:\/\/[^"\']+)["\']/', $content, $matches);
-            foreach ($matches[1] as $url) {
-                $links[] = ['name' => 'View Link', 'url' => $url];
+            if (! empty($matches[1])) {
+                foreach ($matches[1] as $url) {
+                    $links[] = ['name' => 'View Link', 'url' => $url];
+                }
             }
         }
 
         return $links;
     }
 
-    private function generateReport()
+    private function generateReport(): void
     {
         $this->newLine();
         $this->info('📊 Link Check Report');
@@ -187,7 +199,7 @@ class LinkCheckerCommand extends Command
         $this->saveReportToFile();
     }
 
-    private function saveReportToFile()
+    private function saveReportToFile(): void
     {
         $report = [
             'timestamp' => now()->toISOString(),
@@ -199,7 +211,7 @@ class LinkCheckerCommand extends Command
         ];
 
         $reportPath = storage_path('logs/link-check-report.json');
-        File::put($reportPath, json_encode($report, JSON_PRETTY_PRINT));
+        File::put($reportPath, (string) json_encode($report, JSON_PRETTY_PRINT));
 
         $this->info("📁 Report saved to: {$reportPath}");
     }

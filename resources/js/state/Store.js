@@ -24,10 +24,10 @@ class Store {
     setState(newState) {
         const prevState = { ...this.state };
         this.state = { ...this.state, ...newState };
-        
+
         // Run middleware
         this.runMiddleware(prevState, this.state);
-        
+
         // Notify listeners
         this.notifyListeners(prevState, this.state);
     }
@@ -40,7 +40,7 @@ class Store {
             this.listeners.set(key, new Set());
         }
         this.listeners.get(key).add(callback);
-        
+
         // Return unsubscribe function
         return () => {
             const listeners = this.listeners.get(key);
@@ -93,7 +93,7 @@ class Store {
         this.listeners.forEach((callbacks, key) => {
             const oldValue = this.getNestedValue(prevState, key);
             const newValue = this.getNestedValue(newState, key);
-            
+
             if (oldValue !== newValue) {
                 callbacks.forEach(callback => {
                     try {
@@ -111,7 +111,9 @@ class Store {
      */
     getNestedValue(obj, path) {
         return path.split('.').reduce((current, key) => {
-            return current && current[key] !== undefined ? current[key] : undefined;
+            return current && current[key] !== undefined
+                ? current[key]
+                : undefined;
         }, obj);
     }
 
@@ -138,7 +140,7 @@ class Store {
         this.cache.set(key, {
             data,
             timestamp: Date.now(),
-            ttl: timeout
+            ttl: timeout,
         });
     }
 
@@ -148,13 +150,13 @@ class Store {
     getCachedData(key) {
         const cached = this.cache.get(key);
         if (!cached) return null;
-        
+
         const isExpired = Date.now() - cached.timestamp > cached.ttl;
         if (isExpired) {
             this.cache.delete(key);
             return null;
         }
-        
+
         return cached.data;
     }
 
@@ -226,7 +228,7 @@ class Store {
             stateKeys: Object.keys(this.state).length,
             listeners: this.listeners.size,
             cacheSize: this.cache.size,
-            middleware: this.middleware.length
+            middleware: this.middleware.length,
         };
     }
 }

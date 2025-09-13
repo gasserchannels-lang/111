@@ -76,22 +76,24 @@ npm run build
 ### إعداد IDE
 
 #### VS Code
+
 ```json
 {
-  "php.suggest.basic": false,
-  "php.validate.enable": true,
-  "php.validate.executablePath": "/usr/bin/php",
-  "phpcs.enable": true,
-  "phpcs.executablePath": "./vendor/bin/phpcs",
-  "phpcs.standard": "PSR12",
-  "phpstan.enabled": true,
-  "phpstan.path": "./vendor/bin/phpstan",
-  "psalm.enabled": true,
-  "psalm.path": "./vendor/bin/psalm"
+    "php.suggest.basic": false,
+    "php.validate.enable": true,
+    "php.validate.executablePath": "/usr/bin/php",
+    "phpcs.enable": true,
+    "phpcs.executablePath": "./vendor/bin/phpcs",
+    "phpcs.standard": "PSR12",
+    "phpstan.enabled": true,
+    "phpstan.path": "./vendor/bin/phpstan",
+    "psalm.enabled": true,
+    "psalm.path": "./vendor/bin/psalm"
 }
 ```
 
 #### PhpStorm
+
 - تفعيل **PHP CS Fixer**
 - تفعيل **PHPStan**
 - تفعيل **Psalm**
@@ -102,6 +104,7 @@ npm run build
 ### PHP
 
 #### PSR-12
+
 ```php
 <?php
 
@@ -129,10 +132,11 @@ class ExampleService
 ```
 
 #### التعليقات
+
 ```php
 /**
  * فئة خدمة المثال
- * 
+ *
  * @package App\Services
  * @author Your Name <your.email@example.com>
  * @since 1.0.0
@@ -141,7 +145,7 @@ class ExampleService
 {
     /**
      * مثال على الطريقة
-     * 
+     *
      * @param string $parameter معامل النص
      * @return array النتيجة
      * @throws \InvalidArgumentException عند وجود خطأ في المعامل
@@ -157,6 +161,7 @@ class ExampleService
 ### JavaScript
 
 #### ES6+
+
 ```javascript
 /**
  * فئة مثال JavaScript
@@ -188,6 +193,7 @@ export default ExampleClass;
 ### CSS
 
 #### BEM Methodology
+
 ```css
 /* Block */
 .product-card {
@@ -217,6 +223,7 @@ export default ExampleClass;
 ### Git Workflow
 
 #### Branch Naming
+
 - `feature/description`: للميزات الجديدة
 - `bugfix/description`: لإصلاح الأخطاء
 - `hotfix/description`: للإصلاحات العاجلة
@@ -225,6 +232,7 @@ export default ExampleClass;
 - `test/description`: للاختبارات
 
 #### Commit Messages
+
 ```
 type(scope): description
 
@@ -234,6 +242,7 @@ Closes #123
 ```
 
 **Types:**
+
 - `feat`: ميزة جديدة
 - `fix`: إصلاح خطأ
 - `docs`: توثيق
@@ -243,6 +252,7 @@ Closes #123
 - `chore`: مهام
 
 **Examples:**
+
 ```
 feat(api): add product search endpoint
 fix(auth): resolve login validation issue
@@ -252,6 +262,7 @@ docs(readme): update installation guide
 ### Code Review
 
 #### Checklist
+
 - [ ] الكود يتبع معايير PSR-12
 - [ ] الاختبارات مكتوبة ومتجاوزة
 - [ ] التوثيق محدث
@@ -266,6 +277,7 @@ docs(readme): update installation guide
 ### PHP Tests
 
 #### Unit Tests
+
 ```php
 <?php
 
@@ -280,13 +292,14 @@ class ExampleServiceTest extends TestCase
     {
         $service = new ExampleService();
         $result = $service->exampleMethod('test');
-        
+
         $this->assertIsArray($result);
     }
 }
 ```
 
 #### Feature Tests
+
 ```php
 <?php
 
@@ -299,7 +312,7 @@ class ProductApiTest extends TestCase
     public function test_can_get_products(): void
     {
         $response = $this->getJson('/api/products');
-        
+
         $response->assertStatus(200)
                 ->assertJsonStructure([
                     'data' => [
@@ -317,6 +330,7 @@ class ProductApiTest extends TestCase
 ### JavaScript Tests
 
 #### Jest Tests
+
 ```javascript
 import ExampleClass from '../src/ExampleClass';
 
@@ -352,26 +366,29 @@ npm run test:all
 ## التوثيق
 
 ### README Files
+
 - **README.md**: نظرة عامة على المشروع
 - **API_DOCUMENTATION.md**: وثائق API
 - **DEPLOYMENT_GUIDE.md**: دليل النشر
 - **CHANGELOG.md**: سجل التغييرات
 
 ### Code Documentation
+
 - **PHPDoc**: توثيق PHP
 - **JSDoc**: توثيق JavaScript
 - **CSS Comments**: تعليقات CSS
 - **Inline Comments**: تعليقات داخلية
 
 ### Examples
+
 ```php
 /**
  * البحث عن أفضل عرض للمنتج
- * 
+ *
  * @param string $product اسم المنتج
  * @param string $country رمز البلد
  * @return array النتيجة
- * 
+ *
  * @example
  * $result = $service->findBestOffer('iPhone 15', 'US');
  * // Returns: ['store' => 'Apple', 'price' => 999.99]
@@ -391,6 +408,7 @@ public function findBestOffer(string $product, string $country): array
 وصف واضح ومفصل للخطأ.
 
 **خطوات إعادة الإنتاج**
+
 1. اذهب إلى '...'
 2. انقر على '...'
 3. مرر لأسفل إلى '...'
@@ -403,6 +421,7 @@ public function findBestOffer(string $product, string $country): array
 إذا أمكن، أضف لقطات شاشة للمساعدة في شرح المشكلة.
 
 **البيئة**
+
 - OS: [e.g. Windows 10]
 - Browser: [e.g. Chrome 91]
 - Version: [e.g. 1.0.0]
@@ -414,6 +433,7 @@ public function findBestOffer(string $product, string $country): array
 ### Security Issues
 
 للإبلاغ عن مشاكل الأمان، يرجى:
+
 1. **عدم** إنشاء issue عام
 2. إرسال بريد إلكتروني إلى: security@coprra.com
 3. وصف المشكلة بالتفصيل
@@ -443,21 +463,27 @@ public function findBestOffer(string $product, string $country): array
 ## الأسئلة الشائعة
 
 ### Q: كيف أبدأ في المساهمة؟
+
 A: ابدأ بقراءة هذا الدليل، ثم اختر issue بسيط للمبتدئين.
 
 ### Q: ما هي المتطلبات للمساهمة؟
+
 A: معرفة أساسية بـ PHP, Laravel, JavaScript, و Git.
 
 ### Q: كيف أتأكد من أن كودي يتبع المعايير؟
+
 A: استخدم PHP CS Fixer, PHPStan, و Psalm.
 
 ### Q: هل يمكنني المساهمة في التوثيق فقط؟
+
 A: نعم، التوثيق مهم جداً ونقدر المساهمات فيه.
 
 ### Q: كيف أتأكد من أن اختباراتي صحيحة؟
+
 A: تأكد من أن الاختبارات تغطي جميع الحالات وتتجاوز بنجاح.
 
 ### Q: هل يمكنني اقتراح ميزات جديدة؟
+
 A: نعم، نرحب بجميع الاقتراحات المفيدة.
 
 ## التواصل

@@ -21,7 +21,7 @@ class StartQualityMonitoringCommand extends Command
         $this->monitor = $monitor;
     }
 
-    public function handle()
+    public function handle(): int
     {
         $interval = (int) $this->option('interval');
         $daemon = $this->option('daemon');
@@ -35,6 +35,8 @@ class StartQualityMonitoringCommand extends Command
         } else {
             $this->runInteractive($interval);
         }
+
+        return Command::SUCCESS;
     }
 
     private function runInteractive(int $interval): void
@@ -42,6 +44,7 @@ class StartQualityMonitoringCommand extends Command
         $this->info('🚀 بدء المراقبة التفاعلية...');
         $this->info('اضغط Ctrl+C للإيقاف');
 
+        // @phpstan-ignore-next-line
         while (true) {
             $this->performQualityCheck();
             sleep($interval);
@@ -73,6 +76,7 @@ class StartQualityMonitoringCommand extends Command
 
     private function runMonitoringLoop(int $interval): void
     {
+        // @phpstan-ignore-next-line
         while (true) {
             $this->performQualityCheck();
             sleep($interval);

@@ -52,11 +52,12 @@ class CleanupOldDataCommand extends Command
             $this->info("📊 Found {$oldPriceOffersCount} old out-of-stock price offers to clean up");
 
             if (! $dryRun) {
+                /** @var int $deleted */
                 $deleted = PriceOffer::where('updated_at', '<', $cutoffDate)
                     ->where('in_stock', false)
                     ->delete();
                 $totalDeleted += $deleted;
-                $this->line("✅ Deleted {$deleted} old price offers");
+                $this->line('✅ Deleted '.$deleted.' old price offers');
             }
         }
 
@@ -69,11 +70,12 @@ class CleanupOldDataCommand extends Command
             $this->info("📝 Found {$oldReviewsCount} old unapproved reviews to clean up");
 
             if (! $dryRun) {
+                /** @var int $deleted */
                 $deleted = Review::where('created_at', '<', $cutoffDate)
                     ->where('is_approved', false)
                     ->delete();
                 $totalDeleted += $deleted;
-                $this->line("✅ Deleted {$deleted} old unapproved reviews");
+                $this->line('✅ Deleted '.$deleted.' old unapproved reviews');
             }
         }
 
@@ -86,11 +88,12 @@ class CleanupOldDataCommand extends Command
             $this->info("🔔 Found {$expiredAlertsCount} old inactive price alerts to clean up");
 
             if (! $dryRun) {
+                /** @var int $deleted */
                 $deleted = PriceAlert::where('created_at', '<', $cutoffDate)
                     ->where('is_active', false)
                     ->delete();
                 $totalDeleted += $deleted;
-                $this->line("✅ Deleted {$deleted} old price alerts");
+                $this->line('✅ Deleted '.$deleted.' old price alerts');
             }
         }
 

@@ -1,7 +1,7 @@
 /**
  * GSAP Image Effects Library
  * مكتبة تأثيرات الصور باستخدام GSAP
- * 
+ *
  * هذا الملف يحتوي على جميع تأثيرات الصور المتحركة
  * Zoom, Pan, Fade, Rotation
  */
@@ -38,15 +38,19 @@ class ImageEffects {
     setupZoomEffects() {
         // تكبير عند التمرير
         gsap.utils.toArray('.zoom-on-scroll').forEach(element => {
-            gsap.fromTo(element, {
-                scale: 0.8,
-                opacity: 0.7
-            }, {
-                scale: 1,
-                opacity: 1,
-                duration: 1.5,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    scale: 0.8,
+                    opacity: 0.7,
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تكبير عند التمرير فوق
@@ -55,7 +59,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1.1,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
 
@@ -63,20 +67,24 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
         });
 
         // تكبير تدريجي
         gsap.utils.toArray('.zoom-progressive').forEach(element => {
-            gsap.fromTo(element, {
-                scale: 0.5
-            }, {
-                scale: 1,
-                duration: 2,
-                ease: 'elastic.out(1, 0.3)'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    scale: 0.5,
+                },
+                {
+                    scale: 1,
+                    duration: 2,
+                    ease: 'elastic.out(1, 0.3)',
+                }
+            );
         });
     }
 
@@ -87,43 +95,55 @@ class ImageEffects {
     setupPanEffects() {
         // تحريك أفقي
         gsap.utils.toArray('.pan-horizontal').forEach(element => {
-            gsap.fromTo(element, {
-                x: -100,
-                opacity: 0
-            }, {
-                x: 0,
-                opacity: 1,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    x: -100,
+                    opacity: 0,
+                },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تحريك عمودي
         gsap.utils.toArray('.pan-vertical').forEach(element => {
-            gsap.fromTo(element, {
-                y: 100,
-                opacity: 0
-            }, {
-                y: 0,
-                opacity: 1,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    y: 100,
+                    opacity: 0,
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تحريك قطري
         gsap.utils.toArray('.pan-diagonal').forEach(element => {
-            gsap.fromTo(element, {
-                x: -100,
-                y: 100,
-                opacity: 0
-            }, {
-                x: 0,
-                y: 0,
-                opacity: 1,
-                duration: 1.2,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    x: -100,
+                    y: 100,
+                    opacity: 0,
+                },
+                {
+                    x: 0,
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: 'power2.out',
+                }
+            );
         });
     }
 
@@ -134,65 +154,85 @@ class ImageEffects {
     setupFadeEffects() {
         // تلاشي بسيط
         gsap.utils.toArray('.fade-simple').forEach(element => {
-            gsap.fromTo(element, {
-                opacity: 0
-            }, {
-                opacity: 1,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                },
+                {
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تلاشي من الأعلى
         gsap.utils.toArray('.fade-from-top').forEach(element => {
-            gsap.fromTo(element, {
-                opacity: 0,
-                y: -50
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                    y: -50,
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تلاشي من الأسفل
         gsap.utils.toArray('.fade-from-bottom').forEach(element => {
-            gsap.fromTo(element, {
-                opacity: 0,
-                y: 50
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                    y: 50,
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تلاشي من اليسار
         gsap.utils.toArray('.fade-from-left').forEach(element => {
-            gsap.fromTo(element, {
-                opacity: 0,
-                x: -50
-            }, {
-                opacity: 1,
-                x: 0,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                    x: -50,
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // تلاشي من اليمين
         gsap.utils.toArray('.fade-from-right').forEach(element => {
-            gsap.fromTo(element, {
-                opacity: 0,
-                x: 50
-            }, {
-                opacity: 1,
-                x: 0,
-                duration: 1,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                    x: 50,
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    ease: 'power2.out',
+                }
+            );
         });
     }
 
@@ -203,15 +243,19 @@ class ImageEffects {
     setupRotationEffects() {
         // دوران بسيط
         gsap.utils.toArray('.rotate-simple').forEach(element => {
-            gsap.fromTo(element, {
-                rotation: -180,
-                opacity: 0
-            }, {
-                rotation: 0,
-                opacity: 1,
-                duration: 1.5,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    rotation: -180,
+                    opacity: 0,
+                },
+                {
+                    rotation: 0,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: 'power2.out',
+                }
+            );
         });
 
         // دوران مستمر
@@ -220,23 +264,27 @@ class ImageEffects {
                 rotation: 360,
                 duration: 10,
                 ease: 'none',
-                repeat: -1
+                repeat: -1,
             });
         });
 
         // دوران ثلاثي الأبعاد
         gsap.utils.toArray('.rotate-3d').forEach(element => {
-            gsap.fromTo(element, {
-                rotationX: -90,
-                rotationY: -90,
-                opacity: 0
-            }, {
-                rotationX: 0,
-                rotationY: 0,
-                opacity: 1,
-                duration: 2,
-                ease: 'power2.out'
-            });
+            gsap.fromTo(
+                element,
+                {
+                    rotationX: -90,
+                    rotationY: -90,
+                    opacity: 0,
+                },
+                {
+                    rotationX: 0,
+                    rotationY: 0,
+                    opacity: 1,
+                    duration: 2,
+                    ease: 'power2.out',
+                }
+            );
         });
     }
 
@@ -251,7 +299,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1.05,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
 
@@ -259,7 +307,7 @@ class ImageEffects {
                 gsap.to(element, {
                     scale: 1,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
         });
@@ -271,7 +319,7 @@ class ImageEffects {
                     rotation: 5,
                     scale: 1.1,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
 
@@ -280,7 +328,7 @@ class ImageEffects {
                     rotation: 0,
                     scale: 1,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
         });
@@ -292,7 +340,7 @@ class ImageEffects {
                     opacity: 0.8,
                     scale: 1.05,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
 
@@ -301,7 +349,7 @@ class ImageEffects {
                     opacity: 1,
                     scale: 1,
                     duration: 0.3,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
         });
@@ -320,7 +368,7 @@ class ImageEffects {
                     duration: 0.1,
                     ease: 'power2.out',
                     yoyo: true,
-                    repeat: 1
+                    repeat: 1,
                 });
             });
         });
@@ -331,7 +379,7 @@ class ImageEffects {
                 gsap.to(element, {
                     rotation: 360,
                     duration: 0.5,
-                    ease: 'power2.out'
+                    ease: 'power2.out',
                 });
             });
         });
@@ -344,7 +392,7 @@ class ImageEffects {
                     duration: 0.2,
                     ease: 'power2.out',
                     yoyo: true,
-                    repeat: 1
+                    repeat: 1,
                 });
             });
         });
@@ -358,112 +406,144 @@ class ImageEffects {
         const defaultOptions = {
             duration: 1,
             ease: 'power2.out',
-            delay: 0
+            delay: 0,
         };
 
         const config = { ...defaultOptions, ...options };
 
         switch (effectType) {
         case 'zoom':
-            gsap.fromTo(element, {
-                scale: 0.8,
-                opacity: 0.7
-            }, {
-                scale: 1,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    scale: 0.8,
+                    opacity: 0.7,
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'fade':
-            gsap.fromTo(element, {
-                opacity: 0
-            }, {
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                },
+                {
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'slide-left':
-            gsap.fromTo(element, {
-                x: -100,
-                opacity: 0
-            }, {
-                x: 0,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    x: -100,
+                    opacity: 0,
+                },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'slide-right':
-            gsap.fromTo(element, {
-                x: 100,
-                opacity: 0
-            }, {
-                x: 0,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    x: 100,
+                    opacity: 0,
+                },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'slide-up':
-            gsap.fromTo(element, {
-                y: 100,
-                opacity: 0
-            }, {
-                y: 0,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    y: 100,
+                    opacity: 0,
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'slide-down':
-            gsap.fromTo(element, {
-                y: -100,
-                opacity: 0
-            }, {
-                y: 0,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    y: -100,
+                    opacity: 0,
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'rotate':
-            gsap.fromTo(element, {
-                rotation: -180,
-                opacity: 0
-            }, {
-                rotation: 0,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    rotation: -180,
+                    opacity: 0,
+                },
+                {
+                    rotation: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         case 'scale':
-            gsap.fromTo(element, {
-                scale: 0,
-                opacity: 0
-            }, {
-                scale: 1,
-                opacity: 1,
-                duration: config.duration,
-                ease: config.ease,
-                delay: config.delay
-            });
+            gsap.fromTo(
+                element,
+                {
+                    scale: 0,
+                    opacity: 0,
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
             break;
 
         default:
@@ -485,7 +565,7 @@ class ImageEffects {
      */
     resetAllElements() {
         gsap.set('*', {
-            clearProps: 'all'
+            clearProps: 'all',
         });
     }
 }

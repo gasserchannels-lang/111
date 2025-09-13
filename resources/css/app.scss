@@ -6,7 +6,13 @@ $warning-color: #f59e0b;
 $error-color: #ef4444;
 $info-color: #06b6d4;
 
-$font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-base:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 $font-size-base: 16px;
 $line-height-base: 1.6;
 
@@ -23,388 +29,540 @@ $border-radius-lg: 0.75rem;
 $border-radius-xl: 1rem;
 
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
 // Mixins
 @mixin button-variant($color, $background, $border) {
-  color: $color;
-  background-color: $background;
-  border-color: $border;
-  
-  &:hover {
-    background-color: darken($background, 10%);
-    border-color: darken($border, 10%);
-  }
-  
-  &:focus {
-    box-shadow: 0 0 0 3px rgba($background, 0.25);
-  }
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+    color: $color;
+    background-color: $background;
+    border-color: $border;
+
+    &:hover {
+        background-color: darken($background, 10%);
+        border-color: darken($border, 10%);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 3px rgba($background, 0.25);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
 }
 
 @mixin card {
-  background: white;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
-  padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
+    background: white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-md;
+    padding: $spacing-lg;
+    margin-bottom: $spacing-lg;
 }
 
 @mixin form-input {
-  width: 100%;
-  padding: $spacing-sm $spacing-md;
-  border: 1px solid #d1d5db;
-  border-radius: $border-radius-md;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  
-  &:focus {
-    outline: none;
-    border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
-  }
-  
-  &:invalid {
-    border-color: $error-color;
-  }
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid #d1d5db;
+    border-radius: $border-radius-md;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+
+    &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+
+    &:invalid {
+        border-color: $error-color;
+    }
 }
 
 @mixin responsive($breakpoint) {
-  @if $breakpoint == mobile {
-    @media (max-width: 767px) {
-      @content;
+    @if $breakpoint == mobile {
+        @media (max-width: 767px) {
+            @content;
+        }
     }
-  }
-  
-  @if $breakpoint == tablet {
-    @media (min-width: 768px) and (max-width: 1023px) {
-      @content;
+
+    @if $breakpoint == tablet {
+        @media (min-width: 768px) and (max-width: 1023px) {
+            @content;
+        }
     }
-  }
-  
-  @if $breakpoint == desktop {
-    @media (min-width: 1024px) {
-      @content;
+
+    @if $breakpoint == desktop {
+        @media (min-width: 1024px) {
+            @content;
+        }
     }
-  }
 }
 
 // Base styles
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: $font-family-base;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  color: #374151;
-  background-color: #f9fafb;
-  margin: 0;
-  padding: 0;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: #374151;
+    background-color: #f9fafb;
+    margin: 0;
+    padding: 0;
 }
 
 // Typography
-h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 $spacing-md 0;
-  font-weight: 600;
-  line-height: 1.25;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 $spacing-md 0;
+    font-weight: 600;
+    line-height: 1.25;
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.875rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 1.25rem; }
-h5 { font-size: 1.125rem; }
-h6 { font-size: 1rem; }
+h1 {
+    font-size: 2.25rem;
+}
+h2 {
+    font-size: 1.875rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+h4 {
+    font-size: 1.25rem;
+}
+h5 {
+    font-size: 1.125rem;
+}
+h6 {
+    font-size: 1rem;
+}
 
 p {
-  margin: 0 0 $spacing-md 0;
+    margin: 0 0 $spacing-md 0;
 }
 
 a {
-  color: $primary-color;
-  text-decoration: none;
-  
-  &:hover {
-    text-decoration: underline;
-  }
+    color: $primary-color;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 // Layout
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 $spacing-md;
-  
-  @include responsive(mobile) {
-    padding: 0 $spacing-sm;
-  }
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+
+    @include responsive(mobile) {
+        padding: 0 $spacing-sm;
+    }
 }
 
 .row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -$spacing-sm;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -$spacing-sm;
 }
 
 .col {
-  flex: 1;
-  padding: 0 $spacing-sm;
-  
-  @include responsive(mobile) {
-    flex: 100%;
-    margin-bottom: $spacing-md;
-  }
+    flex: 1;
+    padding: 0 $spacing-sm;
+
+    @include responsive(mobile) {
+        flex: 100%;
+        margin-bottom: $spacing-md;
+    }
 }
 
 // Components
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: $spacing-sm $spacing-md;
-  border: 1px solid transparent;
-  border-radius: $border-radius-md;
-  font-size: $font-size-base;
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  &.btn-primary {
-    @include button-variant(white, $primary-color, $primary-color);
-  }
-  
-  &.btn-secondary {
-    @include button-variant($secondary-color, white, $secondary-color);
-  }
-  
-  &.btn-success {
-    @include button-variant(white, $success-color, $success-color);
-  }
-  
-  &.btn-warning {
-    @include button-variant(white, $warning-color, $warning-color);
-  }
-  
-  &.btn-error {
-    @include button-variant(white, $error-color, $error-color);
-  }
-  
-  &.btn-sm {
-    padding: $spacing-xs $spacing-sm;
-    font-size: 0.875rem;
-  }
-  
-  &.btn-lg {
-    padding: $spacing-md $spacing-lg;
-    font-size: 1.125rem;
-  }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid transparent;
+    border-radius: $border-radius-md;
+    font-size: $font-size-base;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &.btn-primary {
+        @include button-variant(white, $primary-color, $primary-color);
+    }
+
+    &.btn-secondary {
+        @include button-variant($secondary-color, white, $secondary-color);
+    }
+
+    &.btn-success {
+        @include button-variant(white, $success-color, $success-color);
+    }
+
+    &.btn-warning {
+        @include button-variant(white, $warning-color, $warning-color);
+    }
+
+    &.btn-error {
+        @include button-variant(white, $error-color, $error-color);
+    }
+
+    &.btn-sm {
+        padding: $spacing-xs $spacing-sm;
+        font-size: 0.875rem;
+    }
+
+    &.btn-lg {
+        padding: $spacing-md $spacing-lg;
+        font-size: 1.125rem;
+    }
 }
 
 .card {
-  @include card;
-  
-  &.card-compact {
-    padding: $spacing-md;
-  }
-  
-  &.card-large {
-    padding: $spacing-xl;
-  }
+    @include card;
+
+    &.card-compact {
+        padding: $spacing-md;
+    }
+
+    &.card-large {
+        padding: $spacing-xl;
+    }
 }
 
 .form-group {
-  margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-lg;
 }
 
 .form-label {
-  display: block;
-  margin-bottom: $spacing-xs;
-  font-weight: 500;
-  color: #374151;
+    display: block;
+    margin-bottom: $spacing-xs;
+    font-weight: 500;
+    color: #374151;
 }
 
 .form-input {
-  @include form-input;
+    @include form-input;
 }
 
 .form-textarea {
-  @extend .form-input;
-  min-height: 100px;
-  resize: vertical;
+    @extend .form-input;
+    min-height: 100px;
+    resize: vertical;
 }
 
 .form-select {
-  @extend .form-input;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right $spacing-sm center;
-  background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
-  padding-right: 2.5rem;
+    @extend .form-input;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right $spacing-sm center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
 }
 
 .form-checkbox {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  
-  input[type="checkbox"] {
-    width: 1rem;
-    height: 1rem;
-    accent-color: $primary-color;
-  }
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    input[type='checkbox'] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: $primary-color;
+    }
 }
 
 .form-radio {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  
-  input[type="radio"] {
-    width: 1rem;
-    height: 1rem;
-    accent-color: $primary-color;
-  }
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    input[type='radio'] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: $primary-color;
+    }
 }
 
 // Utilities
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
 
-.text-primary { color: $primary-color; }
-.text-secondary { color: $secondary-color; }
-.text-success { color: $success-color; }
-.text-warning { color: $warning-color; }
-.text-error { color: $error-color; }
-.text-info { color: $info-color; }
+.text-primary {
+    color: $primary-color;
+}
+.text-secondary {
+    color: $secondary-color;
+}
+.text-success {
+    color: $success-color;
+}
+.text-warning {
+    color: $warning-color;
+}
+.text-error {
+    color: $error-color;
+}
+.text-info {
+    color: $info-color;
+}
 
-.bg-primary { background-color: $primary-color; }
-.bg-secondary { background-color: $secondary-color; }
-.bg-success { background-color: $success-color; }
-.bg-warning { background-color: $warning-color; }
-.bg-error { background-color: $error-color; }
-.bg-info { background-color: $info-color; }
+.bg-primary {
+    background-color: $primary-color;
+}
+.bg-secondary {
+    background-color: $secondary-color;
+}
+.bg-success {
+    background-color: $success-color;
+}
+.bg-warning {
+    background-color: $warning-color;
+}
+.bg-error {
+    background-color: $error-color;
+}
+.bg-info {
+    background-color: $info-color;
+}
 
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: $spacing-xs; }
-.mt-2 { margin-top: $spacing-sm; }
-.mt-3 { margin-top: $spacing-md; }
-.mt-4 { margin-top: $spacing-lg; }
-.mt-5 { margin-top: $spacing-xl; }
+.mt-0 {
+    margin-top: 0;
+}
+.mt-1 {
+    margin-top: $spacing-xs;
+}
+.mt-2 {
+    margin-top: $spacing-sm;
+}
+.mt-3 {
+    margin-top: $spacing-md;
+}
+.mt-4 {
+    margin-top: $spacing-lg;
+}
+.mt-5 {
+    margin-top: $spacing-xl;
+}
 
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: $spacing-xs; }
-.mb-2 { margin-bottom: $spacing-sm; }
-.mb-3 { margin-bottom: $spacing-md; }
-.mb-4 { margin-bottom: $spacing-lg; }
-.mb-5 { margin-bottom: $spacing-xl; }
+.mb-0 {
+    margin-bottom: 0;
+}
+.mb-1 {
+    margin-bottom: $spacing-xs;
+}
+.mb-2 {
+    margin-bottom: $spacing-sm;
+}
+.mb-3 {
+    margin-bottom: $spacing-md;
+}
+.mb-4 {
+    margin-bottom: $spacing-lg;
+}
+.mb-5 {
+    margin-bottom: $spacing-xl;
+}
 
-.p-0 { padding: 0; }
-.p-1 { padding: $spacing-xs; }
-.p-2 { padding: $spacing-sm; }
-.p-3 { padding: $spacing-md; }
-.p-4 { padding: $spacing-lg; }
-.p-5 { padding: $spacing-xl; }
+.p-0 {
+    padding: 0;
+}
+.p-1 {
+    padding: $spacing-xs;
+}
+.p-2 {
+    padding: $spacing-sm;
+}
+.p-3 {
+    padding: $spacing-md;
+}
+.p-4 {
+    padding: $spacing-lg;
+}
+.p-5 {
+    padding: $spacing-xl;
+}
 
-.d-none { display: none; }
-.d-block { display: block; }
-.d-inline { display: inline; }
-.d-inline-block { display: inline-block; }
-.d-flex { display: flex; }
-.d-grid { display: grid; }
+.d-none {
+    display: none;
+}
+.d-block {
+    display: block;
+}
+.d-inline {
+    display: inline;
+}
+.d-inline-block {
+    display: inline-block;
+}
+.d-flex {
+    display: flex;
+}
+.d-grid {
+    display: grid;
+}
 
-.justify-start { justify-content: flex-start; }
-.justify-center { justify-content: center; }
-.justify-end { justify-content: flex-end; }
-.justify-between { justify-content: space-between; }
-.justify-around { justify-content: space-around; }
+.justify-start {
+    justify-content: flex-start;
+}
+.justify-center {
+    justify-content: center;
+}
+.justify-end {
+    justify-content: flex-end;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.justify-around {
+    justify-content: space-around;
+}
 
-.items-start { align-items: flex-start; }
-.items-center { align-items: center; }
-.items-end { align-items: flex-end; }
-.items-stretch { align-items: stretch; }
+.items-start {
+    align-items: flex-start;
+}
+.items-center {
+    align-items: center;
+}
+.items-end {
+    align-items: flex-end;
+}
+.items-stretch {
+    align-items: stretch;
+}
 
 // Responsive utilities
 @include responsive(mobile) {
-  .d-mobile-none { display: none; }
-  .d-mobile-block { display: block; }
-  .d-mobile-flex { display: flex; }
+    .d-mobile-none {
+        display: none;
+    }
+    .d-mobile-block {
+        display: block;
+    }
+    .d-mobile-flex {
+        display: flex;
+    }
 }
 
 @include responsive(tablet) {
-  .d-tablet-none { display: none; }
-  .d-tablet-block { display: block; }
-  .d-tablet-flex { display: flex; }
+    .d-tablet-none {
+        display: none;
+    }
+    .d-tablet-block {
+        display: block;
+    }
+    .d-tablet-flex {
+        display: flex;
+    }
 }
 
 @include responsive(desktop) {
-  .d-desktop-none { display: none; }
-  .d-desktop-block { display: block; }
-  .d-desktop-flex { display: flex; }
+    .d-desktop-none {
+        display: none;
+    }
+    .d-desktop-block {
+        display: block;
+    }
+    .d-desktop-flex {
+        display: flex;
+    }
 }
 
 // Animations
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 .animate-slide-in {
-  animation: slideIn 0.3s ease-in-out;
+    animation: slideIn 0.3s ease-in-out;
 }
 
 .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 // Dark mode support
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #111827;
-    color: #f9fafb;
-  }
-  
-  .card {
-    background: #1f2937;
-    color: #f9fafb;
-  }
-  
-  .form-input {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
-    
-    &:focus {
-      border-color: $primary-color;
+    body {
+        background-color: #111827;
+        color: #f9fafb;
     }
-  }
+
+    .card {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+
+    .form-input {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+
+        &:focus {
+            border-color: $primary-color;
+        }
+    }
 }

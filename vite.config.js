@@ -11,7 +11,11 @@ export default defineConfig({
         }),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+            includeAssets: [
+                'favicon.ico',
+                'robots.txt',
+                'apple-touch-icon.png',
+            ],
             manifest: {
                 name: 'COPRRA',
                 short_name: 'COPRRA',
@@ -23,34 +27,34 @@ export default defineConfig({
                     {
                         src: '/icon-192.png',
                         sizes: '192x192',
-                        type: 'image/png'
+                        type: 'image/png',
                     },
                     {
                         src: '/icon-512.png',
                         sizes: '512x512',
-                        type: 'image/png'
-                    }
-                ]
-            }
+                        type: 'image/png',
+                    },
+                ],
+            },
         }),
         visualizer({
             gzipSize: true,
             brotliSize: true,
-            template: 'treemap'
-        })
+            template: 'treemap',
+        }),
     ],
     build: {
         cssMinify: true,
         rollupOptions: {
             output: {
                 manualChunks: {
-                    vendor: ['axios']
-                }
-            }
+                    vendor: ['axios'],
+                },
+            },
         },
-        chunkSizeWarningLimit: 1000
+        chunkSizeWarningLimit: 1000,
     },
     optimizeDeps: {
-        include: ['axios']
-    }
+        include: ['axios'],
+    },
 });

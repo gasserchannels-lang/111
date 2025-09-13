@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\DTO\AnalysisResult;
 use App\Services\PerformanceAnalysisService;
 use App\Services\QualityAnalysisService;
 use App\Services\SecurityAnalysisService;
@@ -18,21 +19,19 @@ class ComprehensiveAnalysis extends Command
     {
         $this->info('🚀 Starting Comprehensive Analysis...');
 
-        /**
-         * @var array<string, mixed>
-         */
+        /** @var array<string, AnalysisResult> $results */
         $results = [];
         $totalScore = 0;
         $maxScore = 0;
 
         // Security Analysis
         $results['security'] = $this->runSecurityAnalysis();
-        $totalScore += $results['security']['score'];
+        $totalScore += $results['security']->score;
         $maxScore += 100;
 
         // Code Quality Analysis
         $results['quality'] = $this->runQualityAnalysis();
-        $totalScore += $results['quality']['score'];
+        $totalScore += $results['quality']->score;
         $maxScore += 100;
 
         // Tests Analysis
@@ -40,13 +39,13 @@ class ComprehensiveAnalysis extends Command
             $this->info('Setting APP_ENV to testing for test analysis...');
             putenv('APP_ENV=testing');
             $results['tests'] = $this->runTestsAnalysis();
-            $totalScore += $results['tests']['score'];
+            $totalScore += $results['tests']->score;
             $maxScore += 100;
         }
 
         // Performance Analysis
         $results['performance'] = $this->runPerformanceAnalysis();
-        $totalScore += $results['performance']['score'];
+        $totalScore += $results['performance']->score;
         $maxScore += 100;
 
         // Generate Summary
@@ -55,71 +54,86 @@ class ComprehensiveAnalysis extends Command
         return Command::SUCCESS;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function runSecurityAnalysis(): array
+    private function runSecurityAnalysis(): AnalysisResult
     {
         $this->info('🛡️  Running Security Analysis...');
 
         $securityService = new SecurityAnalysisService;
+        /** @var array{score: int, max_score: int, issues: array<mixed>} $result */
         $result = $securityService->analyze();
 
         // Display console output based on the results
         $this->line('Checking for outdated dependencies...');
         if (! empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
+                /** @var string $issue */
                 if (str_contains($issue, 'outdated dependencies')) {
                     $this->warn('⚠️  Some direct dependencies are outdated.');
                     break;
                 }
             }
-
-            return $result;
         }
 
         $this->info('✅ All direct dependencies are up to date');
 
-        return $result;
+        $issues = [];
+        if (is_array($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                $issues[] = (string) $issue;
+            }
+        }
+
+        return new AnalysisResult(
+            'Security',
+            $result['score'],
+            $result['max_score'],
+            $issues
+        );
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function runQualityAnalysis(): array
+    private function runQualityAnalysis(): AnalysisResult
     {
         $this->info('📊 Running Code Quality Analysis...');
 
         $qualityService = new QualityAnalysisService;
+        /** @var array{score: int, max_score: int, issues: array<mixed>} $result */
         $result = $qualityService->analyze();
 
         // Display console output based on the results
         $this->line('Running PHPMD...');
         if (! empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
+                /** @var string $issue */
                 if (str_contains($issue, 'PHPMD found')) {
-                    $this->warn("⚠️  {$issue}");
+                    $this->warn('⚠️  '.$issue);
                 }
                 if (str_contains($issue, 'PHPCPD found')) {
                     $this->line('Running PHPCPD...');
-                    $this->warn("⚠️  {$issue}");
+                    $this->warn('⚠️  '.$issue);
                 }
             }
-
-            return $result;
         }
 
         $this->info('✅ PHPMD found no issues.');
         $this->line('Running PHPCPD...');
         $this->info('✅ PHPCPD found no duplicate code.');
 
-        return $result;
+        $issues = [];
+        if (is_array($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                $issues[] = (string) $issue;
+            }
+        }
+
+        return new AnalysisResult(
+            'Quality',
+            $result['score'],
+            $result['max_score'],
+            $issues
+        );
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function runTestsAnalysis(): array
+    private function runTestsAnalysis(): AnalysisResult
     {
         $this->info('🧪 Running Tests Analysis...');
 
@@ -129,11 +143,13 @@ class ComprehensiveAnalysis extends Command
 
         $testServiceFactory = new TestAnalysisServiceFactory;
         $testService = $testServiceFactory->create();
+        /** @var array{score: int, max_score: int, issues: array<mixed>} $result */
         $result = $testService->analyze();
 
         // Display console output based on the results
         if (! empty($result['issues'])) {
             foreach ($result['issues'] as $issue) {
+                /** @var string $issue */
                 if (str_contains($issue, 'tests failed')) {
                     $this->warn('⚠️  Some tests had issues.');
 
@@ -141,8 +157,6 @@ class ComprehensiveAnalysis extends Command
                 }
                 $this->error('❌ Test analysis encountered errors');
             }
-
-            return $result;
         }
 
         $this->info('✅ Tests passed successfully.');
@@ -150,23 +164,46 @@ class ComprehensiveAnalysis extends Command
             $this->info('✅ Code coverage analyzed.');
         }
 
-        return $result;
+        $issues = [];
+        if (is_array($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                $issues[] = (string) $issue;
+            }
+        }
+
+        return new AnalysisResult(
+            'Tests',
+            $result['score'],
+            $result['max_score'],
+            $issues
+        );
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function runPerformanceAnalysis(): array
+    private function runPerformanceAnalysis(): AnalysisResult
     {
         $this->info('⚡ Running Performance Analysis...');
 
         $performanceService = new PerformanceAnalysisService;
+        /** @var array{score: int, max_score: int, issues: array<mixed>} $result */
+        $result = $performanceService->analyze();
 
-        return $performanceService->analyze();
+        $issues = [];
+        if (is_array($result['issues'])) {
+            foreach ($result['issues'] as $issue) {
+                $issues[] = (string) $issue;
+            }
+        }
+
+        return new AnalysisResult(
+            'Performance',
+            $result['score'],
+            $result['max_score'],
+            $issues
+        );
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $results
+     * @param  array<string, AnalysisResult>  $results
      */
     private function generateSummary(array $results, int $totalScore, int $maxScore): void
     {
@@ -177,21 +214,21 @@ class ComprehensiveAnalysis extends Command
         $overallPercentage = $maxScore > 0 ? round(($totalScore / $maxScore) * 100, 1) : 0;
 
         foreach ($results as $result) {
-            $percentage = $result['max_score'] > 0 ? round(($result['score'] / $result['max_score']) * 100, 1) : 0;
+            $percentage = $result->max_score > 0 ? round(($result->score / $result->max_score) * 100, 1) : 0;
             $emoji = $this->getScoreEmoji($percentage);
 
             $this->line(sprintf(
                 '%s %s: %d/%d (%s%%)',
                 $emoji,
-                $result['category'],
-                $result['score'],
-                $result['max_score'],
+                $result->category,
+                $result->score,
+                $result->max_score,
                 $percentage
             ));
 
-            if (! empty($result['issues'])) {
-                foreach ($result['issues'] as $issue) {
-                    $this->line("  ⚠️  {$issue}");
+            if (! empty($result->issues)) {
+                foreach ($result->issues as $issue) {
+                    $this->line('  ⚠️  '.$issue);
                 }
             }
         }
