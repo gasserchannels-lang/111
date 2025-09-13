@@ -234,10 +234,10 @@ class ErrorTracker {
                 : null,
             memory: memory
                 ? {
-                      used: memory.usedJSHeapSize,
-                      total: memory.totalJSHeapSize,
-                      limit: memory.jsHeapSizeLimit,
-                  }
+                    used: memory.usedJSHeapSize,
+                    total: memory.totalJSHeapSize,
+                    limit: memory.jsHeapSizeLimit,
+                }
                 : null,
         };
     }
