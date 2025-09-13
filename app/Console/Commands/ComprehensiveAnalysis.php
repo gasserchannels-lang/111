@@ -77,10 +77,8 @@ class ComprehensiveAnalysis extends Command
         $this->info('✅ All direct dependencies are up to date');
 
         $issues = [];
-        if (is_array($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
-            }
+        foreach ($result['issues'] as $issue) {
+            $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
         }
 
         return new AnalysisResult(
@@ -119,10 +117,8 @@ class ComprehensiveAnalysis extends Command
         $this->info('✅ PHPCPD found no duplicate code.');
 
         $issues = [];
-        if (is_array($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
-            }
+        foreach ($result['issues'] as $issue) {
+            $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
         }
 
         return new AnalysisResult(
@@ -165,10 +161,8 @@ class ComprehensiveAnalysis extends Command
         }
 
         $issues = [];
-        if (is_array($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
-            }
+        foreach ($result['issues'] as $issue) {
+            $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
         }
 
         return new AnalysisResult(
@@ -188,10 +182,8 @@ class ComprehensiveAnalysis extends Command
         $result = $performanceService->analyze();
 
         $issues = [];
-        if (is_array($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
-            }
+        foreach ($result['issues'] as $issue) {
+            $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
         }
 
         return new AnalysisResult(
