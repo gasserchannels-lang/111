@@ -53,9 +53,9 @@ class GenerateAnalysisReport extends Command
         if (File::exists($phpstanFile)) {
             /** @var array<string, mixed> $phpstanData */
             $phpstanData = json_decode(File::get($phpstanFile), true);
-            if (is_array($phpstanData) && isset($phpstanData['totals']) && is_array($phpstanData['totals'])) {
-                $errors = (int) ($phpstanData['totals']['errors'] ?? 0);
-                $warnings = (int) ($phpstanData['totals']['warnings'] ?? 0);
+            if (isset($phpstanData['totals']) && is_array($phpstanData['totals'])) {
+                $errors = is_numeric($phpstanData['totals']['errors'] ?? 0) ? (int) ($phpstanData['totals']['errors']) : 0;
+                $warnings = is_numeric($phpstanData['totals']['warnings'] ?? 0) ? (int) ($phpstanData['totals']['warnings']) : 0;
                 $status = $errors === 0 ? '✅' : '❌';
                 $report .= "| PHPStan Errors | {$errors} | {$status} |\n";
                 $report .= "| PHPStan Warnings | {$warnings} | {$status} |\n";
@@ -67,7 +67,7 @@ class GenerateAnalysisReport extends Command
         if (File::exists($auditFile)) {
             /** @var array<string, mixed> $auditData */
             $auditData = json_decode(File::get($auditFile), true);
-            if (is_array($auditData) && isset($auditData['advisories'])) {
+            if (isset($auditData['advisories'])) {
                 $advisories = count((array) $auditData['advisories']);
                 $status = $advisories === 0 ? '✅' : '⚠️';
                 $report .= "| Security Advisories | {$advisories} | {$status} |\n";
@@ -79,8 +79,8 @@ class GenerateAnalysisReport extends Command
         if (File::exists($pintFile)) {
             /** @var array<string, mixed> $pintData */
             $pintData = json_decode(File::get($pintFile), true);
-            if (is_array($pintData) && isset($pintData['changes'])) {
-                $changes = (int) $pintData['changes'];
+            if (isset($pintData['changes'])) {
+                $changes = is_numeric($pintData['changes']) ? (int) $pintData['changes'] : 0;
                 $status = $changes === 0 ? '✅' : '🔧';
                 $report .= "| Code Style Issues | {$changes} | {$status} |\n";
             }
@@ -118,7 +118,7 @@ class GenerateAnalysisReport extends Command
         if (File::exists($auditFile)) {
             /** @var array<string, mixed> $auditData */
             $auditData = json_decode(File::get($auditFile), true);
-            if (is_array($auditData) && isset($auditData['advisories']) && is_array($auditData['advisories'])) {
+            if (isset($auditData['advisories']) && is_array($auditData['advisories'])) {
                 /** @var array<string, mixed> $advisories */
                 $advisories = $auditData['advisories'];
 
@@ -129,9 +129,12 @@ class GenerateAnalysisReport extends Command
                     foreach ($advisories as $package => $advisory) {
                         if (is_array($advisory)) {
                             $report .= '### 📦 '.(string) $package."\n";
-                            $report .= '- **الخطورة:** '.(string) ($advisory['severity'] ?? 'unknown')."\n";
-                            $report .= '- **الوصف:** '.(string) ($advisory['title'] ?? 'unknown')."\n";
-                            $report .= '- **الإصلاح:** '.(string) ($advisory['remediation'] ?? 'unknown')."\n\n";
+                            $severity = is_string($advisory['severity'] ?? null) ? $advisory['severity'] : 'unknown';
+                            $title = is_string($advisory['title'] ?? null) ? $advisory['title'] : 'unknown';
+                            $remediation = is_string($advisory['remediation'] ?? null) ? $advisory['remediation'] : 'unknown';
+                            $report .= '- **الخطورة:** '.$severity."\n";
+                            $report .= '- **الوصف:** '.$title."\n";
+                            $report .= '- **الإصلاح:** '.$remediation."\n\n";
                         }
                     }
                 }
@@ -144,9 +147,9 @@ class GenerateAnalysisReport extends Command
             /** @var \SimpleXMLElement|false $xml */
             $xml = simplexml_load_file($securityTestsFile);
             if ($xml !== false) {
-                $totalTests = (int) ($xml['tests'] ?? 0);
-                $failures = (int) ($xml['failures'] ?? 0);
-                $errors = (int) ($xml['errors'] ?? 0);
+                $totalTests = is_numeric($xml['tests'] ?? 0) ? (int) ($xml['tests']) : 0;
+                $failures = is_numeric($xml['failures'] ?? 0) ? (int) ($xml['failures']) : 0;
+                $errors = is_numeric($xml['errors'] ?? 0) ? (int) ($xml['errors']) : 0;
 
                 $report .= "## 🧪 اختبارات الأمان\n\n";
                 $report .= "| المؤشر | القيمة |\n";
@@ -186,9 +189,9 @@ class GenerateAnalysisReport extends Command
             /** @var \SimpleXMLElement|false $xml */
             $xml = simplexml_load_file($performanceTestsFile);
             if ($xml !== false) {
-                $totalTests = (int) ($xml['tests'] ?? 0);
-                $failures = (int) ($xml['failures'] ?? 0);
-                $errors = (int) ($xml['errors'] ?? 0);
+                $totalTests = is_numeric($xml['tests'] ?? 0) ? (int) ($xml['tests']) : 0;
+                $failures = is_numeric($xml['failures'] ?? 0) ? (int) ($xml['failures']) : 0;
+                $errors = is_numeric($xml['errors'] ?? 0) ? (int) ($xml['errors']) : 0;
 
                 $report .= "| المؤشر | القيمة |\n";
                 $report .= "|--------|--------|\n";
@@ -240,8 +243,12 @@ class GenerateAnalysisReport extends Command
         if (File::exists($phpstanFile)) {
             /** @var array<string, mixed> $phpstanData */
             $phpstanData = json_decode(File::get($phpstanFile), true);
-            $errors = (int) ($phpstanData['totals']['errors'] ?? 0);
-            $warnings = (int) ($phpstanData['totals']['warnings'] ?? 0);
+            $errors = 0;
+            $warnings = 0;
+            if (isset($phpstanData['totals']) && is_array($phpstanData['totals'])) {
+                $errors = is_numeric($phpstanData['totals']['errors'] ?? 0) ? (int) ($phpstanData['totals']['errors']) : 0;
+                $warnings = is_numeric($phpstanData['totals']['warnings'] ?? 0) ? (int) ($phpstanData['totals']['warnings']) : 0;
+            }
 
             $report .= "### 🔍 PHPStan (التحليل الثابت)\n";
             $report .= "| المؤشر | القيمة |\n";
@@ -262,8 +269,7 @@ class GenerateAnalysisReport extends Command
             /** @var \SimpleXMLElement|false $xml */
             $xml = simplexml_load_file($phpmdFile);
             if ($xml !== false) {
-                /** @var int $violations */
-                $violations = count($xml->xpath('//violation'));
+                $violations = count($xml->xpath('//violation') ?: []);
 
                 $report .= "### 🔧 PHPMD (جودة الكود)\n";
                 $report .= "| المؤشر | القيمة |\n";
@@ -283,7 +289,10 @@ class GenerateAnalysisReport extends Command
         if (File::exists($pintFile)) {
             /** @var array<string, mixed> $pintData */
             $pintData = json_decode(File::get($pintFile), true);
-            $changes = (int) ($pintData['changes'] ?? 0);
+            $changes = 0;
+            if (isset($pintData['changes'])) {
+                $changes = is_numeric($pintData['changes']) ? (int) $pintData['changes'] : 0;
+            }
 
             $report .= "### 🎨 Laravel Pint (تنسيق الكود)\n";
             $report .= "| المؤشر | القيمة |\n";
