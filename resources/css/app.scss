@@ -9,9 +9,9 @@ $info-color: #06b6d4;
 $font-family-base:
     'Inter',
     -apple-system,
-    BlinkMacSystemFont,
+    blinkmacsystemfont,
     'Segoe UI',
-    Roboto,
+    roboto,
     sans-serif;
 $font-size-base: 16px;
 $line-height-base: 1.6;
@@ -28,16 +28,16 @@ $border-radius-md: 0.5rem;
 $border-radius-lg: 0.75rem;
 $border-radius-xl: 1rem;
 
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 5%);
 $shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    0 4px 6px -1px rgb(0 0 0 / 10%),
+    0 2px 4px -1px rgb(0 0 0 / 6%);
 $shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -2px rgb(0 0 0 / 5%);
 $shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    0 20px 25px -5px rgb(0 0 0 / 10%),
+    0 10px 10px -5px rgb(0 0 0 / 4%);
 
 // Mixins
 @mixin button-variant($color, $background, $border) {
@@ -89,19 +89,19 @@ $shadow-xl:
 
 @mixin responsive($breakpoint) {
     @if $breakpoint == mobile {
-        @media (max-width: 767px) {
+        @media (width <= 767px) {
             @content;
         }
     }
 
     @if $breakpoint == tablet {
-        @media (min-width: 768px) and (max-width: 1023px) {
+        @media (width >= 768px) and (width <= 1023px) {
             @content;
         }
     }
 
     @if $breakpoint == desktop {
-        @media (min-width: 1024px) {
+        @media (width >= 1024px) {
             @content;
         }
     }
@@ -129,7 +129,7 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0 0 $spacing-md 0;
+    margin: 0 0 $spacing-md;
     font-weight: 600;
     line-height: 1.25;
 }
@@ -137,24 +137,29 @@ h6 {
 h1 {
     font-size: 2.25rem;
 }
+
 h2 {
     font-size: 1.875rem;
 }
+
 h3 {
     font-size: 1.5rem;
 }
+
 h4 {
     font-size: 1.25rem;
 }
+
 h5 {
     font-size: 1.125rem;
 }
+
 h6 {
     font-size: 1rem;
 }
 
 p {
-    margin: 0 0 $spacing-md 0;
+    margin: 0 0 $spacing-md;
 }
 
 a {
@@ -273,12 +278,14 @@ a {
 
 .form-textarea {
     @extend .form-input;
+
     min-height: 100px;
     resize: vertical;
 }
 
 .form-select {
     @extend .form-input;
+
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right $spacing-sm center;
     background-repeat: no-repeat;
@@ -314,9 +321,11 @@ a {
 .text-center {
     text-align: center;
 }
+
 .text-left {
     text-align: left;
 }
+
 .text-right {
     text-align: right;
 }
@@ -324,18 +333,23 @@ a {
 .text-primary {
     color: $primary-color;
 }
+
 .text-secondary {
     color: $secondary-color;
 }
+
 .text-success {
     color: $success-color;
 }
+
 .text-warning {
     color: $warning-color;
 }
+
 .text-error {
     color: $error-color;
 }
+
 .text-info {
     color: $info-color;
 }
@@ -343,18 +357,23 @@ a {
 .bg-primary {
     background-color: $primary-color;
 }
+
 .bg-secondary {
     background-color: $secondary-color;
 }
+
 .bg-success {
     background-color: $success-color;
 }
+
 .bg-warning {
     background-color: $warning-color;
 }
+
 .bg-error {
     background-color: $error-color;
 }
+
 .bg-info {
     background-color: $info-color;
 }
@@ -362,18 +381,23 @@ a {
 .mt-0 {
     margin-top: 0;
 }
+
 .mt-1 {
     margin-top: $spacing-xs;
 }
+
 .mt-2 {
     margin-top: $spacing-sm;
 }
+
 .mt-3 {
     margin-top: $spacing-md;
 }
+
 .mt-4 {
     margin-top: $spacing-lg;
 }
+
 .mt-5 {
     margin-top: $spacing-xl;
 }
@@ -381,18 +405,23 @@ a {
 .mb-0 {
     margin-bottom: 0;
 }
+
 .mb-1 {
     margin-bottom: $spacing-xs;
 }
+
 .mb-2 {
     margin-bottom: $spacing-sm;
 }
+
 .mb-3 {
     margin-bottom: $spacing-md;
 }
+
 .mb-4 {
     margin-bottom: $spacing-lg;
 }
+
 .mb-5 {
     margin-bottom: $spacing-xl;
 }
@@ -400,18 +429,23 @@ a {
 .p-0 {
     padding: 0;
 }
+
 .p-1 {
     padding: $spacing-xs;
 }
+
 .p-2 {
     padding: $spacing-sm;
 }
+
 .p-3 {
     padding: $spacing-md;
 }
+
 .p-4 {
     padding: $spacing-lg;
 }
+
 .p-5 {
     padding: $spacing-xl;
 }
@@ -419,18 +453,23 @@ a {
 .d-none {
     display: none;
 }
+
 .d-block {
     display: block;
 }
+
 .d-inline {
     display: inline;
 }
+
 .d-inline-block {
     display: inline-block;
 }
+
 .d-flex {
     display: flex;
 }
+
 .d-grid {
     display: grid;
 }
@@ -438,15 +477,19 @@ a {
 .justify-start {
     justify-content: flex-start;
 }
+
 .justify-center {
     justify-content: center;
 }
+
 .justify-end {
     justify-content: flex-end;
 }
+
 .justify-between {
     justify-content: space-between;
 }
+
 .justify-around {
     justify-content: space-around;
 }
@@ -454,12 +497,15 @@ a {
 .items-start {
     align-items: flex-start;
 }
+
 .items-center {
     align-items: center;
 }
+
 .items-end {
     align-items: flex-end;
 }
+
 .items-stretch {
     align-items: stretch;
 }
@@ -469,9 +515,11 @@ a {
     .d-mobile-none {
         display: none;
     }
+
     .d-mobile-block {
         display: block;
     }
+
     .d-mobile-flex {
         display: flex;
     }
@@ -481,9 +529,11 @@ a {
     .d-tablet-none {
         display: none;
     }
+
     .d-tablet-block {
         display: block;
     }
+
     .d-tablet-flex {
         display: flex;
     }
@@ -493,9 +543,11 @@ a {
     .d-desktop-none {
         display: none;
     }
+
     .d-desktop-block {
         display: block;
     }
+
     .d-desktop-flex {
         display: flex;
     }
@@ -506,6 +558,7 @@ a {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -516,6 +569,7 @@ a {
         transform: translateY(-10px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -527,6 +581,7 @@ a {
     100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }

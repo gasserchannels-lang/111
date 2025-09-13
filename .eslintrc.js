@@ -3,6 +3,7 @@ module.exports = {
         browser: true,
         es2021: true,
         node: true,
+        serviceworker: true,
     },
     extends: ['eslint:recommended'],
     parserOptions: {
@@ -27,5 +28,14 @@ module.exports = {
         require: 'readonly',
         exports: 'readonly',
         global: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        self: 'readonly',
+        caches: 'readonly',
+        URL: 'readonly',
+        location: 'readonly',
+        fetch: 'readonly',
+        Response: 'readonly',
+        clients: 'readonly',
     },
 };

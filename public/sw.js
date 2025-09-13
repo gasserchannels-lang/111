@@ -1,7 +1,7 @@
 // Service Worker for COPRRA
 // Version 1.0.0
 
-const CACHE_NAME = 'coprra-v1.0.0';
+// const CACHE_NAME = 'coprra-v1.0.0';
 const STATIC_CACHE = 'coprra-static-v1.0.0';
 const DYNAMIC_CACHE = 'coprra-dynamic-v1.0.0';
 
@@ -279,7 +279,7 @@ async function getPendingPriceAlerts() {
     return [];
 }
 
-async function removePendingPriceAlert(id) {
+async function removePendingPriceAlert(/* id */) {
     // Implementation would depend on your IndexedDB setup
 }
 
@@ -288,7 +288,7 @@ async function getPendingWishlistActions() {
     return [];
 }
 
-async function removePendingWishlistAction(id) {
+async function removePendingWishlistAction(/* id */) {
     // Implementation would depend on your IndexedDB setup
 }
 

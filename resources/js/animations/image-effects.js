@@ -412,141 +412,141 @@ class ImageEffects {
         const config = { ...defaultOptions, ...options };
 
         switch (effectType) {
-            case 'zoom':
-                gsap.fromTo(
-                    element,
-                    {
-                        scale: 0.8,
-                        opacity: 0.7,
-                    },
-                    {
-                        scale: 1,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'zoom':
+            gsap.fromTo(
+                element,
+                {
+                    scale: 0.8,
+                    opacity: 0.7,
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'fade':
-                gsap.fromTo(
-                    element,
-                    {
-                        opacity: 0,
-                    },
-                    {
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'fade':
+            gsap.fromTo(
+                element,
+                {
+                    opacity: 0,
+                },
+                {
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'slide-left':
-                gsap.fromTo(
-                    element,
-                    {
-                        x: -100,
-                        opacity: 0,
-                    },
-                    {
-                        x: 0,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'slide-left':
+            gsap.fromTo(
+                element,
+                {
+                    x: -100,
+                    opacity: 0,
+                },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'slide-right':
-                gsap.fromTo(
-                    element,
-                    {
-                        x: 100,
-                        opacity: 0,
-                    },
-                    {
-                        x: 0,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'slide-right':
+            gsap.fromTo(
+                element,
+                {
+                    x: 100,
+                    opacity: 0,
+                },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'slide-up':
-                gsap.fromTo(
-                    element,
-                    {
-                        y: 100,
-                        opacity: 0,
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'slide-up':
+            gsap.fromTo(
+                element,
+                {
+                    y: 100,
+                    opacity: 0,
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'slide-down':
-                gsap.fromTo(
-                    element,
-                    {
-                        y: -100,
-                        opacity: 0,
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'slide-down':
+            gsap.fromTo(
+                element,
+                {
+                    y: -100,
+                    opacity: 0,
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'rotate':
-                gsap.fromTo(
-                    element,
-                    {
-                        rotation: -180,
-                        opacity: 0,
-                    },
-                    {
-                        rotation: 0,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'rotate':
+            gsap.fromTo(
+                element,
+                {
+                    rotation: -180,
+                    opacity: 0,
+                },
+                {
+                    rotation: 0,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            case 'scale':
-                gsap.fromTo(
-                    element,
-                    {
-                        scale: 0,
-                        opacity: 0,
-                    },
-                    {
-                        scale: 1,
-                        opacity: 1,
-                        duration: config.duration,
-                        ease: config.ease,
-                        delay: config.delay,
-                    }
-                );
-                break;
+        case 'scale':
+            gsap.fromTo(
+                element,
+                {
+                    scale: 0,
+                    opacity: 0,
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: config.duration,
+                    ease: config.ease,
+                    delay: config.delay,
+                }
+            );
+            break;
 
-            default:
+        default:
             // console.warn(`Unknown effect type: ${effectType}`);
         }
     }
