@@ -333,7 +333,7 @@ abstract class BaseApiController extends Controller
 
         return [
             'search' => $search,
-            'search_fields' => is_array($searchFields) ? $searchFields : [$searchFields],
+            'search_fields' => $searchFields,
         ];
     }
 

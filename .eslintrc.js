@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* global module */
 module.exports = {
     env: {
         browser: true,

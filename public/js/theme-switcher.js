@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* global document, localStorage */
 document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme') || 'light';

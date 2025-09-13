@@ -198,7 +198,7 @@ abstract class BaseApiController extends V1BaseController
             return [];
         }
 
-        return is_array($include) ? $include : explode(',', $include);
+        return explode(',', $include);
     }
 
     /**
@@ -215,7 +215,7 @@ abstract class BaseApiController extends V1BaseController
             return [];
         }
 
-        return is_array($fields) ? $fields : explode(',', $fields);
+        return explode(',', $fields);
     }
 
     /**
@@ -229,7 +229,7 @@ abstract class BaseApiController extends V1BaseController
 
         return [
             'search' => $search,
-            'search_fields' => is_array($searchFields) ? $searchFields : [$searchFields],
+            'search_fields' => $searchFields,
             'search_mode' => $searchMode,
         ];
     }
