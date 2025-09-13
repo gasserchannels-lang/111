@@ -85,9 +85,9 @@ class StatsCommand extends Command
         $maxPrice = PriceOffer::max('price') ?? 0.0;
 
         $this->table(['Price Metric', 'Value'], [
-            ['Average Price', '$'.number_format($avgPrice, 2)],
-            ['Minimum Price', '$'.number_format($minPrice, 2)],
-            ['Maximum Price', '$'.number_format($maxPrice, 2)],
+            ['Average Price', '$'.number_format((float) $avgPrice, 2)],
+            ['Minimum Price', '$'.number_format((float) $minPrice, 2)],
+            ['Maximum Price', '$'.number_format((float) $maxPrice, 2)],
         ]);
 
         // Top categories by product count
@@ -154,7 +154,7 @@ class StatsCommand extends Command
                        User::count() + PriceAlert::count();
 
         $this->table(['Database Metric', 'Value'], [
-            ['Total Records', number_format($totalRecords)],
+            ['Total Records', number_format((float) $totalRecords)],
             ['Estimated Size', $this->formatBytes($totalRecords * 1024)], // Rough estimate
         ]);
     }
