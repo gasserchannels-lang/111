@@ -79,7 +79,7 @@ class ComprehensiveAnalysis extends Command
         $issues = [];
         if (is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (string) $issue;
+                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
             }
         }
 
@@ -121,7 +121,7 @@ class ComprehensiveAnalysis extends Command
         $issues = [];
         if (is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (string) $issue;
+                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
             }
         }
 
@@ -167,7 +167,7 @@ class ComprehensiveAnalysis extends Command
         $issues = [];
         if (is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (string) $issue;
+                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
             }
         }
 
@@ -190,7 +190,7 @@ class ComprehensiveAnalysis extends Command
         $issues = [];
         if (is_array($result['issues'])) {
             foreach ($result['issues'] as $issue) {
-                $issues[] = is_string($issue) ? $issue : (string) $issue;
+                $issues[] = is_string($issue) ? $issue : (is_scalar($issue) ? (string) $issue : 'Unknown issue');
             }
         }
 
