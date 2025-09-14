@@ -205,6 +205,10 @@ class CentralizedLoggingService
      * @param  array<string, mixed>  $context
      * @return array<string, mixed>
      */
+    /**
+     * @param array<mixed, mixed> $context
+     * @return array<string, mixed>
+     */
     private function filterSensitiveData(array $context): array
     {
         foreach ($context as $key => $value) {
@@ -408,7 +412,9 @@ class CentralizedLoggingService
 
         // Sort by timestamp
         usort($allLogs, function ($a, $b) {
-            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+            $timestampA = is_array($a) && isset($a['timestamp']) && is_string($a['timestamp']) ? $a['timestamp'] : '';
+            $timestampB = is_array($b) && isset($b['timestamp']) && is_string($b['timestamp']) ? $b['timestamp'] : '';
+            return strtotime($timestampB) - strtotime($timestampA);
         });
 
         return array_slice($allLogs, 0, $limit);
@@ -429,15 +435,24 @@ class CentralizedLoggingService
             $logs = Cache::get($key, []);
 
             $levelCounts = [];
-            foreach ($logs as $log) {
-                $level = $log['level'];
-                $levelCounts[$level] = ($levelCounts[$level] ?? 0) + 1;
+            if (is_array($logs)) {
+                foreach ($logs as $log) {
+                    if (is_array($log) && isset($log['level'])) {
+                        $levelValue = $log['level'];
+                        if (is_string($levelValue)) {
+                            $level = $levelValue;
+                        } else {
+                            $level = 'unknown';
+                        }
+                        $levelCounts[$level] = ($levelCounts[$level] ?? 0) + 1;
+                    }
+                }
             }
 
             $stats[$channel] = [
-                'total' => count($logs),
+                'total' => is_array($logs) ? count($logs) : 0,
                 'levels' => $levelCounts,
-                'last_log' => ! empty($logs) ? end($logs)['timestamp'] : null,
+                'last_log' => ! empty($logs) && is_array($logs) ? (is_array(end($logs)) && isset(end($logs)['timestamp']) ? end($logs)['timestamp'] : null) : null,
             ];
         }
 
@@ -462,7 +477,9 @@ class CentralizedLoggingService
             }
 
             // Search in message and context
-            $searchText = strtolower($log['message'].' '.json_encode($log['context']));
+            $message = is_string($log['message'] ?? null) ? $log['message'] : '';
+            $context = $log['context'] ?? [];
+            $searchText = strtolower($message.' '.json_encode($context));
 
             if (str_contains($searchText, strtolower($query))) {
                 $results[] = $log;
@@ -510,13 +527,19 @@ class CentralizedLoggingService
         $csv = "Timestamp,Channel,Level,Message,Context\n";
 
         foreach ($logs as $log) {
+            $timestamp = is_string($log['timestamp'] ?? null) ? $log['timestamp'] : '';
+            $channel = is_string($log['channel'] ?? null) ? $log['channel'] : '';
+            $level = is_string($log['level'] ?? null) ? $log['level'] : '';
+            $message = is_string($log['message'] ?? null) ? $log['message'] : '';
+            $context = $log['context'] ?? [];
+            
             $csv .= sprintf(
                 "%s,%s,%s,%s,%s\n",
-                $log['timestamp'],
-                $log['channel'],
-                $log['level'],
-                str_replace(',', ';', $log['message']),
-                str_replace(',', ';', json_encode($log['context']) ?: '')
+                $timestamp,
+                $channel,
+                $level,
+                str_replace(',', ';', $message),
+                str_replace(',', ';', json_encode($context) ?: '')
             );
         }
 
@@ -534,13 +557,19 @@ class CentralizedLoggingService
         $txt = '';
 
         foreach ($logs as $log) {
+            $timestamp = is_string($log['timestamp'] ?? null) ? $log['timestamp'] : '';
+            $channel = is_string($log['channel'] ?? null) ? $log['channel'] : '';
+            $level = is_string($log['level'] ?? null) ? $log['level'] : '';
+            $message = is_string($log['message'] ?? null) ? $log['message'] : '';
+            $context = $log['context'] ?? [];
+            
             $txt .= sprintf(
                 "[%s] %s.%s: %s\nContext: %s\n\n",
-                $log['timestamp'],
-                $log['channel'],
-                strtoupper($log['level']),
-                $log['message'],
-                json_encode($log['context'], JSON_PRETTY_PRINT)
+                $timestamp,
+                $channel,
+                strtoupper($level),
+                $message,
+                json_encode($context, JSON_PRETTY_PRINT)
             );
         }
 
