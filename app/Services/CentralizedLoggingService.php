@@ -206,7 +206,7 @@ class CentralizedLoggingService
      * @return array<string, mixed>
      */
     /**
-     * @param array<mixed, mixed> $context
+     * @param  array<mixed, mixed>  $context
      * @return array<string, mixed>
      */
     private function filterSensitiveData(array $context): array
@@ -414,6 +414,7 @@ class CentralizedLoggingService
         usort($allLogs, function ($a, $b) {
             $timestampA = is_array($a) && isset($a['timestamp']) && is_string($a['timestamp']) ? $a['timestamp'] : '';
             $timestampB = is_array($b) && isset($b['timestamp']) && is_string($b['timestamp']) ? $b['timestamp'] : '';
+
             return strtotime($timestampB) - strtotime($timestampA);
         });
 
@@ -532,7 +533,7 @@ class CentralizedLoggingService
             $level = is_string($log['level'] ?? null) ? $log['level'] : '';
             $message = is_string($log['message'] ?? null) ? $log['message'] : '';
             $context = $log['context'] ?? [];
-            
+
             $csv .= sprintf(
                 "%s,%s,%s,%s,%s\n",
                 $timestamp,
@@ -562,7 +563,7 @@ class CentralizedLoggingService
             $level = is_string($log['level'] ?? null) ? $log['level'] : '';
             $message = is_string($log['message'] ?? null) ? $log['message'] : '';
             $context = $log['context'] ?? [];
-            
+
             $txt .= sprintf(
                 "[%s] %s.%s: %s\nContext: %s\n\n",
                 $timestamp,

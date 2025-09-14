@@ -19,6 +19,7 @@ use Tests\TestCase;
 class IntegrationTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * Test complete product workflow.
      */

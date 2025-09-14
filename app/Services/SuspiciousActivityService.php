@@ -78,17 +78,17 @@ final class SuspiciousActivityService
 
             // Multiple failed logins
             if ($event === 'login_failed' && is_numeric($userId)) {
-                $suspiciousActivities = array_merge($suspiciousActivities, $this->checkMultipleFailedLogins((int) $userId, (string) ($ipAddress ?? '')));
+                $suspiciousActivities = array_merge($suspiciousActivities, $this->checkMultipleFailedLogins((int) $userId, is_string($ipAddress) ? $ipAddress : ''));
             }
 
             // Unusual login location
             if ($event === 'login_success' && is_numeric($userId) && is_array($location)) {
-                $suspiciousActivities = array_merge($suspiciousActivities, $this->checkUnusualLoginLocation((int) $userId, $location, (string) ($ipAddress ?? '')));
+                $suspiciousActivities = array_merge($suspiciousActivities, $this->checkUnusualLoginLocation((int) $userId, $location, is_string($ipAddress) ? $ipAddress : ''));
             }
 
             // Rapid API requests
             if ($event === 'api_request' && is_numeric($userId)) {
-                $suspiciousActivities = array_merge($suspiciousActivities, $this->checkRapidApiRequests((int) $userId, (string) ($ipAddress ?? '')));
+                $suspiciousActivities = array_merge($suspiciousActivities, $this->checkRapidApiRequests((int) $userId, is_string($ipAddress) ? $ipAddress : ''));
             }
 
             // Unusual data access
@@ -121,8 +121,8 @@ final class SuspiciousActivityService
      */
     private function checkMultipleFailedLogins(int $userId, string $ipAddress): array
     {
-        $monitoringRules = $this->config['monitoring_rules'] ?? [];
-        $rule = $monitoringRules['multiple_failed_logins'] ?? [];
+        $monitoringRules = is_array($this->config['monitoring_rules'] ?? null) ? $this->config['monitoring_rules'] : [];
+        $rule = is_array($monitoringRules['multiple_failed_logins'] ?? null) ? $monitoringRules['multiple_failed_logins'] : [];
 
         if (! ($rule['enabled'] ?? false)) {
             return [];
@@ -130,16 +130,20 @@ final class SuspiciousActivityService
 
         $key = "failed_logins:{$userId}:{$ipAddress}";
         $failedCount = Cache::get($key, 0);
-        $failedCount++;
+        if (is_numeric($failedCount)) {
+            $failedCount = (int) $failedCount + 1;
+        } else {
+            $failedCount = 1;
+        }
 
-        $timeWindow = $rule['time_window'] ?? 60;
+        $timeWindow = is_numeric($rule['time_window'] ?? 60) ? (int) ($rule['time_window'] ?? 60) : 60;
         Cache::put($key, $failedCount, $timeWindow * 60);
 
-        $threshold = $rule['threshold'] ?? 5;
+        $threshold = is_numeric($rule['threshold'] ?? 5) ? (int) ($rule['threshold'] ?? 5) : 5;
         if ($failedCount >= $threshold) {
             return [[
                 'type' => 'multiple_failed_logins',
-                'severity' => $rule['severity'] ?? 'medium',
+                'severity' => is_string($rule['severity'] ?? 'medium') ? $rule['severity'] : 'medium',
                 'user_id' => $userId,
                 'ip_address' => $ipAddress,
                 'details' => [
@@ -156,13 +160,13 @@ final class SuspiciousActivityService
     /**
      * Check for unusual login location.
      *
-     * @param  array<string, mixed>  $location
+     * @param  array<mixed, mixed>  $location
      * @return list<array<string, mixed>>
      */
     private function checkUnusualLoginLocation(int $userId, array $location, string $ipAddress): array
     {
-        $monitoringRules = $this->config['monitoring_rules'] ?? [];
-        $rule = $monitoringRules['unusual_login_location'] ?? [];
+        $monitoringRules = is_array($this->config['monitoring_rules'] ?? null) ? $this->config['monitoring_rules'] : [];
+        $rule = is_array($monitoringRules['unusual_login_location'] ?? null) ? $monitoringRules['unusual_login_location'] : [];
 
         if (! ($rule['enabled'] ?? false)) {
             return [];
@@ -202,8 +206,8 @@ final class SuspiciousActivityService
      */
     private function checkRapidApiRequests(int $userId, string $ipAddress): array
     {
-        $monitoringRules = $this->config['monitoring_rules'] ?? [];
-        $rule = $monitoringRules['rapid_api_requests'] ?? [];
+        $monitoringRules = is_array($this->config['monitoring_rules'] ?? null) ? $this->config['monitoring_rules'] : [];
+        $rule = is_array($monitoringRules['rapid_api_requests'] ?? null) ? $monitoringRules['rapid_api_requests'] : [];
 
         if (! ($rule['enabled'] ?? false)) {
             return [];
@@ -211,16 +215,20 @@ final class SuspiciousActivityService
 
         $key = "api_requests:{$userId}:{$ipAddress}";
         $requestCount = Cache::get($key, 0);
-        $requestCount++;
+        if (is_numeric($requestCount)) {
+            $requestCount = (int) $requestCount + 1;
+        } else {
+            $requestCount = 1;
+        }
 
-        $timeWindow = $rule['time_window'] ?? 60;
+        $timeWindow = is_numeric($rule['time_window'] ?? 60) ? (int) ($rule['time_window'] ?? 60) : 60;
         Cache::put($key, $requestCount, $timeWindow * 60);
 
-        $threshold = $rule['threshold'] ?? 100;
+        $threshold = is_numeric($rule['threshold'] ?? 100) ? (int) ($rule['threshold'] ?? 100) : 100;
         if ($requestCount >= $threshold) {
             return [[
                 'type' => 'rapid_api_requests',
-                'severity' => $rule['severity'] ?? 'medium',
+                'severity' => is_string($rule['severity'] ?? 'medium') ? $rule['severity'] : 'medium',
                 'user_id' => $userId,
                 'ip_address' => $ipAddress,
                 'details' => [
@@ -242,8 +250,8 @@ final class SuspiciousActivityService
      */
     private function checkUnusualDataAccess(int $userId, array $data): array
     {
-        $monitoringRules = $this->config['monitoring_rules'] ?? [];
-        $rule = $monitoringRules['unusual_data_access'] ?? [];
+        $monitoringRules = is_array($this->config['monitoring_rules'] ?? null) ? $this->config['monitoring_rules'] : [];
+        $rule = is_array($monitoringRules['unusual_data_access'] ?? null) ? $monitoringRules['unusual_data_access'] : [];
 
         if (! ($rule['enabled'] ?? false)) {
             return [];
@@ -251,16 +259,20 @@ final class SuspiciousActivityService
 
         $key = "data_access:{$userId}";
         $accessCount = Cache::get($key, 0);
-        $accessCount++;
+        if (is_numeric($accessCount)) {
+            $accessCount = (int) $accessCount + 1;
+        } else {
+            $accessCount = 1;
+        }
 
-        $timeWindow = $rule['time_window'] ?? 60;
+        $timeWindow = is_numeric($rule['time_window'] ?? 60) ? (int) ($rule['time_window'] ?? 60) : 60;
         Cache::put($key, $accessCount, $timeWindow * 60);
 
-        $threshold = $rule['threshold'] ?? 50;
+        $threshold = is_numeric($rule['threshold'] ?? 50) ? (int) ($rule['threshold'] ?? 50) : 50;
         if ($accessCount >= $threshold) {
             return [[
                 'type' => 'unusual_data_access',
-                'severity' => $rule['severity'] ?? 'medium',
+                'severity' => is_string($rule['severity'] ?? 'medium') ? $rule['severity'] : 'medium',
                 'user_id' => $userId,
                 'details' => [
                     'access_count' => $accessCount,
@@ -282,8 +294,8 @@ final class SuspiciousActivityService
      */
     private function checkAdminActions(int $userId, array $data): array
     {
-        $monitoringRules = $this->config['monitoring_rules'] ?? [];
-        $rule = $monitoringRules['admin_actions'] ?? [];
+        $monitoringRules = is_array($this->config['monitoring_rules'] ?? null) ? $this->config['monitoring_rules'] : [];
+        $rule = is_array($monitoringRules['admin_actions'] ?? null) ? $monitoringRules['admin_actions'] : [];
 
         if (! ($rule['enabled'] ?? false)) {
             return [];
@@ -292,7 +304,7 @@ final class SuspiciousActivityService
         // Log all admin actions as potentially suspicious
         return [[
             'type' => 'admin_action',
-            'severity' => $rule['severity'] ?? 'high',
+            'severity' => is_string($rule['severity'] ?? 'high') ? $rule['severity'] : 'high',
             'user_id' => $userId,
             'details' => [
                 'action' => $data['action'] ?? 'unknown',
@@ -349,17 +361,17 @@ final class SuspiciousActivityService
      */
     private function sendNotifications(array $activity): void
     {
-        $notification = $this->config['notification'] ?? [];
+        $notification = is_array($this->config['notification'] ?? null) ? $this->config['notification'] : [];
 
-        if ($notification['email'] ?? false) {
+        if (($notification['email'] ?? false) === true) {
             $this->sendEmailNotification($activity);
         }
 
-        if ($notification['slack'] ?? false) {
+        if (($notification['slack'] ?? false) === true) {
             $this->sendSlackNotification($activity);
         }
 
-        if ($notification['webhook'] ?? false) {
+        if (($notification['webhook'] ?? false) === true) {
             $this->sendWebhookNotification($activity);
         }
     }
@@ -375,7 +387,8 @@ final class SuspiciousActivityService
             $adminEmails = config('app.admin_emails', []);
 
             if (! empty($adminEmails)) {
-                $subject = 'Suspicious Activity Alert - '.($activity['type'] ?? 'unknown');
+                $activityType = is_string($activity['type'] ?? null) ? $activity['type'] : 'unknown';
+                $subject = 'Suspicious Activity Alert - '.$activityType;
                 $message = $this->formatActivityMessage($activity);
 
                 Mail::raw($message, function ($mail) use ($adminEmails, $subject) {
@@ -540,11 +553,11 @@ final class SuspiciousActivityService
     private function formatActivityMessage(array $activity): string
     {
         $message = "Suspicious Activity Detected\n\n";
-        $message .= 'Type: '.($activity['type'] ?? 'unknown')."\n";
-        $message .= 'Severity: '.($activity['severity'] ?? 'unknown')."\n";
-        $message .= 'User ID: '.($activity['user_id'] ?? 'unknown')."\n";
-        $message .= 'IP Address: '.($activity['ip_address'] ?? 'unknown')."\n";
-        $message .= 'Timestamp: '.($activity['timestamp'] ?? 'unknown')."\n\n";
+        $message .= 'Type: '.(is_string($activity['type'] ?? null) ? $activity['type'] : 'unknown')."\n";
+        $message .= 'Severity: '.(is_string($activity['severity'] ?? null) ? $activity['severity'] : 'unknown')."\n";
+        $message .= 'User ID: '.(is_string($activity['user_id'] ?? null) || is_numeric($activity['user_id'] ?? null) ? (string) $activity['user_id'] : 'unknown')."\n";
+        $message .= 'IP Address: '.(is_string($activity['ip_address'] ?? null) ? $activity['ip_address'] : 'unknown')."\n";
+        $message .= 'Timestamp: '.(is_string($activity['timestamp'] ?? null) ? $activity['timestamp'] : 'unknown')."\n\n";
         $message .= "Details:\n";
         $message .= json_encode($activity['details'] ?? [], JSON_PRETTY_PRINT);
 
@@ -574,13 +587,13 @@ final class SuspiciousActivityService
         // Simple distance-based check
         // In production, this would use more sophisticated geolocation analysis
 
-        $currentLat = is_numeric($currentLocation['latitude'] ?? 0) ? (float) $currentLocation['latitude'] : 0.0;
-        $currentLng = is_numeric($currentLocation['longitude'] ?? 0) ? (float) $currentLocation['longitude'] : 0.0;
+        $currentLat = is_numeric($currentLocation['latitude'] ?? 0) ? (float) ($currentLocation['latitude'] ?? 0) : 0.0;
+        $currentLng = is_numeric($currentLocation['longitude'] ?? 0) ? (float) ($currentLocation['longitude'] ?? 0) : 0.0;
 
         foreach ($previousLocations as $location) {
             if (is_array($location)) {
-                $prevLat = is_numeric($location['latitude'] ?? 0) ? (float) $location['latitude'] : 0.0;
-                $prevLng = is_numeric($location['longitude'] ?? 0) ? (float) $location['longitude'] : 0.0;
+                $prevLat = is_numeric($location['latitude'] ?? 0) ? (float) ($location['latitude'] ?? 0) : 0.0;
+                $prevLng = is_numeric($location['longitude'] ?? 0) ? (float) ($location['longitude'] ?? 0) : 0.0;
 
                 $distance = $this->calculateDistance($currentLat, $currentLng, $prevLat, $prevLng);
 

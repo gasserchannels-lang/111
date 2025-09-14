@@ -21,7 +21,7 @@ class CDNService
     public function __construct()
     {
         $this->provider = is_string(config('cdn.provider', 'cloudflare')) ? config('cdn.provider', 'cloudflare') : 'cloudflare';
-        $this->config = is_array(config('cdn.providers.' . $this->provider, [])) ? config('cdn.providers.' . $this->provider, []) : [];
+        $this->config = is_array(config('cdn.providers.'.$this->provider, [])) ? config('cdn.providers.'.$this->provider, []) : [];
     }
 
     /**
@@ -145,7 +145,7 @@ class CDNService
     {
         $baseUrl = $this->config['base_url'] ?? '';
 
-        return rtrim(is_string($baseUrl) ? $baseUrl : '', '/') . '/' . ltrim($path, '/');
+        return rtrim(is_string($baseUrl) ? $baseUrl : '', '/').'/'.ltrim($path, '/');
     }
 
     /**
@@ -238,16 +238,16 @@ class CDNService
         $zoneId = (string) ($this->config['zone_id'] ?? '');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiToken,
+            'Authorization' => 'Bearer '.$apiToken,
             'Content-Type' => $mimeType,
-        ])->put('https://api.cloudflare.com/client/v4/accounts/' . $accountId . "/images/v1/{$path}", ['content' => $content]);
+        ])->put('https://api.cloudflare.com/client/v4/accounts/'.$accountId."/images/v1/{$path}", ['content' => $content]);
 
         if (! $response->successful()) {
-            throw new Exception('Cloudflare upload failed: ' . $response->body());
+            throw new Exception('Cloudflare upload failed: '.$response->body());
         }
 
         $data = $response->json() ?? [];
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             $data = [];
         }
 
@@ -256,7 +256,7 @@ class CDNService
         $id = is_array($result) && isset($result['id']) ? $result['id'] : null;
 
         return [
-            'url' => !empty($variants) && isset($variants[0]) ? $variants[0] : $this->getUrl($path),
+            'url' => ! empty($variants) && isset($variants[0]) ? $variants[0] : $this->getUrl($path),
             'id' => $id,
             'provider' => 'cloudflare',
         ];
@@ -276,7 +276,7 @@ class CDNService
         $secretKey = (string) ($this->config['secret_key'] ?? '');
 
         // This would use AWS SDK in a real implementation
-        $url = 'https://' . $bucket . '.s3.' . $region . ".amazonaws.com/{$path}";
+        $url = 'https://'.$bucket.'.s3.'.$region.".amazonaws.com/{$path}";
 
         return [
             'url' => $url,
@@ -297,7 +297,7 @@ class CDNService
         $credentials = is_array($this->config['credentials'] ?? []) ? $this->config['credentials'] : [];
 
         // This would use Google Cloud SDK in a real implementation
-        $url = 'https://storage.googleapis.com/' . $bucket . "/{$path}";
+        $url = 'https://storage.googleapis.com/'.$bucket."/{$path}";
 
         return [
             'url' => $url,
@@ -334,8 +334,8 @@ class CDNService
         $accountId = (string) ($this->config['account_id'] ?? '');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiToken,
-        ])->delete('https://api.cloudflare.com/client/v4/accounts/' . $accountId . "/images/v1/{$path}");
+            'Authorization' => 'Bearer '.$apiToken,
+        ])->delete('https://api.cloudflare.com/client/v4/accounts/'.$accountId."/images/v1/{$path}");
 
         return $response->successful();
     }
@@ -393,9 +393,9 @@ class CDNService
         $zoneId = (string) ($this->config['zone_id'] ?? '');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiToken,
+            'Authorization' => 'Bearer '.$apiToken,
             'Content-Type' => 'application/json',
-        ])->post('https://api.cloudflare.com/client/v4/zones/' . $zoneId . '/purge_cache', [
+        ])->post('https://api.cloudflare.com/client/v4/zones/'.$zoneId.'/purge_cache', [
             'purge_everything' => empty($urls),
             'files' => $urls,
         ]);
@@ -472,8 +472,8 @@ class CDNService
         $zoneId = (string) ($this->config['zone_id'] ?? '');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiToken,
-        ])->get('https://api.cloudflare.com/client/v4/zones/' . $zoneId . '/analytics/dashboard');
+            'Authorization' => 'Bearer '.$apiToken,
+        ])->get('https://api.cloudflare.com/client/v4/zones/'.$zoneId.'/analytics/dashboard');
 
         if (! $response->successful()) {
             throw new Exception('Failed to get Cloudflare statistics');
@@ -513,7 +513,7 @@ class CDNService
     {
         try {
             $testPath = 'test/connection.txt';
-            $testContent = 'CDN connection test - ' . now();
+            $testContent = 'CDN connection test - '.now();
 
             $result = $this->uploadToCDN($testContent, $testPath, 'text/plain');
 
