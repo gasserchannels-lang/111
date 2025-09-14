@@ -140,8 +140,18 @@ class MemoryUsageTest extends TestCase
     {
         $initialMemory = memory_get_usage(true);
 
+        // Create required dependencies first
+        $brand = \App\Models\Brand::factory()->create();
+        $category = \App\Models\Category::factory()->create();
+        $store = \App\Models\Store::factory()->create();
+
         // Perform memory-intensive operations
-        $products = \App\Models\Product::factory()->count(1000)->create();
+        $products = \App\Models\Product::factory()
+            ->withBrand($brand->id)
+            ->withCategory($category->id)
+            ->withStore($store->id)
+            ->count(1000)
+            ->create();
 
         // Clear memory
         unset($products);
@@ -175,11 +185,21 @@ class MemoryUsageTest extends TestCase
     {
         $memoryUsages = [];
 
+        // Create required dependencies once
+        $brand = \App\Models\Brand::factory()->create();
+        $category = \App\Models\Category::factory()->create();
+        $store = \App\Models\Store::factory()->create();
+
         for ($run = 0; $run < 5; $run++) {
             $initialMemory = memory_get_usage(true);
 
             // Perform same operations
-            $products = \App\Models\Product::factory()->count(100)->create();
+            $products = \App\Models\Product::factory()
+                ->withBrand($brand->id)
+                ->withCategory($category->id)
+                ->withStore($store->id)
+                ->count(100)
+                ->create();
 
             $finalMemory = memory_get_usage(true);
             $memoryUsed = ($finalMemory - $initialMemory) / 1024 / 1024;
@@ -200,10 +220,20 @@ class MemoryUsageTest extends TestCase
         $dataSizes = [100, 200, 500, 1000];
         $memoryUsages = [];
 
+        // Create required dependencies once
+        $brand = \App\Models\Brand::factory()->create();
+        $category = \App\Models\Category::factory()->create();
+        $store = \App\Models\Store::factory()->create();
+
         foreach ($dataSizes as $size) {
             $initialMemory = memory_get_usage(true);
 
-            $products = \App\Models\Product::factory()->count($size)->create();
+            $products = \App\Models\Product::factory()
+                ->withBrand($brand->id)
+                ->withCategory($category->id)
+                ->withStore($store->id)
+                ->count($size)
+                ->create();
 
             $finalMemory = memory_get_usage(true);
             $memoryUsed = ($finalMemory - $initialMemory) / 1024 / 1024;
