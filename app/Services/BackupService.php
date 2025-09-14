@@ -39,7 +39,7 @@ class BackupService
             ];
 
             // Create backup directory
-            $backupDir = $this->backupPath.'/'.$backupName;
+            $backupDir = $this->backupPath . '/' . $backupName;
             if (! is_dir($backupDir)) {
                 mkdir($backupDir, 0755, true);
             }
@@ -95,7 +95,7 @@ class BackupService
         try {
             Log::info('Starting database backup', ['backup_name' => $backupName]);
 
-            $backupDir = $this->backupPath.'/'.$backupName;
+            $backupDir = $this->backupPath . '/' . $backupName;
             if (! is_dir($backupDir)) {
                 mkdir($backupDir, 0755, true);
             }
@@ -135,7 +135,7 @@ class BackupService
         try {
             Log::info('Starting files backup', ['backup_name' => $backupName]);
 
-            $backupDir = $this->backupPath.'/'.$backupName;
+            $backupDir = $this->backupPath . '/' . $backupName;
             if (! is_dir($backupDir)) {
                 mkdir($backupDir, 0755, true);
             }
@@ -172,7 +172,7 @@ class BackupService
         try {
             Log::info('Starting restore from backup', ['backup_name' => $backupName]);
 
-            $backupPath = $this->backupPath.'/'.$backupName;
+            $backupPath = $this->backupPath . '/' . $backupName;
 
             if (! is_dir($backupPath)) {
                 throw new Exception("Backup not found: {$backupName}");
@@ -250,7 +250,7 @@ class BackupService
                 continue;
             }
 
-            $backupPath = $this->backupPath.'/'.$directory;
+            $backupPath = $this->backupPath . '/' . $directory;
 
             if (is_dir($backupPath)) {
                 $manifest = $this->readBackupManifest($backupPath);
@@ -284,7 +284,7 @@ class BackupService
     public function deleteBackup(string $backupName): bool
     {
         try {
-            $backupPath = $this->backupPath.'/'.$backupName;
+            $backupPath = $this->backupPath . '/' . $backupName;
 
             if (! is_dir($backupPath)) {
                 throw new Exception("Backup not found: {$backupName}");
@@ -345,7 +345,7 @@ class BackupService
     {
         $dbConfig = config('database.connections.mysql');
         $filename = 'database.sql';
-        $filepath = $backupDir.'/'.$filename;
+        $filepath = $backupDir . '/' . $filename;
 
         $dbConfigArray = is_array($dbConfig) ? $dbConfig : [];
         $host = is_string($dbConfigArray['host'] ?? null) ? $dbConfigArray['host'] : 'localhost';
@@ -353,7 +353,7 @@ class BackupService
         $username = is_string($dbConfigArray['username'] ?? null) ? $dbConfigArray['username'] : 'root';
         $password = is_string($dbConfigArray['password'] ?? null) ? $dbConfigArray['password'] : '';
         $database = is_string($dbConfigArray['database'] ?? null) ? $dbConfigArray['database'] : 'database';
-        
+
         $command = sprintf(
             'mysqldump --host=%s --port=%s --user=%s --password=%s %s > %s',
             $host,
@@ -367,7 +367,7 @@ class BackupService
         $result = Process::run($command);
 
         if (! $result->successful()) {
-            throw new Exception('Database backup failed: '.$result->errorOutput());
+            throw new Exception('Database backup failed: ' . $result->errorOutput());
         }
 
         return [
@@ -385,7 +385,7 @@ class BackupService
      */
     private function backupFiles(string $backupDir): array
     {
-        $filesDir = $backupDir.'/files';
+        $filesDir = $backupDir . '/files';
         mkdir($filesDir, 0755, true);
 
         $sourceDirs = [
@@ -398,7 +398,7 @@ class BackupService
 
         foreach ($sourceDirs as $name => $sourcePath) {
             if (is_dir($sourcePath)) {
-                $destPath = $filesDir.'/'.$name;
+                $destPath = $filesDir . '/' . $name;
                 $this->copyDirectory($sourcePath, $destPath);
                 $backedUpDirs[] = $name;
             }
@@ -419,7 +419,7 @@ class BackupService
      */
     private function backupConfiguration(string $backupDir): array
     {
-        $configDir = $backupDir.'/config';
+        $configDir = $backupDir . '/config';
         mkdir($configDir, 0755, true);
 
         $configFiles = [
@@ -433,7 +433,7 @@ class BackupService
 
         foreach ($configFiles as $name => $sourcePath) {
             if (file_exists($sourcePath)) {
-                $destPath = $configDir.'/'.$name;
+                $destPath = $configDir . '/' . $name;
                 copy($sourcePath, $destPath);
                 $backedUpFiles[] = $name;
             }
@@ -462,7 +462,7 @@ class BackupService
             'components' => $results['components'],
         ];
 
-        $manifestPath = $backupDir.'/manifest.json';
+        $manifestPath = $backupDir . '/manifest.json';
         file_put_contents($manifestPath, json_encode($manifest, JSON_PRETTY_PRINT));
 
         return [
@@ -480,14 +480,14 @@ class BackupService
      */
     private function compressBackup(string $backupDir, string $backupName): array
     {
-        $archivePath = $this->backupPath.'/'.$backupName.'.tar.gz';
+        $archivePath = $this->backupPath . '/' . $backupName . '.tar.gz';
 
-        $command = "tar -czf {$archivePath} -C ".dirname($backupDir).' '.basename($backupDir);
+        $command = "tar -czf {$archivePath} -C " . dirname($backupDir) . ' ' . basename($backupDir);
 
         $result = Process::run($command);
 
         if (! $result->successful()) {
-            throw new Exception('Backup compression failed: '.$result->errorOutput());
+            throw new Exception('Backup compression failed: ' . $result->errorOutput());
         }
 
         // Remove uncompressed directory
@@ -508,7 +508,7 @@ class BackupService
      */
     private function readBackupManifest(string $backupPath): array
     {
-        $manifestPath = $backupPath.'/manifest.json';
+        $manifestPath = $backupPath . '/manifest.json';
 
         if (! file_exists($manifestPath)) {
             return [];
@@ -533,7 +533,7 @@ class BackupService
     {
         $dbConfig = config('database.connections.mysql');
         $filename = $dbInfo['filename'] ?? 'database.sql';
-        $sqlFile = $backupPath.'/'.(is_string($filename) ? $filename : 'database.sql');
+        $sqlFile = $backupPath . '/' . (is_string($filename) ? $filename : 'database.sql');
 
         if (! file_exists($sqlFile)) {
             throw new Exception('Database backup file not found');
@@ -545,7 +545,7 @@ class BackupService
         $username = is_string($dbConfigArray['username'] ?? null) ? $dbConfigArray['username'] : 'root';
         $password = is_string($dbConfigArray['password'] ?? null) ? $dbConfigArray['password'] : '';
         $database = is_string($dbConfigArray['database'] ?? null) ? $dbConfigArray['database'] : 'database';
-        
+
         $command = sprintf(
             'mysql --host=%s --port=%s --user=%s --password=%s %s < %s',
             $host,
@@ -559,7 +559,7 @@ class BackupService
         $result = Process::run($command);
 
         if (! $result->successful()) {
-            throw new Exception('Database restore failed: '.$result->errorOutput());
+            throw new Exception('Database restore failed: ' . $result->errorOutput());
         }
 
         return [
@@ -576,7 +576,7 @@ class BackupService
      */
     private function restoreFiles(string $backupPath, array $filesInfo): array
     {
-        $filesDir = $backupPath.'/files';
+        $filesDir = $backupPath . '/files';
 
         if (! is_dir($filesDir)) {
             throw new Exception('Files backup directory not found');
@@ -588,7 +588,7 @@ class BackupService
         if (is_array($directories)) {
             foreach ($directories as $dir) {
                 if (is_string($dir)) {
-                    $sourcePath = $filesDir.'/'.$dir;
+                    $sourcePath = $filesDir . '/' . $dir;
                     $destPath = $this->getDestinationPath($dir);
 
                     if (is_dir($sourcePath)) {
@@ -614,7 +614,7 @@ class BackupService
      */
     private function restoreConfiguration(string $backupPath, array $configInfo): array
     {
-        $configDir = $backupPath.'/config';
+        $configDir = $backupPath . '/config';
 
         if (! is_dir($configDir)) {
             throw new Exception('Configuration backup directory not found');
@@ -626,7 +626,7 @@ class BackupService
         if (is_array($files)) {
             foreach ($files as $file) {
                 if (is_string($file)) {
-                    $sourcePath = $configDir.'/'.$file;
+                    $sourcePath = $configDir . '/' . $file;
                     $destPath = $this->getConfigDestinationPath($file);
 
                     if (file_exists($sourcePath)) {
@@ -688,7 +688,7 @@ class BackupService
 
         foreach ($iterator as $item) {
             if ($item instanceof \SplFileInfo) {
-                $destPath = $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName();
+                $destPath = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
 
                 if ($item->isDir()) {
                     mkdir($destPath, 0755, true);
