@@ -5,12 +5,12 @@ namespace Tests\Unit\Models;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class BrandTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_brand()

@@ -51,7 +51,7 @@ class Brand extends Model
      */
     public static function factory($count = null, $state = [])
     {
-        return static::baseFactory($count, $state)->connection('testing');
+        return static::baseFactory($count, $state)->connection('sqlite_testing');
     }
 
     /**

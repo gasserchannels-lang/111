@@ -49,8 +49,8 @@ Route::middleware(['auth:sanctum', 'admin', 'throttle:admin'])->group(function (
     });
 
     // Admin resource routes
-    Route::apiResource('admin/categories', CategoryController::class);
-    Route::apiResource('admin/brands', BrandController::class);
+    Route::apiResource('admin/categories', CategoryController::class)->names('api.admin.categories');
+    Route::apiResource('admin/brands', BrandController::class)->names('api.admin.brands');
 });
 
 // API Documentation (no rate limiting for documentation)

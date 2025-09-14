@@ -19,9 +19,9 @@ return static function (RectorConfig $rectorConfig): void {
         \Rector\Set\ValueObject\SetList::DEAD_CODE,
         \Rector\Set\ValueObject\SetList::EARLY_RETURN,
         \Rector\Set\ValueObject\SetList::TYPE_DECLARATION,
-        // \Rector\Laravel\Set\LaravelSetList::LARAVEL_100,
     ]);
 
+    // PHPUnit rules commented out due to missing dependencies
     // $rectorConfig->rules([
     //     \Rector\PhpUnit\Rector\ClassMethod\AddDoesNotPerformAssertionsToNonAssertingTestRector::class,
     //     \Rector\PhpUnit\Rector\MethodCall\AssertEqualsToSameRector::class,

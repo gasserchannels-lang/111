@@ -37,7 +37,6 @@
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-backup": "^9.3",
-        "spatie/laravel-ignition": "^2.7",
         "spatie/laravel-permission": "^6.21",
         "spatie/laravel-query-builder": "^6.3"
     },
@@ -195,7 +194,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "spatie/laravel-ignition"
+            ]
         }
     },
     "config": {

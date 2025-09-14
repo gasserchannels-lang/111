@@ -1,0 +1,46 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running pre-push checks..."
+
+# Run PHPStan
+echo "📊 Running PHPStan static analysis..."
+./vendor/bin/phpstan analyse --memory-limit=2G
+if [ $? -ne 0 ]; then
+    echo "❌ PHPStan failed. Please fix the issues before pushing."
+    exit 1
+fi
+
+# Run PHPUnit tests
+echo "🧪 Running PHPUnit tests..."
+./vendor/bin/phpunit --configuration=phpunit.xml
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed. Please fix the failing tests before pushing."
+    exit 1
+fi
+
+# Run Laravel Pint
+echo "🎨 Running Laravel Pint code style check..."
+./vendor/bin/pint --test
+if [ $? -ne 0 ]; then
+    echo "❌ Code style issues found. Please run './vendor/bin/pint' to fix them."
+    exit 1
+fi
+
+# Run PHPMD
+echo "🔍 Running PHPMD code quality check..."
+./vendor/bin/phpmd app,config,database,routes text phpmd.xml
+if [ $? -ne 0 ]; then
+    echo "❌ PHPMD found code quality issues. Please review and fix them."
+    exit 1
+fi
+
+# Run Composer Audit
+echo "🔒 Running Composer security audit..."
+composer audit
+if [ $? -ne 0 ]; then
+    echo "❌ Security vulnerabilities found. Please update dependencies."
+    exit 1
+fi
+
+echo "✅ All pre-push checks passed! Ready to push."
