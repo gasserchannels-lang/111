@@ -233,9 +233,9 @@ class CDNService
      */
     private function uploadToCloudflare(string $content, string $path, string $mimeType): array
     {
-        $apiToken = (string) ($this->config['api_token'] ?? '');
-        $accountId = (string) ($this->config['account_id'] ?? '');
-        $zoneId = (string) ($this->config['zone_id'] ?? '');
+        $apiToken = is_string($this->config['api_token'] ?? null) ? $this->config['api_token'] : '';
+        $accountId = is_string($this->config['account_id'] ?? null) ? $this->config['account_id'] : '';
+        $zoneId = is_string($this->config['zone_id'] ?? null) ? $this->config['zone_id'] : '';
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$apiToken,
@@ -251,12 +251,12 @@ class CDNService
             $data = [];
         }
 
-        $result = $data['result'] ?? [];
-        $variants = is_array($result) && isset($result['variants']) && is_array($result['variants']) ? $result['variants'] : [];
-        $id = is_array($result) && isset($result['id']) ? $result['id'] : null;
+        $result = isset($data['result']) && is_array($data['result']) ? $data['result'] : [];
+        $variants = isset($result['variants']) && is_array($result['variants']) ? $result['variants'] : [];
+        $id = isset($result['id']) ? $result['id'] : null;
 
         return [
-            'url' => ! empty($variants) && isset($variants[0]) ? $variants[0] : $this->getUrl($path),
+            'url' => ! empty($variants) && isset($variants[0]) && is_string($variants[0]) ? $variants[0] : $this->getUrl($path),
             'id' => $id,
             'provider' => 'cloudflare',
         ];
@@ -270,10 +270,10 @@ class CDNService
      */
     private function uploadToS3(string $content, string $path, string $mimeType): array
     {
-        $bucket = (string) ($this->config['bucket'] ?? '');
-        $region = (string) ($this->config['region'] ?? '');
-        $accessKey = (string) ($this->config['access_key'] ?? '');
-        $secretKey = (string) ($this->config['secret_key'] ?? '');
+        $bucket = is_string($this->config['bucket'] ?? null) ? $this->config['bucket'] : '';
+        $region = is_string($this->config['region'] ?? null) ? $this->config['region'] : '';
+        $accessKey = is_string($this->config['access_key'] ?? null) ? $this->config['access_key'] : '';
+        $secretKey = is_string($this->config['secret_key'] ?? null) ? $this->config['secret_key'] : '';
 
         // This would use AWS SDK in a real implementation
         $url = 'https://'.$bucket.'.s3.'.$region.".amazonaws.com/{$path}";
@@ -292,8 +292,8 @@ class CDNService
      */
     private function uploadToGoogleCloud(string $content, string $path, string $mimeType): array
     {
-        $bucket = (string) ($this->config['bucket'] ?? '');
-        $projectId = (string) ($this->config['project_id'] ?? '');
+        $bucket = is_string($this->config['bucket'] ?? null) ? $this->config['bucket'] : '';
+        $projectId = is_string($this->config['project_id'] ?? null) ? $this->config['project_id'] : '';
         $credentials = is_array($this->config['credentials'] ?? []) ? $this->config['credentials'] : [];
 
         // This would use Google Cloud SDK in a real implementation
@@ -330,8 +330,8 @@ class CDNService
      */
     private function deleteFromCloudflare(string $path): bool
     {
-        $apiToken = (string) ($this->config['api_token'] ?? '');
-        $accountId = (string) ($this->config['account_id'] ?? '');
+        $apiToken = is_string($this->config['api_token'] ?? null) ? $this->config['api_token'] : '';
+        $accountId = is_string($this->config['account_id'] ?? null) ? $this->config['account_id'] : '';
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$apiToken,
@@ -389,8 +389,8 @@ class CDNService
      */
     private function purgeCloudflareCache(array $urls): bool
     {
-        $apiToken = (string) ($this->config['api_token'] ?? '');
-        $zoneId = (string) ($this->config['zone_id'] ?? '');
+        $apiToken = is_string($this->config['api_token'] ?? null) ? $this->config['api_token'] : '';
+        $zoneId = is_string($this->config['zone_id'] ?? null) ? $this->config['zone_id'] : '';
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$apiToken,
@@ -468,8 +468,8 @@ class CDNService
      */
     private function getCloudflareStatistics(): array
     {
-        $apiToken = (string) ($this->config['api_token'] ?? '');
-        $zoneId = (string) ($this->config['zone_id'] ?? '');
+        $apiToken = is_string($this->config['api_token'] ?? null) ? $this->config['api_token'] : '';
+        $zoneId = is_string($this->config['zone_id'] ?? null) ? $this->config['zone_id'] : '';
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$apiToken,
