@@ -4,20 +4,21 @@ namespace Tests\AI;
 
 use App\Services\AIService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ai_model_initializes_correctly()
     {
         $aiService = new AIService;
         $this->assertInstanceOf(AIService::class, $aiService);
     }
 
-    /** @test */
+    #[Test]
     public function ai_can_analyze_text()
     {
         $aiService = new AIService;
@@ -30,7 +31,7 @@ class AIModelTest extends TestCase
         $this->assertArrayHasKey('confidence', $result);
     }
 
-    /** @test */
+    #[Test]
     public function ai_can_classify_products()
     {
         $aiService = new AIService;
@@ -46,7 +47,7 @@ class AIModelTest extends TestCase
         $this->assertNotEmpty($category);
     }
 
-    /** @test */
+    #[Test]
     public function ai_can_generate_recommendations()
     {
         $aiService = new AIService;
@@ -62,7 +63,7 @@ class AIModelTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
     }
 
-    /** @test */
+    #[Test]
     public function ai_can_process_images()
     {
         $aiService = new AIService;
@@ -82,7 +83,7 @@ class AIModelTest extends TestCase
         $this->assertArrayHasKey('tags', $result);
     }
 
-    /** @test */
+    #[Test]
     public function ai_response_time_is_acceptable()
     {
         $aiService = new AIService;
@@ -98,7 +99,7 @@ class AIModelTest extends TestCase
         $this->assertIsArray($result);
     }
 
-    /** @test */
+    #[Test]
     public function ai_accuracy_is_acceptable()
     {
         $aiService = new AIService;
@@ -122,7 +123,7 @@ class AIModelTest extends TestCase
         $this->assertGreaterThan(0.7, $accuracy); // At least 70% accuracy
     }
 
-    /** @test */
+    #[Test]
     public function ai_can_learn_from_feedback()
     {
         $aiService = new AIService;

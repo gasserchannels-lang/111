@@ -71,7 +71,7 @@ class LoginAttemptService
         $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
-        return count($attempts) >= self::MAX_ATTEMPTS;
+        return is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS;
     }
 
     /**
@@ -82,7 +82,7 @@ class LoginAttemptService
         $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
-        return count($attempts) >= self::MAX_ATTEMPTS;
+        return is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS;
     }
 
     /**
@@ -93,7 +93,7 @@ class LoginAttemptService
         $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
-        return max(0, self::MAX_ATTEMPTS - count($attempts));
+        return max(0, self::MAX_ATTEMPTS - (is_array($attempts) ? count($attempts) : 0));
     }
 
     /**
@@ -104,7 +104,7 @@ class LoginAttemptService
         $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
-        return max(0, self::MAX_ATTEMPTS - count($attempts));
+        return max(0, self::MAX_ATTEMPTS - (is_array($attempts) ? count($attempts) : 0));
     }
 
     /**
@@ -115,12 +115,14 @@ class LoginAttemptService
         $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
 
-        if (count($attempts) >= self::MAX_ATTEMPTS) {
+        if (is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS) {
             $lastAttempt = end($attempts);
-            $lockoutEnd = Carbon::parse($lastAttempt['timestamp'])->addMinutes(self::LOCKOUT_DURATION);
+            if (is_array($lastAttempt) && isset($lastAttempt['timestamp']) && is_string($lastAttempt['timestamp'])) {
+                $lockoutEnd = Carbon::parse($lastAttempt['timestamp'])->addMinutes(self::LOCKOUT_DURATION);
 
-            if ($lockoutEnd->isFuture()) {
-                return (int) $lockoutEnd->diffInSeconds(now());
+                if ($lockoutEnd->isFuture()) {
+                    return (int) $lockoutEnd->diffInSeconds(now());
+                }
             }
         }
 
@@ -135,12 +137,14 @@ class LoginAttemptService
         $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
 
-        if (count($attempts) >= self::MAX_ATTEMPTS) {
+        if (is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS) {
             $lastAttempt = end($attempts);
-            $lockoutEnd = Carbon::parse($lastAttempt['timestamp'])->addMinutes(self::LOCKOUT_DURATION);
+            if (is_array($lastAttempt) && isset($lastAttempt['timestamp']) && is_string($lastAttempt['timestamp'])) {
+                $lockoutEnd = Carbon::parse($lastAttempt['timestamp'])->addMinutes(self::LOCKOUT_DURATION);
 
-            if ($lockoutEnd->isFuture()) {
-                return (int) $lockoutEnd->diffInSeconds(now());
+                if ($lockoutEnd->isFuture()) {
+                    return (int) $lockoutEnd->diffInSeconds(now());
+                }
             }
         }
 
@@ -154,6 +158,10 @@ class LoginAttemptService
     {
         $key = self::IP_PREFIX.md5($ip);
         $attempts = Cache::get($key, []);
+
+        if (! is_array($attempts)) {
+            $attempts = [];
+        }
 
         $attempts[] = [
             'timestamp' => now()->toISOString(),
@@ -173,6 +181,10 @@ class LoginAttemptService
     {
         $key = self::CACHE_PREFIX.md5($email);
         $attempts = Cache::get($key, []);
+
+        if (! is_array($attempts)) {
+            $attempts = [];
+        }
 
         $attempts[] = [
             'timestamp' => now()->toISOString(),

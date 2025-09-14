@@ -4,20 +4,21 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CacheFunctionalityTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function can_store_data_in_cache()
     {
         Cache::put('test_key', 'test_value', 60);
         $this->assertEquals('test_value', Cache::get('test_key'));
     }
 
-    /** @test */
+    #[Test]
     public function cache_expires_after_ttl()
     {
         Cache::put('expiring_key', 'expiring_value', 1);
@@ -30,7 +31,7 @@ class CacheFunctionalityTest extends TestCase
         $this->assertNull(Cache::get('expiring_key'));
     }
 
-    /** @test */
+    #[Test]
     public function can_remember_cached_data()
     {
         $value = Cache::remember('remember_key', 60, function () {
@@ -41,7 +42,7 @@ class CacheFunctionalityTest extends TestCase
         $this->assertEquals('computed_value', Cache::get('remember_key'));
     }
 
-    /** @test */
+    #[Test]
     public function can_forget_cached_data()
     {
         Cache::put('forget_key', 'forget_value', 60);
@@ -51,7 +52,7 @@ class CacheFunctionalityTest extends TestCase
         $this->assertNull(Cache::get('forget_key'));
     }
 
-    /** @test */
+    #[Test]
     public function can_clear_all_cache()
     {
         Cache::put('key1', 'value1', 60);
@@ -66,7 +67,7 @@ class CacheFunctionalityTest extends TestCase
         $this->assertNull(Cache::get('key2'));
     }
 
-    /** @test */
+    #[Test]
     public function cache_improves_performance()
     {
         $startTime = microtime(true);

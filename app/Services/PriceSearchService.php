@@ -24,7 +24,7 @@ class PriceSearchService
      */
     public function findBestOffer(string $productName, string $countryCode): array
     {
-        $product = Product::where('name', 'like', '%' . $productName . '%')->first();
+        $product = Product::where('name', 'like', '%'.$productName.'%')->first();
 
         if (! $product) {
             return [
@@ -67,7 +67,7 @@ class PriceSearchService
         $query = Product::with(['priceOffers.store', 'brand', 'category']);
 
         if (isset($filters['name']) && is_string($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
         if (isset($filters['brand_id'])) {
@@ -98,7 +98,7 @@ class PriceSearchService
 
         $perPage = isset($filters['per_page']) && is_numeric($filters['per_page'])
             ? (int) $filters['per_page']
-            : config('coprra.pagination.default_items_per_page', 20);
+            : 20;
         $products = $query->paginate($perPage);
 
         return [

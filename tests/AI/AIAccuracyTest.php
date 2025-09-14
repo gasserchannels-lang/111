@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use App\Services\AIService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIAccuracyTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function sentiment_analysis_accuracy_is_acceptable()
     {
         $aiService = new AIService;
@@ -37,7 +38,7 @@ class AIAccuracyTest extends TestCase
         $this->assertGreaterThan(0.7, $accuracy); // At least 70% accuracy
     }
 
-    /** @test */
+    #[Test]
     public function product_classification_accuracy_is_acceptable()
     {
         $aiService = new AIService;
@@ -64,7 +65,7 @@ class AIAccuracyTest extends TestCase
         $this->assertGreaterThan(0.6, $accuracy); // At least 60% accuracy
     }
 
-    /** @test */
+    #[Test]
     public function keyword_extraction_accuracy_is_acceptable()
     {
         $aiService = new AIService;
@@ -94,7 +95,7 @@ class AIAccuracyTest extends TestCase
         $this->assertGreaterThan(0.5, $accuracy); // At least 50% accuracy
     }
 
-    /** @test */
+    #[Test]
     public function recommendation_relevance_is_acceptable()
     {
         $aiService = new AIService;
@@ -123,7 +124,7 @@ class AIAccuracyTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function image_analysis_accuracy_is_acceptable()
     {
         $aiService = new AIService;
@@ -158,7 +159,7 @@ class AIAccuracyTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function confidence_scores_are_reasonable()
     {
         $aiService = new AIService;
@@ -171,7 +172,7 @@ class AIAccuracyTest extends TestCase
         $this->assertLessThanOrEqual(1, $result['confidence']);
     }
 
-    /** @test */
+    #[Test]
     public function ai_learns_from_corrective_feedback()
     {
         $aiService = new AIService;

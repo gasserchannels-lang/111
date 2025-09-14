@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIModelPerformanceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ai_model_responds_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -31,7 +32,7 @@ class AIModelPerformanceTest extends TestCase
         Log::info("AI Model Response Time: {$responseTime}ms");
     }
 
-    /** @test */
+    #[Test]
     public function ai_model_handles_large_inputs()
     {
         $largeText = str_repeat('This is a test product description. ', 1000);
@@ -45,7 +46,7 @@ class AIModelPerformanceTest extends TestCase
         $this->assertArrayHasKey('analysis', $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function ai_model_memory_usage_is_reasonable()
     {
         $initialMemory = memory_get_usage(true);
@@ -67,7 +68,7 @@ class AIModelPerformanceTest extends TestCase
         Log::info('AI Memory Usage: '.($memoryIncrease / 1024 / 1024).'MB');
     }
 
-    /** @test */
+    #[Test]
     public function ai_model_accuracy_is_acceptable()
     {
         $testCases = [

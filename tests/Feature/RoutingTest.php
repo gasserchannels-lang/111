@@ -3,20 +3,21 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RoutingTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function home_route_works()
     {
         $response = $this->get('/');
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function api_routes_are_accessible()
     {
         $apiRoutes = [
@@ -33,7 +34,7 @@ class RoutingTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function web_routes_are_accessible()
     {
         $webRoutes = [
@@ -50,7 +51,7 @@ class RoutingTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function admin_routes_require_authentication()
     {
         $adminRoutes = [
@@ -66,28 +67,28 @@ class RoutingTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_routes_return_json()
     {
         $response = $this->getJson('/api/health');
         $response->assertHeader('content-type', 'application/json');
     }
 
-    /** @test */
+    #[Test]
     public function routes_handle_method_not_allowed()
     {
         $response = $this->post('/api/health');
         $this->assertContains($response->status(), [405, 404]);
     }
 
-    /** @test */
+    #[Test]
     public function routes_handle_404_correctly()
     {
         $response = $this->get('/nonexistent-route');
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function routes_with_parameters_work()
     {
         $response = $this->get('/products/1');

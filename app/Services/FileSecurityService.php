@@ -45,35 +45,40 @@ class FileSecurityService
         $extensionCheck = $this->checkFileExtension($file);
         if (! $extensionCheck['is_safe']) {
             $results['is_safe'] = false;
-            $results['threats'] = array_merge($results['threats'], $extensionCheck['threats']);
+            $threats = is_array($extensionCheck['threats'] ?? null) ? $extensionCheck['threats'] : [];
+            $results['threats'] = array_merge($results['threats'], $threats);
         }
 
         // Check file size
         $sizeCheck = $this->checkFileSize($file);
         if (! $sizeCheck['is_safe']) {
             $results['is_safe'] = false;
-            $results['threats'] = array_merge($results['threats'], $sizeCheck['threats']);
+            $threats = is_array($sizeCheck['threats'] ?? null) ? $sizeCheck['threats'] : [];
+            $results['threats'] = array_merge($results['threats'], $threats);
         }
 
         // Check file content
         $contentCheck = $this->checkFileContent($file);
         if (! $contentCheck['is_safe']) {
             $results['is_safe'] = false;
-            $results['threats'] = array_merge($results['threats'], $contentCheck['threats']);
+            $threats = is_array($contentCheck['threats'] ?? null) ? $contentCheck['threats'] : [];
+            $results['threats'] = array_merge($results['threats'], $threats);
         }
 
         // Check for malware signatures
         $malwareCheck = $this->checkMalwareSignatures($file);
         if (! $malwareCheck['is_safe']) {
             $results['is_safe'] = false;
-            $results['threats'] = array_merge($results['threats'], $malwareCheck['threats']);
+            $threats = is_array($malwareCheck['threats'] ?? null) ? $malwareCheck['threats'] : [];
+            $results['threats'] = array_merge($results['threats'], $threats);
         }
 
         // Check file headers
         $headerCheck = $this->checkFileHeaders($file);
         if (! $headerCheck['is_safe']) {
             $results['is_safe'] = false;
-            $results['threats'] = array_merge($results['threats'], $headerCheck['threats']);
+            $threats = is_array($headerCheck['threats'] ?? null) ? $headerCheck['threats'] : [];
+            $results['threats'] = array_merge($results['threats'], $threats);
         }
 
         // Log scan results
@@ -326,7 +331,7 @@ class FileSecurityService
             'file_name' => $file->getClientOriginalName(),
             'file_size' => $file->getSize(),
             'is_safe' => $results['is_safe'],
-            'threats_count' => count($results['threats']),
+            'threats_count' => is_array($results['threats'] ?? null) ? count($results['threats']) : 0,
             'threats' => $results['threats'],
         ]);
     }

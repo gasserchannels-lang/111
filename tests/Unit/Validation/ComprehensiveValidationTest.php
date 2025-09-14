@@ -3,6 +3,7 @@
 namespace Tests\Unit\Validation;
 
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ComprehensiveValidationTest extends TestCase
@@ -11,9 +12,10 @@ class ComprehensiveValidationTest extends TestCase
     {
         parent::setUp();
         $this->app['config']->set('database.default', 'testing');
+        $this->artisan('migrate:fresh');
     }
 
-    /** @test */
+    #[Test]
     public function product_validation_rules_work()
     {
         $rules = [
@@ -53,7 +55,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertCount(5, $validator->errors());
     }
 
-    /** @test */
+    #[Test]
     public function user_validation_rules_work()
     {
         $rules = [
@@ -86,7 +88,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function review_validation_rules_work()
     {
         $rules = [
@@ -116,7 +118,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function price_alert_validation_rules_work()
     {
         $rules = [
@@ -143,7 +145,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function custom_validation_rules_work()
     {
         // اختبار قاعدة التحقق المخصصة للبريد الإلكتروني
@@ -162,7 +164,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function validation_error_messages_are_meaningful()
     {
         $rules = [
@@ -191,7 +193,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertStringContainsString('8', $errors->first('password'));
     }
 
-    /** @test */
+    #[Test]
     public function validation_works_with_file_uploads()
     {
         $rules = [
@@ -218,7 +220,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function validation_works_with_arrays()
     {
         $rules = [
@@ -247,7 +249,7 @@ class ComprehensiveValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function validation_works_with_conditional_rules()
     {
         $rules = [

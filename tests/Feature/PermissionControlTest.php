@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -28,7 +29,7 @@ class PermissionControlTest extends TestCase
         $userRole->givePermissionTo([$createProductPermission]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_access_admin_panel()
     {
         $admin = User::factory()->create();
@@ -39,7 +40,7 @@ class PermissionControlTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_access_admin_panel()
     {
         $user = User::factory()->create();
@@ -50,7 +51,7 @@ class PermissionControlTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function user_with_permission_can_create_product()
     {
         $user = User::factory()->create();
@@ -65,7 +66,7 @@ class PermissionControlTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[Test]
     public function user_without_permission_cannot_edit_product()
     {
         $user = User::factory()->create();
@@ -79,7 +80,7 @@ class PermissionControlTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_delete_any_product()
     {
         $admin = User::factory()->create();
@@ -90,7 +91,7 @@ class PermissionControlTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_only_access_own_data()
     {
         $user1 = User::factory()->create();

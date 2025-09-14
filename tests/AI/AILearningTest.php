@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use App\Services\AIService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AILearningTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ai_can_learn_from_user_feedback()
     {
         $aiService = new AIService;
@@ -29,7 +30,7 @@ class AILearningTest extends TestCase
         $this->assertArrayHasKey('sentiment', $updatedResult);
     }
 
-    /** @test */
+    #[Test]
     public function ai_improves_accuracy_over_time()
     {
         $aiService = new AIService;
@@ -68,7 +69,7 @@ class AILearningTest extends TestCase
         $this->assertGreaterThanOrEqual($initialAccuracy, $finalAccuracy);
     }
 
-    /** @test */
+    #[Test]
     public function ai_adapts_to_user_preferences()
     {
         $aiService = new AIService;
@@ -93,7 +94,7 @@ class AILearningTest extends TestCase
         $this->assertIsArray($updatedRecommendations);
     }
 
-    /** @test */
+    #[Test]
     public function ai_learns_from_product_classification_feedback()
     {
         $aiService = new AIService;
@@ -115,7 +116,7 @@ class AILearningTest extends TestCase
         $this->assertIsString($updatedClassification);
     }
 
-    /** @test */
+    #[Test]
     public function ai_learns_from_recommendation_feedback()
     {
         $aiService = new AIService;
@@ -139,7 +140,7 @@ class AILearningTest extends TestCase
         $this->assertIsArray($updatedRecommendations);
     }
 
-    /** @test */
+    #[Test]
     public function ai_learns_from_image_analysis_feedback()
     {
         $aiService = new AIService;
@@ -166,7 +167,7 @@ class AILearningTest extends TestCase
         $this->assertIsArray($updatedAnalysis);
     }
 
-    /** @test */
+    #[Test]
     public function ai_learning_persists_across_sessions()
     {
         $aiService = new AIService;
@@ -186,7 +187,7 @@ class AILearningTest extends TestCase
         $this->assertArrayHasKey('sentiment', $result);
     }
 
-    /** @test */
+    #[Test]
     public function ai_learning_rate_is_appropriate()
     {
         $aiService = new AIService;
@@ -213,7 +214,7 @@ class AILearningTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function ai_handles_contradictory_feedback()
     {
         $aiService = new AIService;

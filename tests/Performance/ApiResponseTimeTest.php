@@ -4,13 +4,14 @@ namespace Tests\Performance;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ApiResponseTimeTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function api_endpoints_respond_within_acceptable_time()
     {
         $apiEndpoints = [
@@ -32,7 +33,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_api_endpoints_respond_within_acceptable_time()
     {
         $user = User::factory()->create();
@@ -57,7 +58,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_post_requests_respond_within_acceptable_time()
     {
         $user = User::factory()->create();
@@ -81,7 +82,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_put_requests_respond_within_acceptable_time()
     {
         $user = User::factory()->create();
@@ -105,7 +106,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_delete_requests_respond_within_acceptable_time()
     {
         $user = User::factory()->create();
@@ -129,7 +130,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_search_responds_within_acceptable_time()
     {
         $searchQueries = [
@@ -152,7 +153,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_pagination_responds_within_acceptable_time()
     {
         $paginationEndpoints = [
@@ -173,7 +174,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_filtering_responds_within_acceptable_time()
     {
         $filterEndpoints = [
@@ -195,7 +196,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_concurrent_requests_handle_gracefully()
     {
         $startTime = microtime(true);
@@ -216,7 +217,7 @@ class ApiResponseTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_response_times_are_consistent()
     {
         $responseTimes = [];
@@ -241,7 +242,7 @@ class ApiResponseTimeTest extends TestCase
         $this->assertLessThan(1000, $averageTime); // Average should be less than 1 second
     }
 
-    /** @test */
+    #[Test]
     public function api_error_responses_are_fast()
     {
         $errorEndpoints = [

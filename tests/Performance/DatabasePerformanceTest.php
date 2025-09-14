@@ -4,13 +4,14 @@ namespace Tests\Performance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DatabasePerformanceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function simple_select_queries_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -23,7 +24,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(100, $queryTime); // Should complete within 100ms
     }
 
-    /** @test */
+    #[Test]
     public function complex_join_queries_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -41,7 +42,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(500, $queryTime); // Should complete within 500ms
     }
 
-    /** @test */
+    #[Test]
     public function search_queries_perform_within_acceptable_time()
     {
         $searchTerms = ['laptop', 'phone', 'clothing', 'electronics'];
@@ -60,7 +61,7 @@ class DatabasePerformanceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function aggregate_queries_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -78,7 +79,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(200, $queryTime); // Should complete within 200ms
     }
 
-    /** @test */
+    #[Test]
     public function pagination_queries_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -91,7 +92,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(150, $queryTime); // Should complete within 150ms
     }
 
-    /** @test */
+    #[Test]
     public function bulk_insert_operations_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -105,7 +106,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(2000, $queryTime); // Should complete within 2 seconds
     }
 
-    /** @test */
+    #[Test]
     public function bulk_update_operations_perform_within_acceptable_time()
     {
         // Create test data
@@ -122,7 +123,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(1000, $queryTime); // Should complete within 1 second
     }
 
-    /** @test */
+    #[Test]
     public function bulk_delete_operations_perform_within_acceptable_time()
     {
         // Create test data
@@ -138,7 +139,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(1000, $queryTime); // Should complete within 1 second
     }
 
-    /** @test */
+    #[Test]
     public function database_connections_are_efficient()
     {
         $startTime = microtime(true);
@@ -154,7 +155,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(500, $queryTime); // Should complete within 500ms
     }
 
-    /** @test */
+    #[Test]
     public function database_transactions_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -171,7 +172,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan(300, $queryTime); // Should complete within 300ms
     }
 
-    /** @test */
+    #[Test]
     public function database_indexes_improve_query_performance()
     {
         // Create test data
@@ -193,7 +194,7 @@ class DatabasePerformanceTest extends TestCase
         $this->assertLessThan($queryTimeWithoutIndex, $queryTimeWithIndex);
     }
 
-    /** @test */
+    #[Test]
     public function database_queries_scale_linearly_with_data_size()
     {
         $dataSizes = [100, 500, 1000, 2000];

@@ -172,7 +172,7 @@ class ProcessHeavyOperation implements ShouldQueue
         }
 
         return [
-            'total_images' => count($imageIds),
+            'total_images' => is_array($imageIds) ? count($imageIds) : 0,
             'processed' => $processed,
             'status' => 'completed',
         ];
@@ -220,7 +220,7 @@ class ProcessHeavyOperation implements ShouldQueue
         }
 
         return [
-            'total_users' => count($userIds),
+            'total_users' => is_array($userIds) ? count($userIds) : 0,
             'sent' => $sent,
             'message' => $message,
             'status' => 'completed',
@@ -291,7 +291,7 @@ class ProcessHeavyOperation implements ShouldQueue
         return [
             'format' => $format,
             'table' => $table,
-            'file_path' => 'exports/'.$table.'_'.$format.'_'.time().'.'.$format,
+            'file_path' => 'exports/'.(is_string($table) ? $table : 'unknown').'_'.(is_string($format) ? $format : 'csv').'_'.time().'.'.(is_string($format) ? $format : 'csv'),
             'status' => 'completed',
         ];
     }

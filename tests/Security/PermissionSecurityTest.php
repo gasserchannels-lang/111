@@ -4,6 +4,7 @@ namespace Tests\Security;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -32,7 +33,7 @@ class PermissionSecurityTest extends TestCase
         $userRole->givePermissionTo([$createProductPermission]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_access_admin_panel_without_admin_role()
     {
         $user = User::factory()->create();
@@ -43,7 +44,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_edit_products_without_edit_permission()
     {
         $user = User::factory()->create();
@@ -57,7 +58,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_delete_products_without_delete_permission()
     {
         $user = User::factory()->create();
@@ -68,7 +69,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function moderator_can_edit_products_but_cannot_delete()
     {
         $moderator = User::factory()->create();
@@ -86,7 +87,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_perform_all_actions()
     {
         $admin = User::factory()->create();
@@ -111,7 +112,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertNotEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_access_other_users_data()
     {
         $user1 = User::factory()->create();
@@ -123,7 +124,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function user_can_only_access_own_data()
     {
         $user = User::factory()->create();
@@ -133,7 +134,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertNotEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_escalate_privileges()
     {
         $user = User::factory()->create();
@@ -148,7 +149,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_modify_own_permissions()
     {
         $user = User::factory()->create();
@@ -163,7 +164,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function api_endpoints_respect_permissions()
     {
         $user = User::factory()->create();
@@ -183,7 +184,7 @@ class PermissionSecurityTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function permission_checks_are_enforced_at_middleware_level()
     {
         $user = User::factory()->create();
@@ -195,7 +196,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function role_based_access_control_works_correctly()
     {
         $admin = User::factory()->create();
@@ -223,7 +224,7 @@ class PermissionSecurityTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function permission_denied_returns_proper_error_message()
     {
         $user = User::factory()->create();

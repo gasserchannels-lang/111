@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SessionManagementTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function session_starts_correctly()
     {
         $response = $this->get('/');
@@ -14,7 +15,7 @@ class SessionManagementTest extends TestCase
         $this->assertTrue(true); // Simplified assertion
     }
 
-    /** @test */
+    #[Test]
     public function can_store_data_in_session()
     {
         $this->get('/');
@@ -22,7 +23,7 @@ class SessionManagementTest extends TestCase
         $this->assertEquals('test_value', session('test_key'));
     }
 
-    /** @test */
+    #[Test]
     public function session_persists_across_requests()
     {
         $this->get('/');
@@ -32,7 +33,7 @@ class SessionManagementTest extends TestCase
         $this->assertEquals(123, session('user_id'));
     }
 
-    /** @test */
+    #[Test]
     public function session_expires_after_timeout()
     {
         config(['session.lifetime' => 1]); // 1 minute
@@ -48,7 +49,7 @@ class SessionManagementTest extends TestCase
         $this->assertTrue(true); // Simplified assertion
     }
 
-    /** @test */
+    #[Test]
     public function can_flash_data_to_session()
     {
         $this->get('/');
@@ -62,7 +63,7 @@ class SessionManagementTest extends TestCase
         $this->assertTrue(true); // Simplified assertion
     }
 
-    /** @test */
+    #[Test]
     public function session_regenerates_on_login()
     {
         // Skip this test as it requires database access

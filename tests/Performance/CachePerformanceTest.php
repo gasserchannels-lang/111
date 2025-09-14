@@ -4,13 +4,14 @@ namespace Tests\Performance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CachePerformanceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function cache_operations_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -26,7 +27,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan(50, $operationTime); // Should complete within 50ms
     }
 
-    /** @test */
+    #[Test]
     public function cache_remember_improves_performance()
     {
         // First call without cache
@@ -43,7 +44,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan($firstCallTime, $secondCallTime);
     }
 
-    /** @test */
+    #[Test]
     public function cache_handles_high_frequency_operations()
     {
         $startTime = microtime(true);
@@ -59,7 +60,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan(1000, $operationTime); // Should complete within 1 second
     }
 
-    /** @test */
+    #[Test]
     public function cache_retrieval_is_fast()
     {
         // Store data in cache
@@ -78,7 +79,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan(100, $operationTime); // Should complete within 100ms
     }
 
-    /** @test */
+    #[Test]
     public function cache_expiration_works_correctly()
     {
         // Store data with short expiration
@@ -94,7 +95,7 @@ class CachePerformanceTest extends TestCase
         $this->assertNull(Cache::get('expiring_key'));
     }
 
-    /** @test */
+    #[Test]
     public function cache_clearing_performs_within_acceptable_time()
     {
         // Store multiple cache entries
@@ -113,7 +114,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan(200, $operationTime); // Should complete within 200ms
     }
 
-    /** @test */
+    #[Test]
     public function cache_handles_concurrent_operations()
     {
         $startTime = microtime(true);
@@ -130,7 +131,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan(500, $operationTime); // Should complete within 500ms
     }
 
-    /** @test */
+    #[Test]
     public function cache_memory_usage_is_efficient()
     {
         $initialMemory = memory_get_usage(true);
@@ -146,7 +147,7 @@ class CachePerformanceTest extends TestCase
         $this->assertLessThan(50, $memoryUsed); // Should use less than 50MB
     }
 
-    /** @test */
+    #[Test]
     public function cache_tags_work_efficiently()
     {
         $startTime = microtime(true);
@@ -170,7 +171,7 @@ class CachePerformanceTest extends TestCase
         $this->assertEquals('john', Cache::get('user_1'));
     }
 
-    /** @test */
+    #[Test]
     public function cache_serialization_performs_well()
     {
         $complexData = [
@@ -198,7 +199,7 @@ class CachePerformanceTest extends TestCase
         $this->assertEquals($complexData, $retrievedData);
     }
 
-    /** @test */
+    #[Test]
     public function cache_hit_ratio_is_acceptable()
     {
         $cacheHits = 0;

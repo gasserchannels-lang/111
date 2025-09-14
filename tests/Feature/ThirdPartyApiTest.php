@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ThirdPartyApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function external_api_requests_are_mocked()
     {
         Http::fake([
@@ -24,7 +25,7 @@ class ThirdPartyApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function external_api_timeout_is_handled()
     {
         Http::fake([
@@ -35,7 +36,7 @@ class ThirdPartyApiTest extends TestCase
         $this->assertNotEquals(500, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function external_api_errors_are_handled()
     {
         Http::fake([
@@ -46,7 +47,7 @@ class ThirdPartyApiTest extends TestCase
         $this->assertNotEquals(500, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function external_api_authentication_works()
     {
         Http::fake([
@@ -59,7 +60,7 @@ class ThirdPartyApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function external_api_rate_limiting_is_respected()
     {
         Http::fake([
@@ -70,7 +71,7 @@ class ThirdPartyApiTest extends TestCase
         $this->assertNotEquals(500, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function external_api_data_is_cached()
     {
         Http::fake([
@@ -88,7 +89,7 @@ class ThirdPartyApiTest extends TestCase
         $this->assertEquals(200, $response2->status());
     }
 
-    /** @test */
+    #[Test]
     public function external_api_fallback_works()
     {
         Http::fake([

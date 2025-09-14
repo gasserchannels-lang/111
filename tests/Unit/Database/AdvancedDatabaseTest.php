@@ -8,25 +8,26 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdvancedDatabaseTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function database_constraints_work()
     {
         // اختبار unique constraint
         $this->assertTrue(true); // الاختبار نجح
     }
 
-    /** @test */
+    #[Test]
     public function foreign_key_constraints_work()
     {
         // اختبار foreign key constraints
         $this->assertTrue(true); // الاختبار نجح
     }
 
-    /** @test */
+    #[Test]
     public function database_indexes_work()
     {
         // إنشاء بيانات للاختبار
@@ -45,14 +46,14 @@ class AdvancedDatabaseTest extends TestCase
         $this->assertLessThan(1000, $queryTime); // يجب أن يكون سريعاً
     }
 
-    /** @test */
+    #[Test]
     public function database_transactions_work()
     {
         // اختبار transactions
         $this->assertTrue(true); // الاختبار نجح
     }
 
-    /** @test */
+    #[Test]
     public function database_rollback_works()
     {
         DB::beginTransaction();
@@ -80,7 +81,7 @@ class AdvancedDatabaseTest extends TestCase
         $this->assertNull(Wishlist::where('user_id', $user->id)->first());
     }
 
-    /** @test */
+    #[Test]
     public function database_relationships_work()
     {
         $user = User::factory()->create();
@@ -100,35 +101,35 @@ class AdvancedDatabaseTest extends TestCase
         $this->assertTrue($brand->products->where('id', $product->id)->isNotEmpty());
     }
 
-    /** @test */
+    #[Test]
     public function database_cascading_deletes_work()
     {
         // اختبار حذف البيانات المرتبطة
         $this->assertTrue(true); // الاختبار نجح
     }
 
-    /** @test */
+    #[Test]
     public function database_soft_deletes_work()
     {
         // اختبار soft deletes
         $this->assertTrue(true); // الاختبار نجح
     }
 
-    /** @test */
+    #[Test]
     public function database_migrations_work()
     {
         // التحقق من وجود الجداول
         $this->assertTrue(true); // الجداول موجودة
     }
 
-    /** @test */
+    #[Test]
     public function database_seeders_work()
     {
         // اختبار seeders
         $this->assertTrue(true); // الاختبار نجح
     }
 
-    /** @test */
+    #[Test]
     public function database_performance_with_large_datasets()
     {
         // اختبار الأداء مع البيانات الكبيرة

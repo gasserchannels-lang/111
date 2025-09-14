@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use App\Services\ProductClassificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductClassificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function can_classify_electronics()
     {
         $classifier = new ProductClassificationService;
@@ -25,7 +26,7 @@ class ProductClassificationTest extends TestCase
         $this->assertEquals('إلكترونيات', $category);
     }
 
-    /** @test */
+    #[Test]
     public function can_classify_clothing()
     {
         $classifier = new ProductClassificationService;
@@ -40,7 +41,7 @@ class ProductClassificationTest extends TestCase
         $this->assertEquals('ملابس', $category);
     }
 
-    /** @test */
+    #[Test]
     public function can_classify_books()
     {
         $classifier = new ProductClassificationService;
@@ -55,7 +56,7 @@ class ProductClassificationTest extends TestCase
         $this->assertEquals('كتب', $category);
     }
 
-    /** @test */
+    #[Test]
     public function can_classify_home_garden()
     {
         $classifier = new ProductClassificationService;
@@ -70,7 +71,7 @@ class ProductClassificationTest extends TestCase
         $this->assertEquals('منزل وحديقة', $category);
     }
 
-    /** @test */
+    #[Test]
     public function can_classify_sports()
     {
         $classifier = new ProductClassificationService;
@@ -85,7 +86,7 @@ class ProductClassificationTest extends TestCase
         $this->assertEquals('رياضة', $category);
     }
 
-    /** @test */
+    #[Test]
     public function classification_confidence_is_high()
     {
         $classifier = new ProductClassificationService;
@@ -103,7 +104,7 @@ class ProductClassificationTest extends TestCase
         $this->assertGreaterThan(0.8, $result['confidence']);
     }
 
-    /** @test */
+    #[Test]
     public function can_handle_ambiguous_products()
     {
         $classifier = new ProductClassificationService;
@@ -121,7 +122,7 @@ class ProductClassificationTest extends TestCase
         $this->assertGreaterThan(0.5, $result['confidence']);
     }
 
-    /** @test */
+    #[Test]
     public function can_suggest_subcategories()
     {
         $classifier = new ProductClassificationService;

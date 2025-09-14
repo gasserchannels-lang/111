@@ -27,12 +27,25 @@ class ProductService
         $page = request()->get('page', 1);
         $pageNumber = is_numeric($page) ? (int) $page : 1;
 
-        return $this->cache->remember(
+        $result = $this->cache->remember(
             'products.page.' . $pageNumber,
             3600,
             fn() => $this->repository->getPaginatedActive($perPage),
             ['products']
         );
+
+        // Return empty paginator if result is null
+        if ($result === null) {
+            return new LengthAwarePaginator(
+                collect([]),
+                0,
+                $perPage,
+                $pageNumber,
+                ['path' => request()->url(), 'pageName' => 'page']
+            );
+        }
+
+        return $result;
     }
 
     /**

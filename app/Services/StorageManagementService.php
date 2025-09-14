@@ -42,7 +42,10 @@ final class StorageManagementService
     {
         $storagePath = storage_path();
         $totalSize = $this->getDirectorySize($storagePath);
-        $maxSizeMb = is_numeric($this->config['max_storage_size_mb'] ?? 1024) ? (float) $this->config['max_storage_size_mb'] : 1024.0;
+        $maxSizeMb = 1024.0;
+        if (isset($this->config['max_storage_size_mb']) && is_numeric($this->config['max_storage_size_mb'])) {
+            $maxSizeMb = (float) $this->config['max_storage_size_mb'];
+        }
         $maxSize = $maxSizeMb * 1024 * 1024;
         $usagePercentage = ($totalSize / $maxSize) * 100;
 
@@ -128,26 +131,28 @@ final class StorageManagementService
             ? $this->config['cleanup_priority']
             : ['temp', 'cache', 'logs', 'backups'];
 
-        foreach ($priority as $type) {
-            switch ($type) {
-                case 'temp':
-                    $cleanupResults['temp'] = $this->cleanupService->cleanupTempFiles();
-                    break;
-                case 'cache':
-                    $cleanupResults['cache'] = $this->cleanupService->cleanupCacheFiles();
-                    break;
-                case 'logs':
-                    $cleanupResults['logs'] = $this->cleanupService->cleanupLogFiles();
-                    break;
-                case 'backups':
-                    $cleanupResults['backups'] = $this->cleanupService->cleanupBackupFiles();
-                    break;
-            }
+        if (is_array($priority)) {
+            foreach ($priority as $type) {
+                switch ($type) {
+                    case 'temp':
+                        $cleanupResults['temp'] = $this->cleanupService->cleanupTempFiles();
+                        break;
+                    case 'cache':
+                        $cleanupResults['cache'] = $this->cleanupService->cleanupCacheFiles();
+                        break;
+                    case 'logs':
+                        $cleanupResults['logs'] = $this->cleanupService->cleanupLogFiles();
+                        break;
+                    case 'backups':
+                        $cleanupResults['backups'] = $this->cleanupService->cleanupBackupFiles();
+                        break;
+                }
 
-            // Check if usage is now acceptable
-            $newUsage = $this->monitorStorageUsage();
-            if ($newUsage['status'] === 'healthy') {
-                break;
+                // Check if usage is now acceptable
+                $newUsage = $this->monitorStorageUsage();
+                if ($newUsage['status'] === 'healthy') {
+                    break;
+                }
             }
         }
 
@@ -185,8 +190,10 @@ final class StorageManagementService
             foreach ($directories as $directory) {
                 if (is_dir($directory)) {
                     $compressionResult = $this->compressDirectory($directory);
-                    $results['files_compressed'] += $compressionResult['files_compressed'];
-                    $results['space_saved_mb'] += $compressionResult['space_saved_mb'];
+                    if (isset($compressionResult['files_compressed'], $compressionResult['space_saved_mb'])) {
+                        $results['files_compressed'] += is_numeric($compressionResult['files_compressed']) ? (int) $compressionResult['files_compressed'] : 0;
+                        $results['space_saved_mb'] += is_numeric($compressionResult['space_saved_mb']) ? (float) $compressionResult['space_saved_mb'] : 0.0;
+                    }
                 }
             }
 
@@ -228,9 +235,11 @@ final class StorageManagementService
             foreach ($archiveDirectories as $name => $directory) {
                 if (is_dir($directory)) {
                     $archiveResult = $this->createArchive($directory, $name);
-                    $results['files_archived'] += $archiveResult['files_archived'];
-                    $results['archives_created'] += $archiveResult['archives_created'];
-                    $results['space_saved_mb'] += $archiveResult['space_saved_mb'];
+                    if (isset($archiveResult['files_archived'], $archiveResult['archives_created'], $archiveResult['space_saved_mb'])) {
+                        $results['files_archived'] += is_numeric($archiveResult['files_archived']) ? (int) $archiveResult['files_archived'] : 0;
+                        $results['archives_created'] += is_numeric($archiveResult['archives_created']) ? (int) $archiveResult['archives_created'] : 0;
+                        $results['space_saved_mb'] += is_numeric($archiveResult['space_saved_mb']) ? (float) $archiveResult['space_saved_mb'] : 0.0;
+                    }
                 }
             }
 
@@ -257,11 +266,22 @@ final class StorageManagementService
         $recommendations = [];
 
         // Sort directories by size
-        uasort($breakdown, function ($a, $b) {
-            $aSize = is_numeric($a['size_mb'] ?? 0) ? (float) $a['size_mb'] : 0.0;
-            $bSize = is_numeric($b['size_mb'] ?? 0) ? (float) $b['size_mb'] : 0.0;
-            return $bSize <=> $aSize;
-        });
+        if (is_array($breakdown)) {
+            uasort($breakdown, function ($a, $b) {
+                $aSize = 0.0;
+                $bSize = 0.0;
+
+                if (is_array($a) && isset($a['size_mb']) && is_numeric($a['size_mb'])) {
+                    $aSize = (float) $a['size_mb'];
+                }
+
+                if (is_array($b) && isset($b['size_mb']) && is_numeric($b['size_mb'])) {
+                    $bSize = (float) $b['size_mb'];
+                }
+
+                return $bSize <=> $aSize;
+            });
+        }
 
         // Generate recommendations based on usage
         if ($usage['status'] === 'critical') {
@@ -279,14 +299,18 @@ final class StorageManagementService
         }
 
         // Directory-specific recommendations
-        foreach ($breakdown as $name => $data) {
-            $sizeMb = is_numeric($data['size_mb'] ?? 0) ? (float) $data['size_mb'] : 0.0;
-            if ($sizeMb > 100) { // More than 100MB
-                $recommendations[] = [
-                    'type' => 'info',
-                    'message' => "Directory '{$name}' is using {$sizeMb}MB",
-                    'action' => "Consider cleaning up {$name} directory",
-                ];
+        if (is_array($breakdown)) {
+            foreach ($breakdown as $name => $data) {
+                if (is_array($data) && isset($data['size_mb']) && is_numeric($data['size_mb'])) {
+                    $sizeMb = (float) $data['size_mb'];
+                    if ($sizeMb > 100) { // More than 100MB
+                        $recommendations[] = [
+                            'type' => 'info',
+                            'message' => "Directory '{$name}' is using {$sizeMb}MB",
+                            'action' => "Consider cleaning up {$name} directory",
+                        ];
+                    }
+                }
             }
         }
 
@@ -335,18 +359,20 @@ final class StorageManagementService
         $oldestFile = null;
         $newestFile = null;
 
-        foreach ($breakdown as $data) {
-            if (is_array($data) && isset($data['path']) && is_string($data['path'])) {
-                $files = $this->getFilesInDirectory($data['path']);
-                $totalFiles += count($files);
+        if (is_array($breakdown)) {
+            foreach ($breakdown as $data) {
+                if (is_array($data) && isset($data['path']) && is_string($data['path'])) {
+                    $files = $this->getFilesInDirectory($data['path']);
+                    $totalFiles += count($files);
 
-                foreach ($files as $file) {
-                    $fileTime = filemtime($file);
-                    if (! $oldestFile || $fileTime < $oldestFile) {
-                        $oldestFile = $fileTime;
-                    }
-                    if (! $newestFile || $fileTime > $newestFile) {
-                        $newestFile = $fileTime;
+                    foreach ($files as $file) {
+                        $fileTime = filemtime($file);
+                        if (! $oldestFile || $fileTime < $oldestFile) {
+                            $oldestFile = $fileTime;
+                        }
+                        if (! $newestFile || $fileTime > $newestFile) {
+                            $newestFile = $fileTime;
+                        }
                     }
                 }
             }

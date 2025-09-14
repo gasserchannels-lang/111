@@ -3,13 +3,14 @@
 namespace Tests\Performance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MemoryUsageTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function memory_usage_remains_within_acceptable_limits()
     {
         $initialMemory = memory_get_usage(true);
@@ -23,7 +24,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(100, $memoryUsed); // Should use less than 100MB
     }
 
-    /** @test */
+    #[Test]
     public function large_dataset_processing_does_not_exceed_memory_limits()
     {
         $initialMemory = memory_get_usage(true);
@@ -41,7 +42,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(200, $memoryUsed); // Should use less than 200MB
     }
 
-    /** @test */
+    #[Test]
     public function image_processing_does_not_exceed_memory_limits()
     {
         $initialMemory = memory_get_usage(true);
@@ -63,7 +64,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(150, $memoryUsed); // Should use less than 150MB
     }
 
-    /** @test */
+    #[Test]
     public function database_queries_do_not_cause_memory_leaks()
     {
         $initialMemory = memory_get_usage(true);
@@ -81,7 +82,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(50, $memoryUsed); // Should use less than 50MB
     }
 
-    /** @test */
+    #[Test]
     public function api_requests_do_not_cause_memory_leaks()
     {
         $initialMemory = memory_get_usage(true);
@@ -97,7 +98,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(30, $memoryUsed); // Should use less than 30MB
     }
 
-    /** @test */
+    #[Test]
     public function file_operations_do_not_cause_memory_leaks()
     {
         $initialMemory = memory_get_usage(true);
@@ -114,7 +115,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(40, $memoryUsed); // Should use less than 40MB
     }
 
-    /** @test */
+    #[Test]
     public function memory_usage_returns_to_normal_after_operations()
     {
         $initialMemory = memory_get_usage(true);
@@ -132,7 +133,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(20, $memoryUsed); // Should return to near initial state
     }
 
-    /** @test */
+    #[Test]
     public function concurrent_requests_do_not_cause_memory_issues()
     {
         $initialMemory = memory_get_usage(true);
@@ -149,7 +150,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(60, $memoryUsed); // Should use less than 60MB
     }
 
-    /** @test */
+    #[Test]
     public function memory_usage_is_consistent_across_multiple_runs()
     {
         $memoryUsages = [];
@@ -173,7 +174,7 @@ class MemoryUsageTest extends TestCase
         $this->assertLessThan(10, $maxDeviation); // Deviation should be less than 10MB
     }
 
-    /** @test */
+    #[Test]
     public function memory_usage_scales_linearly_with_data_size()
     {
         $dataSizes = [100, 200, 500, 1000];

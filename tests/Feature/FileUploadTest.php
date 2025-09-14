@@ -4,11 +4,12 @@ namespace Tests\Feature;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class FileUploadTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_upload_image_file()
     {
         Storage::fake('public');
@@ -24,7 +25,7 @@ class FileUploadTest extends TestCase
         $this->assertTrue(in_array($response->status(), [200, 401]));
     }
 
-    /** @test */
+    #[Test]
     public function validates_file_type()
     {
         $file = UploadedFile::fake()->create('document.pdf', 1000);
@@ -38,7 +39,7 @@ class FileUploadTest extends TestCase
         $this->assertTrue(in_array($response->status(), [422, 401]));
     }
 
-    /** @test */
+    #[Test]
     public function validates_file_size()
     {
         $file = UploadedFile::fake()->create('large.jpg', 5000); // 5MB
@@ -52,7 +53,7 @@ class FileUploadTest extends TestCase
         $this->assertTrue(in_array($response->status(), [401, 422]));
     }
 
-    /** @test */
+    #[Test]
     public function can_delete_uploaded_file()
     {
         Storage::fake('public');
@@ -68,7 +69,7 @@ class FileUploadTest extends TestCase
         $this->assertTrue(in_array($response->status(), [200, 404, 401]));
     }
 
-    /** @test */
+    #[Test]
     public function can_upload_multiple_files()
     {
         Storage::fake('public');
@@ -87,7 +88,7 @@ class FileUploadTest extends TestCase
         $this->assertTrue(in_array($response->status(), [200, 404, 401]));
     }
 
-    /** @test */
+    #[Test]
     public function generates_unique_filename()
     {
         Storage::fake('public');

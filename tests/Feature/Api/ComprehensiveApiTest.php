@@ -10,6 +10,7 @@ use App\Models\Review;
 use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ComprehensiveApiTest extends TestCase
@@ -23,7 +24,7 @@ class ComprehensiveApiTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
+    #[Test]
     public function products_api_endpoints_work()
     {
         // GET /api/products
@@ -53,7 +54,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(201, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function categories_api_endpoints_work()
     {
         // GET /api/categories
@@ -66,7 +67,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function brands_api_endpoints_work()
     {
         // GET /api/brands
@@ -79,7 +80,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function wishlist_api_endpoints_work()
     {
         $product = Product::factory()->create();
@@ -104,7 +105,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function price_alerts_api_endpoints_work()
     {
         $product = Product::factory()->create();
@@ -127,7 +128,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function reviews_api_endpoints_work()
     {
         $product = Product::factory()->create();
@@ -154,7 +155,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function search_api_works()
     {
         // إنشاء منتجات للبحث
@@ -172,7 +173,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function ai_api_endpoints_work()
     {
         // تحليل النص
@@ -191,7 +192,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function api_pagination_works()
     {
         // إنشاء 25 منتج
@@ -209,7 +210,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertCount(10, $response->json('data'));
     }
 
-    /** @test */
+    #[Test]
     public function api_error_handling_works()
     {
         // 404 للعنصر غير الموجود
@@ -228,7 +229,7 @@ class ComprehensiveApiTest extends TestCase
         $this->assertEquals(401, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function api_response_format_is_consistent()
     {
         $response = $this->getJson('/api/products');

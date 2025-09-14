@@ -8,13 +8,14 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PerformanceBenchmarkTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function homepage_load_time_benchmark()
     {
         $startTime = microtime(true);
@@ -41,7 +42,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function database_query_performance_benchmark()
     {
         // إنشاء بيانات اختبار
@@ -92,7 +93,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function memory_usage_benchmark()
     {
         $initialMemory = memory_get_usage(true);
@@ -122,7 +123,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function concurrent_users_benchmark()
     {
         $concurrentUsers = [5, 10, 20, 50];
@@ -155,7 +156,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function cache_performance_benchmark()
     {
         Cache::flush();
@@ -186,7 +187,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_response_time_benchmark()
     {
         $endpoints = [
@@ -219,7 +220,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function file_upload_performance_benchmark()
     {
         $fileSizes = [1024, 10240, 102400, 1048576]; // 1KB, 10KB, 100KB, 1MB
@@ -241,7 +242,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function database_connection_pool_benchmark()
     {
         $connections = [];
@@ -270,7 +271,7 @@ class PerformanceBenchmarkTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function overall_performance_score()
     {
         $scores = [];

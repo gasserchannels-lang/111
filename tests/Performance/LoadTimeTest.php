@@ -3,13 +3,14 @@
 namespace Tests\Performance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class LoadTimeTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function homepage_loads_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -23,7 +24,7 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(2000, $loadTime); // Should load within 2 seconds
     }
 
-    /** @test */
+    #[Test]
     public function api_endpoints_load_within_acceptable_time()
     {
         $apiEndpoints = [
@@ -45,7 +46,7 @@ class LoadTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function product_list_page_loads_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -59,7 +60,7 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(3000, $loadTime); // Should load within 3 seconds
     }
 
-    /** @test */
+    #[Test]
     public function search_function_performs_within_acceptable_time()
     {
         $searchQueries = [
@@ -81,7 +82,7 @@ class LoadTimeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function user_registration_performs_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -99,7 +100,7 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(3000, $loadTime); // Should register within 3 seconds
     }
 
-    /** @test */
+    #[Test]
     public function user_login_performs_within_acceptable_time()
     {
         $user = \App\Models\User::factory()->create([
@@ -120,7 +121,7 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(2000, $loadTime); // Should login within 2 seconds
     }
 
-    /** @test */
+    #[Test]
     public function database_queries_perform_within_acceptable_time()
     {
         $startTime = microtime(true);
@@ -139,9 +140,14 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(1000, $loadTime); // Should query within 1 second
     }
 
-    /** @test */
+    #[Test]
     public function file_upload_performs_within_acceptable_time()
     {
+        // Skip this test if GD extension is not available
+        if (!function_exists('imagecreatetruecolor')) {
+            $this->markTestSkipped('GD extension not available');
+        }
+
         $user = \App\Models\User::factory()->create();
         $this->actingAs($user);
 
@@ -159,7 +165,7 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(5000, $loadTime); // Should upload within 5 seconds
     }
 
-    /** @test */
+    #[Test]
     public function admin_panel_loads_within_acceptable_time()
     {
         $admin = \App\Models\User::factory()->create();
@@ -177,7 +183,7 @@ class LoadTimeTest extends TestCase
         $this->assertLessThan(3000, $loadTime); // Should load within 3 seconds
     }
 
-    /** @test */
+    #[Test]
     public function concurrent_requests_handle_gracefully()
     {
         $startTime = microtime(true);

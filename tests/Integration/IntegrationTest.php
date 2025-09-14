@@ -20,6 +20,11 @@ class IntegrationTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     /**
      * Test complete product workflow.
      */

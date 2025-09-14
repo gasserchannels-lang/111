@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use App\Services\AIService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIResponseTimeTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function text_analysis_response_time_is_acceptable()
     {
         $aiService = new AIService;
@@ -26,7 +27,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertIsArray($result);
     }
 
-    /** @test */
+    #[Test]
     public function product_classification_response_time_is_acceptable()
     {
         $aiService = new AIService;
@@ -46,7 +47,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertIsString($result);
     }
 
-    /** @test */
+    #[Test]
     public function recommendation_generation_response_time_is_acceptable()
     {
         $aiService = new AIService;
@@ -66,7 +67,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertIsArray($result);
     }
 
-    /** @test */
+    #[Test]
     public function image_processing_response_time_is_acceptable()
     {
         $aiService = new AIService;
@@ -90,7 +91,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertIsArray($result);
     }
 
-    /** @test */
+    #[Test]
     public function batch_processing_response_time_is_acceptable()
     {
         $aiService = new AIService;
@@ -118,7 +119,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertCount(5, $results);
     }
 
-    /** @test */
+    #[Test]
     public function concurrent_requests_handle_gracefully()
     {
         $aiService = new AIService;
@@ -140,7 +141,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertCount(5, $promises);
     }
 
-    /** @test */
+    #[Test]
     public function response_time_improves_with_caching()
     {
         $aiService = new AIService;
@@ -160,7 +161,7 @@ class AIResponseTimeTest extends TestCase
         $this->assertEquals($result1, $result2);
     }
 
-    /** @test */
+    #[Test]
     public function response_time_under_load_is_acceptable()
     {
         $aiService = new AIService;

@@ -201,7 +201,7 @@ class ProductUpdateRequest extends FormRequest
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $data['tags'] = is_array($this->tags) ? array_map(fn($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -234,11 +234,15 @@ class ProductUpdateRequest extends FormRequest
                 $oldPrice = $product instanceof \App\Models\Product ? $product->price : null;
                 $newPrice = $this->input('price');
 
-                if ($oldPrice && $newPrice && is_numeric($oldPrice) && is_numeric($newPrice)) {
-                    $changePercentage = abs(($newPrice - $oldPrice) / $oldPrice) * 100;
+                if ($oldPrice && $newPrice && $oldPrice > 0) {
+                    $oldPriceFloat = is_numeric($oldPrice) ? (float) $oldPrice : 0.0;
+                    $newPriceFloat = is_numeric($newPrice) ? (float) $newPrice : 0.0;
+                    if ($oldPriceFloat > 0) {
+                        $changePercentage = abs($newPriceFloat - $oldPriceFloat) / $oldPriceFloat * 100;
 
-                    if ($changePercentage > 50) { // More than 50% change
-                        $validator->warnings()->add('price', 'تغيير السعر بنسبة '.round($changePercentage, 2).'% - يرجى التأكد من صحة السعر');
+                        if ($changePercentage > 50) { // More than 50% change
+                            $validator->warnings()->add('price', 'تغيير السعر بنسبة ' . round($changePercentage, 2) . '% - يرجى التأكد من صحة السعر');
+                        }
                     }
                 }
             }
@@ -253,11 +257,14 @@ class ProductUpdateRequest extends FormRequest
         $validated = parent::validated($key, $default);
 
         // Add computed fields
-        if (isset($validated['name'])) {
-            $validated['slug'] = \Str::slug($validated['name'] ?? '');
+        if (is_array($validated) && isset($validated['name'])) {
+            $name = $validated['name'];
+            $validated['slug'] = \Str::slug(is_string($name) ? $name : '');
         }
 
-        $validated['updated_by'] = $this->user()?->id;
+        if (is_array($validated)) {
+            $validated['updated_by'] = $this->user()?->id;
+        }
 
         return $validated;
     }

@@ -206,10 +206,12 @@ class ProductSearchRequest extends FormRequest
         $validated = parent::validated($key, $default);
 
         // Set default values
-        $validated['sort'] = $validated['sort'] ?? 'popularity';
-        $validated['order'] = $validated['order'] ?? 'desc';
-        $validated['page'] = is_numeric($validated['page'] ?? null) ? (int) $validated['page'] : 1;
-        $validated['per_page'] = is_numeric($validated['per_page'] ?? null) ? (int) $validated['per_page'] : 15;
+        if (is_array($validated)) {
+            $validated['sort'] = $validated['sort'] ?? 'popularity';
+            $validated['order'] = $validated['order'] ?? 'desc';
+            $validated['page'] = is_numeric($validated['page'] ?? null) ? (int) $validated['page'] : 1;
+            $validated['per_page'] = is_numeric($validated['per_page'] ?? null) ? (int) $validated['per_page'] : 15;
+        }
 
         return $validated;
     }

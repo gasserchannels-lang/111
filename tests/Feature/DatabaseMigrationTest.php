@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DatabaseMigrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function users_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('users'));
@@ -20,7 +21,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function products_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('products'));
@@ -30,7 +31,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function categories_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('categories'));
@@ -40,7 +41,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function brands_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('brands'));
@@ -50,7 +51,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function wishlists_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('wishlists'));
@@ -59,7 +60,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function price_alerts_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('price_alerts'));
@@ -69,7 +70,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function reviews_table_has_correct_structure()
     {
         $this->assertTrue(Schema::hasTable('reviews'));
@@ -79,7 +80,7 @@ class DatabaseMigrationTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function foreign_key_constraints_are_working()
     {
         // Test that foreign key constraints are properly set up
@@ -89,7 +90,7 @@ class DatabaseMigrationTest extends TestCase
         $this->assertTrue(Schema::hasColumn('wishlists', 'product_id'));
     }
 
-    /** @test */
+    #[Test]
     public function indexes_are_created()
     {
         // Test that important indexes are created
@@ -98,7 +99,7 @@ class DatabaseMigrationTest extends TestCase
         $this->assertTrue(Schema::hasIndex('products', 'products_brand_id_index'));
     }
 
-    /** @test */
+    #[Test]
     public function migrations_can_be_rolled_back()
     {
         // Test that migrations can be rolled back without errors

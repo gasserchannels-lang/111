@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ApiRateLimitingTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function api_requests_are_rate_limited()
     {
         // Test rate limiting for unauthenticated requests
@@ -21,7 +22,7 @@ class ApiRateLimitingTest extends TestCase
         $this->assertEquals(429, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_users_have_higher_rate_limit()
     {
         $user = User::factory()->create();
@@ -35,7 +36,7 @@ class ApiRateLimitingTest extends TestCase
         $this->assertEquals(429, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function rate_limit_resets_after_timeout()
     {
         // Make requests to hit rate limit
@@ -53,7 +54,7 @@ class ApiRateLimitingTest extends TestCase
         $this->assertNotEquals(429, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function different_endpoints_have_separate_rate_limits()
     {
         // Hit rate limit on one endpoint
@@ -66,7 +67,7 @@ class ApiRateLimitingTest extends TestCase
         $this->assertNotEquals(429, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function rate_limit_headers_are_present()
     {
         $response = $this->getJson('/api/products');

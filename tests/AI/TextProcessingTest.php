@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use App\Services\TextProcessingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TextProcessingTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function can_process_arabic_text()
     {
         $textProcessor = new TextProcessingService;
@@ -24,7 +25,7 @@ class TextProcessingTest extends TestCase
         $this->assertEquals('ar', $result['language']);
     }
 
-    /** @test */
+    #[Test]
     public function can_extract_keywords()
     {
         $textProcessor = new TextProcessingService;
@@ -37,7 +38,7 @@ class TextProcessingTest extends TestCase
         $this->assertContains('ديل', $keywords);
     }
 
-    /** @test */
+    #[Test]
     public function can_detect_sentiment()
     {
         $textProcessor = new TextProcessingService;
@@ -55,7 +56,7 @@ class TextProcessingTest extends TestCase
         $this->assertEquals('neutral', $neutralSentiment);
     }
 
-    /** @test */
+    #[Test]
     public function can_remove_stop_words()
     {
         $textProcessor = new TextProcessingService;
@@ -68,7 +69,7 @@ class TextProcessingTest extends TestCase
         $this->assertStringContainsString('منتج', $processedText);
     }
 
-    /** @test */
+    #[Test]
     public function can_normalize_text()
     {
         $textProcessor = new TextProcessingService;
@@ -80,7 +81,7 @@ class TextProcessingTest extends TestCase
         $this->assertStringContainsString('هذا نص به مسافات كثيرة', $normalizedText);
     }
 
-    /** @test */
+    #[Test]
     public function can_handle_mixed_languages()
     {
         $textProcessor = new TextProcessingService;
@@ -93,7 +94,7 @@ class TextProcessingTest extends TestCase
         $this->assertContains('iPhone', $result['tokens']);
     }
 
-    /** @test */
+    #[Test]
     public function can_extract_entities()
     {
         $textProcessor = new TextProcessingService;
@@ -107,7 +108,7 @@ class TextProcessingTest extends TestCase
         $this->assertContains('سامسونج', $entities['organizations']);
     }
 
-    /** @test */
+    #[Test]
     public function can_summarize_text()
     {
         $textProcessor = new TextProcessingService;

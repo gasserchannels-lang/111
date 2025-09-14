@@ -6,13 +6,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DataEncryptionTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function sensitive_data_is_encrypted_at_rest()
     {
         $user = User::factory()->create([
@@ -32,7 +33,7 @@ class DataEncryptionTest extends TestCase
         $this->assertEquals('123-45-6789', Crypt::decrypt($user->ssn));
     }
 
-    /** @test */
+    #[Test]
     public function api_responses_do_not_include_sensitive_data()
     {
         $user = User::factory()->create([
@@ -54,7 +55,7 @@ class DataEncryptionTest extends TestCase
         $this->assertArrayNotHasKey('phone', $data);
     }
 
-    /** @test */
+    #[Test]
     public function database_queries_do_not_log_sensitive_data()
     {
         $user = User::factory()->create([
@@ -79,7 +80,7 @@ class DataEncryptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function file_uploads_are_encrypted()
     {
         $user = User::factory()->create();
@@ -102,7 +103,7 @@ class DataEncryptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function api_keys_are_encrypted()
     {
         $user = User::factory()->create();
@@ -124,7 +125,7 @@ class DataEncryptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function credit_card_data_is_encrypted()
     {
         $user = User::factory()->create();
@@ -147,7 +148,7 @@ class DataEncryptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function error_logs_do_not_contain_sensitive_data()
     {
         $user = User::factory()->create([
@@ -172,7 +173,7 @@ class DataEncryptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function database_backups_are_encrypted()
     {
         $user = User::factory()->create([
@@ -195,7 +196,7 @@ class DataEncryptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function session_data_is_encrypted()
     {
         $user = User::factory()->create();
@@ -213,7 +214,7 @@ class DataEncryptionTest extends TestCase
         $this->assertEquals('secret_value', Crypt::decrypt($sessionData));
     }
 
-    /** @test */
+    #[Test]
     public function api_tokens_are_encrypted()
     {
         $user = User::factory()->create();

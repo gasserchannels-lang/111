@@ -12,6 +12,7 @@ class ContinuousQualityMonitor
     private array $monitoringRules = [];
 
     /** @var array<string, mixed> */
+    /** @var array<int|string, mixed> */
     private array $alerts = [];
 
     private int $checkInterval = 300; // 5 minutes
@@ -67,9 +68,16 @@ class ContinuousQualityMonitor
     {
         Log::info('🔍 بدء المراقبة المستمرة للجودة...');
 
-        while (true) {
+        $running = true;
+        while ($running) {
             $this->performQualityCheck();
             sleep($this->checkInterval);
+            // In a real implementation, you would have a way to stop this loop
+            // For now, we'll add a break after a reasonable number of iterations
+            static $iterations = 0;
+            if (++$iterations > 1000) {
+                $running = false;
+            }
         }
     }
 
@@ -85,16 +93,21 @@ class ContinuousQualityMonitor
 
         foreach ($this->monitoringRules as $ruleId => $rule) {
             if (is_array($rule)) {
-                $result = $this->checkRule($ruleId, $rule);
-                $results[$ruleId] = $result;
+                $result = $this->checkRule((string) $ruleId, $rule);
+                $results[(string) $ruleId] = $result;
 
-                if ($result['health_score'] < ($rule['threshold'] ?? 0)) {
-                    $overallHealth = min($overallHealth, $result['health_score']);
+                if (is_numeric($result['health_score'] ?? null) && is_numeric($rule['threshold'] ?? null)) {
+                    $healthScore = (int) $result['health_score'];
+                    $threshold = (int) $rule['threshold'];
 
-                    if ($rule['critical'] ?? false) {
-                        $this->triggerCriticalAlert($ruleId, $result);
-                    } else {
-                        $this->triggerWarningAlert($ruleId, $result);
+                    if ($healthScore < $threshold) {
+                        $overallHealth = min($overallHealth, $healthScore);
+
+                        if ($rule['critical'] ?? false) {
+                            $this->triggerCriticalAlert($ruleId, $result);
+                        } else {
+                            $this->triggerWarningAlert($ruleId, $result);
+                        }
                     }
                 }
             }
@@ -112,7 +125,7 @@ class ContinuousQualityMonitor
     /**
      * Check a specific rule.
      *
-     * @param  array<string, mixed>  $rule
+     * @param  array<mixed, mixed>  $rule
      * @return array<string, mixed>
      */
     private function checkRule(string $ruleId, array $rule): array
@@ -121,20 +134,28 @@ class ContinuousQualityMonitor
 
         try {
             $command = $rule['command'] ?? '';
-            $result = Process::run($command);
-            $endTime = microtime(true);
-            $duration = round($endTime - $startTime, 2);
+            if (is_string($command) && ! empty($command)) {
+                $result = Process::run($command);
+                $endTime = microtime(true);
+                $duration = round($endTime - $startTime, 2);
 
-            $success = $result->successful();
-            $healthScore = $this->calculateHealthScore($ruleId, $result, $rule);
+                $success = $result->successful();
+                $healthScore = $this->calculateHealthScore($ruleId, $result, $rule);
+            } else {
+                $result = null;
+                $endTime = microtime(true);
+                $duration = round($endTime - $startTime, 2);
+                $success = false;
+                $healthScore = 0;
+            }
 
             return [
                 'name' => $rule['name'],
                 'success' => $success,
                 'health_score' => $healthScore,
                 'duration' => $duration,
-                'output' => $result->output(),
-                'errors' => $result->errorOutput(),
+                'output' => $result ? $result->output() : '',
+                'errors' => $result ? $result->errorOutput() : [],
                 'timestamp' => now()->toISOString(),
                 'critical' => $rule['critical'],
             ];
@@ -159,25 +180,25 @@ class ContinuousQualityMonitor
      */
     private function calculateHealthScore(string $ruleId, mixed $result, array $rule): int
     {
-        if (! $result->successful()) {
+        if (! $result || ! is_object($result) || ! method_exists($result, 'successful') || ! $result->successful()) {
             return 0;
         }
 
         switch ($ruleId) {
             case 'code_quality':
-                return $this->calculateCodeQualityScore($result->output());
+                return $this->calculateCodeQualityScore(method_exists($result, 'output') ? $result->output() : '');
 
             case 'test_coverage':
-                return $this->calculateTestCoverageScore($result->output());
+                return $this->calculateTestCoverageScore(method_exists($result, 'output') ? $result->output() : '');
 
             case 'security_scan':
-                return $this->calculateSecurityScore($result->output());
+                return $this->calculateSecurityScore(method_exists($result, 'output') ? $result->output() : '');
 
             case 'performance':
-                return $this->calculatePerformanceScore($result->output());
+                return $this->calculatePerformanceScore(method_exists($result, 'output') ? $result->output() : '');
 
             case 'memory_usage':
-                return $this->calculateMemoryScore($result->output());
+                return $this->calculateMemoryScore(method_exists($result, 'output') ? $result->output() : '');
 
             default:
                 return 100;
@@ -273,12 +294,12 @@ class ContinuousQualityMonitor
         $alert = [
             'type' => 'critical',
             'rule' => $ruleId,
-            'message' => 'تنبيه حرج: فشل في '.($result['name'] ?? ''),
-            'details' => $result['errors'],
+            'message' => 'تنبيه حرج: فشل في '.(is_string($result['name'] ?? null) ? $result['name'] : ''),
+            'details' => is_array($result['errors'] ?? null) ? $result['errors'] : [],
             'timestamp' => now()->toISOString(),
         ];
 
-        $this->alerts[] = $alert;
+        $this->alerts[(string) count($this->alerts)] = $alert;
         Log::critical("🚨 تنبيه حرج: {$alert['message']}");
 
         // Send notification (email, Slack, etc.)
@@ -295,12 +316,12 @@ class ContinuousQualityMonitor
         $alert = [
             'type' => 'warning',
             'rule' => $ruleId,
-            'message' => 'تحذير: مشكلة في '.($result['name'] ?? ''),
-            'details' => $result['errors'],
+            'message' => 'تحذير: مشكلة في '.(is_string($result['name'] ?? null) ? $result['name'] : ''),
+            'details' => is_array($result['errors'] ?? null) ? $result['errors'] : [],
             'timestamp' => now()->toISOString(),
         ];
 
-        $this->alerts[] = $alert;
+        $this->alerts[(string) count($this->alerts)] = $alert;
         Log::warning("⚠️ تحذير: {$alert['message']}");
     }
 
@@ -326,7 +347,8 @@ class ContinuousQualityMonitor
     private function sendNotification(array $alert): void
     {
         // Implement notification logic (email, Slack, etc.)
-        Log::info('📧 إرسال إشعار: '.($alert['message'] ?? ''));
+        $message = is_string($alert['message'] ?? null) ? $alert['message'] : '';
+        Log::info('📧 إرسال إشعار: '.$message);
     }
 
     /**
@@ -351,8 +373,12 @@ class ContinuousQualityMonitor
      */
     public function getAlertsSummary(): array
     {
-        $criticalAlerts = array_filter($this->alerts, fn ($alert) => ($alert['type'] ?? '') === 'critical');
-        $warningAlerts = array_filter($this->alerts, fn ($alert) => ($alert['type'] ?? '') === 'warning');
+        $criticalAlerts = array_filter($this->alerts, function ($alert) {
+            return is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'critical';
+        });
+        $warningAlerts = array_filter($this->alerts, function ($alert) {
+            return is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'warning';
+        });
 
         return [
             'total' => count($this->alerts),

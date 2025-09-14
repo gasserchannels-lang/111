@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use App\Services\ImageProcessingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ImageProcessingTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function can_analyze_product_images()
     {
         $imageProcessor = new ImageProcessingService;
@@ -34,7 +35,7 @@ class ImageProcessingTest extends TestCase
         $this->assertArrayHasKey('colors', $result);
     }
 
-    /** @test */
+    #[Test]
     public function can_detect_objects_in_images()
     {
         $imageProcessor = new ImageProcessingService;
@@ -54,7 +55,7 @@ class ImageProcessingTest extends TestCase
         $this->assertIsArray($objects);
     }
 
-    /** @test */
+    #[Test]
     public function can_extract_colors_from_images()
     {
         $imageProcessor = new ImageProcessingService;
@@ -74,7 +75,7 @@ class ImageProcessingTest extends TestCase
         $this->assertArrayHasKey('palette', $colors);
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_image_tags()
     {
         $imageProcessor = new ImageProcessingService;
@@ -95,7 +96,7 @@ class ImageProcessingTest extends TestCase
         $this->assertGreaterThan(0, count($tags));
     }
 
-    /** @test */
+    #[Test]
     public function can_resize_images()
     {
         $imageProcessor = new ImageProcessingService;
@@ -118,7 +119,7 @@ class ImageProcessingTest extends TestCase
         $this->assertEquals(200, $imageInfo[1]);
     }
 
-    /** @test */
+    #[Test]
     public function can_compress_images()
     {
         $imageProcessor = new ImageProcessingService;
@@ -138,7 +139,7 @@ class ImageProcessingTest extends TestCase
         $this->assertLessThan(filesize($originalPath), filesize($compressedPath));
     }
 
-    /** @test */
+    #[Test]
     public function can_detect_image_quality()
     {
         $imageProcessor = new ImageProcessingService;
@@ -159,7 +160,7 @@ class ImageProcessingTest extends TestCase
         $this->assertLessThanOrEqual(1, $quality);
     }
 
-    /** @test */
+    #[Test]
     public function can_handle_multiple_image_formats()
     {
         $imageProcessor = new ImageProcessingService;

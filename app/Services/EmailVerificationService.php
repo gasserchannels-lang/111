@@ -163,14 +163,15 @@ class EmailVerificationService
         $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
 
-        if (! $data) {
+        if (! $data || ! is_array($data)) {
             return false;
         }
 
         // Check if token matches
-        if ($data['token'] !== $token) {
+        if (($data['token'] ?? '') !== $token) {
             // Increment attempts
-            $data['attempts']++;
+            $attempts = is_numeric($data['attempts'] ?? 0) ? (int) $data['attempts'] : 0;
+            $data['attempts'] = $attempts + 1;
             Cache::put($key, $data, now()->addHours(self::VERIFICATION_EXPIRY));
 
             // Block if too many attempts
@@ -182,11 +183,14 @@ class EmailVerificationService
         }
 
         // Check if token is expired
-        $createdAt = Carbon::parse($data['created_at']);
-        if ($createdAt->addHours(self::VERIFICATION_EXPIRY)->isPast()) {
-            Cache::forget($key);
+        $createdAtValue = $data['created_at'] ?? null;
+        if ($createdAtValue && is_string($createdAtValue)) {
+            $createdAt = Carbon::parse($createdAtValue);
+            if ($createdAt->addHours(self::VERIFICATION_EXPIRY)->isPast()) {
+                Cache::forget($key);
 
-            return false;
+                return false;
+            }
         }
 
         return true;
@@ -209,11 +213,13 @@ class EmailVerificationService
         $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
 
-        if (! $data) {
+        if (! $data || ! is_array($data)) {
             return false;
         }
 
-        return $data['resend_count'] >= self::MAX_ATTEMPTS;
+        $resendCount = is_numeric($data['resend_count'] ?? 0) ? (int) $data['resend_count'] : 0;
+
+        return $resendCount >= self::MAX_ATTEMPTS;
     }
 
     /**
@@ -224,8 +230,9 @@ class EmailVerificationService
         $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
 
-        if ($data) {
-            $data['resend_count']++;
+        if ($data && is_array($data)) {
+            $resendCount = is_numeric($data['resend_count'] ?? 0) ? (int) $data['resend_count'] : 0;
+            $data['resend_count'] = $resendCount + 1;
             Cache::put($key, $data, now()->addHours(self::VERIFICATION_EXPIRY));
         }
     }
@@ -250,17 +257,21 @@ class EmailVerificationService
         $key = self::CACHE_PREFIX.md5($email);
         $data = Cache::get($key);
 
-        if (! $data) {
+        if (! $data || ! is_array($data)) {
             return null;
         }
 
+        $createdAt = $data['created_at'] ?? null;
+        $attempts = is_numeric($data['attempts'] ?? 0) ? (int) $data['attempts'] : 0;
+        $resendCount = is_numeric($data['resend_count'] ?? 0) ? (int) $data['resend_count'] : 0;
+
         return [
-            'created_at' => $data['created_at'],
-            'expires_at' => Carbon::parse($data['created_at'])->addHours(self::VERIFICATION_EXPIRY)->toISOString(),
-            'attempts' => $data['attempts'],
-            'resend_count' => $data['resend_count'],
-            'remaining_attempts' => self::MAX_ATTEMPTS - $data['attempts'],
-            'remaining_resends' => self::MAX_ATTEMPTS - $data['resend_count'],
+            'created_at' => $createdAt,
+            'expires_at' => $createdAt && is_string($createdAt) ? Carbon::parse($createdAt)->addHours(self::VERIFICATION_EXPIRY)->toISOString() : null,
+            'attempts' => $attempts,
+            'resend_count' => $resendCount,
+            'remaining_attempts' => self::MAX_ATTEMPTS - $attempts,
+            'remaining_resends' => self::MAX_ATTEMPTS - $resendCount,
         ];
     }
 

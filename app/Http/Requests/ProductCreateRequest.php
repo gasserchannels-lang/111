@@ -237,8 +237,11 @@ class ProductCreateRequest extends FormRequest
         $validated = parent::validated($key, $default);
 
         // Add computed fields
-        $validated['slug'] = \Str::slug($validated['name'] ?? '');
-        $validated['created_by'] = $this->user()?->id;
+        if (is_array($validated)) {
+            $name = $validated['name'] ?? '';
+            $validated['slug'] = \Str::slug(is_string($name) ? $name : '');
+            $validated['created_by'] = $this->user()?->id;
+        }
 
         return $validated;
     }

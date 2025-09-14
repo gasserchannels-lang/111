@@ -3,11 +3,12 @@
 namespace Tests\Security;
 
 use App\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SQLInjectionTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function login_form_protected_from_sql_injection()
     {
         $maliciousInputs = [
@@ -30,7 +31,7 @@ class SQLInjectionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function search_function_protected_from_sql_injection()
     {
         $maliciousInputs = [
@@ -55,7 +56,7 @@ class SQLInjectionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function product_filter_protected_from_sql_injection()
     {
         $maliciousInputs = [
@@ -71,7 +72,7 @@ class SQLInjectionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function user_registration_protected_from_sql_injection()
     {
         $maliciousInputs = [
@@ -92,7 +93,7 @@ class SQLInjectionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function database_queries_use_parameterized_statements()
     {
         // This test ensures that raw SQL queries use parameterized statements
@@ -108,7 +109,7 @@ class SQLInjectionTest extends TestCase
         $this->assertCount(0, $users); // Should return empty result, not error
     }
 
-    /** @test */
+    #[Test]
     public function api_endpoints_validate_input_properly()
     {
         $maliciousInputs = [
@@ -130,7 +131,7 @@ class SQLInjectionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function database_connection_remains_stable_after_attack_attempts()
     {
         $maliciousInputs = [
@@ -150,7 +151,7 @@ class SQLInjectionTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $userCount);
     }
 
-    /** @test */
+    #[Test]
     public function error_messages_do_not_reveal_database_structure()
     {
         $maliciousInput = "'; DROP TABLE users; --";

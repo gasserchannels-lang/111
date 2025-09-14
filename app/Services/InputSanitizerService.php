@@ -48,7 +48,7 @@ class InputSanitizerService
      * @return array<string, mixed>
      */
     /**
-     * @param array<mixed, mixed> $input
+     * @param  array<mixed, mixed>  $input
      * @return array<string, mixed>
      */
     public function sanitizeArray(array $input): array

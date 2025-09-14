@@ -3,13 +3,14 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class StressTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function system_handles_high_concurrent_users()
     {
         $responses = [];
@@ -32,7 +33,7 @@ class StressTest extends TestCase
         $this->assertLessThan(10, $responseTime);
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_high_request_volume()
     {
         $successfulRequests = 0;
@@ -57,7 +58,7 @@ class StressTest extends TestCase
         $this->assertLessThan(30, $responseTime);
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_mixed_request_types()
     {
         $responses = [];
@@ -81,7 +82,7 @@ class StressTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_database_load()
     {
         $startTime = microtime(true);
@@ -100,7 +101,7 @@ class StressTest extends TestCase
         $this->assertLessThan(60, $responseTime);
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_file_upload_load()
     {
         $responses = [];
@@ -123,7 +124,7 @@ class StressTest extends TestCase
         $this->assertGreaterThan(15, $successfulUploads);
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_memory_pressure()
     {
         $initialMemory = memory_get_usage(true);
@@ -145,7 +146,7 @@ class StressTest extends TestCase
         $this->assertLessThan(50 * 1024 * 1024, $memoryIncrease);
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_error_conditions_under_load()
     {
         $responses = [];
@@ -170,7 +171,7 @@ class StressTest extends TestCase
         $this->assertLessThan(0.2, $errorRate);
     }
 
-    /** @test */
+    #[Test]
     public function system_handles_authentication_load()
     {
         $responses = [];

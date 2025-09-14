@@ -12,13 +12,20 @@ use App\Models\Wishlist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CompleteWorkflowTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('migrate:fresh', ['--force' => true]);
+    }
+
+    #[Test]
     public function complete_e_commerce_workflow()
     {
         // 1. إنشاء فئات وعلامات تجارية
@@ -122,7 +129,7 @@ class CompleteWorkflowTest extends TestCase
         $this->assertEquals(200, $deleteAlertResponse->status());
     }
 
-    /** @test */
+    #[Test]
     public function ai_integration_workflow()
     {
         $product = Product::factory()->create([
@@ -167,7 +174,7 @@ class CompleteWorkflowTest extends TestCase
         $this->assertArrayHasKey('similar_products', $similarResponse->json());
     }
 
-    /** @test */
+    #[Test]
     public function admin_management_workflow()
     {
         $admin = User::factory()->create(['is_admin' => true]);
@@ -234,7 +241,7 @@ class CompleteWorkflowTest extends TestCase
         $this->assertEquals(200, $deleteResponse->status());
     }
 
-    /** @test */
+    #[Test]
     public function cache_and_performance_workflow()
     {
         // 1. إنشاء بيانات للاختبار
@@ -263,7 +270,7 @@ class CompleteWorkflowTest extends TestCase
         $this->assertEquals(200, $filterResponse->status());
     }
 
-    /** @test */
+    #[Test]
     public function error_handling_workflow()
     {
         // 1. اختبار 404 للعنصر غير الموجود
@@ -302,7 +309,7 @@ class CompleteWorkflowTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function data_consistency_workflow()
     {
         $user = User::factory()->create();

@@ -43,8 +43,10 @@ class InputSanitizationMiddleware
     {
         if ($response instanceof \Illuminate\Http\JsonResponse) {
             $data = $response->getData(true);
-            $sanitized = $this->sanitizeArray($data);
-            $response->setData($sanitized);
+            if (is_array($data)) {
+                $sanitized = $this->sanitizeArray($data);
+                $response->setData($sanitized);
+            }
         }
     }
 

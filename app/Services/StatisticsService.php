@@ -670,7 +670,7 @@ final class StatisticsService
                 'min' => ! empty($prices) ? min($prices) : 0,
                 'max' => ! empty($prices) ? max($prices) : 0,
             ],
-            'price_volatility' => $this->calculatePriceVolatility(array_map('floatval', $prices)),
+            'price_volatility' => $this->calculatePriceVolatility(array_map(function($price) { return is_numeric($price) ? (float) $price : 0.0; }, $prices)),
         ];
     }
 
@@ -947,7 +947,7 @@ final class StatisticsService
     private function getUptime(): string
     {
         $startTime = config('app.start_time', now()->subDay());
-        $startTimeValue = is_string($startTime) ? Carbon::parse($startTime) : $startTime;
+        $startTimeValue = is_string($startTime) ? Carbon::parse($startTime) : ($startTime instanceof \DateTimeInterface ? $startTime : now()->subDay());
         $uptime = now()->diffInSeconds($startTimeValue);
 
         $days = floor($uptime / 86400);

@@ -97,8 +97,8 @@ class ErrorController extends Controller
 
             // Sort by timestamp (newest first)
             usort($errors, function ($a, $b) {
-                $timestampA = ($a['timestamp'] ?? false) ? strtotime((string) $a['timestamp']) : 0;
-                $timestampB = ($b['timestamp'] ?? false) ? strtotime((string) $b['timestamp']) : 0;
+                $timestampA = (isset($a['timestamp']) && is_string($a['timestamp'])) ? strtotime($a['timestamp']) : 0;
+                $timestampB = (isset($b['timestamp']) && is_string($b['timestamp'])) ? strtotime($b['timestamp']) : 0;
 
                 return (int) $timestampB - (int) $timestampA;
             });

@@ -135,8 +135,9 @@ class ProductRepository
         }
 
         // Generate cache key based on parameters
-        $queryHash = md5($query ?? '');
-        $filtersHash = md5(json_encode($filters));
+        $queryHash = md5($query ?: '');
+        $filtersJson = json_encode($filters);
+        $filtersHash = md5(is_string($filtersJson) ? $filtersJson : '');
         $cacheKey = sprintf(
             'products:search:%s:%s:%d:%d',
             $queryHash,

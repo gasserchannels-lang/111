@@ -6,13 +6,14 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdvancedPerformanceTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function page_load_speed_is_acceptable()
     {
         $startTime = microtime(true);
@@ -28,7 +29,7 @@ class AdvancedPerformanceTest extends TestCase
         \Log::info("Homepage load time: {$loadTime}ms");
     }
 
-    /** @test */
+    #[Test]
     public function database_query_performance()
     {
         // إنشاء بيانات اختبار
@@ -52,7 +53,7 @@ class AdvancedPerformanceTest extends TestCase
         \Log::info("Complex query time: {$queryTime}ms");
     }
 
-    /** @test */
+    #[Test]
     public function memory_usage_is_reasonable()
     {
         $initialMemory = memory_get_usage(true);
@@ -71,7 +72,7 @@ class AdvancedPerformanceTest extends TestCase
         \Log::info("Memory usage: {$memoryUsed}MB");
     }
 
-    /** @test */
+    #[Test]
     public function concurrent_users_handling()
     {
         $responses = [];
@@ -95,7 +96,7 @@ class AdvancedPerformanceTest extends TestCase
         \Log::info("Concurrent users test time: {$totalTime}ms");
     }
 
-    /** @test */
+    #[Test]
     public function cache_performance()
     {
         // اختبار بدون cache
@@ -119,7 +120,7 @@ class AdvancedPerformanceTest extends TestCase
         \Log::info("No cache: {$noCacheTime}ms, With cache: {$withCacheTime}ms");
     }
 
-    /** @test */
+    #[Test]
     public function api_response_time()
     {
         $endpoints = [
@@ -143,7 +144,7 @@ class AdvancedPerformanceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function database_connection_pooling()
     {
         $connections = [];
@@ -162,7 +163,7 @@ class AdvancedPerformanceTest extends TestCase
         \Log::info("Database connection time: {$connectionTime}ms");
     }
 
-    /** @test */
+    #[Test]
     public function file_upload_performance()
     {
         $testFile = base64_encode('Test file content for performance testing');

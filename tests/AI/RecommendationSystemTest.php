@@ -6,13 +6,14 @@ use App\Models\Product;
 use App\Models\User;
 use App\Services\RecommendationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RecommendationSystemTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function can_generate_user_recommendations()
     {
         $recommendationService = new RecommendationService;
@@ -31,7 +32,7 @@ class RecommendationSystemTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
     }
 
-    /** @test */
+    #[Test]
     public function recommendations_match_user_preferences()
     {
         $recommendationService = new RecommendationService;
@@ -69,7 +70,7 @@ class RecommendationSystemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_similar_products()
     {
         $recommendationService = new RecommendationService;
@@ -86,7 +87,7 @@ class RecommendationSystemTest extends TestCase
         $this->assertIsArray($similarProducts);
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_trending_products()
     {
         $recommendationService = new RecommendationService;
@@ -100,7 +101,7 @@ class RecommendationSystemTest extends TestCase
         $this->assertLessThanOrEqual(10, count($trendingProducts));
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_collaborative_recommendations()
     {
         $recommendationService = new RecommendationService;
@@ -118,7 +119,7 @@ class RecommendationSystemTest extends TestCase
         $this->assertIsArray($recommendations);
     }
 
-    /** @test */
+    #[Test]
     public function recommendations_consider_price_range()
     {
         $recommendationService = new RecommendationService;
@@ -142,7 +143,7 @@ class RecommendationSystemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_seasonal_recommendations()
     {
         $recommendationService = new RecommendationService;
@@ -152,7 +153,7 @@ class RecommendationSystemTest extends TestCase
         $this->assertIsArray($seasonalRecommendations);
     }
 
-    /** @test */
+    #[Test]
     public function recommendations_improve_with_feedback()
     {
         $recommendationService = new RecommendationService;

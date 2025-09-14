@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function user_can_register()
     {
         $userData = [
@@ -25,7 +26,7 @@ class AuthenticationTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_login()
     {
         $user = User::factory()->create([
@@ -42,7 +43,7 @@ class AuthenticationTest extends TestCase
         $response->assertJsonStructure(['token']);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_logout()
     {
         $user = User::factory()->create();
@@ -52,14 +53,14 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function protected_route_requires_authentication()
     {
         $response = $this->getJson('/api/user');
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_user_can_access_protected_route()
     {
         $user = User::factory()->create();

@@ -379,6 +379,7 @@ class CacheService
         $prefix = config('cache.prefix', 'coprra_cache');
 
         $prefixValue = is_string($prefix) ? $prefix : 'coprra_cache';
+
         return $prefixValue.":{$key}";
     }
 

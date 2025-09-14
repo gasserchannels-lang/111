@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class FormValidationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function validates_required_fields()
     {
         $rules = [
@@ -29,7 +30,7 @@ class FormValidationTest extends TestCase
         $this->assertTrue($validator->passes());
     }
 
-    /** @test */
+    #[Test]
     public function validates_email_format()
     {
         $rules = ['email' => 'email'];
@@ -48,7 +49,7 @@ class FormValidationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function validates_password_strength()
     {
         $rules = ['password' => 'min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'];
@@ -67,7 +68,7 @@ class FormValidationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function validates_unique_constraints()
     {
         $rules = ['email' => 'unique:users,email'];
@@ -84,16 +85,20 @@ class FormValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    /** @test */
+    #[Test]
     public function validates_file_uploads()
     {
         $rules = [
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
 
-        // Test valid image upload
-        $file = \Illuminate\Http\UploadedFile::fake()->image('test.jpg', 100, 100);
-        $validator = Validator::make(['image' => $file], $rules);
-        $this->assertTrue($validator->passes());
+        // Test valid image upload (skip if GD extension not available)
+        if (function_exists('imagecreatetruecolor')) {
+            $file = \Illuminate\Http\UploadedFile::fake()->image('test.jpg', 100, 100);
+            $validator = Validator::make(['image' => $file], $rules);
+            $this->assertTrue($validator->passes());
+        } else {
+            $this->markTestSkipped('GD extension not available');
+        }
     }
 }

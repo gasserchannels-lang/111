@@ -10,13 +10,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdvancedIntegrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function complete_user_journey_works()
     {
         // 1. تسجيل مستخدم جديد
@@ -27,11 +28,11 @@ class AdvancedIntegrationTest extends TestCase
             'password_confirmation' => 'password123',
         ];
 
-        $registerResponse = $this->postJson('/api/register', $userData);
+        $registerResponse = $this->postJson('/api/auth/register', $userData);
         $this->assertEquals(201, $registerResponse->status());
 
         // 2. تسجيل الدخول
-        $loginResponse = $this->postJson('/api/login', [
+        $loginResponse = $this->postJson('/api/auth/login', [
             'email' => 'test@example.com',
             'password' => 'password123',
         ]);
@@ -67,7 +68,7 @@ class AdvancedIntegrationTest extends TestCase
         $this->assertEquals(201, $reviewResponse->status());
     }
 
-    /** @test */
+    #[Test]
     public function ai_integration_workflow()
     {
         $product = Product::factory()->create([
@@ -93,7 +94,7 @@ class AdvancedIntegrationTest extends TestCase
         $this->assertEquals(200, $suggestionsResponse->status());
     }
 
-    /** @test */
+    #[Test]
     public function email_notification_system()
     {
         Mail::fake();
@@ -118,38 +119,47 @@ class AdvancedIntegrationTest extends TestCase
         Mail::assertSent(\App\Mail\PriceAlertMail::class);
     }
 
-    /** @test */
+    #[Test]
     public function queue_system_integration()
     {
         Queue::fake();
 
+        // إنشاء منتج جديد
         $product = Product::factory()->create();
 
-        // إرسال مهمة للطابور
-        $this->postJson('/api/products/'.$product->id.'/analyze');
+        // إرسال إشعار للمستخدمين المهتمين
+        $user = User::factory()->create();
+        PriceAlert::factory()->create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+            'target_price' => 100,
+        ]);
 
-        // التحقق من إضافة المهمة للطابور
-        Queue::assertPushed(\App\Jobs\AnalyzeProductJob::class);
+        // محاكاة تغيير السعر
+        $product->update(['price' => 90]);
+
+        // التحقق من إرسال الإشعار
+        Queue::assertPushed(\App\Jobs\SendPriceAlertJob::class);
     }
 
-    /** @test */
+    #[Test]
     public function cache_integration_works()
     {
         $product = Product::factory()->create();
 
         // الطلب الأول - بدون cache
-        $response1 = $this->getJson('/api/products/'.$product->id);
+        $response1 = $this->getJson('/api/products/' . $product->id);
         $this->assertEquals(200, $response1->status());
 
         // الطلب الثاني - مع cache
-        $response2 = $this->getJson('/api/products/'.$product->id);
+        $response2 = $this->getJson('/api/products/' . $product->id);
         $this->assertEquals(200, $response2->status());
 
         // يجب أن تكون النتائج متطابقة
         $this->assertEquals($response1->json(), $response2->json());
     }
 
-    /** @test */
+    #[Test]
     public function search_integration_works()
     {
         // إنشاء منتجات للبحث
@@ -166,7 +176,7 @@ class AdvancedIntegrationTest extends TestCase
         $this->assertEquals('iPhone 15', $results[0]['name']);
     }
 
-    /** @test */
+    #[Test]
     public function payment_integration_works()
     {
         $user = User::factory()->create();
@@ -185,7 +195,7 @@ class AdvancedIntegrationTest extends TestCase
         $this->assertContains($paymentResponse->status(), [200, 400, 422]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_workflow_integration()
     {
         $admin = User::factory()->create(['is_admin' => true]);
@@ -205,13 +215,13 @@ class AdvancedIntegrationTest extends TestCase
 
         // 2. تحديث المنتج
         $product = Product::latest()->first();
-        $updateResponse = $this->putJson('/api/admin/products/'.$product->id, [
+        $updateResponse = $this->putJson('/api/admin/products/' . $product->id, [
             'name' => 'Updated Product Name',
         ]);
         $this->assertEquals(200, $updateResponse->status());
 
         // 3. حذف المنتج
-        $deleteResponse = $this->deleteJson('/api/admin/products/'.$product->id);
+        $deleteResponse = $this->deleteJson('/api/admin/products/' . $product->id);
         $this->assertEquals(200, $deleteResponse->status());
     }
 }

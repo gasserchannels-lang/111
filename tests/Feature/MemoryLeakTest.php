@@ -3,13 +3,14 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MemoryLeakTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function memory_usage_does_not_increase_significantly()
     {
         $initialMemory = memory_get_usage(true);
@@ -28,7 +29,7 @@ class MemoryLeakTest extends TestCase
         $this->assertLessThan(10 * 1024 * 1024, $memoryIncrease);
     }
 
-    /** @test */
+    #[Test]
     public function database_queries_do_not_cause_memory_leaks()
     {
         $initialMemory = memory_get_usage(true);
@@ -49,7 +50,7 @@ class MemoryLeakTest extends TestCase
         $this->assertLessThan(5 * 1024 * 1024, $memoryIncrease);
     }
 
-    /** @test */
+    #[Test]
     public function file_operations_do_not_cause_memory_leaks()
     {
         $initialMemory = memory_get_usage(true);
@@ -68,7 +69,7 @@ class MemoryLeakTest extends TestCase
         $this->assertLessThan(3 * 1024 * 1024, $memoryIncrease);
     }
 
-    /** @test */
+    #[Test]
     public function cache_operations_do_not_cause_memory_leaks()
     {
         $initialMemory = memory_get_usage(true);
@@ -89,7 +90,7 @@ class MemoryLeakTest extends TestCase
         $this->assertLessThan(2 * 1024 * 1024, $memoryIncrease);
     }
 
-    /** @test */
+    #[Test]
     public function memory_usage_returns_to_normal_after_operations()
     {
         $initialMemory = memory_get_usage(true);
@@ -113,7 +114,7 @@ class MemoryLeakTest extends TestCase
         $this->assertLessThan(1 * 1024 * 1024, $memoryIncrease);
     }
 
-    /** @test */
+    #[Test]
     public function concurrent_requests_do_not_cause_memory_issues()
     {
         $initialMemory = memory_get_usage(true);

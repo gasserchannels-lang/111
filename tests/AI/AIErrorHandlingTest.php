@@ -4,13 +4,14 @@ namespace Tests\AI;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIErrorHandlingTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ai_handles_invalid_input_gracefully()
     {
         $response = $this->postJson('/api/ai/analyze', [
@@ -22,7 +23,7 @@ class AIErrorHandlingTest extends TestCase
         $this->assertArrayHasKey('errors', $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function ai_handles_malformed_json()
     {
         $response = $this->postJson('/api/ai/analyze', [
@@ -33,7 +34,7 @@ class AIErrorHandlingTest extends TestCase
         $this->assertEquals(422, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function ai_handles_network_timeout()
     {
         // محاكاة timeout
@@ -48,7 +49,7 @@ class AIErrorHandlingTest extends TestCase
         $this->assertContains($response->status(), [408, 500, 503]);
     }
 
-    /** @test */
+    #[Test]
     public function ai_logs_errors_properly()
     {
         Log::shouldReceive('error')
@@ -61,7 +62,7 @@ class AIErrorHandlingTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function ai_returns_meaningful_error_messages()
     {
         $response = $this->postJson('/api/ai/analyze', [
@@ -76,7 +77,7 @@ class AIErrorHandlingTest extends TestCase
         $this->assertStringContainsString('Unsupported analysis type', $responseData['message']);
     }
 
-    /** @test */
+    #[Test]
     public function ai_handles_concurrent_requests()
     {
         $responses = [];

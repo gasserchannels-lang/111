@@ -55,7 +55,7 @@ class PerformanceMonitoringService
         $operationData = $this->metrics[$operation];
 
         // Ensure operationData has the expected structure
-        if (!is_array($operationData) || !isset($operationData['start_time'], $operationData['start_memory'], $operationData['queries'])) {
+        if (! is_array($operationData) || ! isset($operationData['start_time'], $operationData['start_memory'], $operationData['queries'])) {
             return [];
         }
 

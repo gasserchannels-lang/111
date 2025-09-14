@@ -9,9 +9,11 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PerformanceTest extends TestCase
 {
+    use RefreshDatabase;
     protected function setUp(): void
     {
         parent::setUp();

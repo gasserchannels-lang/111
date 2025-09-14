@@ -29,7 +29,11 @@ final class WatermarkService
             'margin' => 10,
             'font_family' => 'Arial',
         ]);
-        $this->config = is_array($config) ? $config : [];
+        if (is_array($config)) {
+            $this->config = array_merge($this->config, array_filter($config, function($value) {
+                return is_string($value) || is_numeric($value) || is_bool($value);
+            }));
+        }
     }
 
     /**
