@@ -126,7 +126,8 @@ class StrictQualityAgent
 
         foreach ($this->stages as $stageId => $stage) {
             if (is_array($stage)) {
-                $this->log('📋 تنفيذ المرحلة: '.($stage['name'] ?? ''));
+                $stageName = is_string($stage['name'] ?? null) ? $stage['name'] : '';
+                $this->log('📋 تنفيذ المرحلة: '.$stageName);
 
                 $result = $this->executeStage($stageId, $stage);
                 $this->results[$stageId] = $result;
@@ -206,10 +207,11 @@ class StrictQualityAgent
         $errors = [];
         $success = true;
 
-        if (is_array($stage['files'] ?? [])) {
-            foreach ($stage['files'] as $file) {
+        $files = $stage['files'] ?? [];
+        if (is_array($files)) {
+            foreach ($files as $file) {
                 if (is_string($file)) {
-                    $command = ($stage['command'] ?? '').' '.$file;
+                    $command = (is_string($stage['command'] ?? null) ? $stage['command'] : '').' '.$file;
                     $result = Process::run($command);
 
                     if (! $result->successful()) {
@@ -235,7 +237,7 @@ class StrictQualityAgent
      */
     private function executeCommandStage(array $stage): array
     {
-        $command = is_string($stage['command'] ?? '') ? $stage['command'] : '';
+        $command = is_string($stage['command'] ?? null) ? $stage['command'] : '';
         $result = Process::run($command);
 
         return [
@@ -323,8 +325,12 @@ class StrictQualityAgent
             'timestamp' => now()->toISOString(),
             'overall_success' => $overallSuccess,
             'total_stages' => count($this->stages),
-            'successful_stages' => count(array_filter($this->results, fn ($r) => $r['success'] ?? false)),
-            'failed_stages' => count(array_filter($this->results, fn ($r) => ! ($r['success'] ?? false))),
+            'successful_stages' => count(array_filter($this->results, function ($r) {
+                return is_array($r) && ($r['success'] ?? false) === true;
+            })),
+            'failed_stages' => count(array_filter($this->results, function ($r) {
+                return is_array($r) && ($r['success'] ?? false) !== true;
+            })),
             'stages_details' => $this->results,
             'errors' => $this->errors,
             'fixes' => $this->fixes,

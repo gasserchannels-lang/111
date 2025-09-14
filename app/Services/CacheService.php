@@ -27,8 +27,11 @@ class CacheService
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
 
-            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
-                $cache = $cache->tags($tags);
+            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore')) {
+                $store = $cache->getStore();
+                if (is_object($store) && method_exists($store, 'tags') && method_exists($cache, 'tags')) {
+                    $cache = $cache->tags($tags);
+                }
             }
 
             if (is_object($cache) && method_exists($cache, 'remember')) {
@@ -69,8 +72,11 @@ class CacheService
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
 
-            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
-                $cache = $cache->tags($tags);
+            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore')) {
+                $store = $cache->getStore();
+                if (is_object($store) && method_exists($store, 'tags') && method_exists($cache, 'tags')) {
+                    $cache = $cache->tags($tags);
+                }
             }
 
             if (is_object($cache) && method_exists($cache, 'forever')) {
@@ -118,8 +124,11 @@ class CacheService
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
 
-            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
-                $cache = $cache->tags($tags);
+            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore')) {
+                $store = $cache->getStore();
+                if (is_object($store) && method_exists($store, 'tags') && method_exists($cache, 'tags')) {
+                    $cache = $cache->tags($tags);
+                }
             }
 
             if (is_object($cache) && method_exists($cache, 'put')) {
@@ -165,7 +174,7 @@ class CacheService
     {
         try {
             $cache = Cache::getFacadeRoot();
-            if (is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
+            if (is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags') && method_exists($cache, 'tags')) {
                 $taggedCache = $cache->tags($tags);
                 if (is_object($taggedCache) && method_exists($taggedCache, 'flush')) {
                     return $taggedCache->flush();
@@ -369,7 +378,8 @@ class CacheService
     {
         $prefix = config('cache.prefix', 'coprra_cache');
 
-        return (string) ($prefix ?? 'coprra_cache').":{$key}";
+        $prefixValue = is_string($prefix) ? $prefix : 'coprra_cache';
+        return $prefixValue.":{$key}";
     }
 
     /**
@@ -387,12 +397,24 @@ class CacheService
         $tags[] = strtolower(class_basename($modelClass));
 
         // Add specific model tag
-        $tags[] = strtolower(class_basename($modelClass)).':'.(string) $model->getKey();
+        $modelKey = $model->getKey();
+        if (is_string($modelKey)) {
+            $tags[] = strtolower(class_basename($modelClass)).':'.$modelKey;
+        } else {
+            $modelKeyString = is_scalar($modelKey) ? (string) $modelKey : '';
+            $tags[] = strtolower(class_basename($modelClass)).':'.$modelKeyString;
+        }
 
         // Add related model tags
         foreach ($model->getRelations() as $relation => $related) {
             if ($related instanceof Model) {
-                $tags[] = strtolower(class_basename(get_class($related))).':'.(string) $related->getKey();
+                $relatedKey = $related->getKey();
+                if (is_string($relatedKey)) {
+                    $tags[] = strtolower(class_basename(get_class($related))).':'.$relatedKey;
+                } else {
+                    $relatedKeyString = is_scalar($relatedKey) ? (string) $relatedKey : '';
+                    $tags[] = strtolower(class_basename(get_class($related))).':'.$relatedKeyString;
+                }
             }
         }
 
@@ -478,7 +500,12 @@ class CacheService
                 return $default;
             }
 
-            $decompressed = gzuncompress((string) $compressed);
+            if (is_string($compressed)) {
+                $decompressed = gzuncompress($compressed);
+            } else {
+                $compressedString = is_scalar($compressed) ? (string) $compressed : '';
+                $decompressed = gzuncompress($compressedString);
+            }
             if ($decompressed === false) {
                 return $default;
             }
