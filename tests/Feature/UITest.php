@@ -40,7 +40,12 @@ class UITest extends TestCase
      */
     public function test_product_detail_page_loads(): void
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $response = $this->get("/products/{$product->slug}"); // Use slug instead of id
 
@@ -227,7 +232,12 @@ class UITest extends TestCase
     public function test_wishlist_functionality(): void
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $this->startSession();
 
@@ -245,7 +255,12 @@ class UITest extends TestCase
     public function test_price_alert_functionality(): void
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $this->startSession();
 
@@ -264,7 +279,12 @@ class UITest extends TestCase
     public function test_review_functionality(): void
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $this->startSession();
 

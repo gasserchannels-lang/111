@@ -53,7 +53,7 @@ class EmailSendingTest extends TestCase
         $user = \App\Models\User::factory()->create(['name' => 'John Doe']);
 
         // Use a simple mail instead of WelcomeMail
-        Mail::to($user->email)->send(new \Illuminate\Mail\Mailable());
+        Mail::to($user->email)->send(new \Illuminate\Mail\Mailable);
 
         Mail::assertSent(\Illuminate\Mail\Mailable::class);
     }

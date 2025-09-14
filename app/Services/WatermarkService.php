@@ -30,7 +30,7 @@ final class WatermarkService
             'font_family' => 'Arial',
         ]);
         if (is_array($config)) {
-            $this->config = array_merge($this->config, array_filter($config, function($value) {
+            $this->config = array_merge($this->config, array_filter($config, function ($value) {
                 return is_string($value) || is_numeric($value) || is_bool($value);
             }));
         }

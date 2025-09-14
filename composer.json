@@ -32,6 +32,8 @@
         "nunomaduro/collision": "^7.0|^8.0",
         "phpmd/phpmd": "^2.15",
         "phpunit/phpunit": "^11.5",
+        "rector/rector": "*",
+        "rector/rector-laravel": "*",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-backup": "^9.3",

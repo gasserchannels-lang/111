@@ -2,14 +2,17 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class StoreTest extends TestCase
 {
     use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_store()
     {
@@ -105,7 +108,16 @@ class StoreTest extends TestCase
     public function it_can_get_store_with_products_count()
     {
         $store = Store::factory()->create();
-        Product::factory()->count(3)->create(['store_id' => $store->id]);
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+
+        for ($i = 0; $i < 3; $i++) {
+            Product::factory()->create([
+                'store_id' => $store->id,
+                'brand_id' => $brand->id,
+                'category_id' => $category->id,
+            ]);
+        }
 
         $storeWithCount = Store::withCount('products')->find($store->id);
 

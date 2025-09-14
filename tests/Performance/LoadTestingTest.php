@@ -3,14 +3,11 @@
 namespace Tests\Performance;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class LoadTestingTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -169,7 +166,7 @@ class LoadTestingTest extends TestCase
         // Create memory pressure
         $largeArrays = [];
         for ($i = 0; $i < 100; $i++) {
-            $largeArrays[] = array_fill(0, 1000, 'test_data_' . $i);
+            $largeArrays[] = array_fill(0, 1000, 'test_data_'.$i);
         }
 
         $memoryAfterPressure = memory_get_usage(true);

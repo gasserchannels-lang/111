@@ -11,17 +11,14 @@ use App\Models\Wishlist;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Mockery;
+// use Mockery;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class WishlistControllerTest extends TestCase
 {
-    use RefreshDatabase;
     private WishlistController $controller;
 
-    private Guard $mockAuth;
+    // private Guard $mockAuth;
 
     private User $user;
 
@@ -30,15 +27,14 @@ class WishlistControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->mockAuth = Mockery::mock(Guard::class);
-        $this->mockAuth->shouldReceive('user')->andReturn($this->user);
 
-        $this->controller = new WishlistController($this->mockAuth);
+        // Use real auth instead of mock to avoid console issues
+        $this->actingAs($this->user);
+        $this->controller = new WishlistController(app('auth'));
     }
 
     protected function tearDown(): void
     {
-        Mockery::close();
         parent::tearDown();
     }
 

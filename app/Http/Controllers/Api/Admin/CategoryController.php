@@ -14,6 +14,7 @@ class CategoryController extends Controller
     public function index(): JsonResponse
     {
         $categories = Category::all();
+
         return response()->json($categories);
     }
 
@@ -25,6 +26,7 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::create($validated);
+
         return response()->json($category, 201);
     }
 
@@ -41,12 +43,14 @@ class CategoryController extends Controller
         ]);
 
         $category->update($validated);
+
         return response()->json($category);
     }
 
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();
+
         return response()->json(null, 204);
     }
 }

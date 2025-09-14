@@ -9,10 +9,13 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Store;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_categories_index()
     {
@@ -171,12 +174,13 @@ class CategoryControllerTest extends TestCase
             'is_active' => true,
         ]);
 
-        Product::factory()->count(25)->create([
-            'category_id' => $category->id,
-            'brand_id' => $brand->id,
-            'store_id' => $store->id,
-            'is_active' => true,
-        ]);
+        for ($i = 0; $i < 25; $i++) {
+            Product::factory()->create([
+                'category_id' => $category->id,
+                'brand_id' => $brand->id,
+                'is_active' => true,
+            ]);
+        }
 
         $response = $this->get('/categories/test-category');
 

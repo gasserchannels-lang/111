@@ -144,7 +144,7 @@ class LoadTimeTest extends TestCase
     public function file_upload_performs_within_acceptable_time()
     {
         // Skip this test if GD extension is not available
-        if (!function_exists('imagecreatetruecolor')) {
+        if (! function_exists('imagecreatetruecolor')) {
             $this->markTestSkipped('GD extension not available');
         }
 
@@ -168,8 +168,9 @@ class LoadTimeTest extends TestCase
     #[Test]
     public function admin_panel_loads_within_acceptable_time()
     {
-        $admin = \App\Models\User::factory()->create();
-        $admin->assignRole('admin');
+        $admin = \App\Models\User::factory()->create([
+            'is_admin' => true,
+        ]);
         $this->actingAs($admin);
 
         $startTime = microtime(true);

@@ -2,21 +2,32 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Wishlist;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class WishlistTest extends TestCase
 {
     use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_wishlist_item()
     {
+        $user = User::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
+
         $wishlist = Wishlist::factory()->create([
-            'user_id' => User::factory()->create()->id,
-            'product_id' => Product::factory()->create()->id,
+            'user_id' => $user->id,
+            'product_id' => $product->id,
             'notes' => 'Test notes',
         ]);
 
@@ -37,7 +48,12 @@ class WishlistTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $wishlist = Wishlist::factory()->create(['product_id' => $product->id]);
 
         $this->assertInstanceOf(Product::class, $wishlist->product);
@@ -81,8 +97,19 @@ class WishlistTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_wishlist_for_product()
     {
-        $product1 = Product::factory()->create();
-        $product2 = Product::factory()->create();
+        $brand1 = Brand::factory()->create();
+        $category1 = Category::factory()->create();
+        $product1 = Product::factory()->create([
+            'brand_id' => $brand1->id,
+            'category_id' => $category1->id,
+        ]);
+
+        $brand2 = Brand::factory()->create();
+        $category2 = Category::factory()->create();
+        $product2 = Product::factory()->create([
+            'brand_id' => $brand2->id,
+            'category_id' => $category2->id,
+        ]);
 
         Wishlist::factory()->create(['product_id' => $product1->id]);
         Wishlist::factory()->create(['product_id' => $product2->id]);
@@ -121,7 +148,12 @@ class WishlistTest extends TestCase
     public function it_can_check_if_product_is_in_wishlist()
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         Wishlist::factory()->create([
             'user_id' => $user->id,
@@ -138,7 +170,12 @@ class WishlistTest extends TestCase
     public function it_can_add_product_to_wishlist()
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $wishlist = Wishlist::addToWishlist($user->id, $product->id, 'Test notes');
 
@@ -152,7 +189,12 @@ class WishlistTest extends TestCase
     public function it_can_remove_product_from_wishlist()
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         Wishlist::factory()->create([
             'user_id' => $user->id,

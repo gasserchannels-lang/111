@@ -670,7 +670,9 @@ final class StatisticsService
                 'min' => ! empty($prices) ? min($prices) : 0,
                 'max' => ! empty($prices) ? max($prices) : 0,
             ],
-            'price_volatility' => $this->calculatePriceVolatility(array_map(function($price) { return is_numeric($price) ? (float) $price : 0.0; }, $prices)),
+            'price_volatility' => $this->calculatePriceVolatility(array_map(function ($price) {
+                return is_numeric($price) ? (float) $price : 0.0;
+            }, $prices)),
         ];
     }
 

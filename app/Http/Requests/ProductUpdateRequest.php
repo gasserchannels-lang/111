@@ -201,7 +201,7 @@ class ProductUpdateRequest extends FormRequest
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -241,7 +241,7 @@ class ProductUpdateRequest extends FormRequest
                         $changePercentage = abs($newPriceFloat - $oldPriceFloat) / $oldPriceFloat * 100;
 
                         if ($changePercentage > 50) { // More than 50% change
-                            $validator->warnings()->add('price', 'تغيير السعر بنسبة ' . round($changePercentage, 2) . '% - يرجى التأكد من صحة السعر');
+                            $validator->warnings()->add('price', 'تغيير السعر بنسبة '.round($changePercentage, 2).'% - يرجى التأكد من صحة السعر');
                         }
                     }
                 }

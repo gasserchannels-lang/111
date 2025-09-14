@@ -157,8 +157,8 @@ class HomeControllerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_only_shows_active_categories()
     {
-        Category::factory()->count(3)->create(['is_active' => true]);
-        Category::factory()->count(2)->create(['is_active' => false]);
+        Category::factory()->count(3)->create(['is_active' => true, 'parent_id' => null]);
+        Category::factory()->count(2)->create(['is_active' => false, 'parent_id' => null]);
 
         $response = $this->get('/');
 

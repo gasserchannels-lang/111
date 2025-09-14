@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Currency;
-use App\Models\PriceOffer;
-use App\Models\Product;
-use App\Models\Store;
 use Tests\TestCase;
 
 class PriceSearchControllerTest extends TestCase

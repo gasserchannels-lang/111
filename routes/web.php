@@ -90,7 +90,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('users', [AdminController::class, 'users'])->name('users');
     Route::get('products', [AdminController::class, 'products'])->name('products');
     Route::get('brands', [AdminController::class, 'brands'])->name('brands');
-    Route::get('categories', [AdminController::class, 'categories'])->name('categories');
+    Route::get('categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('stores', [AdminController::class, 'stores'])->name('stores');
     Route::post('users/{user}/toggle-admin', [AdminController::class, 'toggleUserAdmin'])->name('users.toggle-admin');
 });

@@ -10,10 +10,13 @@ use App\Models\Currency;
 use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UpdatePricesCommandTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_update_prices_command()
     {

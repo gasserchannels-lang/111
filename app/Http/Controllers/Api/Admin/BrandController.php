@@ -14,6 +14,7 @@ class BrandController extends Controller
     public function index(): JsonResponse
     {
         $brands = Brand::all();
+
         return response()->json($brands);
     }
 
@@ -25,6 +26,7 @@ class BrandController extends Controller
         ]);
 
         $brand = Brand::create($validated);
+
         return response()->json($brand, 201);
     }
 
@@ -41,12 +43,14 @@ class BrandController extends Controller
         ]);
 
         $brand->update($validated);
+
         return response()->json($brand);
     }
 
     public function destroy(Brand $brand): JsonResponse
     {
         $brand->delete();
+
         return response()->json(null, 204);
     }
 }

@@ -9,12 +9,11 @@ use App\Http\Controllers\Api\PriceSearchController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 // User authentication route
-Route::middleware(['auth:sanctum', 'throttle:auth'])->get('/user', fn(Request $request) => $request->user());
+Route::middleware(['auth:sanctum', 'throttle:auth'])->get('/user', fn (Request $request) => $request->user());
 
 // Public API routes (no authentication required)
 Route::middleware(['throttle:public'])->group(function () {
@@ -73,6 +72,7 @@ Route::middleware(['throttle:public'])->group(function () {
     Route::get('/external-data', function () {
         try {
             $response = Http::get('https://api.external-service.com/data');
+
             return response()->json($response->json(), $response->status());
         } catch (Exception $e) {
             return response()->json(['error' => 'External service unavailable'], 503);
@@ -82,6 +82,7 @@ Route::middleware(['throttle:public'])->group(function () {
     Route::get('/slow-external-data', function () {
         try {
             $response = Http::timeout(3)->get('https://api.slow-service.com/data');
+
             return response()->json($response->json(), $response->status());
         } catch (Exception $e) {
             return response()->json(['error' => 'Service timeout'], 408);
@@ -94,6 +95,7 @@ Route::middleware(['throttle:public'])->group(function () {
             if ($response->status() >= 400) {
                 return response()->json(['error' => 'External service error'], 502);
             }
+
             return response()->json($response->json(), $response->status());
         } catch (Exception $e) {
             return response()->json(['error' => 'External service unavailable'], 503);
@@ -103,8 +105,9 @@ Route::middleware(['throttle:public'])->group(function () {
     Route::get('/authenticated-external-data', function () {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . Config::get('services.external.token', 'test-token')
+                'Authorization' => 'Bearer test-token',
             ])->get('https://api.authenticated-service.com/data');
+
             return response()->json($response->json(), $response->status());
         } catch (Exception $e) {
             return response()->json(['error' => 'Authentication failed'], 401);
@@ -117,6 +120,7 @@ Route::middleware(['throttle:public'])->group(function () {
             if ($response->status() === 429) {
                 return response()->json(['error' => 'Rate limited'], 429);
             }
+
             return response()->json($response->json(), $response->status());
         } catch (Exception $e) {
             return response()->json(['error' => 'Service unavailable'], 503);
@@ -127,6 +131,7 @@ Route::middleware(['throttle:public'])->group(function () {
         return Cache::remember('external-data', 60, function () {
             try {
                 $response = Http::get('https://api.cacheable-service.com/data');
+
                 return $response->json();
             } catch (Exception $e) {
                 return ['error' => 'Service unavailable'];
@@ -148,6 +153,7 @@ Route::middleware(['throttle:public'])->group(function () {
         try {
             // Try fallback service
             $response = Http::get('https://api.fallback-service.com/data');
+
             return response()->json($response->json(), $response->status());
         } catch (Exception $e) {
             return response()->json(['error' => 'All services unavailable'], 503);

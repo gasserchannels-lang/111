@@ -4,18 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Models;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PriceOfferTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_offer()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
         $store = Store::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $priceOffer = PriceOffer::create([
             'product_id' => $product->id,
@@ -36,7 +46,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([
@@ -54,7 +69,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_store_relationship()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([
@@ -85,7 +105,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_price_is_numeric()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         // Create a valid price offer first
@@ -105,7 +130,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_price_is_positive()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = new PriceOffer([
@@ -124,7 +154,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_validate_url_format()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = new PriceOffer([
@@ -143,7 +178,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_available_offers()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         PriceOffer::create([
@@ -171,8 +211,19 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_offers_for_product()
     {
-        $product1 = Product::factory()->create();
-        $product2 = Product::factory()->create();
+        $brand1 = Brand::factory()->create();
+        $category1 = Category::factory()->create();
+        $product1 = Product::factory()->create([
+            'brand_id' => $brand1->id,
+            'category_id' => $category1->id,
+        ]);
+
+        $brand2 = Brand::factory()->create();
+        $category2 = Category::factory()->create();
+        $product2 = Product::factory()->create([
+            'brand_id' => $brand2->id,
+            'category_id' => $category2->id,
+        ]);
         $store = Store::factory()->create();
 
         PriceOffer::create([
@@ -200,7 +251,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_offers_for_store()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store1 = Store::factory()->create();
         $store2 = Store::factory()->create();
 
@@ -229,7 +285,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_lowest_price_for_product()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store1 = Store::factory()->create();
         $store2 = Store::factory()->create();
 
@@ -257,7 +318,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_best_offer_for_product()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store1 = Store::factory()->create();
         $store2 = Store::factory()->create();
 
@@ -287,7 +353,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_mark_as_unavailable()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([
@@ -306,7 +377,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_mark_as_available()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([
@@ -325,7 +401,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_price()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([
@@ -344,7 +425,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_from_original()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([
@@ -366,7 +452,12 @@ class PriceOfferTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_get_price_difference_percentage()
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
         $store = Store::factory()->create();
 
         $priceOffer = PriceOffer::create([

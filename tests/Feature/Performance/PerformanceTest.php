@@ -10,12 +10,13 @@ use App\Models\Currency;
 use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PerformanceTest extends TestCase
 {
     use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_large_dataset_efficiently()
     {

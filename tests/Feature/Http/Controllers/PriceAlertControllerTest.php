@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,6 +17,8 @@ use Tests\TestCase;
 
 class PriceAlertControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     private User $user;
 
     private User $anotherUser;
@@ -87,7 +92,12 @@ class PriceAlertControllerTest extends TestCase
     #[Test]
     public function an_authenticated_user_can_create_a_price_alert(): void
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $this->actingAs($this->user)
             ->post(route('price-alerts.store'), [
@@ -116,7 +126,12 @@ class PriceAlertControllerTest extends TestCase
     #[Test]
     public function it_fails_to_store_a_price_alert_with_non_numeric_target_price(): void
     {
-        $product = Product::factory()->create();
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         $this->actingAs($this->user)
             ->post(route('price-alerts.store'), [

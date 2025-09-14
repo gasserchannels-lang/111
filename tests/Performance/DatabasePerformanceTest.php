@@ -2,15 +2,12 @@
 
 namespace Tests\Performance;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DatabasePerformanceTest extends TestCase
 {
-    use RefreshDatabase;
-
     #[Test]
     public function simple_select_queries_perform_within_acceptable_time()
     {
@@ -110,7 +107,15 @@ class DatabasePerformanceTest extends TestCase
     public function bulk_update_operations_perform_within_acceptable_time()
     {
         // Create test data
-        \App\Models\Product::factory()->count(500)->create();
+        $brands = \App\Models\Brand::factory()->count(10)->create();
+        $categories = \App\Models\Category::factory()->count(10)->create();
+
+        for ($i = 0; $i < 500; $i++) {
+            \App\Models\Product::factory()->create([
+                'brand_id' => $brands->random()->id,
+                'category_id' => $categories->random()->id,
+            ]);
+        }
 
         $startTime = microtime(true);
 

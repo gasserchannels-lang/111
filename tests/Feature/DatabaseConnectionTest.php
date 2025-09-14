@@ -36,10 +36,10 @@ class DatabaseConnectionTest extends TestCase
     {
         // Create a test table first
         DB::statement('CREATE TABLE IF NOT EXISTS test_table (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
-            created_at DATETIME,
-            updated_at DATETIME
+            created_at TIMESTAMP NULL,
+            updated_at TIMESTAMP NULL
         )');
 
         DB::table('test_table')->insert([

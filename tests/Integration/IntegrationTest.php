@@ -13,13 +13,10 @@ use App\Models\Review;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\Wishlist;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IntegrationTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -169,7 +166,13 @@ class IntegrationTest extends TestCase
     public function test_data_consistency_across_operations(): void
     {
         $user = User::factory()->create();
-        $product = Product::factory()->create(['price' => 100.00]);
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'price' => 100.00,
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
 
         // Create price alert
         $priceAlert = PriceAlert::factory()->create([
@@ -230,8 +233,8 @@ class IntegrationTest extends TestCase
         $categories = Category::factory()->count(10)->create();
         $brands = Brand::factory()->count(20)->create();
         $products = Product::factory()->count(100)->create([
-            'category_id' => fn() => $categories->random()->id,
-            'brand_id' => fn() => $brands->random()->id,
+            'category_id' => fn () => $categories->random()->id,
+            'brand_id' => fn () => $brands->random()->id,
         ]);
 
         $startTime = microtime(true);
@@ -251,6 +254,6 @@ class IntegrationTest extends TestCase
         $totalTime = ($endTime - $startTime) * 1000;
 
         // Should complete within reasonable time (adjusted for rate limiting delays)
-        $this->assertLessThan(25000, $totalTime, 'Performance test failed: ' . $totalTime . 'ms');
+        $this->assertLessThan(25000, $totalTime, 'Performance test failed: '.$totalTime.'ms');
     }
 }

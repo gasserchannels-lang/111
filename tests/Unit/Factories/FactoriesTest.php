@@ -17,11 +17,9 @@ use App\Models\User;
 use App\Models\UserLocaleSetting;
 use App\Models\Wishlist;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class FactoriesTest extends TestCase
 {
-    use RefreshDatabase;
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_user_with_factory()
     {

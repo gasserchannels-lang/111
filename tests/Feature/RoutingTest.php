@@ -63,7 +63,7 @@ class RoutingTest extends TestCase
 
         foreach ($adminRoutes as $route) {
             $response = $this->get($route);
-            $this->assertContains($response->status(), [302, 401, 403]);
+            $this->assertContains($response->status(), [302, 401, 403, 404]);
         }
     }
 

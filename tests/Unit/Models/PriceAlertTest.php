@@ -11,6 +11,7 @@ use Tests\TestCase;
 class PriceAlertTest extends TestCase
 {
     use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_alert()
     {
@@ -36,7 +37,7 @@ class PriceAlertTest extends TestCase
         $product = Product::factory()->create();
         $priceAlert = PriceAlert::factory()->create([
             'user_id' => $user->id,
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
 
         $this->assertInstanceOf(User::class, $priceAlert->user);
@@ -50,7 +51,7 @@ class PriceAlertTest extends TestCase
         $product = Product::factory()->create();
         $priceAlert = PriceAlert::factory()->create([
             'user_id' => $user->id,
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
 
         $this->assertInstanceOf(Product::class, $priceAlert->product);

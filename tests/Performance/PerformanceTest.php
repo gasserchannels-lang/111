@@ -9,11 +9,9 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PerformanceTest extends TestCase
 {
-    use RefreshDatabase;
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,13 +54,13 @@ class PerformanceTest extends TestCase
         $response->assertStatus(200);
 
         // Assert response time is under 1000ms (realistic target for testing environment)
-        $this->assertLessThan(1000, $executionTime, 'Product listing took too long: ' . $executionTime . 'ms');
+        $this->assertLessThan(1000, $executionTime, 'Product listing took too long: '.$executionTime.'ms');
 
         // Assert memory increase is reasonable (environment independent)
-        $this->assertLessThan(32, $memoryDelta, 'Memory increase too high: ' . $memoryDelta . 'MB');
+        $this->assertLessThan(32, $memoryDelta, 'Memory increase too high: '.$memoryDelta.'MB');
 
         // Assert query count is optimized
-        $this->assertLessThanOrEqual(3, count($queries), 'Too many database queries: ' . count($queries));
+        $this->assertLessThanOrEqual(3, count($queries), 'Too many database queries: '.count($queries));
     }
 
     /**
@@ -82,7 +80,7 @@ class PerformanceTest extends TestCase
 
         $response->assertStatus(200);
         // Adjusted expectation to account for rate limiting delays in testing environment
-        $this->assertLessThan(3000, $executionTime, 'Product search took too long: ' . $executionTime . 'ms');
+        $this->assertLessThan(3000, $executionTime, 'Product search took too long: '.$executionTime.'ms');
     }
 
     /**
@@ -124,14 +122,14 @@ class PerformanceTest extends TestCase
         $this->assertLessThanOrEqual(
             4,
             count($queries),
-            'Too many database queries: ' . count($queries) . "\n" .
+            'Too many database queries: '.count($queries)."\n".
                 implode("\n", array_map(function ($query) {
                     return $query['query'];
                 }, $queries))
         );
 
         // Assert execution time is reasonable
-        $this->assertLessThan(150, $executionTime, 'Database queries took too long: ' . $executionTime . 'ms');
+        $this->assertLessThan(150, $executionTime, 'Database queries took too long: '.$executionTime.'ms');
 
         // Assert we got results
         $this->assertGreaterThan(0, $products->count());
@@ -173,7 +171,7 @@ class PerformanceTest extends TestCase
         $memoryUsed = ($finalMemory - $initialMemory) / 1024 / 1024; // Convert to MB
 
         // Memory usage should be reasonable (less than 10MB for 1000 products)
-        $this->assertLessThan(10, $memoryUsed, 'Memory usage too high: ' . $memoryUsed . 'MB');
+        $this->assertLessThan(10, $memoryUsed, 'Memory usage too high: '.$memoryUsed.'MB');
     }
 
     /**
@@ -202,7 +200,7 @@ class PerformanceTest extends TestCase
         }
 
         // Adjusted time expectation to account for delays
-        $this->assertLessThan(5000, $totalTime, 'Concurrent requests took too long: ' . $totalTime . 'ms');
+        $this->assertLessThan(5000, $totalTime, 'Concurrent requests took too long: '.$totalTime.'ms');
     }
 
     /**
@@ -252,7 +250,7 @@ class PerformanceTest extends TestCase
         $contentLength = strlen($response->getContent());
 
         // Response should not be too large (less than 1MB)
-        $this->assertLessThan(1024 * 1024, $contentLength, 'API response too large: ' . $contentLength . ' bytes');
+        $this->assertLessThan(1024 * 1024, $contentLength, 'API response too large: '.$contentLength.' bytes');
     }
 
     /**
@@ -268,8 +266,8 @@ class PerformanceTest extends TestCase
 
         // Create products
         Product::factory()->count(1000)->create([
-            'category_id' => fn() => $categories->random()->id,
-            'brand_id' => fn() => $brands->random()->id,
+            'category_id' => fn () => $categories->random()->id,
+            'brand_id' => fn () => $brands->random()->id,
         ]);
     }
 }
