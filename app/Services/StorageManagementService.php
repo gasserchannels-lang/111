@@ -124,8 +124,8 @@ final class StorageManagementService
         }
 
         $cleanupResults = [];
-        $priority = is_array($this->config['cleanup_priority'] ?? ['temp', 'cache', 'logs', 'backups']) 
-            ? $this->config['cleanup_priority'] 
+        $priority = is_array($this->config['cleanup_priority'] ?? ['temp', 'cache', 'logs', 'backups'])
+            ? $this->config['cleanup_priority']
             : ['temp', 'cache', 'logs', 'backups'];
 
         foreach ($priority as $type) {
@@ -305,7 +305,7 @@ final class StorageManagementService
 
             // Update config file
             $configPath = config_path('storage_management.php');
-            $configContent = "<?php\n\nreturn ".var_export($this->config, true).";\n";
+            $configContent = "<?php\n\nreturn " . var_export($this->config, true) . ";\n";
             file_put_contents($configPath, $configContent);
 
             Log::info('Storage limits updated', $limits);
@@ -372,7 +372,7 @@ final class StorageManagementService
         $filesCompressed = 0;
         $spaceSaved = 0;
 
-        $files = glob($directory.'/*');
+        $files = glob($directory . '/*');
         if ($files === false) {
             return [
                 'files_compressed' => 0,
@@ -382,7 +382,7 @@ final class StorageManagementService
         foreach ($files as $file) {
             if (is_file($file) && ! str_ends_with($file, '.gz')) {
                 $originalSize = filesize($file);
-                $compressedFile = $file.'.gz';
+                $compressedFile = $file . '.gz';
 
                 $fileContent = file_get_contents($file);
                 if ($fileContent !== false && file_put_contents($compressedFile, gzencode($fileContent))) {
@@ -407,15 +407,15 @@ final class StorageManagementService
      */
     private function createArchive(string $directory, string $name): array
     {
-        $archiveName = $name.'_'.Carbon::now()->format('Y-m-d').'.tar.gz';
-        $archivePath = storage_path('archives/'.$archiveName);
+        $archiveName = $name . '_' . Carbon::now()->format('Y-m-d') . '.tar.gz';
+        $archivePath = storage_path('archives/' . $archiveName);
 
         // Create archives directory if it doesn't exist
         if (! is_dir(dirname($archivePath))) {
             mkdir(dirname($archivePath), 0755, true);
         }
 
-        $command = "tar -czf {$archivePath} -C ".dirname($directory).' '.basename($directory);
+        $command = "tar -czf {$archivePath} -C " . dirname($directory) . ' ' . basename($directory);
         exec($command, $output, $returnCode);
 
         if ($returnCode === 0) {
@@ -426,7 +426,7 @@ final class StorageManagementService
             // Remove original directory
             $this->removeDirectory($directory);
 
-            $files = glob($directory.'/*');
+            $files = glob($directory . '/*');
 
             return [
                 'files_archived' => $files ? count($files) : 0,
@@ -456,11 +456,11 @@ final class StorageManagementService
                 new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
             );
 
-        foreach ($iterator as $file) {
-            if ($file instanceof \SplFileInfo && $file->isFile()) {
-                $files[] = $file->getPathname();
+            foreach ($iterator as $file) {
+                if ($file instanceof \SplFileInfo && $file->isFile()) {
+                    $files[] = $file->getPathname();
+                }
             }
-        }
         }
 
         return $files;

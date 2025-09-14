@@ -26,11 +26,11 @@ class ProductService
     {
         $page = request()->get('page', 1);
         $pageNumber = is_numeric($page) ? (int) $page : 1;
-        
+
         return $this->cache->remember(
-            'products.page.'.$pageNumber,
+            'products.page.' . $pageNumber,
             3600,
-            fn () => $this->repository->getPaginatedActive($perPage),
+            fn() => $this->repository->getPaginatedActive($perPage),
             ['products']
         );
     }
@@ -43,7 +43,7 @@ class ProductService
     public function getBySlug(string $slug): ?Product
     {
         return $this->cache->remember(
-            'product.slug.'.$slug,
+            'product.slug.' . $slug,
             3600,
             function () use ($slug) {
                 $product = $this->repository->findBySlug($slug);
@@ -66,9 +66,9 @@ class ProductService
     public function getRelatedProducts(Product $product, int $limit = 4): Collection
     {
         return $this->cache->remember(
-            'product.related.'.$product->id,
+            'product.related.' . $product->id,
             3600,
-            fn () => $this->repository->getRelated($product, $limit),
+            fn() => $this->repository->getRelated($product, $limit),
             ['products']
         );
     }
