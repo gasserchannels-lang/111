@@ -42,7 +42,7 @@ final class StorageManagementService
     {
         $storagePath = storage_path();
         $totalSize = $this->getDirectorySize($storagePath);
-        $maxSizeMb = $this->config['max_storage_size_mb'] ?? 1024;
+        $maxSizeMb = is_numeric($this->config['max_storage_size_mb'] ?? 1024) ? (float) $this->config['max_storage_size_mb'] : 1024.0;
         $maxSize = $maxSizeMb * 1024 * 1024;
         $usagePercentage = ($totalSize / $maxSize) * 100;
 
@@ -124,7 +124,9 @@ final class StorageManagementService
         }
 
         $cleanupResults = [];
-        $priority = $this->config['cleanup_priority'] ?? ['temp', 'cache', 'logs', 'backups'];
+        $priority = is_array($this->config['cleanup_priority'] ?? ['temp', 'cache', 'logs', 'backups']) 
+            ? $this->config['cleanup_priority'] 
+            : ['temp', 'cache', 'logs', 'backups'];
 
         foreach ($priority as $type) {
             switch ($type) {
@@ -256,7 +258,9 @@ final class StorageManagementService
 
         // Sort directories by size
         uasort($breakdown, function ($a, $b) {
-            return $b['size_mb'] <=> $a['size_mb'];
+            $aSize = is_numeric($a['size_mb'] ?? 0) ? (float) $a['size_mb'] : 0.0;
+            $bSize = is_numeric($b['size_mb'] ?? 0) ? (float) $b['size_mb'] : 0.0;
+            return $bSize <=> $aSize;
         });
 
         // Generate recommendations based on usage
@@ -276,10 +280,11 @@ final class StorageManagementService
 
         // Directory-specific recommendations
         foreach ($breakdown as $name => $data) {
-            if ($data['size_mb'] > 100) { // More than 100MB
+            $sizeMb = is_numeric($data['size_mb'] ?? 0) ? (float) $data['size_mb'] : 0.0;
+            if ($sizeMb > 100) { // More than 100MB
                 $recommendations[] = [
                     'type' => 'info',
-                    'message' => "Directory '{$name}' is using {$data['size_mb']}MB",
+                    'message' => "Directory '{$name}' is using {$sizeMb}MB",
                     'action' => "Consider cleaning up {$name} directory",
                 ];
             }
@@ -331,16 +336,18 @@ final class StorageManagementService
         $newestFile = null;
 
         foreach ($breakdown as $data) {
-            $files = $this->getFilesInDirectory($data['path']);
-            $totalFiles += count($files);
+            if (is_array($data) && isset($data['path']) && is_string($data['path'])) {
+                $files = $this->getFilesInDirectory($data['path']);
+                $totalFiles += count($files);
 
-            foreach ($files as $file) {
-                $fileTime = filemtime($file);
-                if (! $oldestFile || $fileTime < $oldestFile) {
-                    $oldestFile = $fileTime;
-                }
-                if (! $newestFile || $fileTime > $newestFile) {
-                    $newestFile = $fileTime;
+                foreach ($files as $file) {
+                    $fileTime = filemtime($file);
+                    if (! $oldestFile || $fileTime < $oldestFile) {
+                        $oldestFile = $fileTime;
+                    }
+                    if (! $newestFile || $fileTime > $newestFile) {
+                        $newestFile = $fileTime;
+                    }
                 }
             }
         }
@@ -449,11 +456,11 @@ final class StorageManagementService
                 new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
             );
 
-            foreach ($iterator as $file) {
-                if ($file->isFile()) {
-                    $files[] = $file->getPathname();
-                }
+        foreach ($iterator as $file) {
+            if ($file instanceof \SplFileInfo && $file->isFile()) {
+                $files[] = $file->getPathname();
             }
+        }
         }
 
         return $files;
@@ -474,10 +481,12 @@ final class StorageManagementService
         );
 
         foreach ($iterator as $file) {
-            if ($file->isDir()) {
-                rmdir($file);
-            } else {
-                unlink($file);
+            if ($file instanceof \SplFileInfo) {
+                if ($file->isDir()) {
+                    rmdir($file->getPathname());
+                } else {
+                    unlink($file->getPathname());
+                }
             }
         }
 
@@ -500,7 +509,7 @@ final class StorageManagementService
         );
 
         foreach ($iterator as $file) {
-            if ($file->isFile()) {
+            if ($file instanceof \SplFileInfo && $file->isFile()) {
                 $size += $file->getSize();
             }
         }

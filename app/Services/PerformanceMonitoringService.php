@@ -53,14 +53,23 @@ class PerformanceMonitoringService
         $endMemory = memory_get_usage();
 
         $operationData = $this->metrics[$operation];
+        
+        // Ensure operationData has the expected structure
+        if (!is_array($operationData) || !isset($operationData['start_time'], $operationData['start_memory'], $operationData['queries'])) {
+            return [];
+        }
+        
+        $startTime = is_numeric($operationData['start_time']) ? (float) $operationData['start_time'] : 0.0;
+        $startMemory = is_numeric($operationData['start_memory']) ? (int) $operationData['start_memory'] : 0;
+        $queries = is_array($operationData['queries']) ? $operationData['queries'] : [];
 
         $result = [
             'operation' => $operation,
-            'execution_time' => $endTime - $operationData['start_time'],
-            'memory_usage' => $endMemory - $operationData['start_memory'],
+            'execution_time' => $endTime - $startTime,
+            'memory_usage' => $endMemory - $startMemory,
             'peak_memory' => memory_get_peak_usage(),
-            'queries_count' => count(DB::getQueryLog()) - count($operationData['queries']),
-            'queries' => array_slice(DB::getQueryLog(), count($operationData['queries'])),
+            'queries_count' => count(DB::getQueryLog()) - count($queries),
+            'queries' => array_slice(DB::getQueryLog(), count($queries)),
         ];
 
         // Check thresholds
@@ -212,30 +221,30 @@ class PerformanceMonitoringService
         $config = config('monitoring.performance', []);
 
         // Check execution time
-        if (isset($config['execution_time_threshold']) &&
-            $metrics['execution_time'] > $config['execution_time_threshold']) {
+        if (is_array($config) && isset($config['execution_time_threshold']) && is_numeric($config['execution_time_threshold']) &&
+            is_numeric($metrics['execution_time']) && $metrics['execution_time'] > (float) $config['execution_time_threshold']) {
             Log::warning('Slow operation detected', [
-                'operation' => $metrics['operation'],
+                'operation' => $metrics['operation'] ?? 'unknown',
                 'execution_time' => $metrics['execution_time'],
                 'threshold' => $config['execution_time_threshold'],
             ]);
         }
 
         // Check memory usage
-        if (isset($config['memory_threshold']) &&
-            $metrics['memory_usage'] > ($config['memory_threshold'] * 1024 * 1024)) {
+        if (is_array($config) && isset($config['memory_threshold']) && is_numeric($config['memory_threshold']) &&
+            is_numeric($metrics['memory_usage']) && $metrics['memory_usage'] > ((float) $config['memory_threshold'] * 1024 * 1024)) {
             Log::warning('High memory usage detected', [
-                'operation' => $metrics['operation'],
+                'operation' => $metrics['operation'] ?? 'unknown',
                 'memory_usage' => $metrics['memory_usage'],
                 'threshold' => $config['memory_threshold'],
             ]);
         }
 
         // Check query count
-        if (isset($config['query_count_threshold']) &&
-            $metrics['queries_count'] > $config['query_count_threshold']) {
+        if (is_array($config) && isset($config['query_count_threshold']) && is_numeric($config['query_count_threshold']) &&
+            is_numeric($metrics['queries_count']) && $metrics['queries_count'] > (int) $config['query_count_threshold']) {
             Log::warning('High query count detected', [
-                'operation' => $metrics['operation'],
+                'operation' => $metrics['operation'] ?? 'unknown',
                 'queries_count' => $metrics['queries_count'],
                 'threshold' => $config['query_count_threshold'],
             ]);

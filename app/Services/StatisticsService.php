@@ -670,7 +670,7 @@ final class StatisticsService
                 'min' => ! empty($prices) ? min($prices) : 0,
                 'max' => ! empty($prices) ? max($prices) : 0,
             ],
-            'price_volatility' => $this->calculatePriceVolatility($prices),
+            'price_volatility' => $this->calculatePriceVolatility(array_map('floatval', $prices)),
         ];
     }
 
@@ -895,7 +895,9 @@ final class StatisticsService
     private function getApiHealth(): array
     {
         try {
-            $response = \Http::timeout(5)->get(config('app.url').'/health');
+            $appUrl = config('app.url');
+            $healthUrl = is_string($appUrl) ? $appUrl.'/health' : '/health';
+            $response = \Http::timeout(5)->get($healthUrl);
 
             return [
                 'status' => $response->successful() ? 'healthy' : 'unhealthy',
@@ -945,7 +947,8 @@ final class StatisticsService
     private function getUptime(): string
     {
         $startTime = config('app.start_time', now()->subDay());
-        $uptime = now()->diffInSeconds($startTime);
+        $startTimeValue = is_string($startTime) ? Carbon::parse($startTime) : $startTime;
+        $uptime = now()->diffInSeconds($startTimeValue);
 
         $days = floor($uptime / 86400);
         $hours = floor(($uptime % 86400) / 3600);

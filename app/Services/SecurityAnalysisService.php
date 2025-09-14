@@ -99,7 +99,8 @@ class SecurityAnalysisService
      */
     private function checkHttpsConfiguration(array &$issues): int
     {
-        if (config('app.url') && str_starts_with(config('app.url'), 'https')) {
+        $appUrl = config('app.url');
+        if ($appUrl && is_string($appUrl) && str_starts_with($appUrl, 'https')) {
             return 20;
         }
 

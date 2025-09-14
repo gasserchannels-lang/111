@@ -66,7 +66,7 @@ class PriceSearchService
     {
         $query = Product::with(['priceOffers.store', 'brand', 'category']);
 
-        if (isset($filters['name'])) {
+        if (isset($filters['name']) && is_string($filters['name'])) {
             $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
@@ -96,7 +96,9 @@ class PriceSearchService
             });
         }
 
-        $perPage = $filters['per_page'] ?? config('coprra.pagination.default_items_per_page', 20);
+        $perPage = isset($filters['per_page']) && is_numeric($filters['per_page']) 
+            ? (int) $filters['per_page'] 
+            : config('coprra.pagination.default_items_per_page', 20);
         $products = $query->paginate($perPage);
 
         return [

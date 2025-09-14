@@ -148,7 +148,9 @@ class ReportService
         $priceChanges = [];
 
         for ($i = 1; $i < count($prices); $i++) {
-            $priceChanges[] = $prices[$i] - $prices[$i - 1];
+            $currentPrice = is_numeric($prices[$i]) ? (float) $prices[$i] : 0.0;
+            $previousPrice = is_numeric($prices[$i - 1]) ? (float) $prices[$i - 1] : 0.0;
+            $priceChanges[] = $currentPrice - $previousPrice;
         }
 
         return [
@@ -159,7 +161,7 @@ class ReportService
             ],
             'average_price' => array_sum($prices) / count($prices),
             'price_volatility' => count($priceChanges) > 0 ? array_sum($priceChanges) / count($priceChanges) : 0,
-            'price_trend' => $this->calculatePriceTrend($prices),
+            'price_trend' => $this->calculatePriceTrend(array_map('floatval', $prices)),
         ];
     }
 
