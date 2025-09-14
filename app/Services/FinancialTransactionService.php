@@ -138,7 +138,8 @@ class FinancialTransactionService
 
                 // Validate update data
                 if (isset($updateData['price'])) {
-                    $this->validatePrice($updateData['price']);
+                    $price = is_numeric($updateData['price']) ? (float) $updateData['price'] : 0.0;
+                    $this->validatePrice($price);
                 }
 
                 // Update offer
@@ -226,7 +227,8 @@ class FinancialTransactionService
             throw new Exception('Missing required fields: product_id, store_id, price');
         }
 
-        $this->validatePrice($data['price']);
+        $price = is_numeric($data['price']) ? (float) $data['price'] : 0.0;
+        $this->validatePrice($price);
 
         // Check if product exists
         if (! Product::find($data['product_id'])) {

@@ -52,13 +52,15 @@ class PasswordPolicyService
         $errors = [];
 
         // Check minimum length
-        $minLength = $this->config['min_length'] ?? 8;
+        $minLengthValue = $this->config['min_length'] ?? 8;
+        $minLength = is_numeric($minLengthValue) ? (int) $minLengthValue : 8;
         if (strlen($password) < $minLength) {
             $errors[] = 'Password must be at least '.$minLength.' characters long';
         }
 
         // Check maximum length
-        $maxLength = $this->config['max_length'] ?? 128;
+        $maxLengthValue = $this->config['max_length'] ?? 128;
+        $maxLength = is_numeric($maxLengthValue) ? (int) $maxLengthValue : 128;
         if (strlen($password) > $maxLength) {
             $errors[] = 'Password must not exceed '.$maxLength.' characters';
         }
@@ -223,7 +225,8 @@ class PasswordPolicyService
 
             // This would query a password_history table
             // For now, we'll simulate the check
-            $passwordHashes = $this->getUserPasswordHistory($userId, $historyCount);
+            $historyCountInt = is_numeric($historyCount) ? (int) $historyCount : 5;
+            $passwordHashes = $this->getUserPasswordHistory($userId, $historyCountInt);
 
             foreach ($passwordHashes as $hash) {
                 if (Hash::check($password, $hash)) {
@@ -325,7 +328,8 @@ class PasswordPolicyService
             $lockoutDuration = $this->config['lockout_duration'] ?? 30;
 
             // This would query a failed_attempts table
-            $failedAttempts = $this->getFailedAttempts($userId, $lockoutDuration);
+            $lockoutDurationInt = is_numeric($lockoutDuration) ? (int) $lockoutDuration : 30;
+            $failedAttempts = $this->getFailedAttempts($userId, $lockoutDurationInt);
 
             return $failedAttempts >= $lockoutAttempts;
         } catch (Exception $e) {

@@ -47,6 +47,10 @@ class InputSanitizerService
      * @param  array<string, mixed>  $input
      * @return array<string, mixed>
      */
+    /**
+     * @param array<mixed, mixed> $input
+     * @return array<string, mixed>
+     */
     public function sanitizeArray(array $input): array
     {
         foreach ($input as $key => $value) {
@@ -172,7 +176,8 @@ class InputSanitizerService
         }
 
         // Sanitize filename
-        $safeName = $this->sanitizeFileName($file['name']);
+        $filename = is_string($file['name']) ? $file['name'] : '';
+        $safeName = $this->sanitizeFileName($filename);
 
         // Validate mime type
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -180,7 +185,8 @@ class InputSanitizerService
             return null;
         }
 
-        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        $tmpName = is_string($file['tmp_name']) ? $file['tmp_name'] : '';
+        $mimeType = finfo_file($finfo, $tmpName);
         finfo_close($finfo);
 
         if ($mimeType !== false && $this->isAllowedMimeType($mimeType)) {
