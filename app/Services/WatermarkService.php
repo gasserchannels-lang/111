@@ -18,7 +18,7 @@ final class WatermarkService
 
     public function __construct()
     {
-        $this->config = config('watermark', [
+        $config = config('watermark', [
             'enabled' => true,
             'text' => 'COPRRA',
             'font_size' => 24,
@@ -29,6 +29,7 @@ final class WatermarkService
             'margin' => 10,
             'font_family' => 'Arial',
         ]);
+        $this->config = is_array($config) ? $config : [];
     }
 
     /**

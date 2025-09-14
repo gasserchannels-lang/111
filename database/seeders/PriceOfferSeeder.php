@@ -33,7 +33,7 @@ class PriceOfferSeeder extends Seeder
                     'condition' => config('coprra.default_condition', 'new'),
                     'rating' => random_int(35, 50) / 10,
                     'reviews_count' => random_int(10, 1000),
-                    'image_url' => config('app.url').'/images/placeholder/300x300?text='.urlencode($product->name ?? ''),
+                    'image_url' => (config('app.url') ?? '') . '/images/placeholder/300x300?text=' . urlencode($product->name ?? ''),
                     'specifications' => [
                         'brand' => explode(' ', $product->name)[0],
                         'model' => $product->name,
