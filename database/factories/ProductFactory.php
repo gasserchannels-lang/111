@@ -25,7 +25,7 @@ class ProductFactory extends Factory
         $words = $this->faker->unique()->words(3, true);
 
         return [
-            'name' => $words.' Product',
+            'name' => (is_string($words) ? $words : '').' Product',
             'slug' => $this->faker->unique()->slug(3),
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->randomFloat(2, 10, 1000),

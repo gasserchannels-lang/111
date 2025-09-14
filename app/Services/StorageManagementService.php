@@ -21,7 +21,7 @@ final class StorageManagementService
     public function __construct(FileCleanupService $cleanupService)
     {
         $this->cleanupService = $cleanupService;
-        $this->config = config('storage_management', [
+        $config = config('storage_management', [
             'max_storage_size_mb' => 1024, // 1GB
             'warning_threshold' => 80, // 80%
             'critical_threshold' => 95, // 95%
@@ -30,6 +30,7 @@ final class StorageManagementService
             'compression_enabled' => true,
             'archival_enabled' => true,
         ]);
+        $this->config = is_array($config) ? $config : [];
     }
 
     /**
@@ -41,22 +42,24 @@ final class StorageManagementService
     {
         $storagePath = storage_path();
         $totalSize = $this->getDirectorySize($storagePath);
-        $maxSize = $this->config['max_storage_size_mb'] * 1024 * 1024;
+        $maxSizeMb = $this->config['max_storage_size_mb'] ?? 1024;
+        $maxSize = $maxSizeMb * 1024 * 1024;
         $usagePercentage = ($totalSize / $maxSize) * 100;
 
         $status = 'healthy';
-        if ($usagePercentage >= $this->config['critical_threshold']) {
+        $criticalThreshold = $this->config['critical_threshold'] ?? 95;
+        if ($usagePercentage >= $criticalThreshold) {
             $status = 'critical';
-        } elseif ($usagePercentage >= $this->config['warning_threshold']) {
+        } elseif ($usagePercentage >= ($this->config['warning_threshold'] ?? 80)) {
             $status = 'warning';
         }
 
         $result = [
             'current_size_mb' => round($totalSize / 1024 / 1024, 2),
-            'max_size_mb' => $this->config['max_storage_size_mb'],
+            'max_size_mb' => $maxSizeMb,
             'usage_percentage' => round($usagePercentage, 2),
             'status' => $status,
-            'needs_cleanup' => $usagePercentage >= $this->config['warning_threshold'],
+            'needs_cleanup' => $usagePercentage >= ($this->config['warning_threshold'] ?? 80),
             'breakdown' => $this->getStorageBreakdown(),
         ];
 
@@ -112,7 +115,7 @@ final class StorageManagementService
     {
         $usage = $this->monitorStorageUsage();
 
-        if (! $usage['needs_cleanup'] || ! $this->config['auto_cleanup']) {
+        if (! $usage['needs_cleanup'] || ! ($this->config['auto_cleanup'] ?? false)) {
             return [
                 'cleanup_performed' => false,
                 'reason' => 'No cleanup needed or auto cleanup disabled',
@@ -121,7 +124,7 @@ final class StorageManagementService
         }
 
         $cleanupResults = [];
-        $priority = $this->config['cleanup_priority'];
+        $priority = $this->config['cleanup_priority'] ?? ['temp', 'cache', 'logs', 'backups'];
 
         foreach ($priority as $type) {
             switch ($type) {
@@ -161,7 +164,7 @@ final class StorageManagementService
      */
     public function compressOldFiles(): array
     {
-        if (! $this->config['compression_enabled']) {
+        if (! ($this->config['compression_enabled'] ?? false)) {
             return ['compression_disabled' => true];
         }
 
@@ -203,7 +206,7 @@ final class StorageManagementService
      */
     public function archiveOldFiles(): array
     {
-        if (! $this->config['archival_enabled']) {
+        if (! ($this->config['archival_enabled'] ?? false)) {
             return ['archival_disabled' => true];
         }
 

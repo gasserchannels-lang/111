@@ -25,7 +25,7 @@ class ProductService
     public function getPaginatedProducts(int $perPage = 15): LengthAwarePaginator
     {
         return $this->cache->remember(
-            'products.page.'.request()->get('page', 1),
+            'products.page.'.(request()->get('page', 1) ?? 1),
             3600,
             fn () => $this->repository->getPaginatedActive($perPage),
             ['products']

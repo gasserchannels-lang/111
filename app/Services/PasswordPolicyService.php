@@ -17,7 +17,7 @@ class PasswordPolicyService
 
     public function __construct()
     {
-        $this->config = config('password_policy', [
+        $config = config('password_policy', [
             'min_length' => 8,
             'max_length' => 128,
             'require_uppercase' => true,
@@ -25,14 +25,21 @@ class PasswordPolicyService
             'require_numbers' => true,
             'require_symbols' => true,
             'forbidden_passwords' => [
-                'password', '123456', 'qwerty', 'abc123',
-                'password123', 'admin', 'root', 'user',
+                'password',
+                '123456',
+                'qwerty',
+                'abc123',
+                'password123',
+                'admin',
+                'root',
+                'user',
             ],
             'history_count' => 5, // Remember last 5 passwords
             'expiry_days' => 90, // Password expires after 90 days
             'lockout_attempts' => 5, // Lock account after 5 failed attempts
             'lockout_duration' => 30, // Lock for 30 minutes
         ]);
+        $this->config = is_array($config) ? $config : [];
     }
 
     /**
@@ -45,38 +52,44 @@ class PasswordPolicyService
         $errors = [];
 
         // Check minimum length
-        if (strlen($password) < $this->config['min_length']) {
-            $errors[] = "Password must be at least {$this->config['min_length']} characters long";
+        $minLength = $this->config['min_length'] ?? 8;
+        if (strlen($password) < $minLength) {
+            $errors[] = 'Password must be at least '.$minLength.' characters long';
         }
 
         // Check maximum length
-        if (strlen($password) > $this->config['max_length']) {
-            $errors[] = "Password must not exceed {$this->config['max_length']} characters";
+        $maxLength = $this->config['max_length'] ?? 128;
+        if (strlen($password) > $maxLength) {
+            $errors[] = 'Password must not exceed '.$maxLength.' characters';
         }
 
         // Check for uppercase letters
-        if ($this->config['require_uppercase'] && ! preg_match('/[A-Z]/', $password)) {
+        if (($this->config['require_uppercase'] ?? false) && ! preg_match('/[A-Z]/', $password)) {
             $errors[] = 'Password must contain at least one uppercase letter';
         }
 
         // Check for lowercase letters
-        if ($this->config['require_lowercase'] && ! preg_match('/[a-z]/', $password)) {
+        if (($this->config['require_lowercase'] ?? false) && ! preg_match('/[a-z]/', $password)) {
             $errors[] = 'Password must contain at least one lowercase letter';
         }
 
         // Check for numbers
-        if ($this->config['require_numbers'] && ! preg_match('/[0-9]/', $password)) {
+        if (($this->config['require_numbers'] ?? false) && ! preg_match('/[0-9]/', $password)) {
             $errors[] = 'Password must contain at least one number';
         }
 
         // Check for symbols
-        if ($this->config['require_symbols'] && ! preg_match('/[^A-Za-z0-9]/', $password)) {
+        if (($this->config['require_symbols'] ?? false) && ! preg_match('/[^A-Za-z0-9]/', $password)) {
             $errors[] = 'Password must contain at least one special character';
         }
 
         // Check against forbidden passwords
-        if (in_array(strtolower($password), array_map('strtolower', $this->config['forbidden_passwords']))) {
-            $errors[] = 'Password is too common and not allowed';
+        $forbiddenPasswords = $this->config['forbidden_passwords'] ?? [];
+        if (is_array($forbiddenPasswords)) {
+            $lowercaseForbidden = array_map(fn ($pwd) => is_string($pwd) ? strtolower($pwd) : '', $forbiddenPasswords);
+            if (in_array(strtolower($password), $lowercaseForbidden)) {
+                $errors[] = 'Password is too common and not allowed';
+            }
         }
 
         // Check against user's password history
@@ -111,8 +124,14 @@ class PasswordPolicyService
 
         // Check for keyboard patterns
         $keyboardPatterns = [
-            'qwerty', 'asdf', 'zxcv', '1234', 'abcd',
-            'qwertyuiop', 'asdfghjkl', 'zxcvbnm',
+            'qwerty',
+            'asdf',
+            'zxcv',
+            '1234',
+            'abcd',
+            'qwertyuiop',
+            'asdfghjkl',
+            'zxcvbnm',
         ];
 
         foreach ($keyboardPatterns as $pattern) {
@@ -200,7 +219,7 @@ class PasswordPolicyService
     private function isPasswordInHistory(int $userId, string $password): bool
     {
         try {
-            $historyCount = $this->config['history_count'];
+            $historyCount = $this->config['history_count'] ?? 5;
 
             // This would query a password_history table
             // For now, we'll simulate the check
@@ -267,7 +286,7 @@ class PasswordPolicyService
     public function isPasswordExpired(int $userId): bool
     {
         try {
-            $expiryDays = $this->config['expiry_days'];
+            $expiryDays = $this->config['expiry_days'] ?? 90;
 
             // This would query the users table for password_updated_at
             // For now, we'll simulate the check
@@ -302,8 +321,8 @@ class PasswordPolicyService
     public function isAccountLocked(int $userId): bool
     {
         try {
-            $lockoutAttempts = $this->config['lockout_attempts'];
-            $lockoutDuration = $this->config['lockout_duration'];
+            $lockoutAttempts = $this->config['lockout_attempts'] ?? 5;
+            $lockoutDuration = $this->config['lockout_duration'] ?? 30;
 
             // This would query a failed_attempts table
             $failedAttempts = $this->getFailedAttempts($userId, $lockoutDuration);
@@ -406,14 +425,14 @@ class PasswordPolicyService
     public function getPolicyRequirements(): array
     {
         return [
-            'min_length' => $this->config['min_length'],
-            'max_length' => $this->config['max_length'],
-            'require_uppercase' => $this->config['require_uppercase'],
-            'require_lowercase' => $this->config['require_lowercase'],
-            'require_numbers' => $this->config['require_numbers'],
-            'require_symbols' => $this->config['require_symbols'],
-            'expiry_days' => $this->config['expiry_days'],
-            'history_count' => $this->config['history_count'],
+            'min_length' => $this->config['min_length'] ?? 8,
+            'max_length' => $this->config['max_length'] ?? 128,
+            'require_uppercase' => $this->config['require_uppercase'] ?? true,
+            'require_lowercase' => $this->config['require_lowercase'] ?? true,
+            'require_numbers' => $this->config['require_numbers'] ?? true,
+            'require_symbols' => $this->config['require_symbols'] ?? true,
+            'expiry_days' => $this->config['expiry_days'] ?? 90,
+            'history_count' => $this->config['history_count'] ?? 5,
         ];
     }
 

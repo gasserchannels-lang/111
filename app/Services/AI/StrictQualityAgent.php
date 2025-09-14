@@ -8,12 +8,16 @@ use Illuminate\Support\Facades\Process;
 
 class StrictQualityAgent
 {
+    /** @var array<string, mixed> */
     private array $stages = [];
 
+    /** @var array<string, mixed> */
     private array $results = [];
 
+    /** @var array<string, mixed> */
     private array $errors = [];
 
+    /** @var array<string, mixed> */
     private array $fixes = [];
 
     public function __construct()
@@ -111,6 +115,8 @@ class StrictQualityAgent
 
     /**
      * Execute all quality control stages.
+     *
+     * @return array<string, mixed>
      */
     public function executeAllStages(): array
     {
@@ -119,21 +125,23 @@ class StrictQualityAgent
         $overallSuccess = true;
 
         foreach ($this->stages as $stageId => $stage) {
-            $this->log("📋 تنفيذ المرحلة: {$stage['name']}");
+            if (is_array($stage)) {
+                $this->log('📋 تنفيذ المرحلة: '.($stage['name'] ?? ''));
 
-            $result = $this->executeStage($stageId, $stage);
-            $this->results[$stageId] = $result;
+                $result = $this->executeStage($stageId, $stage);
+                $this->results[$stageId] = $result;
 
-            if (! $result['success']) {
-                $overallSuccess = false;
-                $this->log("❌ فشل في المرحلة: {$stage['name']}");
+                if (! ($result['success'] ?? false)) {
+                    $overallSuccess = false;
+                    $this->log('❌ فشل في المرحلة: '.($stage['name'] ?? ''));
 
-                if ($stage['strict']) {
-                    $this->log('🛑 توقف العملية بسبب فشل مرحلة صارمة');
-                    break;
+                    if ($stage['strict'] ?? false) {
+                        $this->log('🛑 توقف العملية بسبب فشل مرحلة صارمة');
+                        break;
+                    }
+                } else {
+                    $this->log('✅ نجح في المرحلة: '.($stage['name'] ?? ''));
                 }
-            } else {
-                $this->log("✅ نجح في المرحلة: {$stage['name']}");
             }
         }
 
@@ -149,6 +157,9 @@ class StrictQualityAgent
 
     /**
      * Execute a single stage.
+     *
+     * @param  array<string, mixed>  $stage
+     * @return array<string, mixed>
      */
     private function executeStage(string $stageId, array $stage): array
     {
@@ -186,19 +197,26 @@ class StrictQualityAgent
 
     /**
      * Execute file-based stage (like syntax check).
+     *
+     * @param  array<string, mixed>  $stage
+     * @return array<string, mixed>
      */
     private function executeFileBasedStage(array $stage): array
     {
         $errors = [];
         $success = true;
 
-        foreach ($stage['files'] as $file) {
-            $command = "{$stage['command']} {$file}";
-            $result = Process::run($command);
+        if (is_array($stage['files'] ?? [])) {
+            foreach ($stage['files'] as $file) {
+                if (is_string($file)) {
+                    $command = ($stage['command'] ?? '').' '.$file;
+                    $result = Process::run($command);
 
-            if (! $result->successful()) {
-                $errors[] = "خطأ في الملف {$file}: ".$result->errorOutput();
-                $success = false;
+                    if (! $result->successful()) {
+                        $errors[] = 'خطأ في الملف '.$file.': '.$result->errorOutput();
+                        $success = false;
+                    }
+                }
             }
         }
 
@@ -211,10 +229,14 @@ class StrictQualityAgent
 
     /**
      * Execute command-based stage.
+     *
+     * @param  array<string, mixed>  $stage
+     * @return array<string, mixed>
      */
     private function executeCommandStage(array $stage): array
     {
-        $result = Process::run($stage['command']);
+        $command = is_string($stage['command'] ?? '') ? $stage['command'] : '';
+        $result = Process::run($command);
 
         return [
             'success' => $result->successful(),
@@ -225,6 +247,8 @@ class StrictQualityAgent
 
     /**
      * Get all PHP files in the project.
+     *
+     * @return array<string, mixed>
      */
     private function getPhpFiles(): array
     {
@@ -247,6 +271,8 @@ class StrictQualityAgent
 
     /**
      * Auto-fix issues when possible.
+     *
+     * @return array<string, mixed>
      */
     public function autoFixIssues(): array
     {
@@ -297,15 +323,18 @@ class StrictQualityAgent
             'timestamp' => now()->toISOString(),
             'overall_success' => $overallSuccess,
             'total_stages' => count($this->stages),
-            'successful_stages' => count(array_filter($this->results, fn ($r) => $r['success'])),
-            'failed_stages' => count(array_filter($this->results, fn ($r) => ! $r['success'])),
+            'successful_stages' => count(array_filter($this->results, fn ($r) => $r['success'] ?? false)),
+            'failed_stages' => count(array_filter($this->results, fn ($r) => ! ($r['success'] ?? false))),
             'stages_details' => $this->results,
             'errors' => $this->errors,
             'fixes' => $this->fixes,
         ];
 
         $reportPath = storage_path('logs/ai-quality-report.json');
-        File::put($reportPath, json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        $jsonContent = json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if ($jsonContent !== false) {
+            File::put($reportPath, $jsonContent);
+        }
 
         $this->log("📊 تم إنشاء التقرير الشامل: {$reportPath}");
     }
@@ -321,6 +350,8 @@ class StrictQualityAgent
 
     /**
      * Get stage status.
+     *
+     * @return array<string, mixed>|null
      */
     public function getStageStatus(string $stageId): ?array
     {
@@ -329,6 +360,8 @@ class StrictQualityAgent
 
     /**
      * Get all results.
+     *
+     * @return array<string, mixed>
      */
     public function getAllResults(): array
     {
@@ -337,13 +370,15 @@ class StrictQualityAgent
 
     /**
      * Get errors summary.
+     *
+     * @return array<string, mixed>
      */
     public function getErrorsSummary(): array
     {
         return [
             'total_errors' => count($this->errors),
             'errors_by_stage' => $this->errors,
-            'critical_errors' => array_filter($this->errors, fn ($error) => str_contains($error, 'Fatal')),
+            'critical_errors' => array_filter($this->errors, fn ($error) => is_string($error) && str_contains($error, 'Fatal')),
         ];
     }
 }

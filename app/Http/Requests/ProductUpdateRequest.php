@@ -189,19 +189,19 @@ class ProductUpdateRequest extends FormRequest
         $data = [];
 
         if ($this->has('name')) {
-            $data['name'] = trim($this->name);
+            $data['name'] = is_string($this->name) ? trim($this->name) : '';
         }
 
         if ($this->has('description')) {
-            $data['description'] = trim($this->description);
+            $data['description'] = is_string($this->description) ? trim($this->description) : '';
         }
 
         if ($this->has('sku')) {
-            $data['sku'] = strtoupper(trim($this->sku));
+            $data['sku'] = is_string($this->sku) ? strtoupper(trim($this->sku)) : '';
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = array_map('trim', $this->tags);
+            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -234,7 +234,7 @@ class ProductUpdateRequest extends FormRequest
                 $oldPrice = $product instanceof \App\Models\Product ? $product->price : null;
                 $newPrice = $this->input('price');
 
-                if ($oldPrice && $newPrice) {
+                if ($oldPrice && $newPrice && is_numeric($oldPrice) && is_numeric($newPrice)) {
                     $changePercentage = abs(($newPrice - $oldPrice) / $oldPrice) * 100;
 
                     if ($changePercentage > 50) { // More than 50% change
@@ -254,7 +254,7 @@ class ProductUpdateRequest extends FormRequest
 
         // Add computed fields
         if (isset($validated['name'])) {
-            $validated['slug'] = \Str::slug($validated['name']);
+            $validated['slug'] = \Str::slug($validated['name'] ?? '');
         }
 
         $validated['updated_by'] = $this->user()?->id;

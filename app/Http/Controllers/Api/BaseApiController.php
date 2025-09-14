@@ -220,19 +220,19 @@ abstract class BaseApiController extends Controller
         array $meta = []
     ): JsonResponse {
         $pagination = [
-            'current_page' => $data->currentPage(),
-            'per_page' => $data->perPage(),
-            'total' => $data->total(),
-            'last_page' => $data->lastPage(),
-            'from' => $data->firstItem(),
-            'to' => $data->lastItem(),
-            'has_more_pages' => $data->hasMorePages(),
+            'current_page' => (is_object($data) && method_exists($data, 'currentPage')) ? $data->currentPage() : 1,
+            'per_page' => (is_object($data) && method_exists($data, 'perPage')) ? $data->perPage() : 15,
+            'total' => (is_object($data) && method_exists($data, 'total')) ? $data->total() : 0,
+            'last_page' => (is_object($data) && method_exists($data, 'lastPage')) ? $data->lastPage() : 1,
+            'from' => (is_object($data) && method_exists($data, 'firstItem')) ? $data->firstItem() : null,
+            'to' => (is_object($data) && method_exists($data, 'lastItem')) ? $data->lastItem() : null,
+            'has_more_pages' => (is_object($data) && method_exists($data, 'hasMorePages')) ? $data->hasMorePages() : false,
         ];
 
         $response = [
             'success' => true,
             'message' => $message,
-            'data' => $data->items(),
+            'data' => (is_object($data) && method_exists($data, 'items')) ? $data->items() : [],
             'pagination' => $pagination,
         ];
 
@@ -271,10 +271,10 @@ abstract class BaseApiController extends Controller
      */
     protected function getPaginationParams(Request $request): array
     {
-        $page = max(1, (int) $request->get('page', 1));
+        $page = max(1, is_numeric($request->get('page', 1)) ? (int) $request->get('page', 1) : 1);
         $perPage = min(
             $this->maxPerPage,
-            max(1, (int) $request->get('per_page', $this->perPage))
+            max(1, is_numeric($request->get('per_page', $this->perPage)) ? (int) $request->get('per_page', $this->perPage) : $this->perPage)
         );
 
         return [
@@ -389,10 +389,11 @@ abstract class BaseApiController extends Controller
      */
     protected function logApiResponse(JsonResponse $response, string $action): void
     {
+        $responseData = $response->getData();
         Log::info('API Response', [
             'action' => $action,
             'status_code' => $response->getStatusCode(),
-            'success' => $response->getData()->success ?? false,
+            'success' => is_object($responseData) && property_exists($responseData, 'success') ? $responseData->success : false,
         ]);
     }
 
@@ -437,9 +438,9 @@ abstract class BaseApiController extends Controller
     {
         $rateLimitInfo = $this->getRateLimitInfo();
 
-        $response->headers->set('X-RateLimit-Limit', $rateLimitInfo['limit']);
-        $response->headers->set('X-RateLimit-Remaining', $rateLimitInfo['remaining']);
-        $response->headers->set('X-RateLimit-Reset', $rateLimitInfo['reset']);
+        $response->headers->set('X-RateLimit-Limit', (string) (is_numeric($rateLimitInfo['limit'] ?? null) ? $rateLimitInfo['limit'] : 0));
+        $response->headers->set('X-RateLimit-Remaining', (string) (is_numeric($rateLimitInfo['remaining'] ?? null) ? $rateLimitInfo['remaining'] : 0));
+        $response->headers->set('X-RateLimit-Reset', (string) (is_numeric($rateLimitInfo['reset'] ?? null) ? $rateLimitInfo['reset'] : 0));
 
         return $response;
     }

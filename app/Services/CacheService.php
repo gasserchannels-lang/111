@@ -26,22 +26,27 @@ class CacheService
         try {
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
-            if (! empty($tags) && method_exists($cache->getStore(), 'tags')) {
+
+            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
                 $cache = $cache->tags($tags);
             }
 
-            return $cache->remember($cacheKey, $ttl, function () use ($callback, $key) {
-                $startTime = microtime(true);
-                $result = $callback();
-                $executionTime = microtime(true) - $startTime;
+            if (is_object($cache) && method_exists($cache, 'remember')) {
+                return $cache->remember($cacheKey, $ttl, function () use ($callback, $key) {
+                    $startTime = microtime(true);
+                    $result = $callback();
+                    $executionTime = microtime(true) - $startTime;
 
-                Log::debug('Cache miss - data generated', [
-                    'key' => $key,
-                    'execution_time' => $executionTime,
-                ]);
+                    Log::debug('Cache miss - data generated', [
+                        'key' => $key,
+                        'execution_time' => $executionTime,
+                    ]);
 
-                return $result;
-            });
+                    return $result;
+                });
+            }
+
+            return null;
         } catch (Exception $e) {
             Log::error('Cache error', [
                 'key' => $key,
@@ -63,11 +68,16 @@ class CacheService
         try {
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
-            if (! empty($tags) && method_exists($cache->getStore(), 'tags')) {
+
+            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
                 $cache = $cache->tags($tags);
             }
 
-            return $cache->forever($cacheKey, $value);
+            if (is_object($cache) && method_exists($cache, 'forever')) {
+                return $cache->forever($cacheKey, $value);
+            }
+
+            return false;
         } catch (Exception $e) {
             Log::error('Cache forever error', [
                 'key' => $key,
@@ -107,11 +117,16 @@ class CacheService
         try {
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
-            if (! empty($tags) && method_exists($cache->getStore(), 'tags')) {
+
+            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
                 $cache = $cache->tags($tags);
             }
 
-            return $cache->put($cacheKey, $value, $ttl);
+            if (is_object($cache) && method_exists($cache, 'put')) {
+                return $cache->put($cacheKey, $value, $ttl);
+            }
+
+            return false;
         } catch (Exception $e) {
             Log::error('Cache put error', [
                 'key' => $key,
@@ -150,8 +165,11 @@ class CacheService
     {
         try {
             $cache = Cache::getFacadeRoot();
-            if (method_exists($cache->getStore(), 'tags')) {
-                return $cache->tags($tags)->flush();
+            if (is_object($cache) && method_exists($cache, 'getStore') && method_exists($cache->getStore(), 'tags')) {
+                $taggedCache = $cache->tags($tags);
+                if (is_object($taggedCache) && method_exists($taggedCache, 'flush')) {
+                    return $taggedCache->flush();
+                }
             }
 
             return true;
@@ -212,7 +230,7 @@ class CacheService
      */
     public function rememberApiResponse(string $endpoint, array $params, callable $callback, int $ttl = 300): mixed
     {
-        $key = 'api:'.$endpoint.':'.md5(serialize($params));
+        $key = 'api:' . $endpoint . ':' . md5(serialize($params));
         $tags = ['api', $endpoint];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -226,7 +244,7 @@ class CacheService
      */
     public function rememberSearch(string $query, array $filters, callable $callback, int $ttl = 600): mixed
     {
-        $key = 'search:'.md5($query.serialize($filters));
+        $key = 'search:' . md5($query . serialize($filters));
         $tags = ['search', 'products'];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -351,7 +369,7 @@ class CacheService
     {
         $prefix = config('cache.prefix', 'coprra_cache');
 
-        return "{$prefix}:{$key}";
+        return (string) ($prefix ?? 'coprra_cache') . ":{$key}";
     }
 
     /**
@@ -369,12 +387,12 @@ class CacheService
         $tags[] = strtolower(class_basename($modelClass));
 
         // Add specific model tag
-        $tags[] = strtolower(class_basename($modelClass)).':'.$model->getKey();
+        $tags[] = strtolower(class_basename($modelClass)) . ':' . (string) $model->getKey();
 
         // Add related model tags
         foreach ($model->getRelations() as $relation => $related) {
             if ($related instanceof Model) {
-                $tags[] = strtolower(class_basename(get_class($related))).':'.$related->getKey();
+                $tags[] = strtolower(class_basename(get_class($related))) . ':' . (string) $related->getKey();
             }
         }
 
@@ -460,7 +478,7 @@ class CacheService
                 return $default;
             }
 
-            $decompressed = gzuncompress($compressed);
+            $decompressed = gzuncompress((string) $compressed);
             if ($decompressed === false) {
                 return $default;
             }

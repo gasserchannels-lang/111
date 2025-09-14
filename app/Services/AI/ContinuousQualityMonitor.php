@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Process;
 
 class ContinuousQualityMonitor
 {
+    /** @var array<string, mixed> */
     private array $monitoringRules = [];
 
+    /** @var array<string, mixed> */
     private array $alerts = [];
 
     private int $checkInterval = 300; // 5 minutes
@@ -73,6 +75,8 @@ class ContinuousQualityMonitor
 
     /**
      * Perform quality check.
+     *
+     * @return array<string, mixed>
      */
     public function performQualityCheck(): array
     {
@@ -80,16 +84,18 @@ class ContinuousQualityMonitor
         $overallHealth = 100;
 
         foreach ($this->monitoringRules as $ruleId => $rule) {
-            $result = $this->checkRule($ruleId, $rule);
-            $results[$ruleId] = $result;
+            if (is_array($rule)) {
+                $result = $this->checkRule($ruleId, $rule);
+                $results[$ruleId] = $result;
 
-            if ($result['health_score'] < $rule['threshold']) {
-                $overallHealth = min($overallHealth, $result['health_score']);
+                if ($result['health_score'] < ($rule['threshold'] ?? 0)) {
+                    $overallHealth = min($overallHealth, $result['health_score']);
 
-                if ($rule['critical']) {
-                    $this->triggerCriticalAlert($ruleId, $result);
-                } else {
-                    $this->triggerWarningAlert($ruleId, $result);
+                    if ($rule['critical'] ?? false) {
+                        $this->triggerCriticalAlert($ruleId, $result);
+                    } else {
+                        $this->triggerWarningAlert($ruleId, $result);
+                    }
                 }
             }
         }
@@ -105,13 +111,17 @@ class ContinuousQualityMonitor
 
     /**
      * Check a specific rule.
+     *
+     * @param  array<string, mixed>  $rule
+     * @return array<string, mixed>
      */
     private function checkRule(string $ruleId, array $rule): array
     {
         $startTime = microtime(true);
 
         try {
-            $result = Process::run($rule['command']);
+            $command = $rule['command'] ?? '';
+            $result = Process::run($command);
             $endTime = microtime(true);
             $duration = round($endTime - $startTime, 2);
 
@@ -144,8 +154,10 @@ class ContinuousQualityMonitor
 
     /**
      * Calculate health score based on rule type.
+     *
+     * @param  array<string, mixed>  $rule
      */
-    private function calculateHealthScore(string $ruleId, $result, array $rule): int
+    private function calculateHealthScore(string $ruleId, mixed $result, array $rule): int
     {
         if (! $result->successful()) {
             return 0;
@@ -253,13 +265,15 @@ class ContinuousQualityMonitor
 
     /**
      * Trigger critical alert.
+     *
+     * @param  array<string, mixed>  $result
      */
     private function triggerCriticalAlert(string $ruleId, array $result): void
     {
         $alert = [
             'type' => 'critical',
             'rule' => $ruleId,
-            'message' => "تنبيه حرج: فشل في {$result['name']}",
+            'message' => 'تنبيه حرج: فشل في '.($result['name'] ?? ''),
             'details' => $result['errors'],
             'timestamp' => now()->toISOString(),
         ];
@@ -273,13 +287,15 @@ class ContinuousQualityMonitor
 
     /**
      * Trigger warning alert.
+     *
+     * @param  array<string, mixed>  $result
      */
     private function triggerWarningAlert(string $ruleId, array $result): void
     {
         $alert = [
             'type' => 'warning',
             'rule' => $ruleId,
-            'message' => "تحذير: مشكلة في {$result['name']}",
+            'message' => 'تحذير: مشكلة في '.($result['name'] ?? ''),
             'details' => $result['errors'],
             'timestamp' => now()->toISOString(),
         ];
@@ -290,6 +306,8 @@ class ContinuousQualityMonitor
 
     /**
      * Update health status.
+     *
+     * @param  array<string, mixed>  $results
      */
     private function updateHealthStatus(int $overallHealth, array $results): void
     {
@@ -302,15 +320,19 @@ class ContinuousQualityMonitor
 
     /**
      * Send notification.
+     *
+     * @param  array<string, mixed>  $alert
      */
     private function sendNotification(array $alert): void
     {
         // Implement notification logic (email, Slack, etc.)
-        Log::info("📧 إرسال إشعار: {$alert['message']}");
+        Log::info('📧 إرسال إشعار: '.($alert['message'] ?? ''));
     }
 
     /**
      * Get current health status.
+     *
+     * @return array<string, mixed>
      */
     public function getHealthStatus(): array
     {
@@ -324,11 +346,13 @@ class ContinuousQualityMonitor
 
     /**
      * Get alerts summary.
+     *
+     * @return array<string, mixed>
      */
     public function getAlertsSummary(): array
     {
-        $criticalAlerts = array_filter($this->alerts, fn ($alert) => $alert['type'] === 'critical');
-        $warningAlerts = array_filter($this->alerts, fn ($alert) => $alert['type'] === 'warning');
+        $criticalAlerts = array_filter($this->alerts, fn ($alert) => ($alert['type'] ?? '') === 'critical');
+        $warningAlerts = array_filter($this->alerts, fn ($alert) => ($alert['type'] ?? '') === 'warning');
 
         return [
             'total' => count($this->alerts),

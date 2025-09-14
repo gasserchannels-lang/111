@@ -289,11 +289,15 @@ class CentralizedLoggingService
         ];
 
         $recentLogs = Cache::get($key, []);
-        $recentLogs[] = $logEntry;
+        if (is_array($recentLogs)) {
+            $recentLogs[] = $logEntry;
 
-        // Keep only last 100 entries
-        if (count($recentLogs) > 100) {
-            $recentLogs = array_slice($recentLogs, -100);
+            // Keep only last 100 entries
+            if (count($recentLogs) > 100) {
+                $recentLogs = array_slice($recentLogs, -100);
+            }
+        } else {
+            $recentLogs = [$logEntry];
         }
 
         Cache::put($key, $recentLogs, now()->addHours(1));
@@ -397,7 +401,9 @@ class CentralizedLoggingService
         foreach (array_keys(self::LOG_CHANNELS) as $channelName) {
             $key = "logs:{$channelName}:recent";
             $channelLogs = Cache::get($key, []);
-            $allLogs = array_merge($allLogs, $channelLogs);
+            if (is_array($channelLogs)) {
+                $allLogs = array_merge($allLogs, $channelLogs);
+            }
         }
 
         // Sort by timestamp

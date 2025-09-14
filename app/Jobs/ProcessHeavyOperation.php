@@ -160,13 +160,15 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function processImages(): array
     {
-        $imageIds = $this->data['image_ids'] ?? [];
+        $imageIds = is_array($this->data['image_ids'] ?? []) ? $this->data['image_ids'] : [];
         $processed = 0;
 
-        foreach ($imageIds as $imageId) {
-            // Simulate image processing
-            usleep(100000); // 100ms per image
-            $processed++;
+        if (is_array($imageIds)) {
+            foreach ($imageIds as $imageId) {
+                // Simulate image processing
+                usleep(100000); // 100ms per image
+                $processed++;
+            }
         }
 
         return [
@@ -205,14 +207,16 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function sendBulkNotifications(): array
     {
-        $userIds = $this->data['user_ids'] ?? [];
-        $message = $this->data['message'] ?? '';
+        $userIds = is_array($this->data['user_ids'] ?? []) ? $this->data['user_ids'] : [];
+        $message = is_string($this->data['message'] ?? '') ? $this->data['message'] : '';
         $sent = 0;
 
-        foreach ($userIds as $userId) {
-            // Simulate notification sending
-            usleep(50000); // 50ms per notification
-            $sent++;
+        if (is_array($userIds)) {
+            foreach ($userIds as $userId) {
+                // Simulate notification sending
+                usleep(50000); // 50ms per notification
+                $sent++;
+            }
         }
 
         return [
@@ -231,13 +235,15 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function updateStatistics(): array
     {
-        $statTypes = $this->data['stat_types'] ?? ['users', 'products', 'orders'];
+        $statTypes = is_array($this->data['stat_types'] ?? []) ? $this->data['stat_types'] : ['users', 'products', 'orders'];
         $updated = 0;
 
-        foreach ($statTypes as $statType) {
-            // Simulate statistics update
-            usleep(200000); // 200ms per stat type
-            $updated++;
+        if (is_array($statTypes)) {
+            foreach ($statTypes as $statType) {
+                // Simulate statistics update
+                usleep(200000); // 200ms per stat type
+                $updated++;
+            }
         }
 
         return [
@@ -276,8 +282,8 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function exportData(): array
     {
-        $format = $this->data['format'] ?? 'csv';
-        $table = $this->data['table'] ?? 'products';
+        $format = is_string($this->data['format'] ?? '') ? $this->data['format'] : 'csv';
+        $table = is_string($this->data['table'] ?? '') ? $this->data['table'] : 'products';
 
         // Simulate data export
         sleep(3);
@@ -285,7 +291,7 @@ class ProcessHeavyOperation implements ShouldQueue
         return [
             'format' => $format,
             'table' => $table,
-            'file_path' => "exports/{$table}_{$format}_".time().".{$format}",
+            'file_path' => 'exports/'.$table.'_'.$format.'_'.time().'.'.$format,
             'status' => 'completed',
         ];
     }

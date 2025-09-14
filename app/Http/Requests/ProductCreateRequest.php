@@ -188,10 +188,10 @@ class ProductCreateRequest extends FormRequest
     {
         // Clean and format data before validation
         $this->merge([
-            'name' => trim($this->name),
-            'description' => trim($this->description),
-            'sku' => strtoupper(trim($this->sku)),
-            'tags' => $this->tags ? array_map('trim', $this->tags) : null,
+            'name' => is_string($this->name) ? trim($this->name) : '',
+            'description' => is_string($this->description) ? trim($this->description) : '',
+            'sku' => is_string($this->sku) ? strtoupper(trim($this->sku)) : '',
+            'tags' => is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : null,
         ]);
     }
 
@@ -237,7 +237,7 @@ class ProductCreateRequest extends FormRequest
         $validated = parent::validated($key, $default);
 
         // Add computed fields
-        $validated['slug'] = \Str::slug($validated['name']);
+        $validated['slug'] = \Str::slug($validated['name'] ?? '');
         $validated['created_by'] = $this->user()?->id;
 
         return $validated;

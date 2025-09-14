@@ -15,7 +15,7 @@ class TestAIQualitySystemCommand extends Command
 
     protected $description = 'Test the AI-powered quality control system';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🧪 بدء اختبار نظام ضمان الجودة بالذكاء الاصطناعي');
         $this->info('===============================================');
@@ -37,6 +37,8 @@ class TestAIQualitySystemCommand extends Command
         }
 
         $this->info('✅ تم إكمال اختبار النظام');
+
+        return 0;
     }
 
     private function testQualityAgent(): void

@@ -36,7 +36,9 @@ class LocaleController extends Controller
 
         // Set the locale in session
         $this->session->put('locale', $locale);
-        $this->app->setLocale($locale);
+        if (is_string($locale)) {
+            $this->app->setLocale($locale);
+        }
 
         return redirect()->back();
     }

@@ -100,25 +100,25 @@ abstract class BaseApiController extends V1BaseController
         array $meta = []
     ): JsonResponse {
         $pagination = [
-            'current_page' => $data->currentPage(),
-            'per_page' => $data->perPage(),
-            'total' => $data->total(),
-            'last_page' => $data->lastPage(),
-            'from' => $data->firstItem(),
-            'to' => $data->lastItem(),
-            'has_more_pages' => $data->hasMorePages(),
+            'current_page' => (is_object($data) && method_exists($data, 'currentPage')) ? $data->currentPage() : 1,
+            'per_page' => (is_object($data) && method_exists($data, 'perPage')) ? $data->perPage() : 15,
+            'total' => (is_object($data) && method_exists($data, 'total')) ? $data->total() : 0,
+            'last_page' => (is_object($data) && method_exists($data, 'lastPage')) ? $data->lastPage() : 1,
+            'from' => (is_object($data) && method_exists($data, 'firstItem')) ? $data->firstItem() : null,
+            'to' => (is_object($data) && method_exists($data, 'lastItem')) ? $data->lastItem() : null,
+            'has_more_pages' => (is_object($data) && method_exists($data, 'hasMorePages')) ? $data->hasMorePages() : false,
             'links' => [
-                'first' => $data->url(1),
-                'last' => $data->url($data->lastPage()),
-                'prev' => $data->previousPageUrl(),
-                'next' => $data->nextPageUrl(),
+                'first' => (is_object($data) && method_exists($data, 'url')) ? $data->url(1) : null,
+                'last' => (is_object($data) && method_exists($data, 'url') && method_exists($data, 'lastPage')) ? $data->url($data->lastPage()) : null,
+                'prev' => (is_object($data) && method_exists($data, 'previousPageUrl')) ? $data->previousPageUrl() : null,
+                'next' => (is_object($data) && method_exists($data, 'nextPageUrl')) ? $data->nextPageUrl() : null,
             ],
         ];
 
         $response = [
             'success' => true,
             'message' => $message,
-            'data' => $data->items(),
+            'data' => (is_object($data) && method_exists($data, 'items')) ? $data->items() : [],
             'pagination' => $pagination,
             'version' => '2.0',
             'timestamp' => now()->toISOString(),
@@ -198,7 +198,7 @@ abstract class BaseApiController extends V1BaseController
             return [];
         }
 
-        return explode(',', $include);
+        return is_string($include) ? explode(',', $include) : [];
     }
 
     /**
@@ -215,7 +215,7 @@ abstract class BaseApiController extends V1BaseController
             return [];
         }
 
-        return explode(',', $fields);
+        return is_string($fields) ? explode(',', $fields) : [];
     }
 
     /**

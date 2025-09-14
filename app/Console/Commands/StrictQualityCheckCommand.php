@@ -22,7 +22,7 @@ class StrictQualityCheckCommand extends Command
         $this->agent = $agent;
     }
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🤖 بدء تشغيل نظام ضمان الجودة الصارم بالذكاء الاصطناعي');
         $this->info('==================================================');
@@ -33,8 +33,12 @@ class StrictQualityCheckCommand extends Command
 
         if ($stage) {
             $this->runSingleStage($stage);
+
+            return 0;
         } else {
             $this->runAllStages($autoFix, $generateReport);
+
+            return 0;
         }
     }
 
@@ -47,7 +51,7 @@ class StrictQualityCheckCommand extends Command
             $fixes = $this->agent->autoFixIssues();
 
             foreach ($fixes as $type => $message) {
-                $this->info("✅ {$message}");
+                $this->info('✅ '.(is_string($message) ? $message : ''));
             }
         }
 
@@ -76,6 +80,9 @@ class StrictQualityCheckCommand extends Command
         $this->warn('تشغيل مرحلة واحدة غير متاح حالياً');
     }
 
+    /**
+     * @param  array<string, mixed>  $results
+     */
     private function displayResults(array $results): void
     {
         $this->newLine();
@@ -83,44 +90,58 @@ class StrictQualityCheckCommand extends Command
         $this->info('==================');
 
         $table = [];
-        foreach ($results['stages'] as $stageId => $result) {
-            $status = $result['success'] ? '✅ نجح' : '❌ فشل';
-            $duration = $result['duration'].'s';
+        if (isset($results['stages']) && is_array($results['stages'])) {
+            foreach ($results['stages'] as $stageId => $result) {
+                if (is_array($result)) {
+                    $success = $result['success'] ?? false;
+                    $duration = $result['duration'] ?? 0;
+                    $errors = $result['errors'] ?? [];
 
-            $table[] = [
-                $stageId,
-                $status,
-                $duration,
-                count($result['errors']),
-            ];
+                    $status = $success ? '✅ نجح' : '❌ فشل';
+                    $durationStr = (is_numeric($duration) ? (float) $duration : 0.0).'s';
+
+                    $table[] = [
+                        (string) $stageId,
+                        $status,
+                        $durationStr,
+                        is_array($errors) ? count($errors) : 0,
+                    ];
+                }
+            }
         }
 
         $this->table(['المرحلة', 'الحالة', 'المدة', 'الأخطاء'], $table);
 
         $this->newLine();
         $this->info('📈 الإحصائيات:');
-        $this->info('- إجمالي المراحل: '.count($results['stages']));
-        $this->info('- المراحل الناجحة: '.count(array_filter($results['stages'], fn ($r) => $r['success'])));
-        $this->info('- المراحل الفاشلة: '.count(array_filter($results['stages'], fn ($r) => ! $r['success'])));
-        $this->info('- إجمالي الأخطاء: '.count($results['errors']));
+        $stages = $results['stages'] ?? [];
+        $errors = $results['errors'] ?? [];
+        $this->info('- إجمالي المراحل: '.(is_array($stages) ? count($stages) : 0));
+        $this->info('- المراحل الناجحة: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ($r['success'] ?? false))) : 0));
+        $this->info('- المراحل الفاشلة: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ! ($r['success'] ?? false))) : 0));
+        $this->info('- إجمالي الأخطاء: '.(is_array($errors) ? count($errors) : 0));
 
-        if (! empty($results['errors'])) {
+        if (! empty($errors) && is_array($errors)) {
             $this->newLine();
             $this->error('🚨 الأخطاء المكتشفة:');
-            foreach ($results['errors'] as $stageId => $error) {
-                $this->error("- {$stageId}: {$error}");
+            foreach ($errors as $stageId => $error) {
+                $this->error("- {$stageId}: ".(is_string($error) ? $error : ''));
             }
         }
 
-        if (! empty($results['fixes'])) {
+        $fixes = $results['fixes'] ?? [];
+        if (! empty($fixes) && is_array($fixes)) {
             $this->newLine();
             $this->info('🔧 الإصلاحات المطبقة:');
-            foreach ($results['fixes'] as $type => $message) {
-                $this->info("- {$type}: {$message}");
+            foreach ($fixes as $type => $message) {
+                $this->info("- {$type}: ".(is_string($message) ? $message : ''));
             }
         }
     }
 
+    /**
+     * @param  array<string, mixed>  $results
+     */
     private function generateDetailedReport(array $results): void
     {
         $this->info('📋 إنشاء تقرير مفصل...');
@@ -133,50 +154,67 @@ class StrictQualityCheckCommand extends Command
         $this->info("📁 التقرير المفصل: {$reportPath}");
     }
 
+    /**
+     * @param  array<string, mixed>  $results
+     */
     private function generateMarkdownReport(array $results): string
     {
         $timestamp = now()->format('Y-m-d H:i:s');
-        $overallStatus = $results['overall_success'] ? '✅ نجح' : '❌ فشل';
+        $overallSuccess = $results['overall_success'] ?? false;
+        $overallStatus = $overallSuccess ? '✅ نجح' : '❌ فشل';
+        $stages = $results['stages'] ?? [];
+        $errors = $results['errors'] ?? [];
 
         $content = "# 🤖 تقرير ضمان الجودة الصارم - {$timestamp}\n\n";
         $content .= "## 📊 ملخص النتائج\n\n";
         $content .= "- **الحالة العامة**: {$overallStatus}\n";
-        $content .= '- **إجمالي المراحل**: '.count($results['stages'])."\n";
-        $content .= '- **المراحل الناجحة**: '.count(array_filter($results['stages'], fn ($r) => $r['success']))."\n";
-        $content .= '- **المراحل الفاشلة**: '.count(array_filter($results['stages'], fn ($r) => ! $r['success']))."\n";
-        $content .= '- **إجمالي الأخطاء**: '.count($results['errors'])."\n\n";
+        $content .= '- **إجمالي المراحل**: '.(is_array($stages) ? count($stages) : 0)."\n";
+        $content .= '- **المراحل الناجحة**: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ($r['success'] ?? false))) : 0)."\n";
+        $content .= '- **المراحل الفاشلة**: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ! ($r['success'] ?? false))) : 0)."\n";
+        $content .= '- **إجمالي الأخطاء**: '.(is_array($errors) ? count($errors) : 0)."\n\n";
 
         $content .= "## 📋 تفاصيل المراحل\n\n";
-        foreach ($results['stages'] as $stageId => $result) {
-            $status = $result['success'] ? '✅' : '❌';
-            $content .= "### {$status} {$stageId}\n";
-            $content .= "- **المدة**: {$result['duration']}s\n";
-            $content .= '- **الأخطاء**: '.count($result['errors'])."\n";
+        if (is_array($stages)) {
+            foreach ($stages as $stageId => $result) {
+                if (is_array($result)) {
+                    $success = $result['success'] ?? false;
+                    $duration = $result['duration'] ?? 0;
+                    $resultErrors = $result['errors'] ?? [];
 
-            if (! empty($result['errors'])) {
-                $content .= "- **تفاصيل الأخطاء**:\n";
-                foreach ($result['errors'] as $error) {
-                    $content .= "  - {$error}\n";
+                    $status = $success ? '✅' : '❌';
+                    $content .= "### {$status} {$stageId}\n";
+                    $content .= '- **المدة**: '.(is_numeric($duration) ? (float) $duration : 0.0)."s\n";
+                    $content .= '- **الأخطاء**: '.(is_array($resultErrors) ? count($resultErrors) : 0)."\n";
+
+                    if (! empty($resultErrors) && is_array($resultErrors)) {
+                        $content .= "- **تفاصيل الأخطاء**:\n";
+                        foreach ($resultErrors as $error) {
+                            $content .= '  - '.(is_string($error) ? $error : '')."\n";
+                        }
+                    }
+                    $content .= "\n";
                 }
             }
-            $content .= "\n";
         }
 
-        if (! empty($results['fixes'])) {
+        $fixes = $results['fixes'] ?? [];
+        if (! empty($fixes) && is_array($fixes)) {
             $content .= "## 🔧 الإصلاحات المطبقة\n\n";
-            foreach ($results['fixes'] as $type => $message) {
-                $content .= "- **{$type}**: {$message}\n";
+            foreach ($fixes as $type => $message) {
+                $content .= "- **{$type}**: ".(is_string($message) ? $message : '')."\n";
             }
             $content .= "\n";
         }
 
         $content .= "## 🎯 التوصيات\n\n";
-        if ($results['overall_success']) {
+        if ($overallSuccess) {
             $content .= "✅ جميع المراحل نجحت - المشروع جاهز للنشر\n";
         } else {
             $content .= "❌ يلزم إصلاح المشاكل التالية قبل المتابعة:\n";
-            foreach ($results['errors'] as $stageId => $error) {
-                $content .= "- إصلاح مشاكل {$stageId}: {$error}\n";
+            if (is_array($errors)) {
+                foreach ($errors as $stageId => $error) {
+                    $content .= "- إصلاح مشاكل {$stageId}: ".(is_string($error) ? $error : '')."\n";
+                }
             }
         }
 

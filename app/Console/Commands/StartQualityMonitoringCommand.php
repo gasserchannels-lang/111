@@ -92,10 +92,12 @@ class StartQualityMonitoringCommand extends Command
 
         $this->displayResults($results);
 
-        if ($results['overall_health'] < 80) {
-            $this->error('⚠️ تحذير: صحة الجودة منخفضة ('.$results['overall_health'].'%)');
+        $overallHealthValue = $results['overall_health'] ?? 0;
+        $overallHealth = is_numeric($overallHealthValue) ? (float) $overallHealthValue : 0.0;
+        if ($overallHealth < 80) {
+            $this->error('⚠️ تحذير: صحة الجودة منخفضة ('.$overallHealth.'%)');
         } else {
-            $this->info('✅ صحة الجودة جيدة ('.$results['overall_health'].'%)');
+            $this->info('✅ صحة الجودة جيدة ('.$overallHealth.'%)');
         }
     }
 
@@ -112,12 +114,14 @@ class StartQualityMonitoringCommand extends Command
         if (isset($results['rules']) && is_array($results['rules'])) {
             foreach ($results['rules'] as $ruleId => $result) {
                 /** @var array<string, mixed> $result */
-                $status = ($result['health_score'] ?? 0) >= 80 ? '✅' : '❌';
+                $healthScore = $result['health_score'] ?? 0;
+                $status = (is_numeric($healthScore) ? (float) $healthScore : 0.0) >= 80 ? '✅' : '❌';
+                $duration = $result['duration'] ?? 0;
                 $table[] = [
-                    (string) $result['name'],
+                    is_string($result['name'] ?? null) ? $result['name'] : 'Unknown',
                     $status,
-                    (string) $result['health_score'].'%',
-                    (string) $result['duration'].'s',
+                    (is_numeric($healthScore) ? (float) $healthScore : 0.0).'%',
+                    (is_numeric($duration) ? (float) $duration : 0.0).'s',
                 ];
             }
         }
@@ -125,9 +129,12 @@ class StartQualityMonitoringCommand extends Command
         $this->table(['القاعدة', 'الحالة', 'النقاط', 'المدة'], $table);
 
         $alerts = $this->monitor->getAlertsSummary();
-        if ($alerts['total'] > 0) {
+        if (isset($alerts['total']) && $alerts['total'] > 0) {
             $this->newLine();
-            $this->warn('🚨 التنبيهات: '.$alerts['total'].' (حرجة: '.$alerts['critical'].', تحذيرات: '.$alerts['warnings'].')');
+            $total = is_numeric($alerts['total']) ? (int) $alerts['total'] : 0;
+            $critical = is_numeric($alerts['critical'] ?? null) ? (int) $alerts['critical'] : 0;
+            $warnings = is_numeric($alerts['warnings'] ?? null) ? (int) $alerts['warnings'] : 0;
+            $this->warn('🚨 التنبيهات: '.$total.' (حرجة: '.$critical.', تحذيرات: '.$warnings.')');
         }
     }
 }

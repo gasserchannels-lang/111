@@ -53,7 +53,7 @@ class GenerateAnalysisReport extends Command
         if (File::exists($phpstanFile)) {
             /** @var array<string, mixed> $phpstanData */
             $phpstanData = json_decode(File::get($phpstanFile), true);
-            if (isset($phpstanData['totals'])) {
+            if (isset($phpstanData['totals']) && is_array($phpstanData['totals'])) {
                 $errors = is_numeric($phpstanData['totals']['errors'] ?? 0) ? (int) ($phpstanData['totals']['errors']) : 0;
                 $warnings = is_numeric($phpstanData['totals']['warnings'] ?? 0) ? (int) ($phpstanData['totals']['warnings']) : 0;
                 $status = $errors === 0 ? '✅' : '❌';
@@ -245,7 +245,7 @@ class GenerateAnalysisReport extends Command
             $phpstanData = json_decode(File::get($phpstanFile), true);
             $errors = 0;
             $warnings = 0;
-            if (isset($phpstanData['totals'])) {
+            if (isset($phpstanData['totals']) && is_array($phpstanData['totals'])) {
                 $errors = is_numeric($phpstanData['totals']['errors'] ?? 0) ? (int) ($phpstanData['totals']['errors']) : 0;
                 $warnings = is_numeric($phpstanData['totals']['warnings'] ?? 0) ? (int) ($phpstanData['totals']['warnings']) : 0;
             }

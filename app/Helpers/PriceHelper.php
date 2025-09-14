@@ -18,7 +18,7 @@ class PriceHelper
         $currency = Currency::where('code', $currencyCode)->first();
 
         if (! $currency) {
-            return number_format($price, 2).' '.$currencyCode;
+            return number_format($price, 2).' '.(is_string($currencyCode) ? $currencyCode : 'USD');
         }
 
         return $currency->symbol.number_format($price, 2);
@@ -88,8 +88,8 @@ class PriceHelper
     public static function convertCurrency(float $amount, string $fromCurrency, string $toCurrency): float
     {
         // Get exchange rates from database or cache
-        $fromRate = config("exchange_rates.{$fromCurrency}", 1.0);
-        $toRate = config("exchange_rates.{$toCurrency}", 1.0);
+        $fromRate = is_numeric(config("exchange_rates.{$fromCurrency}", 1.0)) ? (float) config("exchange_rates.{$fromCurrency}", 1.0) : 1.0;
+        $toRate = is_numeric(config("exchange_rates.{$toCurrency}", 1.0)) ? (float) config("exchange_rates.{$toCurrency}", 1.0) : 1.0;
 
         return ($amount / $fromRate) * $toRate;
     }
@@ -99,10 +99,14 @@ class PriceHelper
      */
     public static function formatPriceRange(float $minPrice, float $maxPrice, ?string $currencyCode = null): string
     {
-        $currencyCode = $currencyCode ?? config('coprra.default_currency', 'USD');
+        // Ensure currencyCode is a string, falling back to the config default.
+        $defaultCurrency = config('coprra.default_currency', 'USD');
+        $currencyCode = $currencyCode ?? (is_string($defaultCurrency) ? $defaultCurrency : 'USD');
 
         $currency = Currency::where('code', $currencyCode)->first();
-        $symbol = $currency ? $currency->symbol : $currencyCode;
+
+        // The symbol is either the currency's symbol or the currency code string itself.
+        $symbol = $currency->symbol ?? $currencyCode;
 
         if ($minPrice === $maxPrice) {
             return $symbol.number_format($minPrice, 2);

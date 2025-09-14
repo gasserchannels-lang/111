@@ -156,11 +156,11 @@ class ProductSearchRequest extends FormRequest
         $data = [];
 
         if ($this->has('q')) {
-            $data['q'] = trim($this->q);
+            $data['q'] = is_string($this->q) ? trim($this->q) : '';
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = array_map('trim', $this->tags);
+            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -191,7 +191,7 @@ class ProductSearchRequest extends FormRequest
                 $query = $this->input('q');
                 $genericTerms = ['منتج', 'product', 'item', 'thing', 'stuff'];
 
-                if (in_array(strtolower($query), $genericTerms)) {
+                if (is_string($query) && in_array(strtolower($query), $genericTerms)) {
                     $validator->warnings()->add('q', 'كلمة البحث عامة جداً - جرب كلمات أكثر تحديداً للحصول على نتائج أفضل');
                 }
             }
@@ -208,8 +208,8 @@ class ProductSearchRequest extends FormRequest
         // Set default values
         $validated['sort'] = $validated['sort'] ?? 'popularity';
         $validated['order'] = $validated['order'] ?? 'desc';
-        $validated['page'] = $validated['page'] ?? 1;
-        $validated['per_page'] = $validated['per_page'] ?? 15;
+        $validated['page'] = is_numeric($validated['page'] ?? null) ? (int) $validated['page'] : 1;
+        $validated['per_page'] = is_numeric($validated['per_page'] ?? null) ? (int) $validated['per_page'] : 15;
 
         return $validated;
     }

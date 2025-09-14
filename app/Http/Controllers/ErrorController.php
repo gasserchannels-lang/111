@@ -97,7 +97,10 @@ class ErrorController extends Controller
 
             // Sort by timestamp (newest first)
             usort($errors, function ($a, $b) {
-                return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+                $timestampA = ($a['timestamp'] ?? false) ? strtotime((string) $a['timestamp']) : 0;
+                $timestampB = ($b['timestamp'] ?? false) ? strtotime((string) $b['timestamp']) : 0;
+
+                return (int) $timestampB - (int) $timestampA;
             });
 
             return array_slice($errors, 0, $limit);
@@ -143,15 +146,20 @@ class ErrorController extends Controller
                         }
 
                         // Count by type
-                        $type = $error['type'] ?? 'Unknown';
-                        $stats['errors_by_type'][$type] = ($stats['errors_by_type'][$type] ?? 0) + 1;
+                        $type = is_string($error['type'] ?? '') ? $error['type'] : 'Unknown';
+                        if (is_string($type)) {
+                            $stats['errors_by_type'][$type] = ($stats['errors_by_type'][$type] ?? 0) + 1;
+                        }
 
                         // Count by hour
-                        $hour = date('H', strtotime($error['timestamp']));
+                        $timestampValue = $error['timestamp'] ?? null;
+                        $timestamp = is_string($timestampValue) ? strtotime($timestampValue) : time();
+                        $validTimestamp = $timestamp === false ? time() : $timestamp;
+                        $hour = date('H', $validTimestamp);
                         $stats['errors_by_hour'][$hour] = ($stats['errors_by_hour'][$hour] ?? 0) + 1;
 
                         // Count by day
-                        $day = date('Y-m-d', strtotime($error['timestamp']));
+                        $day = date('Y-m-d', $validTimestamp);
                         $stats['errors_by_day'][$day] = ($stats['errors_by_day'][$day] ?? 0) + 1;
                     }
                 }

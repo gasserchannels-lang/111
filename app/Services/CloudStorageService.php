@@ -15,7 +15,7 @@ class CloudStorageService
 
     public function __construct()
     {
-        $this->disk = config('filesystems.cloud_disk', 's3');
+        $this->disk = is_string(config('filesystems.cloud_disk', 's3')) ? config('filesystems.cloud_disk', 's3') : 's3';
     }
 
     /**
@@ -383,9 +383,9 @@ class CloudStorageService
             // Create optimized versions
             foreach ($sizes as $sizeName => $dimensions) {
                 $optimizedFile = $this->createOptimizedImage($file, $dimensions[0], $dimensions[1]);
-                $optimizedPath = $path.'/optimized/'.$sizeName.'_'.$original['filename'];
+                $optimizedPath = $path.'/optimized/'.(is_string($sizeName) ? $sizeName : '').'_'.(is_string($original['filename'] ?? '') ? $original['filename'] : '');
 
-                $optimized = $this->uploadFile($optimizedFile, $path.'/optimized', $sizeName.'_'.$original['filename']);
+                $optimized = $this->uploadFile($optimizedFile, $path.'/optimized', (is_string($sizeName) ? $sizeName : '').'_'.(is_string($original['filename'] ?? '') ? $original['filename'] : ''));
                 $results[$sizeName] = $optimized;
             }
 

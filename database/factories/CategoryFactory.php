@@ -22,7 +22,7 @@ class CategoryFactory extends Factory
         $words = $this->faker->unique()->words(2, true);
 
         return [
-            'name' => $words.' Category',
+            'name' => (is_string($words) ? $words : '').' Category',
             'slug' => $this->faker->unique()->slug(2),
             'description' => $this->faker->sentence(),
             'parent_id' => null,

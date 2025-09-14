@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run PHP tests
+php artisan test --stop-on-failure
+
+# Run PHPStan analysis
+php ./vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+
+# Run Laravel Pint
+php ./vendor/bin/pint --test

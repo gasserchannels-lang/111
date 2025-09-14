@@ -135,14 +135,14 @@ class ProductRepository
         }
 
         // Generate cache key based on parameters
-        $queryHash = md5($query);
+        $queryHash = md5($query ?? '');
         $filtersHash = md5(json_encode($filters));
         $cacheKey = sprintf(
             'products:search:%s:%s:%d:%d',
             $queryHash,
             $filtersHash,
             $perPage,
-            (int) request()->get('page', 1)
+            is_numeric(request()->get('page', 1)) ? (int) request()->get('page', 1) : 1
         );
 
         return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($query, $filters, $perPage) {
@@ -160,19 +160,19 @@ class ProductRepository
                 });
 
             // Apply validated filters
-            if (! empty($filters['category_id'])) {
+            if (! empty($filters['category_id']) && is_numeric($filters['category_id'])) {
                 $productsQuery->where('category_id', (int) $filters['category_id']);
             }
 
-            if (! empty($filters['brand_id'])) {
+            if (! empty($filters['brand_id']) && is_numeric($filters['brand_id'])) {
                 $productsQuery->where('brand_id', (int) $filters['brand_id']);
             }
 
-            if (! empty($filters['min_price'])) {
+            if (! empty($filters['min_price']) && is_numeric($filters['min_price'])) {
                 $productsQuery->where('price', '>=', (float) $filters['min_price']);
             }
 
-            if (! empty($filters['max_price'])) {
+            if (! empty($filters['max_price']) && is_numeric($filters['max_price'])) {
                 $productsQuery->where('price', '<=', (float) $filters['max_price']);
             }
 

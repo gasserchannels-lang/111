@@ -19,10 +19,10 @@ class ThrottleRequests
 
         if (app('cache')->has("throttle:{$key}")) {
             $attempts = app('cache')->get("throttle:{$key}");
-            if ($attempts >= $maxAttempts) {
+            if (is_numeric($attempts) && (int) $attempts >= $maxAttempts) {
                 return response()->json(['message' => 'Too Many Requests'], 429);
             }
-            app('cache')->put("throttle:{$key}", $attempts + 1, $decayMinutes * 60);
+            app('cache')->put("throttle:{$key}", (is_numeric($attempts) ? (int) $attempts : 0) + 1, $decayMinutes * 60);
         } else {
             app('cache')->put("throttle:{$key}", 1, $decayMinutes * 60);
         }

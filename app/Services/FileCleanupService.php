@@ -18,7 +18,7 @@ class FileCleanupService
 
     public function __construct()
     {
-        $this->config = config('file_cleanup', [
+        $config = config('file_cleanup', [
             'temp_files_retention_days' => 7,
             'log_files_retention_days' => 30,
             'cache_files_retention_days' => 14,
@@ -26,6 +26,7 @@ class FileCleanupService
             'max_storage_size_mb' => 1024, // 1GB
             'cleanup_schedule' => 'daily',
         ]);
+        $this->config = is_array($config) ? $config : [];
     }
 
     /**
@@ -53,7 +54,9 @@ class FileCleanupService
 
             foreach ($tempDirectories as $directory) {
                 if (is_dir($directory)) {
-                    $cleanupResult = $this->cleanupDirectory($directory, $this->config['temp_files_retention_days']);
+                    $retentionDaysValue = $this->config['temp_files_retention_days'] ?? 7;
+                    $retentionDays = is_numeric($retentionDaysValue) ? (int) $retentionDaysValue : 7;
+                    $cleanupResult = $this->cleanupDirectory($directory, $retentionDays);
                     $results['temp_files'] += $cleanupResult['files_deleted'];
                     $results['deleted_size'] += $cleanupResult['size_deleted'];
                 }
@@ -87,7 +90,9 @@ class FileCleanupService
 
         try {
             $logDirectory = storage_path('logs');
-            $cutoffDate = Carbon::now()->subDays($this->config['log_files_retention_days']);
+            $retentionDaysValue = $this->config['log_files_retention_days'] ?? 30;
+            $retentionDays = is_numeric($retentionDaysValue) ? (int) $retentionDaysValue : 30;
+            $cutoffDate = Carbon::now()->subDays($retentionDays);
 
             if (is_dir($logDirectory)) {
                 $files = glob($logDirectory.'/*.log');
@@ -140,7 +145,9 @@ class FileCleanupService
 
             foreach ($cacheDirectories as $directory) {
                 if (is_dir($directory)) {
-                    $cleanupResult = $this->cleanupDirectory($directory, $this->config['cache_files_retention_days']);
+                    $retentionDaysValue = $this->config['cache_files_retention_days'] ?? 14;
+                    $retentionDays = is_numeric($retentionDaysValue) ? (int) $retentionDaysValue : 14;
+                    $cleanupResult = $this->cleanupDirectory($directory, $retentionDays);
                     $results['cache_files'] += $cleanupResult['files_deleted'];
                     $results['deleted_size'] += $cleanupResult['size_deleted'];
                 }
@@ -178,10 +185,12 @@ class FileCleanupService
 
         try {
             $backupDirectory = storage_path('backups');
-            $cutoffDate = Carbon::now()->subDays($this->config['backup_files_retention_days']);
+            $retentionDaysValue = $this->config['backup_files_retention_days'] ?? 90;
+            $retentionDays = is_numeric($retentionDaysValue) ? (int) $retentionDaysValue : 90;
+            $cutoffDate = Carbon::now()->subDays($retentionDays);
 
             if (is_dir($backupDirectory)) {
-                $cleanupResult = $this->cleanupDirectory($backupDirectory, $this->config['backup_files_retention_days']);
+                $cleanupResult = $this->cleanupDirectory($backupDirectory, $retentionDays);
                 $results['backup_files'] = $cleanupResult['files_deleted'];
                 $results['deleted_size'] = $cleanupResult['size_deleted'];
             }
@@ -256,11 +265,11 @@ class FileCleanupService
 
         // Calculate totals
         foreach ($results as $key => $value) {
-            if (is_array($value) && isset($value['files_deleted'])) {
-                $results['total_files_deleted'] += $value['files_deleted'];
+            if (is_array($value) && isset($value['files_deleted']) && is_numeric($value['files_deleted'])) {
+                $results['total_files_deleted'] += (int) $value['files_deleted'];
             }
-            if (is_array($value) && isset($value['deleted_size'])) {
-                $results['total_size_deleted'] += $value['deleted_size'];
+            if (is_array($value) && isset($value['deleted_size']) && is_numeric($value['deleted_size'])) {
+                $results['total_size_deleted'] += (float) $value['deleted_size'];
             }
         }
 
@@ -279,11 +288,13 @@ class FileCleanupService
     {
         $storagePath = storage_path();
         $totalSize = $this->getDirectorySize($storagePath);
-        $maxSize = $this->config['max_storage_size_mb'] * 1024 * 1024; // Convert to bytes
+        $maxSizeValue = $this->config['max_storage_size_mb'] ?? 1024;
+        $maxSizeMb = is_numeric($maxSizeValue) ? (float) $maxSizeValue : 1024.0;
+        $maxSize = $maxSizeMb * 1024 * 1024; // Convert to bytes
 
         return [
             'current_size_mb' => round($totalSize / 1024 / 1024, 2),
-            'max_size_mb' => $this->config['max_storage_size_mb'],
+            'max_size_mb' => $maxSizeMb,
             'usage_percentage' => round(($totalSize / $maxSize) * 100, 2),
             'needs_cleanup' => $totalSize > $maxSize,
         ];
@@ -311,7 +322,7 @@ class FileCleanupService
         );
 
         foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getMTime() < $cutoffDate->timestamp) {
+            if ($file instanceof \SplFileInfo && $file->isFile() && $file->getMTime() < $cutoffDate->timestamp) {
                 $size = $file->getSize();
                 if (unlink($file->getPathname())) {
                     $filesDeleted++;
@@ -342,7 +353,7 @@ class FileCleanupService
         );
 
         foreach ($iterator as $file) {
-            if ($file->isFile()) {
+            if ($file instanceof \SplFileInfo && $file->isFile()) {
                 $size += $file->getSize();
             }
         }

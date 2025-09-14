@@ -14,8 +14,10 @@ class ConvertEmptyStringsToNull
     public function handle(Request $request, Closure $next): Response
     {
         $input = $request->all();
-        $input = $this->convertEmptyStringsToNull($input);
-        $request->merge($input);
+        $convertedInput = $this->convertEmptyStringsToNull($input);
+        if (is_array($convertedInput)) {
+            $request->merge($convertedInput);
+        }
 
         return $next($request);
     }
@@ -26,6 +28,10 @@ class ConvertEmptyStringsToNull
      */
     private function convertEmptyStringsToNull($input)
     {
+        if (! is_array($input)) {
+            return $input;
+        }
+
         foreach ($input as $key => $value) {
             if (is_string($value) && $value === '') {
                 $input[$key] = null;

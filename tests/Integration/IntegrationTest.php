@@ -13,10 +13,12 @@ use App\Models\Review;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\Wishlist;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IntegrationTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test complete product workflow.
      */

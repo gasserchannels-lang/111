@@ -29,16 +29,20 @@ class SecurityHeadersMiddleware
     private function addSecurityHeaders(Response $response): void
     {
         // X-Frame-Options: Prevent clickjacking
-        $response->headers->set('X-Frame-Options', config('security.headers.X-Frame-Options', 'SAMEORIGIN'));
+        $xFrameOptions = config('security.headers.X-Frame-Options', 'SAMEORIGIN');
+        $response->headers->set('X-Frame-Options', is_string($xFrameOptions) ? $xFrameOptions : 'SAMEORIGIN');
 
         // X-Content-Type-Options: Prevent MIME type sniffing
-        $response->headers->set('X-Content-Type-Options', config('security.headers.X-Content-Type-Options', 'nosniff'));
+        $xContentTypeOptions = config('security.headers.X-Content-Type-Options', 'nosniff');
+        $response->headers->set('X-Content-Type-Options', is_string($xContentTypeOptions) ? $xContentTypeOptions : 'nosniff');
 
         // X-XSS-Protection: Enable XSS filtering
-        $response->headers->set('X-XSS-Protection', config('security.headers.X-XSS-Protection', '1; mode=block'));
+        $xXSSProtection = config('security.headers.X-XSS-Protection', '1; mode=block');
+        $response->headers->set('X-XSS-Protection', is_string($xXSSProtection) ? $xXSSProtection : '1; mode=block');
 
         // Referrer-Policy: Control referrer information
-        $response->headers->set('Referrer-Policy', config('security.headers.Referrer-Policy', 'strict-origin-when-cross-origin'));
+        $referrerPolicy = config('security.headers.Referrer-Policy', 'strict-origin-when-cross-origin');
+        $response->headers->set('Referrer-Policy', is_string($referrerPolicy) ? $referrerPolicy : 'strict-origin-when-cross-origin');
 
         // Content-Security-Policy: Prevent XSS attacks
         $this->addContentSecurityPolicy($response);
@@ -68,7 +72,7 @@ class SecurityHeadersMiddleware
     private function addContentSecurityPolicy(Response $response): void
     {
         $csp = config('security.headers.Content-Security-Policy');
-        if ($csp) {
+        if ($csp && is_string($csp)) {
             $response->headers->set('Content-Security-Policy', $csp);
         }
     }
@@ -79,9 +83,10 @@ class SecurityHeadersMiddleware
     private function addStrictTransportSecurity(Response $response): void
     {
         if (request()->isSecure()) {
+            $sts = config('security.headers.Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
             $response->headers->set(
                 'Strict-Transport-Security',
-                config('security.headers.Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+                is_string($sts) ? $sts : 'max-age=31536000; includeSubDomains; preload'
             );
         }
     }
@@ -92,7 +97,7 @@ class SecurityHeadersMiddleware
     private function addPermissionsPolicy(Response $response): void
     {
         $permissions = config('security.headers.Permissions-Policy');
-        if ($permissions) {
+        if ($permissions && is_string($permissions)) {
             $response->headers->set('Permissions-Policy', $permissions);
         }
     }

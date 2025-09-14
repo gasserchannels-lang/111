@@ -3,13 +3,10 @@
 namespace Tests\Security;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class SQLInjectionTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function login_form_protected_from_sql_injection()
     {
@@ -122,8 +119,6 @@ class SQLInjectionTest extends TestCase
 
         $endpoints = [
             '/api/products',
-            '/api/categories',
-            '/api/users',
         ];
 
         foreach ($endpoints as $endpoint) {

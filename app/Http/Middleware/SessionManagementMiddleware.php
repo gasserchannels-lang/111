@@ -66,7 +66,7 @@ class SessionManagementMiddleware
         $lastRegeneration = Session::get('last_regeneration', 0);
         $regenerationInterval = config('session.regeneration_interval', 300); // 5 minutes
 
-        if (time() - $lastRegeneration > $regenerationInterval) {
+        if (is_numeric($lastRegeneration) && time() - (int) $lastRegeneration > $regenerationInterval) {
             Session::regenerate(true);
             Session::put('last_regeneration', time());
 
@@ -85,7 +85,7 @@ class SessionManagementMiddleware
         $lastActivity = Session::get('last_activity', time());
         $inactivityTimeout = config('session.inactivity_timeout', 1800); // 30 minutes
 
-        if (time() - $lastActivity > $inactivityTimeout) {
+        if (is_numeric($lastActivity) && time() - (int) $lastActivity > $inactivityTimeout) {
             Session::flush();
 
             Log::info('Session cleaned up due to inactivity', [
@@ -106,7 +106,8 @@ class SessionManagementMiddleware
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {
-            if (str_starts_with($cookie->getName(), config('session.cookie'))) {
+            $sessionCookie = config('session.cookie');
+            if (is_string($sessionCookie) && str_starts_with($cookie->getName(), $sessionCookie)) {
                 // Note: Cookie properties are set during creation, not after
                 // This is a limitation of Symfony Cookie class
                 // The security settings should be configured in session.php

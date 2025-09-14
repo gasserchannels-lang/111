@@ -86,8 +86,8 @@ class StatsCommand extends Command
 
         $this->table(['Price Metric', 'Value'], [
             ['Average Price', '$'.number_format((float) $avgPrice, 2)],
-            ['Minimum Price', '$'.number_format((float) $minPrice, 2)],
-            ['Maximum Price', '$'.number_format((float) $maxPrice, 2)],
+            ['Minimum Price', '$'.number_format(is_numeric($minPrice) ? (float) $minPrice : 0.0, 2)],
+            ['Maximum Price', '$'.number_format(is_numeric($maxPrice) ? (float) $maxPrice : 0.0, 2)],
         ]);
 
         // Top categories by product count
@@ -150,8 +150,8 @@ class StatsCommand extends Command
         // Database size approximation
         $this->info('💾 Database Information');
         $totalRecords = Product::count() + Store::count() + Brand::count() +
-                       Category::count() + PriceOffer::count() + Review::count() +
-                       User::count() + PriceAlert::count();
+            Category::count() + PriceOffer::count() + Review::count() +
+            User::count() + PriceAlert::count();
 
         $this->table(['Database Metric', 'Value'], [
             ['Total Records', number_format((float) $totalRecords)],

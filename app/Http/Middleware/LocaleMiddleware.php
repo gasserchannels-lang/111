@@ -28,7 +28,9 @@ class LocaleMiddleware
             // في حالة حدوث أي خطأ غير متوقع، اعتمد على القيمة الافتراضية الآمنة
         }
 
-        app()->setLocale($languageCode);
+        if (is_string($languageCode)) {
+            app()->setLocale($languageCode);
+        }
 
         return $next($request);
     }

@@ -36,15 +36,23 @@ class CartController extends Controller
     {
         $validated = $request->validated();
 
+        $attributes = $validated['attributes'] ?? [];
+        if (! is_array($attributes)) {
+            $attributes = [];
+        }
+        $baseAttributes = [
+            'image' => $product->image ?? 'default-product.jpg',
+            'slug' => $product->slug,
+        ];
+
+        $mergedAttributes = array_merge($baseAttributes, $attributes);
+
         Cart::add([
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
             'quantity' => $validated['quantity'],
-            'attributes' => array_merge([
-                'image' => $product->image ?? 'default-product.jpg',
-                'slug' => $product->slug,
-            ], $validated['attributes'] ?? []),
+            'attributes' => $mergedAttributes,
         ]);
 
         return redirect()->back()->with('success', 'Product added to cart!');

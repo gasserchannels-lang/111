@@ -35,10 +35,15 @@ class PriceSearchController extends Controller
         }
 
         $validated = $validation['data'];
-        $result = $this->priceSearchService->findBestOffer(
-            $validated['product'],
-            $validated['country']
-        );
+        if (is_array($validated)) {
+            $product = is_string($validated['product'] ?? null) ? $validated['product'] : '';
+            $country = is_string($validated['country'] ?? null) ? $validated['country'] : '';
+        } else {
+            $product = '';
+            $country = '';
+        }
+
+        $result = $this->priceSearchService->findBestOffer($product, $country);
 
         if (! $result['success']) {
             return response()->json([
@@ -77,8 +82,9 @@ class PriceSearchController extends Controller
                 ], 400);
             }
 
-            $products = Product::where('name', 'like', '%'.$query.'%')
-                ->orWhere('description', 'like', '%'.$query.'%')
+            $queryStr = is_string($query) ? $query : '';
+            $products = Product::where('name', 'like', '%'.$queryStr.'%')
+                ->orWhere('description', 'like', '%'.$queryStr.'%')
                 ->with(['priceOffers.store', 'brand', 'category'])
                 ->limit(20)
                 ->get();
@@ -117,18 +123,21 @@ class PriceSearchController extends Controller
 
     private function getCountryCode(Request $request): string
     {
-        if ($request->has('country') && strlen((string) $request->input('country')) === 2) {
-            return strtoupper((string) $request->input('country'));
+        $countryInput = $request->input('country');
+        if ($request->has('country') && is_string($countryInput) && strlen($countryInput) === 2) {
+            return strtoupper($countryInput);
         }
 
-        if ($request->header('CF-IPCountry')) {
-            return strtoupper($request->header('CF-IPCountry'));
+        $cfCountry = $request->header('CF-IPCountry');
+        if (is_string($cfCountry)) {
+            return strtoupper($cfCountry);
         }
 
         try {
             $response = Http::timeout(2)->get('https://ipapi.co/country');
-            if ($response->successful() && strlen(trim($response->body())) === 2) {
-                return strtoupper(trim($response->body()));
+            $body = $response->body();
+            if ($response->successful() && strlen(trim($body)) === 2) {
+                return strtoupper(trim($body));
             }
         } catch (Exception $e) {
             // Fallback to US

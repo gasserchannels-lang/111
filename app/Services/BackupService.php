@@ -189,18 +189,22 @@ class BackupService
             $results['manifest'] = $manifest;
 
             // Restore database
-            if (isset($manifest['components']['database'])) {
-                $results['components']['database'] = $this->restoreDatabase($backupPath, $manifest['components']['database']);
+            $components = $manifest['components'] ?? [];
+            if (is_array($components) && isset($components['database']) && is_array($components['database'])) {
+                $dbInfo = $components['database'];
+                $results['components']['database'] = $this->restoreDatabase($backupPath, $dbInfo);
             }
 
             // Restore files
-            if (isset($manifest['components']['files'])) {
-                $results['components']['files'] = $this->restoreFiles($backupPath, $manifest['components']['files']);
+            if (is_array($components) && isset($components['files']) && is_array($components['files'])) {
+                $filesInfo = $components['files'];
+                $results['components']['files'] = $this->restoreFiles($backupPath, $filesInfo);
             }
 
             // Restore configuration
-            if (isset($manifest['components']['config'])) {
-                $results['components']['config'] = $this->restoreConfiguration($backupPath, $manifest['components']['config']);
+            if (is_array($components) && isset($components['config']) && is_array($components['config'])) {
+                $configInfo = $components['config'];
+                $results['components']['config'] = $this->restoreConfiguration($backupPath, $configInfo);
             }
 
             $results['completed_at'] = now();
@@ -251,16 +255,19 @@ class BackupService
                 $backups[] = [
                     'name' => $directory,
                     'type' => $manifest['type'] ?? 'unknown',
-                    'created_at' => $manifest['created_at'] ?? null,
+                    'created_at' => isset($manifest['created_at']) && is_string($manifest['created_at']) ? $manifest['created_at'] : null,
                     'size' => $this->getBackupSize($backupPath),
-                    'components' => array_keys($manifest['components'] ?? []),
+                    'components' => is_array($manifest['components'] ?? []) ? array_keys($manifest['components']) : [],
                 ];
             }
         }
 
         // Sort by creation date (newest first)
         usort($backups, function ($a, $b) {
-            return strtotime($b['created_at']) - strtotime($a['created_at']);
+            $timeA = is_string($a['created_at'] ?? '') ? strtotime($a['created_at']) : 0;
+            $timeB = is_string($b['created_at'] ?? '') ? strtotime($b['created_at']) : 0;
+
+            return $timeB - $timeA;
         });
 
         return $backups;
@@ -304,10 +311,12 @@ class BackupService
         $backups = $this->listBackups();
 
         foreach ($backups as $backup) {
-            $createdAt = Carbon::parse($backup['created_at']);
+            $createdAtStr = $backup['created_at'] ?? '';
+            $createdAt = is_string($createdAtStr) ? Carbon::parse($createdAtStr) : now();
 
             if ($createdAt->lt($cutoffDate)) {
-                if ($this->deleteBackup($backup['name'])) {
+                $backupName = $backup['name'] ?? '';
+                if (is_string($backupName) && $this->deleteBackup($backupName)) {
                     $deletedCount++;
                 }
             }
@@ -335,11 +344,11 @@ class BackupService
 
         $command = sprintf(
             'mysqldump --host=%s --port=%s --user=%s --password=%s %s > %s',
-            $dbConfig['host'],
-            $dbConfig['port'],
-            $dbConfig['username'],
-            $dbConfig['password'],
-            $dbConfig['database'],
+            (string) ($dbConfig['host'] ?? 'localhost'),
+            (string) ($dbConfig['port'] ?? '3306'),
+            (string) ($dbConfig['username'] ?? 'root'),
+            (string) ($dbConfig['password'] ?? ''),
+            (string) ($dbConfig['database'] ?? 'database'),
             $filepath
         );
 
@@ -511,7 +520,8 @@ class BackupService
     private function restoreDatabase(string $backupPath, array $dbInfo): array
     {
         $dbConfig = config('database.connections.mysql');
-        $sqlFile = $backupPath.'/'.$dbInfo['filename'];
+        $filename = $dbInfo['filename'] ?? 'database.sql';
+        $sqlFile = $backupPath.'/'.(is_string($filename) ? $filename : 'database.sql');
 
         if (! file_exists($sqlFile)) {
             throw new Exception('Database backup file not found');
@@ -519,11 +529,11 @@ class BackupService
 
         $command = sprintf(
             'mysql --host=%s --port=%s --user=%s --password=%s %s < %s',
-            $dbConfig['host'],
-            $dbConfig['port'],
-            $dbConfig['username'],
-            $dbConfig['password'],
-            $dbConfig['database'],
+            (string) ($dbConfig['host'] ?? 'localhost'),
+            (string) ($dbConfig['port'] ?? '3306'),
+            (string) ($dbConfig['username'] ?? 'root'),
+            (string) ($dbConfig['password'] ?? ''),
+            (string) ($dbConfig['database'] ?? 'database'),
             $sqlFile
         );
 
@@ -555,13 +565,18 @@ class BackupService
 
         $restoredDirs = [];
 
-        foreach ($filesInfo['directories'] as $dir) {
-            $sourcePath = $filesDir.'/'.$dir;
-            $destPath = $this->getDestinationPath($dir);
+        $directories = $filesInfo['directories'] ?? [];
+        if (is_array($directories)) {
+            foreach ($directories as $dir) {
+                if (is_string($dir)) {
+                    $sourcePath = $filesDir.'/'.$dir;
+                    $destPath = $this->getDestinationPath($dir);
 
-            if (is_dir($sourcePath)) {
-                $this->copyDirectory($sourcePath, $destPath);
-                $restoredDirs[] = $dir;
+                    if (is_dir($sourcePath)) {
+                        $this->copyDirectory($sourcePath, $destPath);
+                        $restoredDirs[] = $dir;
+                    }
+                }
             }
         }
 
@@ -588,13 +603,18 @@ class BackupService
 
         $restoredFiles = [];
 
-        foreach ($configInfo['files'] as $file) {
-            $sourcePath = $configDir.'/'.$file;
-            $destPath = $this->getConfigDestinationPath($file);
+        $files = $configInfo['files'] ?? [];
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                if (is_string($file)) {
+                    $sourcePath = $configDir.'/'.$file;
+                    $destPath = $this->getConfigDestinationPath($file);
 
-            if (file_exists($sourcePath)) {
-                copy($sourcePath, $destPath);
-                $restoredFiles[] = $file;
+                    if (file_exists($sourcePath)) {
+                        copy($sourcePath, $destPath);
+                        $restoredFiles[] = $file;
+                    }
+                }
             }
         }
 
@@ -648,12 +668,14 @@ class BackupService
         );
 
         foreach ($iterator as $item) {
-            $destPath = $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName();
+            if ($item instanceof \SplFileInfo) {
+                $destPath = $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName();
 
-            if ($item->isDir()) {
-                mkdir($destPath, 0755, true);
-            } else {
-                copy($item, $destPath);
+                if ($item->isDir()) {
+                    mkdir($destPath, 0755, true);
+                } else {
+                    copy($item->getPathname(), $destPath);
+                }
             }
         }
     }
@@ -673,10 +695,12 @@ class BackupService
         );
 
         foreach ($iterator as $item) {
-            if ($item->isDir()) {
-                rmdir($item);
-            } else {
-                unlink($item);
+            if ($item instanceof \SplFileInfo) {
+                if ($item->isDir()) {
+                    rmdir($item->getPathname());
+                } else {
+                    unlink($item->getPathname());
+                }
             }
         }
 
@@ -699,7 +723,9 @@ class BackupService
         );
 
         foreach ($iterator as $file) {
-            $size += $file->getSize();
+            if ($file instanceof \SplFileInfo) {
+                $size += $file->getSize();
+            }
         }
 
         return $size;
