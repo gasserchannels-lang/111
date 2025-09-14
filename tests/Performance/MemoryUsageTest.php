@@ -15,8 +15,18 @@ class MemoryUsageTest extends TestCase
     {
         $initialMemory = memory_get_usage(true);
 
+        // Create required dependencies first
+        $brand = \App\Models\Brand::factory()->create();
+        $category = \App\Models\Category::factory()->create();
+        $store = \App\Models\Store::factory()->create();
+
         // Perform memory-intensive operations
-        $products = \App\Models\Product::factory()->count(1000)->create();
+        $products = \App\Models\Product::factory()
+            ->withBrand($brand->id)
+            ->withCategory($category->id)
+            ->withStore($store->id)
+            ->count(1000)
+            ->create();
 
         $finalMemory = memory_get_usage(true);
         $memoryUsed = ($finalMemory - $initialMemory) / 1024 / 1024; // Convert to MB
@@ -29,8 +39,18 @@ class MemoryUsageTest extends TestCase
     {
         $initialMemory = memory_get_usage(true);
 
+        // Create required dependencies first
+        $brand = \App\Models\Brand::factory()->create();
+        $category = \App\Models\Category::factory()->create();
+        $store = \App\Models\Store::factory()->create();
+
         // Process large dataset
-        $products = \App\Models\Product::factory()->count(5000)->create();
+        $products = \App\Models\Product::factory()
+            ->withBrand($brand->id)
+            ->withCategory($category->id)
+            ->withStore($store->id)
+            ->count(5000)
+            ->create();
 
         foreach ($products as $product) {
             $product->update(['name' => $product->name.' Updated']);

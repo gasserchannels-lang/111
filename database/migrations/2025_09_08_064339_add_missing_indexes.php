@@ -90,14 +90,8 @@ return new class extends Migration
                 if (! Schema::hasIndex('users', 'users_is_admin_index')) {
                     $table->index('is_admin');
                 }
-                if (! Schema::hasIndex('users', 'users_is_active_index')) {
-                    $table->index('is_active');
-                }
                 if (! Schema::hasIndex('users', 'users_created_at_index')) {
                     $table->index('created_at');
-                }
-                if (! Schema::hasIndex('users', 'users_is_admin_is_active_index')) {
-                    $table->index(['is_admin', 'is_active']);
                 }
             });
         }
@@ -105,14 +99,8 @@ return new class extends Migration
         if (Schema::hasTable('categories')) {
             Schema::table('categories', function (Blueprint $table) {
                 // Add indexes for category queries
-                if (! Schema::hasIndex('categories', 'categories_is_active_index')) {
-                    $table->index('is_active');
-                }
                 if (! Schema::hasIndex('categories', 'categories_parent_id_index')) {
                     $table->index('parent_id');
-                }
-                if (! Schema::hasIndex('categories', 'categories_parent_id_is_active_index')) {
-                    $table->index(['parent_id', 'is_active']);
                 }
             });
         }
@@ -120,9 +108,6 @@ return new class extends Migration
         if (Schema::hasTable('brands')) {
             Schema::table('brands', function (Blueprint $table) {
                 // Add indexes for brand queries
-                if (! Schema::hasIndex('brands', 'brands_is_active_index')) {
-                    $table->index('is_active');
-                }
                 if (! Schema::hasIndex('brands', 'brands_created_at_index')) {
                     $table->index('created_at');
                 }
@@ -134,12 +119,6 @@ return new class extends Migration
                 // Add indexes for store queries
                 if (! Schema::hasIndex('stores', 'stores_is_active_index')) {
                     $table->index('is_active');
-                }
-                if (! Schema::hasIndex('stores', 'stores_is_verified_index')) {
-                    $table->index('is_verified');
-                }
-                if (! Schema::hasIndex('stores', 'stores_is_active_is_verified_index')) {
-                    $table->index(['is_active', 'is_verified']);
                 }
             });
         }

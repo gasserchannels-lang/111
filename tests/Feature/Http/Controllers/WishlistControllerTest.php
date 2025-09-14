@@ -12,9 +12,11 @@ use App\Models\Store;
 use App\Models\User;
 use App\Models\Wishlist;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class WishlistControllerTest extends TestCase
 {
+    use RefreshDatabase;
     protected function setUp(): void
     {
         parent::setUp();

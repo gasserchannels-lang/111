@@ -15,13 +15,13 @@ return new class extends Migration
             Schema::table('users', function (Blueprint $table) {
                 // Add encrypted fields for sensitive data
                 if (! Schema::hasColumn('users', 'encrypted_phone')) {
-                    $table->text('encrypted_phone')->nullable()->after('phone');
+                    $table->text('encrypted_phone')->nullable()->after('email_verified_at');
                 }
                 if (! Schema::hasColumn('users', 'encrypted_address')) {
-                    $table->text('encrypted_address')->nullable()->after('address');
+                    $table->text('encrypted_address')->nullable()->after('encrypted_phone');
                 }
                 if (! Schema::hasColumn('users', 'encrypted_notes')) {
-                    $table->text('encrypted_notes')->nullable()->after('notes');
+                    $table->text('encrypted_notes')->nullable()->after('encrypted_address');
                 }
             });
         }

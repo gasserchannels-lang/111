@@ -5,16 +5,21 @@ namespace Tests\Unit\Models;
 use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PriceAlertTest extends TestCase
 {
+    use RefreshDatabase;
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_alert()
     {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
         $priceAlert = PriceAlert::factory()->create([
-            'user_id' => User::factory()->create()->id,
-            'product_id' => Product::factory()->create()->id,
+            'user_id' => $user->id,
+            'product_id' => $product->id,
             'target_price' => 100.00,
             'is_active' => true,
         ]);
@@ -28,7 +33,11 @@ class PriceAlertTest extends TestCase
     public function it_has_user_relationship()
     {
         $user = User::factory()->create();
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $user->id]);
+        $product = Product::factory()->create();
+        $priceAlert = PriceAlert::factory()->create([
+            'user_id' => $user->id,
+            'product_id' => $product->id
+        ]);
 
         $this->assertInstanceOf(User::class, $priceAlert->user);
         $this->assertEquals($user->id, $priceAlert->user->id);
@@ -37,8 +46,12 @@ class PriceAlertTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_product_relationship()
     {
+        $user = User::factory()->create();
         $product = Product::factory()->create();
-        $priceAlert = PriceAlert::factory()->create(['product_id' => $product->id]);
+        $priceAlert = PriceAlert::factory()->create([
+            'user_id' => $user->id,
+            'product_id' => $product->id
+        ]);
 
         $this->assertInstanceOf(Product::class, $priceAlert->product);
         $this->assertEquals($product->id, $priceAlert->product->id);

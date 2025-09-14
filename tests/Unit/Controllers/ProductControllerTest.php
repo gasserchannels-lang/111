@@ -47,7 +47,7 @@ class ProductControllerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_exception_for_non_existent_product(): void
     {
-        $this->expectException(ModelNotFoundException::class);
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
 
         $this->controller->show('non-existent-product');
     }
