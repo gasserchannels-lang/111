@@ -192,19 +192,22 @@ class BackupService
             $components = $manifest['components'] ?? [];
             if (is_array($components) && isset($components['database']) && is_array($components['database'])) {
                 $dbInfo = $components['database'];
-                $results['components']['database'] = $this->restoreDatabase($backupPath, $dbInfo);
+                $dbInfoTyped = $dbInfo;
+                $results['components']['database'] = $this->restoreDatabase($backupPath, $dbInfoTyped);
             }
 
             // Restore files
             if (is_array($components) && isset($components['files']) && is_array($components['files'])) {
                 $filesInfo = $components['files'];
-                $results['components']['files'] = $this->restoreFiles($backupPath, $filesInfo);
+                $filesInfoTyped = $filesInfo;
+                $results['components']['files'] = $this->restoreFiles($backupPath, $filesInfoTyped);
             }
 
             // Restore configuration
             if (is_array($components) && isset($components['config']) && is_array($components['config'])) {
                 $configInfo = $components['config'];
-                $results['components']['config'] = $this->restoreConfiguration($backupPath, $configInfo);
+                $configInfoTyped = $configInfo;
+                $results['components']['config'] = $this->restoreConfiguration($backupPath, $configInfoTyped);
             }
 
             $results['completed_at'] = now();
@@ -251,21 +254,23 @@ class BackupService
 
             if (is_dir($backupPath)) {
                 $manifest = $this->readBackupManifest($backupPath);
+                $components = $manifest['components'] ?? [];
+                $componentsArray = is_array($components) ? $components : [];
 
                 $backups[] = [
                     'name' => $directory,
                     'type' => $manifest['type'] ?? 'unknown',
                     'created_at' => isset($manifest['created_at']) && is_string($manifest['created_at']) ? $manifest['created_at'] : null,
                     'size' => $this->getBackupSize($backupPath),
-                    'components' => is_array($manifest['components'] ?? []) ? array_keys($manifest['components']) : [],
+                    'components' => array_keys($componentsArray),
                 ];
             }
         }
 
         // Sort by creation date (newest first)
         usort($backups, function ($a, $b) {
-            $timeA = is_string($a['created_at'] ?? '') ? strtotime($a['created_at']) : 0;
-            $timeB = is_string($b['created_at'] ?? '') ? strtotime($b['created_at']) : 0;
+            $timeA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
+            $timeB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
 
             return $timeB - $timeA;
         });
@@ -342,13 +347,20 @@ class BackupService
         $filename = 'database.sql';
         $filepath = $backupDir.'/'.$filename;
 
+        $dbConfigArray = is_array($dbConfig) ? $dbConfig : [];
+        $host = is_string($dbConfigArray['host'] ?? null) ? $dbConfigArray['host'] : 'localhost';
+        $port = is_string($dbConfigArray['port'] ?? null) ? $dbConfigArray['port'] : '3306';
+        $username = is_string($dbConfigArray['username'] ?? null) ? $dbConfigArray['username'] : 'root';
+        $password = is_string($dbConfigArray['password'] ?? null) ? $dbConfigArray['password'] : '';
+        $database = is_string($dbConfigArray['database'] ?? null) ? $dbConfigArray['database'] : 'database';
+        
         $command = sprintf(
             'mysqldump --host=%s --port=%s --user=%s --password=%s %s > %s',
-            (string) ($dbConfig['host'] ?? 'localhost'),
-            (string) ($dbConfig['port'] ?? '3306'),
-            (string) ($dbConfig['username'] ?? 'root'),
-            (string) ($dbConfig['password'] ?? ''),
-            (string) ($dbConfig['database'] ?? 'database'),
+            $host,
+            $port,
+            $username,
+            $password,
+            $database,
             $filepath
         );
 
@@ -514,7 +526,7 @@ class BackupService
      * Restore database.
      */
     /**
-     * @param  array<string, mixed>  $dbInfo
+     * @param  array<mixed, mixed>  $dbInfo
      * @return array<string, mixed>
      */
     private function restoreDatabase(string $backupPath, array $dbInfo): array
@@ -527,13 +539,20 @@ class BackupService
             throw new Exception('Database backup file not found');
         }
 
+        $dbConfigArray = is_array($dbConfig) ? $dbConfig : [];
+        $host = is_string($dbConfigArray['host'] ?? null) ? $dbConfigArray['host'] : 'localhost';
+        $port = is_string($dbConfigArray['port'] ?? null) ? $dbConfigArray['port'] : '3306';
+        $username = is_string($dbConfigArray['username'] ?? null) ? $dbConfigArray['username'] : 'root';
+        $password = is_string($dbConfigArray['password'] ?? null) ? $dbConfigArray['password'] : '';
+        $database = is_string($dbConfigArray['database'] ?? null) ? $dbConfigArray['database'] : 'database';
+        
         $command = sprintf(
             'mysql --host=%s --port=%s --user=%s --password=%s %s < %s',
-            (string) ($dbConfig['host'] ?? 'localhost'),
-            (string) ($dbConfig['port'] ?? '3306'),
-            (string) ($dbConfig['username'] ?? 'root'),
-            (string) ($dbConfig['password'] ?? ''),
-            (string) ($dbConfig['database'] ?? 'database'),
+            $host,
+            $port,
+            $username,
+            $password,
+            $database,
             $sqlFile
         );
 
@@ -552,7 +571,7 @@ class BackupService
      * Restore files.
      */
     /**
-     * @param  array<string, mixed>  $filesInfo
+     * @param  array<mixed, mixed>  $filesInfo
      * @return array<string, mixed>
      */
     private function restoreFiles(string $backupPath, array $filesInfo): array
@@ -590,7 +609,7 @@ class BackupService
      * Restore configuration.
      */
     /**
-     * @param  array<string, mixed>  $configInfo
+     * @param  array<mixed, mixed>  $configInfo
      * @return array<string, mixed>
      */
     private function restoreConfiguration(string $backupPath, array $configInfo): array
