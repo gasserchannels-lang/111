@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class AdvancedPerformanceTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function page_load_speed_is_acceptable()

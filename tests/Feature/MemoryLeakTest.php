@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class MemoryLeakTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function memory_usage_does_not_increase_significantly()

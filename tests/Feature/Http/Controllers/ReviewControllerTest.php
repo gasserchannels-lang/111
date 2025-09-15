@@ -13,7 +13,7 @@ use Tests\TestCase;
 
 class ReviewControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     private User $user;
 

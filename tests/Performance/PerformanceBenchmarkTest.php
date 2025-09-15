@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class PerformanceBenchmarkTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function homepage_load_time_benchmark()

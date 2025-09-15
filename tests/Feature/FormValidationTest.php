@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class FormValidationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function validates_required_fields()

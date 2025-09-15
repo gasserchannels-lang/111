@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class RoutingTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function home_route_works()

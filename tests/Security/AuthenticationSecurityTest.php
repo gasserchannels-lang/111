@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class AuthenticationSecurityTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function passwords_are_hashed_before_storage()

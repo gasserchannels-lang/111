@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class SecurityAudit extends TestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Test password security requirements.

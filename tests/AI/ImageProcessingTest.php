@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ImageProcessingTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function can_analyze_product_images()

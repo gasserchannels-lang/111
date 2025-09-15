@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class PerformanceBenchmark extends TestCase
 {
-    use RefreshDatabase;
+    
     use WithFaker;
 
     /**

@@ -13,7 +13,7 @@ use Tests\TestCase;
  */
 class StrictMockeryTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Test strict mock expectations with exact parameters

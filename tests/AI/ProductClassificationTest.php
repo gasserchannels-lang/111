@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ProductClassificationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function can_classify_electronics()

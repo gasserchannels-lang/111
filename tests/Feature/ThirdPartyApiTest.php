@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ThirdPartyApiTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function external_api_requests_are_mocked()

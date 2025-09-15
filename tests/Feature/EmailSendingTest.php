@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class EmailSendingTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function can_send_welcome_email()

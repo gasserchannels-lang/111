@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ApiResponseTimeTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function api_endpoints_respond_within_acceptable_time()

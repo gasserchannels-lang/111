@@ -14,7 +14,7 @@ use Tests\TestCase;
  */
 class ProcessIsolationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Test console command mocking with process isolation

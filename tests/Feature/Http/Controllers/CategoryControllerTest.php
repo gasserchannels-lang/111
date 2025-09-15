@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_categories_index()

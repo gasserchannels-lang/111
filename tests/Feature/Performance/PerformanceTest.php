@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class PerformanceTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_large_dataset_efficiently()

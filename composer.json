@@ -109,7 +109,7 @@
         ],
         "test": [
             "@php artisan config:clear",
-            "@php artisan test --without-brave"
+            "@php artisan test"
         ],
         "test:coverage": [
             "@php artisan test --coverage"

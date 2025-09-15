@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AILearningTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function ai_can_learn_from_user_feedback()

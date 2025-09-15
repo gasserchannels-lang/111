@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class PriceOfferTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_price_offer()

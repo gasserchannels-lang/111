@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_product()

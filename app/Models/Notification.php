@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\NotificationFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Notification extends Model
 {
     use HasFactory;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): NotificationFactory
+    {
+        return NotificationFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -472,7 +481,7 @@ class Notification extends Model
         $summary = strip_tags($this->message);
 
         if (strlen($summary) > $length) {
-            $summary = substr($summary, 0, $length) . '...';
+            $summary = substr($summary, 0, $length).'...';
         }
 
         return $summary;
@@ -622,7 +631,7 @@ class Notification extends Model
     public function removeTag(string $tag): bool
     {
         $tags = $this->getTags();
-        $tags = array_filter($tags, fn($t) => $t !== $tag);
+        $tags = array_filter($tags, fn ($t) => $t !== $tag);
 
         return $this->setTags(array_values($tags));
     }

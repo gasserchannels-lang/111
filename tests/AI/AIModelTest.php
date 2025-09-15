@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AIModelTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function ai_model_initializes_correctly()

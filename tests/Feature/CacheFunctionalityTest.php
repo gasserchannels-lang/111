@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class CacheFunctionalityTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function can_store_data_in_cache()

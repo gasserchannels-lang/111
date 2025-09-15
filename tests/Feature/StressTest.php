@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class StressTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function system_handles_high_concurrent_users()

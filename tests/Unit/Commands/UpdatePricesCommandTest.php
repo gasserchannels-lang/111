@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class UpdatePricesCommandTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_update_prices_command()

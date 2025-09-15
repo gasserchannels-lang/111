@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class RecommendationSystemTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function can_generate_user_recommendations()

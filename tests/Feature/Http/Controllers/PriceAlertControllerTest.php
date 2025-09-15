@@ -17,7 +17,7 @@ use Tests\TestCase;
 
 class PriceAlertControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     private User $user;
 

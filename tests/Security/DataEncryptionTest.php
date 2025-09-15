@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class DataEncryptionTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function sensitive_data_is_encrypted_at_rest()

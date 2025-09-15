@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
 use Mockery;
@@ -16,8 +15,6 @@ use Tests\TestCase;
  */
 class AlternativeMockeryTest extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test mocking database operations instead of console
      *
@@ -109,7 +106,7 @@ class AlternativeMockeryTest extends TestCase
 
         $mockResponse->shouldReceive('getBody')
             ->once()
-            ->andReturn('{"success": true}');
+            ->andReturn(Mockery::mock('Psr\Http\Message\StreamInterface', ['__toString' => '{"success": true}']));
 
         $mockClient->shouldReceive('get')
             ->once()

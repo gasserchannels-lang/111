@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class CSRFTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function post_requests_require_csrf_token()

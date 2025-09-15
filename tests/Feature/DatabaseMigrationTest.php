@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class DatabaseMigrationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function users_table_has_correct_structure()

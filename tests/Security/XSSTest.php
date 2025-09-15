@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class XSSTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function user_input_is_properly_escaped_in_html_output()

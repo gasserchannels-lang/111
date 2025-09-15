@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class ComprehensiveApiTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     protected function setUp(): void
     {

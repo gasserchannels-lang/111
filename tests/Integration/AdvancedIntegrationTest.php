@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class AdvancedIntegrationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function complete_user_journey_works()

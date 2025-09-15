@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class PermissionControlTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     protected function setUp(): void
     {

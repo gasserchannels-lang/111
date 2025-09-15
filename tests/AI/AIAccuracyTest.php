@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AIAccuracyTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function sentiment_analysis_accuracy_is_acceptable()

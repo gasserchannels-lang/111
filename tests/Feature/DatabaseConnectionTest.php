@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class DatabaseConnectionTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function database_connection_works()

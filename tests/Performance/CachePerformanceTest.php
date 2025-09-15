@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class CachePerformanceTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function cache_operations_perform_within_acceptable_time()

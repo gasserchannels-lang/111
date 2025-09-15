@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class LoadTimeTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function homepage_loads_within_acceptable_time()

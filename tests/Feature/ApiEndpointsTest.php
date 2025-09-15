@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ApiEndpointsTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function api_returns_json_response()

@@ -16,7 +16,7 @@ use Tests\TestCase;
 
 class PriceSearchIntegrationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_search_prices_with_full_workflow()

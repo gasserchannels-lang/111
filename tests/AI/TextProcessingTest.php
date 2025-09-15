@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class TextProcessingTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function can_process_arabic_text()

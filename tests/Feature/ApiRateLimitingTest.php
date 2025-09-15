@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ApiRateLimitingTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function api_requests_are_rate_limited()

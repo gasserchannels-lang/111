@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AIErrorHandlingTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function ai_handles_invalid_input_gracefully()

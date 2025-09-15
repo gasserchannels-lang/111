@@ -14,7 +14,7 @@ use Tests\TestCase;
  */
 class MockeryDebugTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Test basic Mockery functionality

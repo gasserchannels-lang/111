@@ -13,7 +13,7 @@ use Tests\TestCase;
  */
 class IsolatedStrictTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     /**
      * Test strict console command mocking with isolation

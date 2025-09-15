@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AIModelPerformanceTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function ai_model_responds_within_acceptable_time()

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function user_can_register()

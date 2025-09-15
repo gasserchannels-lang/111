@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AIResponseTimeTest extends TestCase
 {
-    use RefreshDatabase;
+    
 
     #[Test]
     public function text_analysis_response_time_is_acceptable()
