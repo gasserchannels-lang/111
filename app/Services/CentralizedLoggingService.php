@@ -411,7 +411,7 @@ class CentralizedLoggingService
         }
 
         // Sort by timestamp
-        usort($allLogs, function ($a, $b) {
+        usort($allLogs, function ($a, $b): int {
             $timestampA = is_array($a) && isset($a['timestamp']) && is_string($a['timestamp']) ? $a['timestamp'] : '';
             $timestampB = is_array($b) && isset($b['timestamp']) && is_string($b['timestamp']) ? $b['timestamp'] : '';
 
@@ -440,11 +440,7 @@ class CentralizedLoggingService
                 foreach ($logs as $log) {
                     if (is_array($log) && isset($log['level'])) {
                         $levelValue = $log['level'];
-                        if (is_string($levelValue)) {
-                            $level = $levelValue;
-                        } else {
-                            $level = 'unknown';
-                        }
+                        $level = is_string($levelValue) ? $levelValue : 'unknown';
                         $levelCounts[$level] = ($levelCounts[$level] ?? 0) + 1;
                     }
                 }
@@ -503,6 +499,7 @@ class CentralizedLoggingService
 
         switch ($format) {
             case 'json':
+            default:
                 $result = json_encode($logs, JSON_PRETTY_PRINT);
 
                 return $result !== false ? $result : '';
@@ -510,10 +507,6 @@ class CentralizedLoggingService
                 return $this->exportToCsv($logs);
             case 'txt':
                 return $this->exportToTxt($logs);
-            default:
-                $result = json_encode($logs, JSON_PRETTY_PRINT);
-
-                return $result !== false ? $result : '';
         }
     }
 

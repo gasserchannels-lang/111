@@ -51,7 +51,7 @@ class SecurityAnalysisService
         }
 
         $outdated = $process->getOutput();
-        if (empty(trim($outdated)) || str_contains($outdated, 'No direct dependencies')) {
+        if (in_array(trim($outdated), ['', '0'], true) || str_contains($outdated, 'No direct dependencies')) {
             return 30;
         }
 
@@ -148,7 +148,7 @@ class SecurityAnalysisService
             // Check if middleware is registered in any of the arrays
             return str_contains($kernelContent ?: '', $middlewareClass) ||
                    str_contains($kernelContent ?: '', $shortClassName);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return false;
         }
     }

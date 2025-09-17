@@ -255,10 +255,12 @@ class BackupController extends Controller
 
             $backups = [];
             foreach ($files as $file) {
-                if ($file === '.' || $file === '..') {
+                if ($file === '.') {
                     continue;
                 }
-
+                if ($file === '..') {
+                    continue;
+                }
                 $filePath = $this->backupPath.'/'.$file;
                 if (is_file($filePath)) {
                     $fileSize = filesize($filePath);
@@ -275,9 +277,7 @@ class BackupController extends Controller
             }
 
             // Sort by creation time (newest first)
-            usort($backups, function ($a, $b) {
-                return strtotime($b['created_at']) - strtotime($a['created_at']);
-            });
+            usort($backups, fn(array $a, array $b): int => strtotime((string) $b['created_at']) - strtotime((string) $a['created_at']));
 
             return $backups;
         } catch (\Exception $e) {
@@ -387,7 +387,7 @@ class BackupController extends Controller
             ];
 
             foreach ($directories as $dir) {
-                $this->addDirectoryToZip($zip, base_path($dir), $dir, $options);
+                $this->addDirectoryToZip($zip, base_path($dir), $dir);
             }
         } catch (\Exception $e) {
             Log::error('Error backing up files: '.$e->getMessage());
@@ -396,10 +396,8 @@ class BackupController extends Controller
 
     /**
      * Add directory to zip.
-     *
-     * @param  array<string, mixed>  $options
      */
-    private function addDirectoryToZip(ZipArchive $zip, string $dir, string $zipPath, array $options): void
+    private function addDirectoryToZip(ZipArchive $zip, string $dir, string $zipPath): void
     {
         if (! is_dir($dir)) {
             return;
@@ -412,7 +410,7 @@ class BackupController extends Controller
 
         foreach ($files as $file) {
             if ($file->isFile()) {
-                $relativePath = $zipPath.'/'.substr($file->getRealPath(), strlen($dir) + 1);
+                $relativePath = $zipPath.'/'.substr((string) $file->getRealPath(), strlen($dir) + 1);
                 $zip->addFile($file->getRealPath(), $relativePath);
             }
         }
@@ -524,7 +522,7 @@ class BackupController extends Controller
 
             foreach ($files as $file) {
                 if ($file->isFile()) {
-                    $relativePath = substr($file->getRealPath(), strlen($tempDir) + 1);
+                    $relativePath = substr((string) $file->getRealPath(), strlen($tempDir) + 1);
                     $targetPath = base_path($relativePath);
 
                     $targetDir = dirname($targetPath);
@@ -545,11 +543,13 @@ class BackupController extends Controller
      */
     private function getBackupType(string $filename): string
     {
-        if (strpos($filename, 'database') !== false) {
+        if (str_contains($filename, 'database')) {
             return 'database';
-        } elseif (strpos($filename, 'files') !== false) {
+        }
+        if (str_contains($filename, 'files')) {
             return 'files';
-        } else {
+        }
+        else {
             return 'full';
         }
     }
@@ -563,7 +563,7 @@ class BackupController extends Controller
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($units) - 1);
-        $bytes /= pow(1024, $pow);
+        $bytes /= 1024 ** $pow;
 
         return round($bytes, 2).' '.$units[$pow];
     }

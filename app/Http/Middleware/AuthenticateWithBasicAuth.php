@@ -15,12 +15,19 @@ class AuthenticateWithBasicAuth
     {
         $username = $request->getUser();
         $password = $request->getPassword();
-
-        if ($username && $password) {
-            if ($username === config('app.basic_auth_username') &&
-                $password === config('app.basic_auth_password')) {
-                return $next($request);
-            }
+        if (!$username) {
+            return response('Unauthorized', 401, [
+                'WWW-Authenticate' => 'Basic realm="API"',
+            ]);
+        }
+        if (!$password) {
+            return response('Unauthorized', 401, [
+                'WWW-Authenticate' => 'Basic realm="API"',
+            ]);
+        }
+        if ($username === config('app.basic_auth_username') &&
+            $password === config('app.basic_auth_password')) {
+            return $next($request);
         }
 
         return response('Unauthorized', 401, [

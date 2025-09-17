@@ -18,7 +18,7 @@ class BrandController extends Controller
     {
         $brands = Brand::with('products')->paginate(20);
 
-        return view('brands.index', compact('brands'));
+        return view('brands.index', ['brands' => $brands]);
     }
 
     /**
@@ -58,7 +58,7 @@ class BrandController extends Controller
     {
         $brand->load('products');
 
-        return view('brands.show', compact('brand'));
+        return view('brands.show', ['brand' => $brand]);
     }
 
     /**
@@ -69,7 +69,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand): View
     {
-        return view('brands.edit', compact('brand'));
+        return view('brands.edit', ['brand' => $brand]);
     }
 
     /**

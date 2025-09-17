@@ -16,7 +16,7 @@ class CDNService
      */
     private array $config;
 
-    private string $provider;
+    private readonly string $provider;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class CDNService
     public function uploadFile(string $localPath, ?string $remotePath = null): array
     {
         try {
-            $remotePath = $remotePath ?? $localPath;
+            $remotePath ??= $localPath;
 
             $fileContent = Storage::disk('public')->get($localPath);
             $mimeType = Storage::disk('public')->mimeType($localPath);
@@ -210,19 +210,12 @@ class CDNService
      */
     private function uploadToCDN(string $content, string $path, string $mimeType): array
     {
-        switch ($this->provider) {
-            case 'cloudflare':
-                return $this->uploadToCloudflare($content, $path, $mimeType);
-
-            case 'aws_s3':
-                return $this->uploadToS3($content, $path, $mimeType);
-
-            case 'google_cloud':
-                return $this->uploadToGoogleCloud($content, $path, $mimeType);
-
-            default:
-                throw new Exception("Unsupported CDN provider: {$this->provider}");
-        }
+        return match ($this->provider) {
+            'cloudflare' => $this->uploadToCloudflare($content, $path, $mimeType),
+            'aws_s3' => $this->uploadToS3($path),
+            'google_cloud' => $this->uploadToGoogleCloud($path),
+            default => throw new Exception("Unsupported CDN provider: {$this->provider}"),
+        };
     }
 
     /**
@@ -235,7 +228,8 @@ class CDNService
     {
         $apiToken = is_string($this->config['api_token'] ?? null) ? $this->config['api_token'] : '';
         $accountId = is_string($this->config['account_id'] ?? null) ? $this->config['account_id'] : '';
-        $zoneId = is_string($this->config['zone_id'] ?? null) ? $this->config['zone_id'] : '';
+        if (is_string($this->config['zone_id'] ?? null)) {
+        }
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$apiToken,
@@ -253,10 +247,10 @@ class CDNService
 
         $result = isset($data['result']) && is_array($data['result']) ? $data['result'] : [];
         $variants = isset($result['variants']) && is_array($result['variants']) ? $result['variants'] : [];
-        $id = isset($result['id']) ? $result['id'] : null;
+        $id = $result['id'] ?? null;
 
         return [
-            'url' => ! empty($variants) && isset($variants[0]) && is_string($variants[0]) ? $variants[0] : $this->getUrl($path),
+            'url' => $variants !== [] && isset($variants[0]) && is_string($variants[0]) ? $variants[0] : $this->getUrl($path),
             'id' => $id,
             'provider' => 'cloudflare',
         ];
@@ -268,12 +262,14 @@ class CDNService
     /**
      * @return array<string, mixed>
      */
-    private function uploadToS3(string $content, string $path, string $mimeType): array
+    private function uploadToS3(string $path): array
     {
         $bucket = is_string($this->config['bucket'] ?? null) ? $this->config['bucket'] : '';
         $region = is_string($this->config['region'] ?? null) ? $this->config['region'] : '';
-        $accessKey = is_string($this->config['access_key'] ?? null) ? $this->config['access_key'] : '';
-        $secretKey = is_string($this->config['secret_key'] ?? null) ? $this->config['secret_key'] : '';
+        if (is_string($this->config['access_key'] ?? null)) {
+        }
+        if (is_string($this->config['secret_key'] ?? null)) {
+        }
 
         // This would use AWS SDK in a real implementation
         $url = 'https://'.$bucket.'.s3.'.$region.".amazonaws.com/{$path}";
@@ -290,11 +286,13 @@ class CDNService
     /**
      * @return array<string, mixed>
      */
-    private function uploadToGoogleCloud(string $content, string $path, string $mimeType): array
+    private function uploadToGoogleCloud(string $path): array
     {
         $bucket = is_string($this->config['bucket'] ?? null) ? $this->config['bucket'] : '';
-        $projectId = is_string($this->config['project_id'] ?? null) ? $this->config['project_id'] : '';
-        $credentials = is_array($this->config['credentials'] ?? []) ? $this->config['credentials'] : [];
+        if (is_string($this->config['project_id'] ?? null)) {
+        }
+        if (is_array($this->config['credentials'] ?? [])) {
+        }
 
         // This would use Google Cloud SDK in a real implementation
         $url = 'https://storage.googleapis.com/'.$bucket."/{$path}";
@@ -310,19 +308,12 @@ class CDNService
      */
     private function deleteFromCDN(string $path): bool
     {
-        switch ($this->provider) {
-            case 'cloudflare':
-                return $this->deleteFromCloudflare($path);
-
-            case 'aws_s3':
-                return $this->deleteFromS3($path);
-
-            case 'google_cloud':
-                return $this->deleteFromGoogleCloud($path);
-
-            default:
-                throw new Exception("Unsupported CDN provider: {$this->provider}");
-        }
+        return match ($this->provider) {
+            'cloudflare' => $this->deleteFromCloudflare($path),
+            'aws_s3' => $this->deleteFromS3(),
+            'google_cloud' => $this->deleteFromGoogleCloud(),
+            default => throw new Exception("Unsupported CDN provider: {$this->provider}"),
+        };
     }
 
     /**
@@ -343,7 +334,7 @@ class CDNService
     /**
      * Delete from AWS S3.
      */
-    private function deleteFromS3(string $path): bool
+    private function deleteFromS3(): bool
     {
         // This would use AWS SDK in a real implementation
         return true;
@@ -352,7 +343,7 @@ class CDNService
     /**
      * Delete from Google Cloud Storage.
      */
-    private function deleteFromGoogleCloud(string $path): bool
+    private function deleteFromGoogleCloud(): bool
     {
         // This would use Google Cloud SDK in a real implementation
         return true;
@@ -366,19 +357,12 @@ class CDNService
      */
     private function purgeCDNCache(array $urls): bool
     {
-        switch ($this->provider) {
-            case 'cloudflare':
-                return $this->purgeCloudflareCache($urls);
-
-            case 'aws_s3':
-                return $this->purgeS3Cache($urls);
-
-            case 'google_cloud':
-                return $this->purgeGoogleCloudCache($urls);
-
-            default:
-                throw new Exception("Unsupported CDN provider: {$this->provider}");
-        }
+        return match ($this->provider) {
+            'cloudflare' => $this->purgeCloudflareCache($urls),
+            'aws_s3' => $this->purgeS3Cache(),
+            'google_cloud' => $this->purgeGoogleCloudCache(),
+            default => throw new Exception("Unsupported CDN provider: {$this->provider}"),
+        };
     }
 
     /**
@@ -396,33 +380,21 @@ class CDNService
             'Authorization' => 'Bearer '.$apiToken,
             'Content-Type' => 'application/json',
         ])->post('https://api.cloudflare.com/client/v4/zones/'.$zoneId.'/purge_cache', [
-            'purge_everything' => empty($urls),
+            'purge_everything' => $urls === [],
             'files' => $urls,
         ]);
 
         return $response->successful();
     }
 
-    /**
-     * Purge S3 cache.
-     */
-    /**
-     * @param  list<string>  $urls
-     */
-    private function purgeS3Cache(array $urls): bool
+    private function purgeS3Cache(): bool
     {
         // S3 doesn't have built-in cache purging
         // This would invalidate CloudFront if configured
         return true;
     }
 
-    /**
-     * Purge Google Cloud cache.
-     */
-    /**
-     * @param  list<string>  $urls
-     */
-    private function purgeGoogleCloudCache(array $urls): bool
+    private function purgeGoogleCloudCache(): bool
     {
         // This would use Google Cloud SDK in a real implementation
         return true;
@@ -437,19 +409,12 @@ class CDNService
     public function getStatistics(): array
     {
         try {
-            switch ($this->provider) {
-                case 'cloudflare':
-                    return $this->getCloudflareStatistics();
-
-                case 'aws_s3':
-                    return $this->getS3Statistics();
-
-                case 'google_cloud':
-                    return $this->getGoogleCloudStatistics();
-
-                default:
-                    return [];
-            }
+            return match ($this->provider) {
+                'cloudflare' => $this->getCloudflareStatistics(),
+                'aws_s3' => $this->getS3Statistics(),
+                'google_cloud' => $this->getGoogleCloudStatistics(),
+                default => [],
+            };
         } catch (Exception $e) {
             Log::error('Failed to get CDN statistics', [
                 'provider' => $this->provider,

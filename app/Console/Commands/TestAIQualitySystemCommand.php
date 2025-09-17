@@ -45,7 +45,7 @@ class TestAIQualitySystemCommand extends Command
     {
         $this->info('🤖 اختبار وكيل ضمان الجودة...');
 
-        $agent = new StrictQualityAgent;
+        new StrictQualityAgent;
 
         // Test agent initialization
         $this->info('✓ تم تهيئة الوكيل بنجاح');
@@ -69,11 +69,11 @@ class TestAIQualitySystemCommand extends Command
         $this->info('✓ تم تهيئة المراقب بنجاح');
 
         // Test health status
-        $status = $monitor->getHealthStatus();
+        $monitor->getHealthStatus();
         $this->info('✓ تم اختبار حالة الصحة');
 
         // Test alerts summary
-        $alerts = $monitor->getAlertsSummary();
+        $monitor->getAlertsSummary();
         $this->info('✓ تم اختبار ملخص التنبيهات');
 
         $this->info('✅ نجح اختبار مراقب الجودة المستمر');
@@ -83,8 +83,8 @@ class TestAIQualitySystemCommand extends Command
     {
         $this->info('🚀 اختبار النظام الكامل...');
 
-        $agent = new StrictQualityAgent;
-        $monitor = new ContinuousQualityMonitor;
+        new StrictQualityAgent;
+        new ContinuousQualityMonitor;
 
         // Test integration
         $this->info('✓ تم اختبار التكامل بين المكونات');

@@ -119,11 +119,13 @@ class InputSanitizerService
             foreach ($nodes as $node) {
                 if ($node->hasAttributes()) {
                     foreach ($node->attributes as $attr) {
-                        if (! in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
-                            if ($node instanceof \DOMElement) {
-                                $node->removeAttribute($attr->nodeName);
-                            }
+                        if (in_array(strtolower($attr->nodeName), $this->allowedAttributes)) {
+                            continue;
                         }
+                        if (!$node instanceof \DOMElement) {
+                            continue;
+                        }
+                        $node->removeAttribute($attr->nodeName);
                     }
                 }
             }

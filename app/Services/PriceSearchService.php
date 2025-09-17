@@ -10,11 +10,8 @@ use Illuminate\Http\Request;
 
 class PriceSearchService
 {
-    private ValidationFactory $validationFactory;
-
-    public function __construct(ValidationFactory $validationFactory)
+    public function __construct(private readonly ValidationFactory $validationFactory)
     {
-        $this->validationFactory = $validationFactory;
     }
 
     /**
@@ -79,19 +76,19 @@ class PriceSearchService
         }
 
         if (isset($filters['min_price'])) {
-            $query->whereHas('priceOffers', function ($q) use ($filters) {
+            $query->whereHas('priceOffers', function ($q) use ($filters): void {
                 $q->where('price_offers.price', '>=', $filters['min_price']);
             });
         }
 
         if (isset($filters['max_price'])) {
-            $query->whereHas('priceOffers', function ($q) use ($filters) {
+            $query->whereHas('priceOffers', function ($q) use ($filters): void {
                 $q->where('price_offers.price', '<=', $filters['max_price']);
             });
         }
 
         if (isset($filters['country_code'])) {
-            $query->whereHas('priceOffers.store', function ($q) use ($filters) {
+            $query->whereHas('priceOffers.store', function ($q) use ($filters): void {
                 $q->where('stores.country_code', $filters['country_code']);
             });
         }
@@ -131,16 +128,12 @@ class PriceSearchService
             ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy('store.name')
-            ->map(function ($offers) {
-                return $offers->map(function ($offer) {
-                    return [
-                        'price' => $offer->price,
-                        'currency' => $offer->currency,
-                        'date' => $offer->created_at?->format('Y-m-d H:i:s') ?? '',
-                        'in_stock' => $offer->in_stock,
-                    ];
-                });
-            });
+            ->map(fn($offers) => $offers->map(fn($offer): array => [
+                'price' => $offer->price,
+                'currency' => $offer->currency,
+                'date' => $offer->created_at?->format('Y-m-d H:i:s') ?? '',
+                'in_stock' => $offer->in_stock,
+            ]));
 
         return [
             'success' => true,
@@ -169,7 +162,7 @@ class PriceSearchService
 
         $query = $product->priceOffers()->with('store');
 
-        if (! empty($storeIds)) {
+        if ($storeIds !== []) {
             $query->whereIn('store_id', $storeIds);
         }
 
@@ -183,18 +176,16 @@ class PriceSearchService
             ];
         }
 
-        $comparison = $offers->map(function ($offer) {
-            return [
-                'store_name' => $offer->store->name ?? 'Unknown Store',
-                'price' => $offer->price,
-                'currency' => $offer->currency,
-                'in_stock' => $offer->in_stock,
-                'product_url' => $offer->product_url,
-                'affiliate_url' => $offer->affiliate_url,
-                'rating' => $offer->rating,
-                'reviews_count' => $offer->reviews_count,
-            ];
-        });
+        $comparison = $offers->map(fn($offer): array => [
+            'store_name' => $offer->store->name ?? 'Unknown Store',
+            'price' => $offer->price,
+            'currency' => $offer->currency,
+            'in_stock' => $offer->in_stock,
+            'product_url' => $offer->product_url,
+            'affiliate_url' => $offer->affiliate_url,
+            'rating' => $offer->rating,
+            'reviews_count' => $offer->reviews_count,
+        ]);
 
         return [
             'success' => true,

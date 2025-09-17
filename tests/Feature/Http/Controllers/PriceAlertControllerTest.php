@@ -9,15 +9,25 @@ use App\Models\Category;
 use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Tests\TestCase;
+
+/**
+ * اختبارات تحكم تنبيهات الأسعار
+ *
+ * هذا الكلاس يختبر وظائف تحكم تنبيهات الأسعار
+ * ويحذر من مشاكل الأمان والتحقق من البيانات
+ *
+ * ⚠️ تحذير: يجب التأكد من صحة البيانات والأمان في تنبيهات الأسعار
+ */
 
 class PriceAlertControllerTest extends TestCase
 {
-    
+    use DatabaseTransactions;
 
     private User $user;
 
@@ -31,22 +41,40 @@ class PriceAlertControllerTest extends TestCase
         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
     }
 
+    private function createProduct(): Product
+    {
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        return Product::factory()->create([
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+        ]);
+    }
+
     // region -------------------- 1. View Lifecycle (Index & Show) --------------------
 
     #[Test]
+    #[CoversNothing]
     public function index_displays_only_user_price_alerts(): void
     {
-        PriceAlert::factory()->count(3)->create(['user_id' => $this->user->id]);
-        PriceAlert::factory()->count(2)->create(['user_id' => $this->anotherUser->id]);
+        // ⚠️ تحذير: يجب عرض تنبيهات الأسعار للمستخدم الحالي فقط
+        $product = $this->createProduct();
+
+        PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
+        PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 200.00, 'repeat_alert' => false, 'is_active' => true]);
+        PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 300.00, 'repeat_alert' => true, 'is_active' => true]);
+        PriceAlert::factory()->create(['user_id' => $this->anotherUser->id, 'product_id' => $product->id, 'target_price' => 150.00, 'repeat_alert' => true, 'is_active' => true]);
+        PriceAlert::factory()->create(['user_id' => $this->anotherUser->id, 'product_id' => $product->id, 'target_price' => 250.00, 'repeat_alert' => false, 'is_active' => true]);
 
         $this->actingAs($this->user)
             ->get(route('price-alerts.index'))
             ->assertOk()
             ->assertViewIs('price-alerts.index')
-            ->assertViewHas('priceAlerts', fn ($priceAlerts): bool => $priceAlerts->count() === 3);
+            ->assertViewHas('priceAlerts', fn($priceAlerts): bool => $priceAlerts->count() === 3);
     }
 
     #[Test]
+    #[CoversNothing]
     public function index_displays_empty_list_when_no_alerts_exist(): void
     {
         $this->actingAs($this->user)
@@ -56,9 +84,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function show_displays_correct_price_alert_for_owner(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->user)
             ->get(route('price-alerts.show', $priceAlert))
@@ -68,9 +98,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function show_returns_403_for_another_user(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->anotherUser)
             ->get(route('price-alerts.show', $priceAlert))
@@ -78,6 +110,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function show_returns_404_for_non_existing_alert(): void
     {
         $this->actingAs($this->user)
@@ -90,8 +123,10 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 2. Create Lifecycle (Create & Store) --------------------
 
     #[Test]
+    #[CoversNothing]
     public function an_authenticated_user_can_create_a_price_alert(): void
     {
+        // ⚠️ تحذير: يجب التحقق من صحة بيانات تنبيه السعر قبل الحفظ
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
         $product = Product::factory()->create([
@@ -116,14 +151,17 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function creating_a_price_alert_fails_with_invalid_data(): void
     {
+        // ⚠️ تحذير: يجب رفض البيانات غير الصحيحة في تنبيهات الأسعار
         $this->actingAs($this->user)
             ->post(route('price-alerts.store'), ['product_id' => 999])
             ->assertSessionHasErrors(['product_id', 'target_price']);
     }
 
     #[Test]
+    #[CoversNothing]
     public function it_fails_to_store_a_price_alert_with_non_numeric_target_price(): void
     {
         $brand = Brand::factory()->create();
@@ -142,6 +180,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function it_fails_to_store_a_price_alert_with_non_existing_product_id(): void
     {
         $this->actingAs($this->user)
@@ -157,9 +196,11 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 3. Update Lifecycle (Edit & Update) --------------------
 
     #[Test]
+    #[CoversNothing]
     public function an_authenticated_user_can_update_their_price_alert(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->user)
             ->put(route('price-alerts.update', $priceAlert), [
@@ -177,9 +218,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function a_user_cannot_update_another_users_price_alert(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->anotherUser)
             ->put(route('price-alerts.update', $priceAlert), ['target_price' => 400])
@@ -187,6 +230,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function update_returns_404_for_non_existing_alert(): void
     {
         $this->actingAs($this->user)
@@ -195,9 +239,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function it_fails_to_update_a_price_alert_with_empty_target_price(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->user)
             ->put(route('price-alerts.update', $priceAlert), ['target_price' => ''])
@@ -209,9 +255,11 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 4. Management Lifecycle (Toggle & Destroy) --------------------
 
     #[Test]
+    #[CoversNothing]
     public function a_user_can_toggle_their_price_alert_status(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'is_active' => true]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->startSession();
 
@@ -227,9 +275,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function it_cannot_toggle_another_users_price_alert(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->anotherUser->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->anotherUser->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->startSession();
 
@@ -239,9 +289,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function a_user_can_delete_their_price_alert(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->user)
             ->delete(route('price-alerts.destroy', $priceAlert))
@@ -252,9 +304,11 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function a_user_cannot_delete_another_users_price_alert(): void
     {
-        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id]);
+        $product = $this->createProduct();
+        $priceAlert = PriceAlert::factory()->create(['user_id' => $this->user->id, 'product_id' => $product->id, 'target_price' => 100.00, 'repeat_alert' => true, 'is_active' => true]);
 
         $this->actingAs($this->anotherUser)
             ->delete(route('price-alerts.destroy', $priceAlert))
@@ -262,6 +316,7 @@ class PriceAlertControllerTest extends TestCase
     }
 
     #[Test]
+    #[CoversNothing]
     public function destroy_returns_404_for_non_existing_alert(): void
     {
         $this->startSession();
@@ -276,6 +331,7 @@ class PriceAlertControllerTest extends TestCase
     // region -------------------- 5. Guest Security Tests --------------------
 
     #[Test]
+    #[CoversNothing]
     #[DataProvider('guestRoutesProvider')]
     #[Group('security')]
     public function a_guest_is_redirected_to_login_from_all_protected_routes(string $method, string $routeName): void

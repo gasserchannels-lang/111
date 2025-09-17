@@ -57,7 +57,7 @@ abstract class BaseApiController extends V1BaseController
             'timestamp' => now()->toISOString(),
         ];
 
-        if (! empty($meta)) {
+        if ($meta !== []) {
             $response['meta'] = $meta;
         }
 
@@ -84,7 +84,7 @@ abstract class BaseApiController extends V1BaseController
             $response['errors'] = $errors;
         }
 
-        if (! empty($meta)) {
+        if ($meta !== []) {
             $response['meta'] = $meta;
         }
 
@@ -124,7 +124,7 @@ abstract class BaseApiController extends V1BaseController
             'timestamp' => now()->toISOString(),
         ];
 
-        if (! empty($meta)) {
+        if ($meta !== []) {
             $response['meta'] = $meta;
         }
 
@@ -168,9 +168,7 @@ abstract class BaseApiController extends V1BaseController
         $filters = $request->except(['page', 'per_page', 'sort_by', 'sort_order', 'search', 'include', 'fields']);
 
         // Remove empty values
-        $filters = array_filter($filters, function ($value) {
-            return $value !== null && $value !== '';
-        });
+        $filters = array_filter($filters, fn($value): bool => $value !== null && $value !== '');
 
         // Add v2 specific filters
         if ($request->has('date_from')) {

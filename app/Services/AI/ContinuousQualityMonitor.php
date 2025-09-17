@@ -134,13 +134,13 @@ class ContinuousQualityMonitor
 
         try {
             $command = $rule['command'] ?? '';
-            if (is_string($command) && ! empty($command)) {
+            if (is_string($command) && ($command !== '' && $command !== '0')) {
                 $result = Process::run($command);
                 $endTime = microtime(true);
                 $duration = round($endTime - $startTime, 2);
 
                 $success = $result->successful();
-                $healthScore = $this->calculateHealthScore($ruleId, $result, $rule);
+                $healthScore = $this->calculateHealthScore($ruleId, $result);
             } else {
                 $result = null;
                 $endTime = microtime(true);
@@ -175,34 +175,21 @@ class ContinuousQualityMonitor
 
     /**
      * Calculate health score based on rule type.
-     *
-     * @param  array<string, mixed>  $rule
      */
-    private function calculateHealthScore(string $ruleId, mixed $result, array $rule): int
+    private function calculateHealthScore(string $ruleId, mixed $result): int
     {
         if (! $result || ! is_object($result) || ! method_exists($result, 'successful') || ! $result->successful()) {
             return 0;
         }
 
-        switch ($ruleId) {
-            case 'code_quality':
-                return $this->calculateCodeQualityScore(method_exists($result, 'output') ? $result->output() : '');
-
-            case 'test_coverage':
-                return $this->calculateTestCoverageScore(method_exists($result, 'output') ? $result->output() : '');
-
-            case 'security_scan':
-                return $this->calculateSecurityScore(method_exists($result, 'output') ? $result->output() : '');
-
-            case 'performance':
-                return $this->calculatePerformanceScore(method_exists($result, 'output') ? $result->output() : '');
-
-            case 'memory_usage':
-                return $this->calculateMemoryScore(method_exists($result, 'output') ? $result->output() : '');
-
-            default:
-                return 100;
-        }
+        return match ($ruleId) {
+            'code_quality' => $this->calculateCodeQualityScore(method_exists($result, 'output') ? $result->output() : ''),
+            'test_coverage' => $this->calculateTestCoverageScore(method_exists($result, 'output') ? $result->output() : ''),
+            'security_scan' => $this->calculateSecurityScore(method_exists($result, 'output') ? $result->output() : ''),
+            'performance' => $this->calculatePerformanceScore(method_exists($result, 'output') ? $result->output() : ''),
+            'memory_usage' => $this->calculateMemoryScore(method_exists($result, 'output') ? $result->output() : ''),
+            default => 100,
+        };
     }
 
     /**
@@ -220,9 +207,8 @@ class ContinuousQualityMonitor
         $warningCount = substr_count($output, 'WARNING');
 
         $totalIssues = $errorCount + $warningCount;
-        $score = max(0, 100 - ($totalIssues * 5));
 
-        return $score;
+        return max(0, 100 - ($totalIssues * 5));
     }
 
     /**
@@ -249,9 +235,8 @@ class ContinuousQualityMonitor
 
         // Count security issues
         $vulnerabilityCount = substr_count($output, 'vulnerability');
-        $score = max(0, 100 - ($vulnerabilityCount * 20));
 
-        return $score;
+        return max(0, 100 - ($vulnerabilityCount * 20));
     }
 
     /**
@@ -276,9 +261,8 @@ class ContinuousQualityMonitor
         if (preg_match('/(\d+)MB/', $output, $matches)) {
             $memoryUsage = (int) $matches[1];
             $maxMemory = 512;
-            $score = max(0, 100 - (($memoryUsage / $maxMemory) * 100));
 
-            return $score;
+            return max(0, 100 - (($memoryUsage / $maxMemory) * 100));
         }
 
         return 100;
@@ -373,12 +357,8 @@ class ContinuousQualityMonitor
      */
     public function getAlertsSummary(): array
     {
-        $criticalAlerts = array_filter($this->alerts, function ($alert) {
-            return is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'critical';
-        });
-        $warningAlerts = array_filter($this->alerts, function ($alert) {
-            return is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'warning';
-        });
+        $criticalAlerts = array_filter($this->alerts, fn($alert): bool => is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'critical');
+        $warningAlerts = array_filter($this->alerts, fn($alert): bool => is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'warning');
 
         return [
             'total' => count($this->alerts),

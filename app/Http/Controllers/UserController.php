@@ -29,7 +29,7 @@ class UserController extends Controller
         // Search by name or email
         if ($request->has('search')) {
             $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
+            $query->where(function ($q) use ($search): void {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
@@ -289,7 +289,7 @@ class UserController extends Controller
      */
     public function restore(int $userId): JsonResponse
     {
-        $user = User::findOrFail($userId);
+        User::findOrFail($userId);
 
         // Note: This would require soft deletes to be implemented in User model
         return response()->json([

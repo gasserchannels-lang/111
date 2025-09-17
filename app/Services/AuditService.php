@@ -27,11 +27,11 @@ class AuditService
         ?Request $request = null
     ): void {
         $user = Auth::user();
-        $request = $request ?? request();
+        $request ??= request();
 
         AuditLog::create([
             'event' => $event,
-            'auditable_type' => get_class($model),
+            'auditable_type' => $model::class,
             'auditable_id' => $model->getKey(),
             'user_id' => $user?->id,
             'ip_address' => $request->ip(),
@@ -140,7 +140,7 @@ class AuditService
      */
     public function getModelLogs(Model $model, ?int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
-        return AuditLog::where('auditable_type', get_class($model))
+        return AuditLog::where('auditable_type', $model::class)
             ->where('auditable_id', $model->getKey())
             ->orderBy('created_at', 'desc')
             ->limit($limit ?? 10)

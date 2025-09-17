@@ -417,7 +417,7 @@ class SystemController extends Controller
             }
 
             return 'Unknown';
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return 'Unknown';
         }
     }
@@ -433,7 +433,7 @@ class SystemController extends Controller
             }
 
             return 1;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return 1;
         }
     }
@@ -461,7 +461,7 @@ class SystemController extends Controller
     {
         try {
             return microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return 0.0;
         }
     }

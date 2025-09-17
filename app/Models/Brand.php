@@ -175,13 +175,13 @@ class Brand extends Model
     {
         parent::boot();
 
-        static::creating(function ($brand) {
+        static::creating(function ($brand): void {
             if (empty($brand->slug)) {
                 $brand->slug = \Str::slug($brand->name);
             }
         });
 
-        static::updating(function ($brand) {
+        static::updating(function ($brand): void {
             if ($brand->isDirty('name') && empty($brand->slug)) {
                 $brand->slug = \Str::slug($brand->name);
             }

@@ -7,13 +7,10 @@ namespace App\Services;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-final class TestAnalysisService
+final readonly class TestAnalysisService
 {
-    private bool $coverageEnabled;
-
-    public function __construct(bool $coverageEnabled = false)
+    public function __construct(private bool $coverageEnabled = false)
     {
-        $this->coverageEnabled = $coverageEnabled;
     }
 
     public static function withoutCoverage(): self

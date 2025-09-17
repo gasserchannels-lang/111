@@ -64,4 +64,4 @@ parameters:
         - '#function.alreadyNarrowedType#'
         - '#cast.double#'
         - '#binaryOp.invalid#'
-        - '#Class App\Models\Notification uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory#'
+        - '#Class App\\Models\\Notification uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'

@@ -27,11 +27,11 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('*', AppComposer::class);
 
         // Register specific view composers
-        View::composer(['layouts.app', 'layouts.admin'], function ($view) {
+        View::composer(['layouts.app', 'layouts.admin'], function ($view): void {
             $view->with('user', auth()->user());
         });
 
-        View::composer(['products.*', 'categories.*', 'brands.*'], function ($view) {
+        View::composer(['products.*', 'categories.*', 'brands.*'], function ($view): void {
             $view->with('breadcrumbs', $this->getBreadcrumbs());
         });
     }

@@ -264,7 +264,7 @@ class FileCleanupService
         ];
 
         // Calculate totals
-        foreach ($results as $key => $value) {
+        foreach ($results as $value) {
             if (is_array($value) && isset($value['files_deleted']) && is_numeric($value['files_deleted'])) {
                 $results['total_files_deleted'] += (int) $value['files_deleted'];
             }
@@ -407,7 +407,7 @@ class FileCleanupService
                 $lastCleanupDate = Carbon::parse($lastCleanup);
 
                 return $lastCleanupDate->addDay()->toISOString();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // If parsing fails, fall back to default
                 return Carbon::now()->addDay()->toISOString();
             }
@@ -425,8 +425,6 @@ class FileCleanupService
 
         switch ($schedule) {
             case 'hourly':
-                \Artisan::call('schedule:run');
-                break;
             case 'daily':
                 \Artisan::call('schedule:run');
                 break;

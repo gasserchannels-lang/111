@@ -17,11 +17,8 @@ use Illuminate\Support\Facades\Notification;
 
 class NotificationService
 {
-    private AuditService $auditService;
-
-    public function __construct(AuditService $auditService)
+    public function __construct(private readonly AuditService $auditService)
     {
-        $this->auditService = $auditService;
     }
 
     /**
@@ -141,7 +138,7 @@ class NotificationService
     public function sendSystemNotification(string $title, string $message, array $userIds = []): void
     {
         try {
-            $users = empty($userIds) ? User::all() : User::whereIn('id', $userIds)->get();
+            $users = $userIds === [] ? User::all() : User::whereIn('id', $userIds)->get();
 
             foreach ($users as $user) {
                 // $user->notify(new SystemNotification($title, $message));
@@ -234,14 +231,10 @@ class NotificationService
             $priceChanges = [];
             foreach ($alerts as $alert) {
                 $product = $alert->product;
-                if ($product) {
-                    $todayOffers = $product->priceOffers()
-                        ->whereDate('created_at', today())
-                        ->orderBy('price')
-                        ->first();
-                } else {
-                    $todayOffers = null;
-                }
+                $todayOffers = $product ? $product->priceOffers()
+                    ->whereDate('created_at', today())
+                    ->orderBy('price')
+                    ->first() : null;
 
                 if ($todayOffers) {
                     $priceChanges[] = [
@@ -253,7 +246,7 @@ class NotificationService
                 }
             }
 
-            if (! empty($priceChanges)) {
+            if ($priceChanges !== []) {
                 // $user->notify(new SystemNotification(
                 //     'Daily Price Summary',
                 //     'Here are the latest price updates for your watched products.'

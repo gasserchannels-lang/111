@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
 
         // Log Management (Hostinger has file size limits)
         $schedule->command('log:prune')->daily()
-            ->onSuccess(function () {
+            ->onSuccess(function (): void {
                 \Illuminate\Support\Facades\Log::info('Log pruning completed successfully');
             });
 
@@ -35,13 +35,13 @@ class Kernel extends ConsoleKernel
 
         // Database Maintenance
         $schedule->command('db:monitor')->hourly()
-            ->onFailure(function () {
+            ->onFailure(function (): void {
                 \Illuminate\Support\Facades\Log::error('Database monitoring failed');
             });
 
         // Deployment Health Checks
         $schedule->command('deployment:check')->daily()
-            ->onFailure(function () {
+            ->onFailure(function (): void {
                 \Illuminate\Support\Facades\Log::error('Deployment health check failed');
             });
     }

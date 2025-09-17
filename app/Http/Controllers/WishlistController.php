@@ -11,11 +11,8 @@ use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
-    private Guard $auth;
-
-    public function __construct(Guard $auth)
+    public function __construct(private readonly Guard $auth)
     {
-        $this->auth = $auth;
     }
 
     // تم إضافة هذا الثابت لتقليل التكرار

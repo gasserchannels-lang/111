@@ -37,7 +37,7 @@ class GlobalExceptionHandler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
+        $this->reportable(function (Throwable $e): void {
             //
         });
     }
@@ -69,15 +69,15 @@ class GlobalExceptionHandler extends ExceptionHandler
         }
 
         if ($e instanceof AuthenticationException) {
-            return $this->handleAuthenticationException($e);
+            return $this->handleAuthenticationException();
         }
 
         if ($e instanceof AuthorizationException) {
-            return $this->handleAuthorizationException($e);
+            return $this->handleAuthorizationException();
         }
 
         if ($e instanceof ModelNotFoundException) {
-            return $this->handleModelNotFoundException($e);
+            return $this->handleModelNotFoundException();
         }
 
         if ($e instanceof QueryException) {
@@ -85,7 +85,7 @@ class GlobalExceptionHandler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException) {
-            return $this->handleNotFoundHttpException($e);
+            return $this->handleNotFoundHttpException();
         }
 
         if ($e instanceof MethodNotAllowedHttpException) {
@@ -154,7 +154,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     /**
      * Handle authentication exceptions.
      */
-    private function handleAuthenticationException(AuthenticationException $e): JsonResponse
+    private function handleAuthenticationException(): JsonResponse
     {
         return response()->json([
             'success' => false,
@@ -166,7 +166,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     /**
      * Handle authorization exceptions.
      */
-    private function handleAuthorizationException(AuthorizationException $e): JsonResponse
+    private function handleAuthorizationException(): JsonResponse
     {
         return response()->json([
             'success' => false,
@@ -177,10 +177,8 @@ class GlobalExceptionHandler extends ExceptionHandler
 
     /**
      * Handle model not found exceptions.
-     *
-     * @param  ModelNotFoundException<\Illuminate\Database\Eloquent\Model>  $e
      */
-    private function handleModelNotFoundException(ModelNotFoundException $e): JsonResponse
+    private function handleModelNotFoundException(): JsonResponse
     {
         return response()->json([
             'success' => false,
@@ -227,7 +225,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     /**
      * Handle not found HTTP exceptions.
      */
-    private function handleNotFoundHttpException(NotFoundHttpException $e): JsonResponse
+    private function handleNotFoundHttpException(): JsonResponse
     {
         return response()->json([
             'success' => false,
@@ -283,7 +281,7 @@ class GlobalExceptionHandler extends ExceptionHandler
     private function logException(Throwable $e, Request $request): void
     {
         $context = [
-            'exception' => get_class($e),
+            'exception' => $e::class,
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
             'line' => $e->getLine(),
@@ -313,11 +311,11 @@ class GlobalExceptionHandler extends ExceptionHandler
             'PDOException',
             'RedisException',
             'MemcachedException',
-            'GuzzleHttp\Exception\ConnectException',
-            'Illuminate\Database\QueryException',
+            \GuzzleHttp\Exception\ConnectException::class,
+            \Illuminate\Database\QueryException::class,
         ];
 
-        return in_array(get_class($e), $criticalErrors) || $e->getCode() >= 500;
+        return in_array($e::class, $criticalErrors) || $e->getCode() >= 500;
     }
 
     /**
@@ -335,7 +333,7 @@ class GlobalExceptionHandler extends ExceptionHandler
                     'File: '.$e->getFile().':'.$e->getLine()."\n".
                     'Time: '.now()->toISOString()."\n".
                     'URL: '.request()->fullUrl(),
-                    function ($message) use ($adminEmails) {
+                    function ($message) use ($adminEmails): void {
                         $message->to($adminEmails)
                             ->subject('Critical Error Alert - COPRRA');
                     }

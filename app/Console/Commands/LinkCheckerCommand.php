@@ -47,7 +47,7 @@ class LinkCheckerCommand extends Command
         $progressBar = $this->output->createProgressBar(count((array) $routes));
 
         foreach ((array) $routes as $route) {
-            if ($route->methods()[0] === 'GET' && ! str_contains($route->uri(), '{')) {
+            if ($route->methods()[0] === 'GET' && ! str_contains((string) $route->uri(), '{')) {
                 // @phpstan-ignore-next-line
                 $this->checkLink(url($route->uri()), $route->getName());
             }
@@ -138,9 +138,8 @@ class LinkCheckerCommand extends Command
         // From static files
         /** @var array<array<string, string>> $staticLinks */
         $staticLinks = $this->getLinksFromStaticFiles();
-        $links = array_merge($links, $staticLinks);
 
-        return $links;
+        return array_merge($links, $staticLinks);
     }
 
     /** @return array<array<string, string>> */
@@ -153,10 +152,8 @@ class LinkCheckerCommand extends Command
         foreach ($viewFiles as $file) {
             $content = File::get($file->getPathname());
             preg_match_all('/href=["\'](https?:\/\/[^"\']+)["\']/', $content, $matches);
-            if (! empty($matches[1])) {
-                foreach ($matches[1] as $url) {
-                    $links[] = ['name' => 'View Link', 'url' => $url];
-                }
+            foreach ($matches[1] as $url) {
+                $links[] = ['name' => 'View Link', 'url' => $url];
             }
         }
 
@@ -173,7 +170,7 @@ class LinkCheckerCommand extends Command
         $this->info('Working links: '.count($this->workingLinks));
         $this->info('Broken links: '.count($this->brokenLinks));
 
-        if (! empty($this->brokenLinks)) {
+        if ($this->brokenLinks !== []) {
             $this->newLine();
             $this->error('❌ Broken Links Found:');
             $this->newLine();

@@ -14,7 +14,7 @@ class WelcomeMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @var mixed
+     * @var \App\Models\User
      */
     public $user;
 

@@ -201,7 +201,7 @@ class ProductUpdateRequest extends FormRequest
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -216,7 +216,7 @@ class ProductUpdateRequest extends FormRequest
      */
     public function withValidator($validator): void
     {
-        $validator->after(function ($validator) {
+        $validator->after(function ($validator): void {
             // Additional custom validation logic
             if ($this->has('dimensions')) {
                 $dimensions = $this->input('dimensions');

@@ -35,21 +35,17 @@ final class AppComposer
      */
     private function getLanguages(): array
     {
-        return cache()->remember('languages', 3600, function () {
-            return Language::where('is_active', true)
-                ->orderBy('sort_order')
-                ->get()
-                ->map(function ($language) {
-                    return [
-                        'code' => $language->code,
-                        'name' => $language->name,
-                        'native_name' => $language->native_name,
-                        'direction' => $language->direction,
-                        'is_current' => app()->getLocale() === $language->code,
-                    ];
-                })
-                ->toArray();
-        });
+        return cache()->remember('languages', 3600, fn() => Language::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn($language): array => [
+                'code' => $language->code,
+                'name' => $language->name,
+                'native_name' => $language->native_name,
+                'direction' => $language->direction,
+                'is_current' => app()->getLocale() === $language->code,
+            ])
+            ->toArray());
     }
 
     /**
@@ -59,20 +55,16 @@ final class AppComposer
      */
     private function getCategories(): array
     {
-        return cache()->remember('categories_menu', 1800, function () {
-            return Category::where('is_active', true)
-                ->orderBy('name')
-                ->get()
-                ->map(function ($category) {
-                    return [
-                        'id' => $category->id,
-                        'name' => $category->name,
-                        'slug' => $category->slug,
-                        'url' => route('categories.show', $category->slug),
-                    ];
-                })
-                ->toArray();
-        });
+        return cache()->remember('categories_menu', 1800, fn() => Category::where('is_active', true)
+            ->orderBy('name')
+            ->get()
+            ->map(fn($category): array => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'url' => route('categories.show', $category->slug),
+            ])
+            ->toArray());
     }
 
     /**
@@ -82,21 +74,17 @@ final class AppComposer
      */
     private function getBrands(): array
     {
-        return cache()->remember('brands_menu', 1800, function () {
-            return Brand::where('is_active', true)
-                ->orderBy('name')
-                ->get()
-                ->map(function ($brand) {
-                    return [
-                        'id' => $brand->id,
-                        'name' => $brand->name,
-                        'slug' => $brand->slug,
-                        'logo' => $brand->logo_url ?? null,
-                        'url' => route('brands.show', $brand->slug),
-                    ];
-                })
-                ->toArray();
-        });
+        return cache()->remember('brands_menu', 1800, fn() => Brand::where('is_active', true)
+            ->orderBy('name')
+            ->get()
+            ->map(fn($brand): array => [
+                'id' => $brand->id,
+                'name' => $brand->name,
+                'slug' => $brand->slug,
+                'logo' => $brand->logo_url ?? null,
+                'url' => route('brands.show', $brand->slug),
+            ])
+            ->toArray());
     }
 
     /**

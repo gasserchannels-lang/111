@@ -16,11 +16,8 @@ final class StorageManagementService
      */
     private array $config;
 
-    private FileCleanupService $cleanupService;
-
-    public function __construct(FileCleanupService $cleanupService)
+    public function __construct(private readonly FileCleanupService $cleanupService)
     {
-        $this->cleanupService = $cleanupService;
         $config = config('storage_management', [
             'max_storage_size_mb' => 1024, // 1GB
             'warning_threshold' => 80, // 80%
@@ -267,7 +264,7 @@ final class StorageManagementService
 
         // Sort directories by size
         if (is_array($breakdown)) {
-            uasort($breakdown, function ($a, $b) {
+            uasort($breakdown, function ($a, $b): int {
                 $aSize = 0.0;
                 $bSize = 0.0;
 

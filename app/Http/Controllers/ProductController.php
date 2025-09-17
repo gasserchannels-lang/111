@@ -9,7 +9,7 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    private ProductService $productService;
+    private readonly ProductService $productService;
 
     public function __construct(?ProductService $productService = null)
     {
@@ -29,7 +29,7 @@ class ProductController extends Controller
     {
         $product = $this->productService->getBySlug($slug);
 
-        if (! $product) {
+        if (!$product instanceof \App\Models\Product) {
             abort(404);
         }
 

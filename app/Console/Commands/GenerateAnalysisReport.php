@@ -128,7 +128,7 @@ class GenerateAnalysisReport extends Command
                     $report .= '⚠️ **تم اكتشاف '.count($advisories)." ثغرة أمنية:**\n\n";
                     foreach ($advisories as $package => $advisory) {
                         if (is_array($advisory)) {
-                            $report .= '### 📦 '.(string) $package."\n";
+                            $report .= '### 📦 '.$package."\n";
                             $severity = is_string($advisory['severity'] ?? null) ? $advisory['severity'] : 'unknown';
                             $title = is_string($advisory['title'] ?? null) ? $advisory['title'] : 'unknown';
                             $remediation = is_string($advisory['remediation'] ?? null) ? $advisory['remediation'] : 'unknown';

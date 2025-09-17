@@ -14,12 +14,9 @@ class StrictQualityCheckCommand extends Command
 
     protected $description = 'Run AI-powered strict quality control with 100% success requirement';
 
-    private StrictQualityAgent $agent;
-
-    public function __construct(StrictQualityAgent $agent)
+    public function __construct(private readonly StrictQualityAgent $agent)
     {
         parent::__construct();
-        $this->agent = $agent;
     }
 
     public function handle(): int
@@ -35,11 +32,9 @@ class StrictQualityCheckCommand extends Command
             $this->runSingleStage($stage);
 
             return 0;
-        } else {
-            $this->runAllStages($autoFix, $generateReport);
-
-            return 0;
         }
+        $this->runAllStages($autoFix, $generateReport);
+        return 0;
     }
 
     private function runAllStages(bool $autoFix, bool $generateReport): void
@@ -50,7 +45,7 @@ class StrictQualityCheckCommand extends Command
             $this->info('🔧 محاولة الإصلاح التلقائي...');
             $fixes = $this->agent->autoFixIssues();
 
-            foreach ($fixes as $type => $message) {
+            foreach ($fixes as $message) {
                 $this->info('✅ '.(is_string($message) ? $message : ''));
             }
         }
@@ -67,9 +62,8 @@ class StrictQualityCheckCommand extends Command
             $this->error('❌ فشل في تحقيق معايير الجودة المطلوبة');
             $this->error('🛑 العملية متوقفة - يلزم إصلاح المشاكل أولاً');
             exit(1);
-        } else {
-            $this->info('🎉 تم تحقيق جميع معايير الجودة بنجاح!');
         }
+        $this->info('🎉 تم تحقيق جميع معايير الجودة بنجاح!');
     }
 
     private function runSingleStage(string $stageId): void
@@ -117,8 +111,8 @@ class StrictQualityCheckCommand extends Command
         $stages = $results['stages'] ?? [];
         $errors = $results['errors'] ?? [];
         $this->info('- إجمالي المراحل: '.(is_array($stages) ? count($stages) : 0));
-        $this->info('- المراحل الناجحة: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ($r['success'] ?? false))) : 0));
-        $this->info('- المراحل الفاشلة: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ! ($r['success'] ?? false))) : 0));
+        $this->info('- المراحل الناجحة: '.(is_array($stages) ? count(array_filter($stages, fn ($r): bool => is_array($r) && ($r['success'] ?? false))) : 0));
+        $this->info('- المراحل الفاشلة: '.(is_array($stages) ? count(array_filter($stages, fn ($r): bool => is_array($r) && ! ($r['success'] ?? false))) : 0));
         $this->info('- إجمالي الأخطاء: '.(is_array($errors) ? count($errors) : 0));
 
         if (! empty($errors) && is_array($errors)) {
@@ -169,8 +163,8 @@ class StrictQualityCheckCommand extends Command
         $content .= "## 📊 ملخص النتائج\n\n";
         $content .= "- **الحالة العامة**: {$overallStatus}\n";
         $content .= '- **إجمالي المراحل**: '.(is_array($stages) ? count($stages) : 0)."\n";
-        $content .= '- **المراحل الناجحة**: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ($r['success'] ?? false))) : 0)."\n";
-        $content .= '- **المراحل الفاشلة**: '.(is_array($stages) ? count(array_filter($stages, fn ($r) => is_array($r) && ! ($r['success'] ?? false))) : 0)."\n";
+        $content .= '- **المراحل الناجحة**: '.(is_array($stages) ? count(array_filter($stages, fn ($r): bool => is_array($r) && ($r['success'] ?? false))) : 0)."\n";
+        $content .= '- **المراحل الفاشلة**: '.(is_array($stages) ? count(array_filter($stages, fn ($r): bool => is_array($r) && ! ($r['success'] ?? false))) : 0)."\n";
         $content .= '- **إجمالي الأخطاء**: '.(is_array($errors) ? count($errors) : 0)."\n\n";
 
         $content .= "## 📋 تفاصيل المراحل\n\n";

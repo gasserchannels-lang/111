@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Process;
 
 class BackupService
 {
-    private string $backupPath;
+    private readonly string $backupPath;
 
     public function __construct()
     {
@@ -246,10 +246,12 @@ class BackupService
         $directories = scandir($this->backupPath);
 
         foreach ($directories as $directory) {
-            if ($directory === '.' || $directory === '..') {
+            if ($directory === '.') {
                 continue;
             }
-
+            if ($directory === '..') {
+                continue;
+            }
             $backupPath = $this->backupPath.'/'.$directory;
 
             if (is_dir($backupPath)) {
@@ -268,9 +270,9 @@ class BackupService
         }
 
         // Sort by creation date (newest first)
-        usort($backups, function ($a, $b) {
-            $timeA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
-            $timeB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
+        usort($backups, function (array $a, array $b): int {
+            $timeA = isset($a['created_at']) ? strtotime((string) $a['created_at']) : 0;
+            $timeB = isset($b['created_at']) ? strtotime((string) $b['created_at']) : 0;
 
             return $timeB - $timeA;
         });

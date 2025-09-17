@@ -26,26 +26,14 @@ class ProcessHeavyOperation implements ShouldQueue
 
     public int $maxExceptions = 3;
 
-    private string $operation;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $data;
-
-    private ?int $userId;
-
     /**
      * Create a new job instance.
      */
     /**
      * @param  array<string, mixed>  $data
      */
-    public function __construct(string $operation, array $data = [], ?int $userId = null)
+    public function __construct(private string $operation, private array $data = [], private ?int $userId = null)
     {
-        $this->operation = $operation;
-        $this->data = $data;
-        $this->userId = $userId;
     }
 
     /**
@@ -98,34 +86,17 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function executeOperation(): mixed
     {
-        switch ($this->operation) {
-            case 'generate_report':
-                return $this->generateReport();
-
-            case 'process_images':
-                return $this->processImages();
-
-            case 'sync_data':
-                return $this->syncData();
-
-            case 'send_bulk_notifications':
-                return $this->sendBulkNotifications();
-
-            case 'update_statistics':
-                return $this->updateStatistics();
-
-            case 'cleanup_old_data':
-                return $this->cleanupOldData();
-
-            case 'export_data':
-                return $this->exportData();
-
-            case 'import_data':
-                return $this->importData();
-
-            default:
-                throw new Exception("Unknown operation: {$this->operation}");
-        }
+        return match ($this->operation) {
+            'generate_report' => $this->generateReport(),
+            'process_images' => $this->processImages(),
+            'sync_data' => $this->syncData(),
+            'send_bulk_notifications' => $this->sendBulkNotifications(),
+            'update_statistics' => $this->updateStatistics(),
+            'cleanup_old_data' => $this->cleanupOldData(),
+            'export_data' => $this->exportData(),
+            'import_data' => $this->importData(),
+            default => throw new Exception("Unknown operation: {$this->operation}"),
+        };
     }
 
     /**

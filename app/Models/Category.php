@@ -194,7 +194,7 @@ class Category extends Model
     {
         parent::boot();
 
-        static::creating(function ($category) {
+        static::creating(function ($category): void {
             if (empty($category->slug)) {
                 $category->slug = \Str::slug($category->name);
             }
@@ -204,7 +204,7 @@ class Category extends Model
             }
         });
 
-        static::updating(function ($category) {
+        static::updating(function ($category): void {
             if ($category->isDirty('name')) {
                 $category->slug = \Str::slug($category->name);
             }

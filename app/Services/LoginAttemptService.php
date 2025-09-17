@@ -223,12 +223,9 @@ class LoginAttemptService
      */
     public function getBlockedEmails(): array
     {
-        $blocked = [];
-        $pattern = self::CACHE_PREFIX.'*';
-
         // This would need to be implemented based on your cache driver
         // For now, return empty array
-        return $blocked;
+        return [];
     }
 
     /**
@@ -238,12 +235,9 @@ class LoginAttemptService
      */
     public function getBlockedIps(): array
     {
-        $blocked = [];
-        $pattern = self::IP_PREFIX.'*';
-
         // This would need to be implemented based on your cache driver
         // For now, return empty array
-        return $blocked;
+        return [];
     }
 
     /**

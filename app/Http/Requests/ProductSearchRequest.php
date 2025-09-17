@@ -160,7 +160,7 @@ class ProductSearchRequest extends FormRequest
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -175,7 +175,7 @@ class ProductSearchRequest extends FormRequest
      */
     public function withValidator($validator): void
     {
-        $validator->after(function ($validator) {
+        $validator->after(function ($validator): void {
             // Additional custom validation logic
             if ($this->has('min_price') && $this->has('max_price')) {
                 $minPrice = $this->input('min_price');
@@ -207,8 +207,8 @@ class ProductSearchRequest extends FormRequest
 
         // Set default values
         if (is_array($validated)) {
-            $validated['sort'] = $validated['sort'] ?? 'popularity';
-            $validated['order'] = $validated['order'] ?? 'desc';
+            $validated['sort'] ??= 'popularity';
+            $validated['order'] ??= 'desc';
             $validated['page'] = is_numeric($validated['page'] ?? null) ? (int) $validated['page'] : 1;
             $validated['per_page'] = is_numeric($validated['per_page'] ?? null) ? (int) $validated['per_page'] : 15;
         }

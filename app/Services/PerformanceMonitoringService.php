@@ -16,9 +16,9 @@ class PerformanceMonitoringService
      */
     private array $metrics = [];
 
-    private float $startTime;
+    private readonly float $startTime;
 
-    private int $startMemory;
+    private readonly int $startMemory;
 
     public function __construct()
     {

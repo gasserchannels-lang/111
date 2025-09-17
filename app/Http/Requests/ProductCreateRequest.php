@@ -191,7 +191,7 @@ class ProductCreateRequest extends FormRequest
             'name' => is_string($this->name) ? trim($this->name) : '',
             'description' => is_string($this->description) ? trim($this->description) : '',
             'sku' => is_string($this->sku) ? strtoupper(trim($this->sku)) : '',
-            'tags' => is_array($this->tags) ? array_map(fn ($tag) => is_string($tag) ? trim($tag) : '', $this->tags) : null,
+            'tags' => is_array($this->tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : null,
         ]);
     }
 
@@ -202,7 +202,7 @@ class ProductCreateRequest extends FormRequest
      */
     public function withValidator($validator): void
     {
-        $validator->after(function ($validator) {
+        $validator->after(function ($validator): void {
             // Additional custom validation logic
             if ($this->has('dimensions')) {
                 $dimensions = $this->input('dimensions');

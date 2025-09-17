@@ -85,7 +85,7 @@ class Product extends Model
     /**
      * @var array<string, string>|null
      */
-    protected $errors = null;
+    protected $errors;
 
     // --- العلاقات ---
     /**
@@ -175,7 +175,7 @@ class Product extends Model
             }
         }
 
-        return empty($this->errors);
+        return $this->errors === [];
     }
 
     /**

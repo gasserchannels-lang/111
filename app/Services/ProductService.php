@@ -30,7 +30,7 @@ class ProductService
         $result = $this->cache->remember(
             'products.page.'.$pageNumber,
             3600,
-            fn () => $this->repository->getPaginatedActive($perPage),
+            fn (): \Illuminate\Pagination\LengthAwarePaginator => $this->repository->getPaginatedActive($perPage),
             ['products']
         );
 
@@ -58,9 +58,9 @@ class ProductService
         return $this->cache->remember(
             'product.slug.'.$slug,
             3600,
-            function () use ($slug) {
+            function () use ($slug): \App\Models\Product {
                 $product = $this->repository->findBySlug($slug);
-                if (! $product) {
+                if (!$product instanceof \App\Models\Product) {
                     throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
                 }
 
@@ -81,7 +81,7 @@ class ProductService
         return $this->cache->remember(
             'product.related.'.$product->id,
             3600,
-            fn () => $this->repository->getRelated($product, $limit),
+            fn (): \Illuminate\Database\Eloquent\Collection => $this->repository->getRelated($product, $limit),
             ['products']
         );
     }

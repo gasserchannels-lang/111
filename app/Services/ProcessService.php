@@ -63,7 +63,7 @@ class ProcessService
         try {
             $this->status = 'processing';
 
-            if ($data === null || empty($data)) {
+            if ($data === null || $data === []) {
                 return ['error' => true, 'message' => 'Invalid data provided'];
             }
 
@@ -106,7 +106,7 @@ class ProcessService
             $this->errors['email'] = 'Email is invalid';
         }
 
-        return empty($this->errors);
+        return $this->errors === [];
     }
 
     /**
@@ -155,11 +155,7 @@ class ProcessService
         $transformed = [];
 
         foreach ($data as $key => $value) {
-            if (is_string($value)) {
-                $transformed[$key] = ucfirst($value);
-            } else {
-                $transformed[$key] = $value;
-            }
+            $transformed[$key] = is_string($value) ? ucfirst($value) : $value;
         }
 
         return $transformed;

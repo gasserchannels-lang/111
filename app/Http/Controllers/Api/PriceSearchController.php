@@ -17,11 +17,8 @@ use Throwable;
 
 class PriceSearchController extends Controller
 {
-    private PriceSearchService $priceSearchService;
-
-    public function __construct(PriceSearchService $priceSearchService)
+    public function __construct(private readonly PriceSearchService $priceSearchService)
     {
-        $this->priceSearchService = $priceSearchService;
     }
 
     public function bestOffer(Request $request): JsonResponse
@@ -89,25 +86,21 @@ class PriceSearchController extends Controller
                 ->limit(20)
                 ->get();
 
-            $results = $products->map(function (Product $product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'description' => $product->description,
-                    'slug' => $product->slug,
-                    'brand' => $product->brand ? $product->brand->name : null,
-                    'category' => $product->category ? $product->category->name : null,
-                    'price_offers' => $product->priceOffers->map(function (\App\Models\PriceOffer $offer) {
-                        return [
-                            'id' => $offer->id,
-                            'price' => $offer->price,
-                            'url' => $offer->store_url ?? null,
-                            'store' => $offer->store ? $offer->store->name : null,
-                            'is_available' => $offer->is_available,
-                        ];
-                    })->values(),
-                ];
-            });
+            $results = $products->map(fn(Product $product): array => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'slug' => $product->slug,
+                'brand' => $product->brand ? $product->brand->name : null,
+                'category' => $product->category ? $product->category->name : null,
+                'price_offers' => $product->priceOffers->map(fn(\App\Models\PriceOffer $offer): array => [
+                    'id' => $offer->id,
+                    'price' => $offer->price,
+                    'url' => $offer->store_url ?? null,
+                    'store' => $offer->store ? $offer->store->name : null,
+                    'is_available' => $offer->is_available,
+                ])->values(),
+            ]);
 
             return response()->json([
                 'data' => $results,
@@ -139,7 +132,7 @@ class PriceSearchController extends Controller
             if ($response->successful() && strlen(trim($body)) === 2) {
                 return strtoupper(trim($body));
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Fallback to US
         }
 

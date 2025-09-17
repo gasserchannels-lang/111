@@ -13,23 +13,13 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    private LoginAttemptService $loginAttemptService;
-
-    private UserBanService $userBanService;
-
-    private FileSecurityService $fileSecurityService;
-
     public function __construct(
-        LoginAttemptService $loginAttemptService,
-        UserBanService $userBanService,
-        FileSecurityService $fileSecurityService
+        private readonly LoginAttemptService $loginAttemptService,
+        private readonly UserBanService $userBanService,
+        private readonly FileSecurityService $fileSecurityService
     ) {
         $this->middleware('auth');
         $this->middleware('admin');
-
-        $this->loginAttemptService = $loginAttemptService;
-        $this->userBanService = $userBanService;
-        $this->fileSecurityService = $fileSecurityService;
     }
 
     /**
@@ -39,7 +29,7 @@ class DashboardController extends Controller
     {
         $statistics = $this->getDashboardStatistics();
 
-        return view('admin.dashboard', compact('statistics'));
+        return view('admin.dashboard', ['statistics' => $statistics]);
     }
 
     /**

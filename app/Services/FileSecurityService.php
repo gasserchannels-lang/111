@@ -209,7 +209,7 @@ class FileSecurityService
             ];
 
             foreach ($malwareSignatures as $signature => $description) {
-                if ($content !== false && strpos($content, $signature) !== false) {
+                if ($content !== false && str_contains($content, $signature)) {
                     $results['is_safe'] = false;
                     $results['threats'][] = "Malware signature detected: {$description}";
                 }
@@ -257,7 +257,7 @@ class FileSecurityService
             ];
 
             foreach ($suspiciousHeaders as $headerSignature => $description) {
-                if ($header !== false && strpos($header, $headerSignature) === 0) {
+                if ($header !== false && str_starts_with($header, $headerSignature)) {
                     $results['is_safe'] = false;
                     $results['threats'][] = $description;
                 }

@@ -74,7 +74,7 @@ class PriceAlert extends Model
      *
      * @var array<string, mixed>|null
      */
-    protected $errors = null;
+    protected $errors;
 
     /**
      * @return BelongsTo<User<\Database\Factories\UserFactory>, PriceAlert<\Database\Factories\PriceAlertFactory>>

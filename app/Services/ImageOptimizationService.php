@@ -102,10 +102,7 @@ class ImageOptimizationService
      */
     private function createOptimizedVersion($image, string $path, string $baseName, string $sizeName, int $width, int $height): array
     {
-        $versions = [];
-
-        // Resize image (placeholder since ImageManager is commented out)
-        $resizedImage = $image; // Placeholder
+        $versions = []; // Placeholder
 
         // Create different formats
         $formats = $this->config['formats'] ?? [];
@@ -116,7 +113,7 @@ class ImageOptimizationService
                     $filePath = $path.'/optimized/'.$filename;
 
                     // Optimize based on format
-                    $optimizedImage = $this->optimizeForFormat($resizedImage, $format);
+                    $optimizedImage = $this->optimizeForFormat($format);
 
                     // Store optimized image
                     Storage::disk('public')->put($filePath, $optimizedImage);
@@ -137,26 +134,17 @@ class ImageOptimizationService
 
     /**
      * Optimize image for specific format.
-     *
-     * @param  mixed  $image
      */
-    private function optimizeForFormat($image, string $format): string
+    private function optimizeForFormat(string $format): string
     {
         $qualityValue = $this->config['quality'] ?? 85;
-        $quality = is_numeric($qualityValue) ? (int) $qualityValue : 85;
-
         // Placeholder implementation since ImageManager is commented out
-        switch ($format) {
-            case 'webp':
-                return ''; // Placeholder
-            case 'jpg':
-            case 'jpeg':
-                return ''; // Placeholder
-            case 'png':
-                return ''; // Placeholder
-            default:
-                return ''; // Placeholder
-        }
+        return match ($format) {
+            'webp' => '',
+            'jpg', 'jpeg' => '',
+            'png' => '',
+            default => '',
+        };
     }
 
     /**
@@ -231,9 +219,8 @@ class ImageOptimizationService
         $imgTag .= '>';
 
         $html .= $imgTag;
-        $html .= '</picture>';
 
-        return $html;
+        return $html . '</picture>';
     }
 
     /**
@@ -257,9 +244,8 @@ class ImageOptimizationService
         foreach ($imgAttributes as $key => $value) {
             $imgTag .= ' '.$key.'="'.htmlspecialchars(is_string($value) ? $value : '').'"';
         }
-        $imgTag .= '>';
 
-        return $imgTag;
+        return $imgTag . '>';
     }
 
     /**
@@ -304,7 +290,7 @@ class ImageOptimizationService
      */
     public function compressImage(string $path, ?int $quality = null): string
     {
-        $quality = $quality ?? $this->config['quality'];
+        $quality ?? $this->config['quality'];
         // $image = $this->imageManager->read(Storage::disk('public')->path($path));
 
         // $compressed = $image->toJpeg($quality);

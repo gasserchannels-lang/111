@@ -160,3 +160,105 @@ Route::middleware(['throttle:public'])->group(function () {
         }
     });
 });
+
+// AI API routes
+Route::middleware(['throttle:ai'])->prefix('ai')->group(function () {
+    Route::post('/analyze', function (Request $request) {
+        $request->validate([
+            'text' => 'required|string|max:10000',
+            'type' => 'required|string|in:general,product_analysis,product_classification,recommendations,sentiment',
+        ]);
+
+        try {
+            $aiService = app(\App\Services\AIService::class);
+            $result = $aiService->analyzeText($request->text, $request->type);
+
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'فشل في تحليل النص',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    });
+
+    Route::post('/classify-product', function (Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'price' => 'nullable|numeric|min:0',
+        ]);
+
+        try {
+            $aiService = app(\App\Services\AIService::class);
+            $category = $aiService->classifyProduct($request->all());
+
+            return response()->json([
+                'success' => true,
+                'category' => $category,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'فشل في تصنيف المنتج',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    });
+
+    Route::post('/analyze-image', function (Request $request) {
+        $request->validate([
+            'image_url' => 'required|url|max:2048',
+        ]);
+
+        try {
+            $aiService = app(\App\Services\AIService::class);
+            $result = $aiService->analyzeImage($request->image_url);
+
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'فشل في تحليل الصورة',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    });
+
+    Route::post('/recommendations', function (Request $request) {
+        $request->validate([
+            'preferences' => 'required|array|min:1',
+            'preferences.*' => 'string|max:255',
+            'products' => 'required|array|min:1',
+            'products.*.name' => 'required|string|max:255',
+            'products.*.description' => 'nullable|string|max:1000',
+            'products.*.price' => 'nullable|numeric|min:0',
+        ]);
+
+        try {
+            $aiService = app(\App\Services\AIService::class);
+            $recommendations = $aiService->generateRecommendations(
+                $request->preferences,
+                $request->products
+            );
+
+            return response()->json([
+                'success' => true,
+                'recommendations' => $recommendations,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'فشل في توليد التوصيات',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    });
+});

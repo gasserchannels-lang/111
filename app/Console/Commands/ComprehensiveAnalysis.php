@@ -64,13 +64,11 @@ class ComprehensiveAnalysis extends Command
 
         // Display console output based on the results
         $this->line('Checking for outdated dependencies...');
-        if (! empty($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                /** @var string $issue */
-                if (str_contains($issue, 'outdated dependencies')) {
-                    $this->warn('⚠️  Some direct dependencies are outdated.');
-                    break;
-                }
+        foreach ($result['issues'] as $issue) {
+            /** @var string $issue */
+            if (str_contains($issue, 'outdated dependencies')) {
+                $this->warn('⚠️  Some direct dependencies are outdated.');
+                break;
             }
         }
 
@@ -99,16 +97,14 @@ class ComprehensiveAnalysis extends Command
 
         // Display console output based on the results
         $this->line('Running PHPMD...');
-        if (! empty($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                /** @var string $issue */
-                if (str_contains($issue, 'PHPMD found')) {
-                    $this->warn('⚠️  '.$issue);
-                }
-                if (str_contains($issue, 'PHPCPD found')) {
-                    $this->line('Running PHPCPD...');
-                    $this->warn('⚠️  '.$issue);
-                }
+        foreach ($result['issues'] as $issue) {
+            /** @var string $issue */
+            if (str_contains($issue, 'PHPMD found')) {
+                $this->warn('⚠️  '.$issue);
+            }
+            if (str_contains($issue, 'PHPCPD found')) {
+                $this->line('Running PHPCPD...');
+                $this->warn('⚠️  '.$issue);
             }
         }
 
@@ -143,16 +139,14 @@ class ComprehensiveAnalysis extends Command
         $result = $testService->analyze();
 
         // Display console output based on the results
-        if (! empty($result['issues'])) {
-            foreach ($result['issues'] as $issue) {
-                /** @var string $issue */
-                if (str_contains($issue, 'tests failed')) {
-                    $this->warn('⚠️  Some tests had issues.');
+        foreach ($result['issues'] as $issue) {
+            /** @var string $issue */
+            if (str_contains($issue, 'tests failed')) {
+                $this->warn('⚠️  Some tests had issues.');
 
-                    continue;
-                }
-                $this->error('❌ Test analysis encountered errors');
+                continue;
             }
+            $this->error('❌ Test analysis encountered errors');
         }
 
         $this->info('✅ Tests passed successfully.');
@@ -218,10 +212,8 @@ class ComprehensiveAnalysis extends Command
                 $percentage
             ));
 
-            if (! empty($result->issues)) {
-                foreach ($result->issues as $issue) {
-                    $this->line('  ⚠️  '.$issue);
-                }
+            foreach ($result->issues as $issue) {
+                $this->line('  ⚠️  '.$issue);
             }
         }
 

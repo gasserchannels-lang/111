@@ -5,6 +5,7 @@ namespace Tests\AI;
 use App\Services\AI\ContinuousQualityMonitor;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Process;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Tests\TestCase;
 
 class ContinuousQualityMonitorTest extends TestCase
@@ -18,11 +19,13 @@ class ContinuousQualityMonitorTest extends TestCase
         Cache::flush();
     }
 
+    #[CoversNothing]
     public function test_monitor_initializes_correctly()
     {
         $this->assertInstanceOf(ContinuousQualityMonitor::class, $this->monitor);
     }
 
+    #[CoversNothing]
     public function test_monitor_has_required_rules()
     {
         $reflection = new \ReflectionClass($this->monitor);
@@ -43,6 +46,7 @@ class ContinuousQualityMonitorTest extends TestCase
         }
     }
 
+    #[CoversNothing]
     public function test_monitor_rules_have_required_properties()
     {
         $reflection = new \ReflectionClass($this->monitor);
@@ -60,6 +64,7 @@ class ContinuousQualityMonitorTest extends TestCase
         }
     }
 
+    #[CoversNothing]
     public function test_monitor_performs_quality_check()
     {
         Process::fake([
@@ -80,6 +85,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertIsArray($results['rules']);
     }
 
+    #[CoversNothing]
     public function test_monitor_calculates_health_scores_correctly()
     {
         $reflection = new \ReflectionClass($this->monitor);
@@ -114,6 +120,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertEquals(100, $securityScore);
     }
 
+    #[CoversNothing]
     public function test_monitor_handles_failed_commands()
     {
         Process::fake([
@@ -138,6 +145,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertNotEmpty($result['errors']);
     }
 
+    #[CoversNothing]
     public function test_monitor_triggers_critical_alerts()
     {
         $reflection = new \ReflectionClass($this->monitor);
@@ -157,6 +165,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertGreaterThan(0, $alerts['critical']);
     }
 
+    #[CoversNothing]
     public function test_monitor_triggers_warning_alerts()
     {
         $reflection = new \ReflectionClass($this->monitor);
@@ -176,6 +185,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertGreaterThan(0, $alerts['warnings']);
     }
 
+    #[CoversNothing]
     public function test_monitor_updates_health_status()
     {
         Process::fake([
@@ -199,6 +209,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertIsArray($detailedResults);
     }
 
+    #[CoversNothing]
     public function test_monitor_returns_health_status()
     {
         Cache::put('quality_health_score', 85, 3600);
@@ -215,6 +226,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertEquals(85, $status['score']);
     }
 
+    #[CoversNothing]
     public function test_monitor_returns_alerts_summary()
     {
         $reflection = new \ReflectionClass($this->monitor);
@@ -238,6 +250,7 @@ class ContinuousQualityMonitorTest extends TestCase
         $this->assertEquals(2, $summary['warnings']);
     }
 
+    #[CoversNothing]
     public function test_monitor_can_clear_alerts()
     {
         $reflection = new \ReflectionClass($this->monitor);

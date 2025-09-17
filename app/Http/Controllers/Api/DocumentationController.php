@@ -135,7 +135,7 @@ class DocumentationController extends Controller
         try {
             \Cache::put('health_check', 'ok', 60);
             $status['cache'] = \Cache::get('health_check') === 'ok' ? 'working' : 'not_working';
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $status['cache'] = 'not_working';
             $status['status'] = 'unhealthy';
         }

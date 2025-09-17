@@ -3,14 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ApiRateLimitingTest extends TestCase
 {
-    
-
     #[Test]
     public function api_requests_are_rate_limited()
     {

@@ -66,13 +66,11 @@ class ProductRepository
         // Cache key includes version to allow mass cache invalidation
         $cacheKey = "product:slug:{$slug}:v1";
 
-        return Cache::remember($cacheKey, now()->addHours(1), function () use ($slug) {
-            return Product::query()
-                ->with(['category', 'brand', 'reviews'])
-                ->where('slug', $slug)
-                ->where('is_active', true)
-                ->first();
-        });
+        return Cache::remember($cacheKey, now()->addHours(1), fn() => Product::query()
+            ->with(['category', 'brand', 'reviews'])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->first());
     }
 
     /**
@@ -94,16 +92,14 @@ class ProductRepository
         $cacheKey = "product:{$product->id}:related:limit:{$limit}:v1";
         $cacheDuration = now()->addHours(1);
 
-        return Cache::remember($cacheKey, $cacheDuration, function () use ($product, $limit) {
-            return Product::query()
-                ->select(['id', 'name', 'slug', 'price', 'image', 'category_id'])
-                ->where('category_id', $product->category_id)
-                ->where('id', '!=', $product->id)
-                ->where('is_active', true)
-                ->inRandomOrder()
-                ->limit($limit)
-                ->get();
-        });
+        return Cache::remember($cacheKey, $cacheDuration, fn() => Product::query()
+            ->select(['id', 'name', 'slug', 'price', 'image', 'category_id'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get());
     }
 
     /**
@@ -154,7 +150,7 @@ class ProductRepository
                     'brand:id,name,slug',
                 ])
                 ->where('is_active', true)
-                ->where(function ($q) use ($query) {
+                ->where(function ($q) use ($query): void {
                     $searchTerm = '%'.addcslashes($query, '%_').'%';
                     $q->where('name', 'like', $searchTerm)
                         ->orWhere('description', 'like', $searchTerm);
@@ -178,22 +174,13 @@ class ProductRepository
             }
 
             // Apply sorting
-            switch ($filters['sort_by'] ?? 'latest') {
-                case 'price_asc':
-                    $productsQuery->orderBy('price', 'asc');
-                    break;
-                case 'price_desc':
-                    $productsQuery->orderBy('price', 'desc');
-                    break;
-                case 'name_asc':
-                    $productsQuery->orderBy('name', 'asc');
-                    break;
-                case 'name_desc':
-                    $productsQuery->orderBy('name', 'desc');
-                    break;
-                default:
-                    $productsQuery->latest();
-            }
+            match ($filters['sort_by'] ?? 'latest') {
+                'price_asc' => $productsQuery->orderBy('price', 'asc'),
+                'price_desc' => $productsQuery->orderBy('price', 'desc'),
+                'name_asc' => $productsQuery->orderBy('name', 'asc'),
+                'name_desc' => $productsQuery->orderBy('name', 'desc'),
+                default => $productsQuery->latest(),
+            };
 
             return $productsQuery->paginate($perPage);
         });
@@ -229,7 +216,7 @@ class ProductRepository
         ];
 
         try {
-            return DB::transaction(function () use ($product, $newPrice, $cacheKeys) {
+            return DB::transaction(function () use ($product, $newPrice, $cacheKeys): true {
                 $oldPrice = $product->price;
 
                 // Lock the row for update

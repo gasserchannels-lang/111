@@ -481,7 +481,7 @@ class Notification extends Model
         $summary = strip_tags($this->message);
 
         if (strlen($summary) > $length) {
-            $summary = substr($summary, 0, $length).'...';
+            return substr($summary, 0, $length).'...';
         }
 
         return $summary;
@@ -532,7 +532,7 @@ class Notification extends Model
     {
         $expirationDate = $this->getExpirationDate();
 
-        return $expirationDate ? $expirationDate->isPast() : false;
+        return $expirationDate instanceof \Carbon\Carbon && $expirationDate->isPast();
     }
 
     /**
@@ -631,7 +631,7 @@ class Notification extends Model
     public function removeTag(string $tag): bool
     {
         $tags = $this->getTags();
-        $tags = array_filter($tags, fn ($t) => $t !== $tag);
+        $tags = array_filter($tags, fn (string $t): bool => $t !== $tag);
 
         return $this->setTags(array_values($tags));
     }

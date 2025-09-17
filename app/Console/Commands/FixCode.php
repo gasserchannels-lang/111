@@ -14,7 +14,7 @@ class FixCode extends Command
 
     protected $description = 'Automatically fixes code style issues using Laravel Pint.';
 
-    private string $phpPath;
+    private readonly string $phpPath;
 
     public function __construct()
     {
@@ -55,7 +55,7 @@ class FixCode extends Command
         $process->setTimeout(3600);
 
         try {
-            $process->mustRun(function ($type, $buffer) {
+            $process->mustRun(function ($type, $buffer): void {
                 if ($type === Process::OUT) {
                     $this->output->write($buffer);
                 }

@@ -112,7 +112,7 @@ class UpdatePricesCommand extends Command
         // In a real application, you would call the store's API here
 
         // Simulate API call with random price fluctuation
-        $fluctuation = rand(-10, 10) / 100; // ±10%
+        $fluctuation = random_int(-10, 10) / 100; // ±10%
         $newPrice = $priceOffer->price * (1 + $fluctuation);
 
         // Only return if price changed significantly (more than 1%)

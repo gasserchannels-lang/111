@@ -28,7 +28,7 @@ class CoprraServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Share global variables with all views
-        View::composer('*', function ($view) {
+        View::composer('*', function ($view): void {
             $view->with([
                 'coprraName' => config('coprra.name'),
                 'coprraVersion' => config('coprra.version'),
@@ -47,18 +47,12 @@ class CoprraServiceProvider extends ServiceProvider
     private function registerBladeDirectives(): void
     {
         // Currency formatting directive
-        Blade::directive('currency', function ($expression) {
-            return "<?php echo number_format($expression, 2); ?>";
-        });
+        Blade::directive('currency', fn($expression): string => "<?php echo number_format($expression, 2); ?>");
 
         // Price comparison directive
-        Blade::directive('pricecompare', function ($expression) {
-            return "<?php echo App\\Helpers\\PriceHelper::formatPrice($expression); ?>";
-        });
+        Blade::directive('pricecompare', fn($expression): string => "<?php echo App\\Helpers\\PriceHelper::formatPrice($expression); ?>");
 
         // Language direction directive
-        Blade::directive('rtl', function () {
-            return "<?php echo in_array(app()->getLocale(), ['ar', 'ur', 'fa']) ? 'rtl' : 'ltr'; ?>";
-        });
+        Blade::directive('rtl', fn(): string => "<?php echo in_array(app()->getLocale(), ['ar', 'ur', 'fa']) ? 'rtl' : 'ltr'; ?>");
     }
 }

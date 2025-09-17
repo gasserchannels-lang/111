@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CloudStorageService
 {
-    private string $disk;
+    private readonly string $disk;
 
     public function __construct()
     {
@@ -27,7 +27,7 @@ class CloudStorageService
     public function uploadFile(UploadedFile $file, string $path = 'images', ?string $filename = null): array
     {
         try {
-            $filename = $filename ?? $this->generateUniqueFilename($file);
+            $filename ??= $this->generateUniqueFilename($file);
             $fullPath = $path.'/'.$filename;
 
             // Upload to cloud storage
@@ -260,13 +260,11 @@ class CloudStorageService
         try {
             $files = Storage::disk($this->disk)->files($path);
 
-            return array_values(array_map(function ($file) {
-                return [
-                    'path' => $file,
-                    'url' => $this->getFileUrl($file),
-                    'metadata' => $this->getFileMetadata($file),
-                ];
-            }, $files));
+            return array_values(array_map(fn(string $file): array => [
+                'path' => $file,
+                'url' => $this->getFileUrl($file),
+                'metadata' => $this->getFileMetadata($file),
+            ], $files));
         } catch (Exception $e) {
             Log::error('Failed to list files', [
                 'error' => $e->getMessage(),
@@ -316,10 +314,8 @@ class CloudStorageService
             foreach ($files as $file) {
                 $fileTime = Storage::disk($this->disk)->lastModified($file);
 
-                if ($fileTime < $cutoffTime) {
-                    if (Storage::disk($this->disk)->delete($file)) {
-                        $deletedCount++;
-                    }
+                if ($fileTime < $cutoffTime && Storage::disk($this->disk)->delete($file)) {
+                    $deletedCount++;
                 }
             }
 
@@ -381,8 +377,8 @@ class CloudStorageService
             $results['original'] = $original;
 
             // Create optimized versions
-            foreach ($sizes as $sizeName => $dimensions) {
-                $optimizedFile = $this->createOptimizedImage($file, $dimensions[0], $dimensions[1]);
+            foreach (array_keys($sizes) as $sizeName) {
+                $optimizedFile = $this->createOptimizedImage($file);
                 $sizeNameStr = $sizeName;
                 $originalFilename = is_string($original['filename'] ?? null) ? $original['filename'] : '';
                 $optimizedPath = $path.'/optimized/'.$sizeNameStr.'_'.$originalFilename;
@@ -406,7 +402,7 @@ class CloudStorageService
     /**
      * Create optimized image.
      */
-    private function createOptimizedImage(UploadedFile $file, int $width, int $height): UploadedFile
+    private function createOptimizedImage(UploadedFile $file): UploadedFile
     {
         // This would use an image processing library like Intervention Image
         // For now, return the original file

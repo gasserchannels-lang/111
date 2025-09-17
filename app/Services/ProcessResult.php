@@ -7,28 +7,23 @@ namespace App\Services;
 class ProcessResult
 {
     /**
-     * The exit code of the process.
-     */
-    private int $exitCode;
-
-    /**
-     * The output of the process.
-     */
-    private string $output;
-
-    /**
-     * The error output of the process.
-     */
-    private string $errorOutput;
-
-    /**
      * Create a new process result instance.
      */
-    public function __construct(int $exitCode, string $output, string $errorOutput)
+    public function __construct(
+        /**
+         * The exit code of the process.
+         */
+        private readonly int $exitCode,
+        /**
+         * The output of the process.
+         */
+        private readonly string $output,
+        /**
+         * The error output of the process.
+         */
+        private readonly string $errorOutput
+    )
     {
-        $this->exitCode = $exitCode;
-        $this->output = $output;
-        $this->errorOutput = $errorOutput;
     }
 
     /**
@@ -76,6 +71,6 @@ class ProcessResult
      */
     public function getFullOutput(): string
     {
-        return $this->output.($this->errorOutput ? "\n".$this->errorOutput : '');
+        return $this->output.($this->errorOutput !== '' && $this->errorOutput !== '0' ? "\n".$this->errorOutput : '');
     }
 }

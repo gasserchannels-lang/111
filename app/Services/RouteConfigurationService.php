@@ -11,51 +11,38 @@ use Illuminate\Http\Request;
 
 class RouteConfigurationService
 {
-    private RateLimiter $rateLimiter;
-
-    private Router $router;
-
-    public function __construct(RateLimiter $rateLimiter, Router $router)
+    public function __construct(private readonly RateLimiter $rateLimiter, private readonly Router $router)
     {
-        $this->rateLimiter = $rateLimiter;
-        $this->router = $router;
     }
 
     public function configureRateLimiting(): void
     {
         // API rate limiting
-        $this->rateLimiter->for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
+        $this->rateLimiter->for('api', fn(Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
 
         // Public rate limiting (for unauthenticated users)
-        $this->rateLimiter->for('public', function (Request $request) {
-            return Limit::perMinute(30)->by($request->ip());
-        });
+        $this->rateLimiter->for('public', fn(Request $request) => Limit::perMinute(30)->by($request->ip()));
 
         // Authenticated rate limiting
-        $this->rateLimiter->for('authenticated', function (Request $request) {
-            return Limit::perMinute(100)->by($request->user()?->id ?: $request->ip());
-        });
+        $this->rateLimiter->for('authenticated', fn(Request $request) => Limit::perMinute(100)->by($request->user()?->id ?: $request->ip()));
 
         // Admin rate limiting
-        $this->rateLimiter->for('admin', function (Request $request) {
-            return Limit::perMinute(200)->by($request->user()?->id ?: $request->ip());
-        });
+        $this->rateLimiter->for('admin', fn(Request $request) => Limit::perMinute(200)->by($request->user()?->id ?: $request->ip()));
 
         // Auth rate limiting (for login attempts)
-        $this->rateLimiter->for('auth', function (Request $request) {
-            return Limit::perMinute(5)->by($request->ip());
-        });
+        $this->rateLimiter->for('auth', fn(Request $request) => Limit::perMinute(5)->by($request->ip()));
+
+        // AI rate limiting
+        $this->rateLimiter->for('ai', fn(Request $request) => Limit::perMinute(100)->by($request->user()?->id ?: $request->ip()));
     }
 
     public function configureRoutes(): void
     {
-        $this->router->group(['middleware' => 'api', 'prefix' => 'api'], function () {
+        $this->router->group(['middleware' => 'api', 'prefix' => 'api'], function (): void {
             require base_path('routes/api.php');
         });
 
-        $this->router->group(['middleware' => 'web'], function () {
+        $this->router->group(['middleware' => 'web'], function (): void {
             require base_path('routes/web.php');
         });
     }

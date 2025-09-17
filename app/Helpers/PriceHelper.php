@@ -13,7 +13,7 @@ class PriceHelper
      */
     public static function formatPrice(float $price, ?string $currencyCode = null): string
     {
-        $currencyCode = $currencyCode ?? config('coprra.default_currency', 'USD');
+        $currencyCode ??= config('coprra.default_currency', 'USD');
 
         $currency = Currency::where('code', $currencyCode)->first();
 
@@ -42,10 +42,11 @@ class PriceHelper
     public static function getPriceDifferenceString(float $originalPrice, float $comparePrice): string
     {
         $difference = self::calculatePriceDifference($originalPrice, $comparePrice);
-
         if ($difference > 0) {
             return '+'.number_format($difference, 1).'%';
-        } elseif ($difference < 0) {
+        }
+
+        if ($difference < 0) {
             return number_format($difference, 1).'%';
         }
 
@@ -59,7 +60,7 @@ class PriceHelper
      */
     public static function isGoodDeal(float $price, array $allPrices): bool
     {
-        if (empty($allPrices)) {
+        if ($allPrices === []) {
             return false;
         }
 
@@ -75,7 +76,7 @@ class PriceHelper
      */
     public static function getBestPrice(array $prices): ?float
     {
-        if (empty($prices)) {
+        if ($prices === []) {
             return null;
         }
 
@@ -101,7 +102,7 @@ class PriceHelper
     {
         // Ensure currencyCode is a string, falling back to the config default.
         $defaultCurrency = config('coprra.default_currency', 'USD');
-        $currencyCode = $currencyCode ?? (is_string($defaultCurrency) ? $defaultCurrency : 'USD');
+        $currencyCode ??= is_string($defaultCurrency) ? $defaultCurrency : 'USD';
 
         $currency = Currency::where('code', $currencyCode)->first();
 

@@ -24,20 +24,18 @@ final class StatisticsService
      */
     public function getRealTimeStats(): array
     {
-        return Cache::remember('real_time_stats', 60, function () {
-            return [
-                'total_users' => User::count(),
-                'total_products' => Product::count(),
-                'total_offers' => PriceOffer::count(),
-                'total_reviews' => Review::count(),
-                'total_wishlists' => Wishlist::count(),
-                'total_price_alerts' => PriceAlert::count(),
-                'active_users_today' => $this->getActiveUsersToday(),
-                'new_products_today' => $this->getNewProductsToday(),
-                'price_changes_today' => $this->getPriceChangesToday(),
-                'new_reviews_today' => $this->getNewReviewsToday(),
-            ];
-        });
+        return Cache::remember('real_time_stats', 60, fn(): array => [
+            'total_users' => User::count(),
+            'total_products' => Product::count(),
+            'total_offers' => PriceOffer::count(),
+            'total_reviews' => Review::count(),
+            'total_wishlists' => Wishlist::count(),
+            'total_price_alerts' => PriceAlert::count(),
+            'active_users_today' => $this->getActiveUsersToday(),
+            'new_products_today' => $this->getNewProductsToday(),
+            'price_changes_today' => $this->getPriceChangesToday(),
+            'new_reviews_today' => $this->getNewReviewsToday(),
+        ]);
     }
 
     /**
@@ -49,20 +47,18 @@ final class StatisticsService
     {
         $cacheKey = "daily_stats_{$date->format('Y-m-d')}";
 
-        return Cache::remember($cacheKey, 3600, function () use ($date) {
-            return [
-                'date' => $date->format('Y-m-d'),
-                'new_users' => User::whereDate('created_at', $date)->count(),
-                'new_products' => Product::whereDate('created_at', $date)->count(),
-                'new_offers' => PriceOffer::whereDate('created_at', $date)->count(),
-                'new_reviews' => Review::whereDate('created_at', $date)->count(),
-                'new_wishlists' => Wishlist::whereDate('created_at', $date)->count(),
-                'new_price_alerts' => PriceAlert::whereDate('created_at', $date)->count(),
-                'price_changes' => $this->getPriceChangesForDate($date),
-                'most_viewed_products' => $this->getMostViewedProductsForDate($date),
-                'most_active_users' => $this->getMostActiveUsersForDate($date),
-            ];
-        });
+        return Cache::remember($cacheKey, 3600, fn(): array => [
+            'date' => $date->format('Y-m-d'),
+            'new_users' => User::whereDate('created_at', $date)->count(),
+            'new_products' => Product::whereDate('created_at', $date)->count(),
+            'new_offers' => PriceOffer::whereDate('created_at', $date)->count(),
+            'new_reviews' => Review::whereDate('created_at', $date)->count(),
+            'new_wishlists' => Wishlist::whereDate('created_at', $date)->count(),
+            'new_price_alerts' => PriceAlert::whereDate('created_at', $date)->count(),
+            'price_changes' => $this->getPriceChangesForDate($date),
+            'most_viewed_products' => $this->getMostViewedProductsForDate($date),
+            'most_active_users' => $this->getMostActiveUsersForDate($date),
+        ]);
     }
 
     /**
@@ -75,22 +71,20 @@ final class StatisticsService
         $endDate = $startDate->copy()->addWeek();
         $cacheKey = "weekly_stats_{$startDate->format('Y-m-d')}";
 
-        return Cache::remember($cacheKey, 3600, function () use ($startDate, $endDate) {
-            return [
-                'week_start' => $startDate->format('Y-m-d'),
-                'week_end' => $endDate->format('Y-m-d'),
-                'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_offers' => PriceOffer::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_reviews' => Review::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_wishlists' => Wishlist::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_price_alerts' => PriceAlert::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'daily_breakdown' => $this->getDailyBreakdown($startDate, $endDate),
-                'top_categories' => $this->getTopCategories($startDate, $endDate),
-                'top_brands' => $this->getTopBrands($startDate, $endDate),
-                'price_trends' => $this->getPriceTrends($startDate, $endDate),
-            ];
-        });
+        return Cache::remember($cacheKey, 3600, fn(): array => [
+            'week_start' => $startDate->format('Y-m-d'),
+            'week_end' => $endDate->format('Y-m-d'),
+            'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_offers' => PriceOffer::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_reviews' => Review::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_wishlists' => Wishlist::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_price_alerts' => PriceAlert::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'daily_breakdown' => $this->getDailyBreakdown($startDate, $endDate),
+            'top_categories' => $this->getTopCategories($startDate, $endDate),
+            'top_brands' => $this->getTopBrands($startDate, $endDate),
+            'price_trends' => $this->getPriceTrends($startDate, $endDate),
+        ]);
     }
 
     /**
@@ -104,23 +98,21 @@ final class StatisticsService
         $endDate = $date->copy()->endOfMonth();
         $cacheKey = "monthly_stats_{$date->format('Y-m')}";
 
-        return Cache::remember($cacheKey, 3600, function () use ($startDate, $endDate, $date) {
-            return [
-                'month' => $date->format('Y-m'),
-                'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_offers' => PriceOffer::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_reviews' => Review::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_wishlists' => Wishlist::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'new_price_alerts' => PriceAlert::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'user_growth_rate' => $this->calculateUserGrowthRate($startDate, $endDate),
-                'product_growth_rate' => $this->calculateProductGrowthRate($startDate, $endDate),
-                'engagement_rate' => $this->calculateEngagementRate($startDate, $endDate),
-                'top_performing_products' => $this->getTopPerformingProducts($startDate, $endDate),
-                'category_performance' => $this->getCategoryPerformance($startDate, $endDate),
-                'brand_performance' => $this->getBrandPerformance($startDate, $endDate),
-            ];
-        });
+        return Cache::remember($cacheKey, 3600, fn(): array => [
+            'month' => $date->format('Y-m'),
+            'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_offers' => PriceOffer::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_reviews' => Review::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_wishlists' => Wishlist::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'new_price_alerts' => PriceAlert::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'user_growth_rate' => $this->calculateUserGrowthRate($startDate, $endDate),
+            'product_growth_rate' => $this->calculateProductGrowthRate($startDate, $endDate),
+            'engagement_rate' => $this->calculateEngagementRate($startDate, $endDate),
+            'top_performing_products' => $this->getTopPerformingProducts($startDate, $endDate),
+            'category_performance' => $this->getCategoryPerformance($startDate, $endDate),
+            'brand_performance' => $this->getBrandPerformance($startDate, $endDate),
+        ]);
     }
 
     /**
@@ -134,23 +126,21 @@ final class StatisticsService
         $endDate = Carbon::createFromDate($year, 12, 31);
         $cacheKey = "yearly_stats_{$year}";
 
-        return Cache::remember($cacheKey, 3600, function () use ($startDate, $endDate, $year) {
-            return [
-                'year' => $year,
-                'total_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'total_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'total_offers' => PriceOffer::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'total_reviews' => Review::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'total_wishlists' => Wishlist::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'total_price_alerts' => PriceAlert::whereBetween('created_at', [$startDate, $endDate])->count(),
-                'monthly_breakdown' => $this->getMonthlyBreakdown($startDate, $endDate),
-                'quarterly_breakdown' => $this->getQuarterlyBreakdown($startDate, $endDate),
-                'year_over_year_growth' => $this->getYearOverYearGrowth($year),
-                'top_categories_yearly' => $this->getTopCategories($startDate, $endDate),
-                'top_brands_yearly' => $this->getTopBrands($startDate, $endDate),
-                'price_analysis_yearly' => $this->getPriceAnalysis($startDate, $endDate),
-            ];
-        });
+        return Cache::remember($cacheKey, 3600, fn(): array => [
+            'year' => $year,
+            'total_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'total_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'total_offers' => PriceOffer::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'total_reviews' => Review::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'total_wishlists' => Wishlist::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'total_price_alerts' => PriceAlert::whereBetween('created_at', [$startDate, $endDate])->count(),
+            'monthly_breakdown' => $this->getMonthlyBreakdown($startDate, $endDate),
+            'quarterly_breakdown' => $this->getQuarterlyBreakdown($startDate, $endDate),
+            'year_over_year_growth' => $this->getYearOverYearGrowth($year),
+            'top_categories_yearly' => $this->getTopCategories($startDate, $endDate),
+            'top_brands_yearly' => $this->getTopBrands($startDate, $endDate),
+            'price_analysis_yearly' => $this->getPriceAnalysis($startDate, $endDate),
+        ]);
     }
 
     /**
@@ -162,7 +152,7 @@ final class StatisticsService
     {
         $cacheKey = "product_stats_{$productId}";
 
-        return Cache::remember($cacheKey, 1800, function () use ($productId) {
+        return Cache::remember($cacheKey, 1800, function () use ($productId): array {
             $product = Product::with(['category:id,name', 'brand:id,name'])
                 ->findOrFail($productId);
 
@@ -211,7 +201,7 @@ final class StatisticsService
     {
         $cacheKey = "user_stats_{$userId}";
 
-        return Cache::remember($cacheKey, 1800, function () use ($userId) {
+        return Cache::remember($cacheKey, 1800, function () use ($userId): array {
             $user = User::findOrFail($userId);
 
             // Use single query with counts to avoid N+1
@@ -254,18 +244,16 @@ final class StatisticsService
      */
     public function getSystemHealthStats(): array
     {
-        return Cache::remember('system_health_stats', 300, function () {
-            return [
-                'database_health' => $this->getDatabaseHealth(),
-                'cache_health' => $this->getCacheHealth(),
-                'queue_health' => $this->getQueueHealth(),
-                'storage_health' => $this->getStorageHealth(),
-                'api_health' => $this->getApiHealth(),
-                'error_rate' => $this->getErrorRate(),
-                'response_time' => $this->getAverageResponseTime(),
-                'uptime' => $this->getUptime(),
-            ];
-        });
+        return Cache::remember('system_health_stats', 300, fn(): array => [
+            'database_health' => $this->getDatabaseHealth(),
+            'cache_health' => $this->getCacheHealth(),
+            'queue_health' => $this->getQueueHealth(),
+            'storage_health' => $this->getStorageHealth(),
+            'api_health' => $this->getApiHealth(),
+            'error_rate' => $this->getErrorRate(),
+            'response_time' => $this->getAverageResponseTime(),
+            'uptime' => $this->getUptime(),
+        ]);
     }
 
     /**
@@ -273,11 +261,11 @@ final class StatisticsService
      */
     private function getActiveUsersToday(): int
     {
-        return User::whereHas('wishlists', function ($query) {
+        return User::whereHas('wishlists', function ($query): void {
             $query->whereDate('created_at', today());
-        })->orWhereHas('priceAlerts', function ($query) {
+        })->orWhereHas('priceAlerts', function ($query): void {
             $query->whereDate('created_at', today());
-        })->orWhereHas('reviews', function ($query) {
+        })->orWhereHas('reviews', function ($query): void {
             $query->whereDate('created_at', today());
         })->count();
     }
@@ -296,7 +284,7 @@ final class StatisticsService
     private function getPriceChangesToday(): int
     {
         return AuditLog::where('event', 'updated')
-            ->where('auditable_type', 'App\Models\Product')
+            ->where('auditable_type', \App\Models\Product::class)
             ->whereDate('created_at', today())
             ->whereJsonContains('metadata->reason', 'Updated from lowest price offer')
             ->count();
@@ -316,7 +304,7 @@ final class StatisticsService
     private function getPriceChangesForDate(Carbon $date): int
     {
         return AuditLog::where('event', 'updated')
-            ->where('auditable_type', 'App\Models\Product')
+            ->where('auditable_type', \App\Models\Product::class)
             ->whereDate('created_at', $date)
             ->whereJsonContains('metadata->reason', 'Updated from lowest price offer')
             ->count();
@@ -331,7 +319,7 @@ final class StatisticsService
     {
         return DB::table('audit_logs')
             ->where('event', 'viewed')
-            ->where('auditable_type', 'App\Models\Product')
+            ->where('auditable_type', \App\Models\Product::class)
             ->whereDate('created_at', $date)
             ->select('auditable_id', DB::raw('COUNT(*) as view_count'))
             ->groupBy('auditable_id')
@@ -349,13 +337,13 @@ final class StatisticsService
     private function getMostActiveUsersForDate(Carbon $date): array
     {
         return User::withCount(['wishlists', 'priceAlerts', 'reviews'])
-            ->whereHas('wishlists', function ($query) use ($date) {
+            ->whereHas('wishlists', function ($query) use ($date): void {
                 $query->whereDate('created_at', $date);
             })
-            ->orWhereHas('priceAlerts', function ($query) use ($date) {
+            ->orWhereHas('priceAlerts', function ($query) use ($date): void {
                 $query->whereDate('created_at', $date);
             })
-            ->orWhereHas('reviews', function ($query) use ($date) {
+            ->orWhereHas('reviews', function ($query) use ($date): void {
                 $query->whereDate('created_at', $date);
             })
             ->orderBy('wishlists_count', 'desc')
@@ -478,11 +466,11 @@ final class StatisticsService
     private function calculateEngagementRate(Carbon $startDate, Carbon $endDate): float
     {
         $totalUsers = User::count();
-        $activeUsers = User::whereHas('wishlists', function ($query) use ($startDate, $endDate) {
+        $activeUsers = User::whereHas('wishlists', function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate]);
-        })->orWhereHas('priceAlerts', function ($query) use ($startDate, $endDate) {
+        })->orWhereHas('priceAlerts', function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate]);
-        })->orWhereHas('reviews', function ($query) use ($startDate, $endDate) {
+        })->orWhereHas('reviews', function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate]);
         })->count();
 
@@ -667,12 +655,10 @@ final class StatisticsService
             'total_offers' => $offers->count(),
             'average_price' => array_sum($prices) / count($prices),
             'price_range' => [
-                'min' => ! empty($prices) ? min($prices) : 0,
-                'max' => ! empty($prices) ? max($prices) : 0,
+                'min' => empty($prices) ? 0 : min($prices),
+                'max' => empty($prices) ? 0 : max($prices),
             ],
-            'price_volatility' => $this->calculatePriceVolatility(array_map(function ($price) {
-                return is_numeric($price) ? (float) $price : 0.0;
-            }, $prices)),
+            'price_volatility' => $this->calculatePriceVolatility(array_map(fn($price): float => is_numeric($price) ? (float) $price : 0.0, $prices)),
         ];
     }
 
@@ -692,8 +678,8 @@ final class StatisticsService
         $prices = $offers->pluck('price')->toArray();
 
         return [
-            'min' => ! empty($prices) ? min($prices) : 0,
-            'max' => ! empty($prices) ? max($prices) : 0,
+            'min' => empty($prices) ? 0 : min($prices),
+            'max' => empty($prices) ? 0 : max($prices),
         ];
     }
 
@@ -703,7 +689,7 @@ final class StatisticsService
     private function getProductViewCount(int $productId): int
     {
         return AuditLog::where('event', 'viewed')
-            ->where('auditable_type', 'App\Models\Product')
+            ->where('auditable_type', \App\Models\Product::class)
             ->where('auditable_id', $productId)
             ->count();
     }
@@ -940,7 +926,7 @@ final class StatisticsService
             ->values()
             ->toArray();
 
-        return ! empty($responseTimes) ? array_sum($responseTimes) / count($responseTimes) : 0;
+        return empty($responseTimes) ? 0 : array_sum($responseTimes) / count($responseTimes);
     }
 
     /**
@@ -971,9 +957,7 @@ final class StatisticsService
         }
 
         $mean = array_sum($prices) / count($prices);
-        $variance = array_sum(array_map(function ($price) use ($mean) {
-            return pow($price - $mean, 2);
-        }, $prices)) / count($prices);
+        $variance = array_sum(array_map(fn($price): float|int => ($price - $mean) ** 2, $prices)) / count($prices);
 
         return sqrt($variance);
     }

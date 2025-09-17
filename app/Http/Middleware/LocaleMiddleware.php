@@ -14,8 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 class LocaleMiddleware
 {
     public function __construct(
-        private Guard $auth,
-        private Session $session
+        private readonly Guard $auth,
+        private readonly Session $session
     ) {}
 
     public function handle(Request $request, Closure $next): Response

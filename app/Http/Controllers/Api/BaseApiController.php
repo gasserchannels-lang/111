@@ -115,7 +115,7 @@ abstract class BaseApiController extends Controller
             'data' => $data,
         ];
 
-        if (! empty($meta)) {
+        if ($meta !== []) {
             $response['meta'] = $meta;
         }
 
@@ -142,7 +142,7 @@ abstract class BaseApiController extends Controller
             $response['errors'] = $errors;
         }
 
-        if (! empty($meta)) {
+        if ($meta !== []) {
             $response['meta'] = $meta;
         }
 
@@ -236,7 +236,7 @@ abstract class BaseApiController extends Controller
             'pagination' => $pagination,
         ];
 
-        if (! empty($meta)) {
+        if ($meta !== []) {
             $response['meta'] = $meta;
         }
 
@@ -315,9 +315,7 @@ abstract class BaseApiController extends Controller
         $filters = $request->except(['page', 'per_page', 'sort_by', 'sort_order', 'search']);
 
         // Remove empty values
-        return array_filter($filters, function ($value) {
-            return $value !== null && $value !== '';
-        });
+        return array_filter($filters, fn($value): bool => $value !== null && $value !== '');
     }
 
     /**
@@ -340,7 +338,7 @@ abstract class BaseApiController extends Controller
     /**
      * Handle API exceptions.
      */
-    protected function handleApiException(Exception $e): JsonResponse
+    protected function handleApiException(\Throwable $e): JsonResponse
     {
         Log::error('API Exception', [
             'message' => $e->getMessage(),

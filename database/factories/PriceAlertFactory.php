@@ -23,7 +23,9 @@ class PriceAlertFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'product_id' => Product::factory(),
+            'product_id' => function () {
+                return Product::factory()->create()->id;
+            },
             'target_price' => $this->faker->randomFloat(2, 10, 1000),
             'repeat_alert' => $this->faker->boolean,
             'is_active' => true,

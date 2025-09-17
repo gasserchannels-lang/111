@@ -22,17 +22,14 @@ class AgentProposeFixCommand extends Command
     protected $description = 'Propose automated fixes via Pull Request for different types of issues';
 
     /**
-     * The process service instance.
-     */
-    private ProcessService $processService;
-
-    /**
      * Create a new command instance.
      */
-    public function __construct(ProcessService $processService)
+    public function __construct(/**
+     * The process service instance.
+     */
+    private readonly ProcessService $processService)
     {
         parent::__construct();
-        $this->processService = $processService;
     }
 
     /**

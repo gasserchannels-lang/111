@@ -81,7 +81,7 @@ class Store extends Model
     /**
      * @var array<string, mixed>|null
      */
-    protected $errors = null;
+    protected $errors;
 
     /**
      * The attributes that should be validated.
@@ -193,13 +193,13 @@ class Store extends Model
     {
         parent::boot();
 
-        static::creating(function ($store) {
+        static::creating(function ($store): void {
             if (empty($store->slug)) {
                 $store->slug = \Str::slug($store->name);
             }
         });
 
-        static::updating(function ($store) {
+        static::updating(function ($store): void {
             if ($store->isDirty('name') && empty($store->slug)) {
                 $store->slug = \Str::slug($store->name);
             }
@@ -216,8 +216,7 @@ class Store extends Model
         $affiliateBaseUrl = (string) $this->affiliate_base_url;
 
         $affiliateUrl = str_replace('{AFFILIATE_CODE}', $affiliateCode, $affiliateBaseUrl);
-        $affiliateUrl = str_replace('{URL}', urlencode($productUrl), $affiliateUrl);
 
-        return $affiliateUrl;
+        return str_replace('{URL}', urlencode($productUrl), $affiliateUrl);
     }
 }

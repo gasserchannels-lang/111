@@ -13,12 +13,9 @@ class StartQualityMonitoringCommand extends Command
 
     protected $description = 'Start continuous AI-powered quality monitoring';
 
-    private ContinuousQualityMonitor $monitor;
-
-    public function __construct(ContinuousQualityMonitor $monitor)
+    public function __construct(private readonly ContinuousQualityMonitor $monitor)
     {
         parent::__construct();
-        $this->monitor = $monitor;
     }
 
     public function handle(): int
@@ -57,18 +54,18 @@ class StartQualityMonitoringCommand extends Command
 
         // Fork process
         $pid = pcntl_fork();
-
         if ($pid == -1) {
             $this->error('فشل في إنشاء العملية الخلفية');
-
             return;
-        } elseif ($pid) {
+        }
+
+        if ($pid !== 0) {
             // Parent process
             $this->info("✅ تم تشغيل العملية الخلفية برقم: {$pid}");
             $this->info('استخدم: kill '.$pid.' لإيقاف العملية');
-
             return;
-        } else {
+        }
+        else {
             // Child process
             $this->runMonitoringLoop($interval);
         }
@@ -112,7 +109,7 @@ class StartQualityMonitoringCommand extends Command
 
         $table = [];
         if (isset($results['rules']) && is_array($results['rules'])) {
-            foreach ($results['rules'] as $ruleId => $result) {
+            foreach ($results['rules'] as $result) {
                 /** @var array<string, mixed> $result */
                 $healthScore = $result['health_score'] ?? 0;
                 $status = (is_numeric($healthScore) ? (float) $healthScore : 0.0) >= 80 ? '✅' : '❌';

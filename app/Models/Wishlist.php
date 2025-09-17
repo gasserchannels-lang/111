@@ -49,7 +49,7 @@ class Wishlist extends Model
     /**
      * @var array<string, mixed>|null
      */
-    protected $errors = null;
+    protected $errors;
 
     /**
      * The attributes that should be validated.

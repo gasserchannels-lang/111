@@ -13,17 +13,8 @@ use Illuminate\Http\Request;
 
 class LocaleController extends Controller
 {
-    private Guard $auth;
-
-    private Session $session;
-
-    private Application $app;
-
-    public function __construct(Guard $auth, Session $session, Application $app)
+    public function __construct(private readonly Guard $auth, private readonly Session $session, private readonly Application $app)
     {
-        $this->auth = $auth;
-        $this->session = $session;
-        $this->app = $app;
     }
 
     public function switchLanguage(Request $request): \Illuminate\Http\RedirectResponse

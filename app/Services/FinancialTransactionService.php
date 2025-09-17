@@ -12,11 +12,8 @@ use Illuminate\Support\Facades\Log;
 
 class FinancialTransactionService
 {
-    private AuditService $auditService;
-
-    public function __construct(AuditService $auditService)
+    public function __construct(private readonly AuditService $auditService)
     {
-        $this->auditService = $auditService;
     }
 
     /**
@@ -26,7 +23,7 @@ class FinancialTransactionService
      */
     public function updateProductPrice(Product $product, float $newPrice, ?string $reason = null): bool
     {
-        return DB::transaction(function () use ($product, $newPrice, $reason) {
+        return DB::transaction(function () use ($product, $newPrice, $reason): true {
             try {
                 $oldPrice = $product->price;
 
@@ -52,7 +49,7 @@ class FinancialTransactionService
                 ]);
 
                 // Check for price alerts
-                $this->checkPriceAlerts($product, (float) $oldPrice, $newPrice);
+                $this->checkPriceAlerts();
 
                 Log::info('Product price updated successfully', [
                     'product_id' => $product->id,
@@ -132,7 +129,7 @@ class FinancialTransactionService
      */
     public function updatePriceOffer(PriceOffer $offer, array $updateData): bool
     {
-        return DB::transaction(function () use ($offer, $updateData) {
+        return DB::transaction(function () use ($offer, $updateData): true {
             try {
                 $oldData = $offer->toArray();
 
@@ -179,7 +176,7 @@ class FinancialTransactionService
      */
     public function deletePriceOffer(PriceOffer $offer): bool
     {
-        return DB::transaction(function () use ($offer) {
+        return DB::transaction(function () use ($offer): true {
             try {
                 $product = $offer->product;
                 $wasLowestPrice = $this->isLowestPriceOffer($offer);
@@ -301,10 +298,8 @@ class FinancialTransactionService
 
     /**
      * Check for price alerts.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      */
-    private function checkPriceAlerts(Product $product, float $oldPrice, float $newPrice): void
+    private function checkPriceAlerts(): void
     {
         // This would integrate with the notification system
         // to send alerts when price drops below target

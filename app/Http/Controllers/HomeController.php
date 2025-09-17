@@ -35,6 +35,6 @@ class HomeController extends Controller
             ->get();
 
         // Tests expect the 'home' view regardless of dataset
-        return view('home', compact('featuredProducts', 'categories', 'brands'));
+        return view('home', ['featuredProducts' => $featuredProducts, 'categories' => $categories, 'brands' => $brands]);
     }
 }

@@ -24,34 +24,34 @@ class CheckDeploymentReadiness extends Command
         // 1. Environment Check
         $this->info('Checking environment configuration...');
         $envErrors = $this->checkEnvironment();
-        if (! empty($envErrors)) {
+        if ($envErrors !== []) {
             $hasErrors = true;
         }
 
         // 2. Storage Permissions
         $this->info('Checking storage permissions...');
         $storageErrors = $this->checkStoragePermissions();
-        $hasErrors = $hasErrors || ! empty($storageErrors);
+        $hasErrors = $hasErrors || $storageErrors !== [];
 
         // 3. Database Configuration
         $this->info('Checking database configuration...');
         $dbErrors = $this->checkDatabase();
-        $hasErrors = $hasErrors || ! empty($dbErrors);
+        $hasErrors = $hasErrors || $dbErrors !== [];
 
         // 4. Cache Configuration
         $this->info('Checking cache configuration...');
         $cacheErrors = $this->checkCache();
-        $hasErrors = $hasErrors || ! empty($cacheErrors);
+        $hasErrors = $hasErrors || $cacheErrors !== [];
 
         // 5. Queue Configuration
         $this->info('Checking queue configuration...');
         $queueErrors = $this->checkQueue();
-        $hasErrors = $hasErrors || ! empty($queueErrors);
+        $hasErrors = $hasErrors || $queueErrors !== [];
 
         // 6. Logging Configuration
         $this->info('Checking logging configuration...');
         $logErrors = $this->checkLogging();
-        $hasErrors = $hasErrors || ! empty($logErrors);
+        $hasErrors = $hasErrors || $logErrors !== [];
 
         // Display Results
         $this->displayResults([

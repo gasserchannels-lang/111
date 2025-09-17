@@ -103,6 +103,10 @@ return [
             'max_attempts' => 1000,
             'decay_minutes' => 60,
         ],
+        'ai_requests' => [
+            'max_attempts' => 100,
+            'decay_minutes' => 60,
+        ],
     ],
 
     /*

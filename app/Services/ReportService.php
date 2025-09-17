@@ -23,8 +23,8 @@ class ReportService
      */
     public function generateProductPerformanceReport(int $productId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
-        $startDate = $startDate ?? now()->subMonth();
-        $endDate = $endDate ?? now();
+        $startDate ??= now()->subMonth();
+        $endDate ??= now();
 
         $product = Product::findOrFail($productId);
 
@@ -54,8 +54,8 @@ class ReportService
      */
     public function generateUserActivityReport(int $userId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
-        $startDate = $startDate ?? now()->subMonth();
-        $endDate = $endDate ?? now();
+        $startDate ??= now()->subMonth();
+        $endDate ??= now();
 
         $user = User::findOrFail($userId);
 
@@ -84,8 +84,8 @@ class ReportService
      */
     public function generateSystemPerformanceReport(?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
-        $startDate = $startDate ?? now()->subMonth();
-        $endDate = $endDate ?? now();
+        $startDate ??= now()->subMonth();
+        $endDate ??= now();
 
         return [
             'period' => [
@@ -107,8 +107,8 @@ class ReportService
      */
     public function generateSalesReport(?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
-        $startDate = $startDate ?? now()->subMonth();
-        $endDate = $endDate ?? now();
+        $startDate ??= now()->subMonth();
+        $endDate ??= now();
 
         return [
             'period' => [
@@ -146,8 +146,9 @@ class ReportService
 
         $prices = $offers->pluck('price')->toArray();
         $priceChanges = [];
+        $counter = count($prices);
 
-        for ($i = 1; $i < count($prices); $i++) {
+        for ($i = 1; $i < $counter; $i++) {
             $currentPrice = is_numeric($prices[$i]) ? (float) $prices[$i] : 0.0;
             $previousPrice = is_numeric($prices[$i - 1]) ? (float) $prices[$i - 1] : 0.0;
             $priceChanges[] = $currentPrice - $previousPrice;
@@ -156,8 +157,8 @@ class ReportService
         return [
             'total_offers' => $offers->count(),
             'price_range' => [
-                'min' => ! empty($prices) ? min($prices) : 0,
-                'max' => ! empty($prices) ? max($prices) : 0,
+                'min' => empty($prices) ? 0 : min($prices),
+                'max' => empty($prices) ? 0 : max($prices),
             ],
             'average_price' => array_sum($prices) / count($prices),
             'price_volatility' => count($priceChanges) > 0 ? array_sum($priceChanges) / count($priceChanges) : 0,
@@ -288,14 +289,12 @@ class ReportService
 
         return [
             'total_items' => $wishlists->count(),
-            'products' => $wishlists->map(function ($wishlist) {
-                return [
-                    'id' => $wishlist->product->id ?? 0,
-                    'name' => $wishlist->product->name ?? 'Unknown Product',
-                    'price' => $wishlist->product->price ?? 0,
-                    'added_at' => $wishlist->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
-                ];
-            })->toArray(),
+            'products' => $wishlists->map(fn($wishlist): array => [
+                'id' => $wishlist->product->id ?? 0,
+                'name' => $wishlist->product->name ?? 'Unknown Product',
+                'price' => $wishlist->product->price ?? 0,
+                'added_at' => $wishlist->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
+            ])->toArray(),
         ];
     }
 
@@ -314,15 +313,13 @@ class ReportService
         return [
             'total_alerts' => $alerts->count(),
             'active_alerts' => $alerts->where('is_active', true)->count(),
-            'alerts' => $alerts->map(function ($alert) {
-                return [
-                    'id' => $alert->id,
-                    'product_name' => $alert->product->name ?? 'Unknown Product',
-                    'target_price' => $alert->target_price,
-                    'current_price' => $alert->product->price ?? 0,
-                    'created_at' => $alert->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
-                ];
-            })->toArray(),
+            'alerts' => $alerts->map(fn($alert): array => [
+                'id' => $alert->id,
+                'product_name' => $alert->product->name ?? 'Unknown Product',
+                'target_price' => $alert->target_price,
+                'current_price' => $alert->product->price ?? 0,
+                'created_at' => $alert->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
+            ])->toArray(),
         ];
     }
 
@@ -341,16 +338,14 @@ class ReportService
         return [
             'total_reviews' => $reviews->count(),
             'average_rating' => $reviews->avg('rating'),
-            'reviews' => $reviews->map(function ($review) {
-                return [
-                    'id' => $review->id,
-                    'product_name' => $review->product->name ?? 'Unknown Product',
-                    'rating' => $review->rating,
-                    'content' => $review->content,
-                    'is_approved' => $review->is_approved,
-                    'created_at' => $review->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
-                ];
-            })->toArray(),
+            'reviews' => $reviews->map(fn($review): array => [
+                'id' => $review->id,
+                'product_name' => $review->product->name ?? 'Unknown Product',
+                'rating' => $review->rating,
+                'content' => $review->content,
+                'is_approved' => $review->is_approved,
+                'created_at' => $review->created_at?->format('Y-m-d H:i:s') ?? 'N/A',
+            ])->toArray(),
         ];
     }
 
@@ -457,7 +452,7 @@ class ReportService
     {
         $priceChanges = DB::table('audit_logs')
             ->where('event', 'updated')
-            ->where('auditable_type', 'App\Models\Product')
+            ->where('auditable_type', \App\Models\Product::class)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->whereJsonContains('metadata->reason', 'Updated from lowest price offer')
             ->count();
@@ -482,16 +477,14 @@ class ReportService
             ->orderBy('reviews_count', 'desc')
             ->take(10)
             ->get()
-            ->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'wishlists_count' => $product->wishlists_count,
-                    'price_alerts_count' => $product->price_alerts_count,
-                    'reviews_count' => $product->reviews_count,
-                ];
-            })
+            ->map(fn($product): array => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'wishlists_count' => $product->wishlists_count,
+                'price_alerts_count' => $product->price_alerts_count,
+                'reviews_count' => $product->reviews_count,
+            ])
             ->toArray();
     }
 
@@ -527,12 +520,10 @@ class ReportService
             ->orderBy('date')
             ->get();
 
-        return $trends->map(function ($trend) {
-            return [
-                'date' => $trend->date,
-                'average_price' => round($trend->average_price, 2),
-            ];
-        })->toArray();
+        return $trends->map(fn($trend): array => [
+            'date' => $trend->date,
+            'average_price' => round($trend->average_price, 2),
+        ])->toArray();
     }
 
     /**
@@ -549,16 +540,14 @@ class ReportService
             ->orderBy('reviews_count', 'desc')
             ->take(10)
             ->get()
-            ->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'wishlists_count' => $user->wishlists_count,
-                    'price_alerts_count' => $user->price_alerts_count,
-                    'reviews_count' => $user->reviews_count,
-                ];
-            })
+            ->map(fn($user): array => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'wishlists_count' => $user->wishlists_count,
+                'price_alerts_count' => $user->price_alerts_count,
+                'reviews_count' => $user->reviews_count,
+            ])
             ->toArray();
     }
 
@@ -572,20 +561,18 @@ class ReportService
         return DB::table('audit_logs')
             ->join('products', 'audit_logs.auditable_id', '=', 'products.id')
             ->where('audit_logs.event', 'viewed')
-            ->where('audit_logs.auditable_type', 'App\Models\Product')
+            ->where('audit_logs.auditable_type', \App\Models\Product::class)
             ->whereBetween('audit_logs.created_at', [$startDate, $endDate])
             ->select('products.id', 'products.name', DB::raw('COUNT(*) as view_count'))
             ->groupBy('products.id', 'products.name')
             ->orderBy('view_count', 'desc')
             ->take(10)
             ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'name' => $item->name,
-                    'view_count' => $item->view_count,
-                ];
-            })
+            ->map(fn($item): array => [
+                'id' => $item->id,
+                'name' => $item->name,
+                'view_count' => $item->view_count,
+            ])
             ->toArray();
     }
 
@@ -604,12 +591,14 @@ class ReportService
         $lastPrice = end($prices);
         $change = $lastPrice - $firstPrice;
         $percentage = ($change / $firstPrice) * 100;
-
         if ($percentage > 5) {
             return 'increasing';
-        } elseif ($percentage < -5) {
+        }
+
+        if ($percentage < -5) {
             return 'decreasing';
-        } else {
+        }
+        else {
             return 'stable';
         }
     }

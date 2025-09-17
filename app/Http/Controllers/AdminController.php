@@ -35,7 +35,7 @@ class AdminController extends Controller
         $recentUsers = User::latest()->take(5)->get();
         $recentProducts = Product::with(['brand', 'category'])->latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('stats', 'recentUsers', 'recentProducts'));
+        return view('admin.dashboard', ['stats' => $stats, 'recentUsers' => $recentUsers, 'recentProducts' => $recentProducts]);
     }
 
     /**
@@ -45,7 +45,7 @@ class AdminController extends Controller
     {
         $users = User::with('localeSetting')->paginate(20);
 
-        return view('admin.users', compact('users'));
+        return view('admin.users', ['users' => $users]);
     }
 
     /**
@@ -56,7 +56,7 @@ class AdminController extends Controller
         $products = Product::with(['brand', 'category', 'priceOffers'])
             ->paginate(20);
 
-        return view('admin.products', compact('products'));
+        return view('admin.products', ['products' => $products]);
     }
 
     /**
@@ -66,7 +66,7 @@ class AdminController extends Controller
     {
         $brands = Brand::with('products')->paginate(20);
 
-        return view('admin.brands', compact('brands'));
+        return view('admin.brands', ['brands' => $brands]);
     }
 
     /**
@@ -76,7 +76,7 @@ class AdminController extends Controller
     {
         $categories = Category::with('products')->paginate(20);
 
-        return view('admin.categories', compact('categories'));
+        return view('admin.categories', ['categories' => $categories]);
     }
 
     /**
@@ -86,7 +86,7 @@ class AdminController extends Controller
     {
         $stores = Store::with('currency')->paginate(20);
 
-        return view('admin.stores', compact('stores'));
+        return view('admin.stores', ['stores' => $stores]);
     }
 
     /**

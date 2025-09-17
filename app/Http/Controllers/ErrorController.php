@@ -35,7 +35,7 @@ class ErrorController extends Controller
         /** @var view-string $view */
         $view = 'errors.dashboard';
 
-        return view($view, compact('errors', 'errorStats', 'systemHealth'));
+        return view($view, ['errors' => $errors, 'errorStats' => $errorStats, 'systemHealth' => $systemHealth]);
     }
 
     /**
@@ -66,7 +66,7 @@ class ErrorController extends Controller
         /** @var view-string $view */
         $view = 'errors.details';
 
-        return view($view, compact('error'));
+        return view($view, ['error' => $error]);
     }
 
     /**
@@ -89,14 +89,14 @@ class ErrorController extends Controller
                 $lines = explode("\n", $content ?: '');
 
                 foreach ($lines as $line) {
-                    if (strpos($line, 'ERROR') !== false || strpos($line, 'CRITICAL') !== false) {
+                    if (str_contains($line, 'ERROR') || str_contains($line, 'CRITICAL')) {
                         $errors[] = $this->parseLogLine($line);
                     }
                 }
             }
 
             // Sort by timestamp (newest first)
-            usort($errors, function ($a, $b) {
+            usort($errors, function (array $a, array $b): int {
                 $timestampA = (isset($a['timestamp']) && is_string($a['timestamp'])) ? strtotime($a['timestamp']) : 0;
                 $timestampB = (isset($b['timestamp']) && is_string($b['timestamp'])) ? strtotime($b['timestamp']) : 0;
 
@@ -136,12 +136,12 @@ class ErrorController extends Controller
                 $lines = explode("\n", $content ?: '');
 
                 foreach ($lines as $line) {
-                    if (strpos($line, 'ERROR') !== false || strpos($line, 'CRITICAL') !== false) {
+                    if (str_contains($line, 'ERROR') || str_contains($line, 'CRITICAL')) {
                         $error = $this->parseLogLine($line);
 
                         $stats['total_errors']++;
 
-                        if (strpos($line, 'CRITICAL') !== false) {
+                        if (str_contains($line, 'CRITICAL')) {
                             $stats['critical_errors']++;
                         }
 
@@ -199,7 +199,7 @@ class ErrorController extends Controller
             ];
 
             $overallHealth = 'healthy';
-            foreach ($health as $component => $status) {
+            foreach ($health as $status) {
                 if ($status['status'] === 'critical') {
                     $overallHealth = 'critical';
                     break;
@@ -244,7 +244,7 @@ class ErrorController extends Controller
             $lines = explode("\n", $content ?: '');
 
             foreach ($lines as $line) {
-                if (strpos($line, $id) !== false) {
+                if (str_contains($line, $id)) {
                     return $this->parseLogLine($line);
                 }
             }
@@ -279,19 +279,19 @@ class ErrorController extends Controller
      */
     private function extractErrorType(string $line): string
     {
-        if (strpos($line, 'Database') !== false) {
+        if (str_contains($line, 'Database')) {
             return 'Database';
         }
-        if (strpos($line, 'Redis') !== false) {
+        if (str_contains($line, 'Redis')) {
             return 'Cache';
         }
-        if (strpos($line, 'Validation') !== false) {
+        if (str_contains($line, 'Validation')) {
             return 'Validation';
         }
-        if (strpos($line, 'Authentication') !== false) {
+        if (str_contains($line, 'Authentication')) {
             return 'Authentication';
         }
-        if (strpos($line, 'Authorization') !== false) {
+        if (str_contains($line, 'Authorization')) {
             return 'Authorization';
         }
 
@@ -371,10 +371,11 @@ class ErrorController extends Controller
             $freeSpace = disk_free_space($storagePath);
             $usedSpace = $totalSpace - $freeSpace;
             $usagePercentage = ($usedSpace / $totalSpace) * 100;
-
             if ($usagePercentage > 90) {
                 return ['status' => 'critical', 'message' => 'Storage usage critical: '.round($usagePercentage, 2).'%'];
-            } elseif ($usagePercentage > 80) {
+            }
+
+            if ($usagePercentage > 80) {
                 return ['status' => 'warning', 'message' => 'Storage usage high: '.round($usagePercentage, 2).'%'];
             }
 
@@ -396,10 +397,11 @@ class ErrorController extends Controller
         $memoryLimit = ini_get('memory_limit');
         $memoryLimitBytes = $this->convertToBytes($memoryLimit);
         $usagePercentage = ($memoryUsage / $memoryLimitBytes) * 100;
-
         if ($usagePercentage > 90) {
             return ['status' => 'critical', 'message' => 'Memory usage critical: '.round($usagePercentage, 2).'%'];
-        } elseif ($usagePercentage > 80) {
+        }
+
+        if ($usagePercentage > 80) {
             return ['status' => 'warning', 'message' => 'Memory usage high: '.round($usagePercentage, 2).'%'];
         }
 
@@ -416,10 +418,11 @@ class ErrorController extends Controller
     {
         $diskSpace = disk_free_space(storage_path());
         $diskSpaceGB = $diskSpace / (1024 * 1024 * 1024);
-
         if ($diskSpaceGB < 1) {
             return ['status' => 'critical', 'message' => 'Disk space critical: '.round($diskSpaceGB, 2).'GB free'];
-        } elseif ($diskSpaceGB < 5) {
+        }
+
+        if ($diskSpaceGB < 5) {
             return ['status' => 'warning', 'message' => 'Disk space low: '.round($diskSpaceGB, 2).'GB free'];
         }
 

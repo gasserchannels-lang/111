@@ -36,9 +36,7 @@ class LogController extends Controller
             // Filter by level if specified
             if ($request->has('level')) {
                 $level = $request->get('level');
-                $reversedLines = array_filter($reversedLines, function ($line) use ($level) {
-                    return strpos($line, $level) !== false;
-                });
+                $reversedLines = array_filter($reversedLines, fn($line): bool => str_contains((string) $line, (string) $level));
             }
 
             // Limit results
@@ -193,10 +191,10 @@ class LogController extends Controller
             $reversedLines = array_reverse($lines);
 
             // Filter by allowed levels
-            if (! empty($allowedLevels)) {
-                $reversedLines = array_filter($reversedLines, function ($line) use ($allowedLevels) {
+            if ($allowedLevels !== []) {
+                $reversedLines = array_filter($reversedLines, function ($line) use ($allowedLevels): bool {
                     foreach ($allowedLevels as $level) {
-                        if (strpos($line, $level) !== false) {
+                        if (str_contains($line, $level)) {
                             return true;
                         }
                     }
@@ -402,9 +400,7 @@ class LogController extends Controller
     public function getSystemLogsForExport(): array
     {
         try {
-            $parsedLogs = $this->parseLogFile();
-
-            return $parsedLogs;
+            return $this->parseLogFile();
         } catch (\Exception $e) {
             Log::error('Error getting system logs: '.$e->getMessage());
 
@@ -424,9 +420,7 @@ class LogController extends Controller
     public function getAccessLogsForExport(): array
     {
         try {
-            $parsedLogs = $this->parseAccessLogFile();
-
-            return $parsedLogs;
+            return $this->parseAccessLogFile();
         } catch (\Exception $e) {
             Log::error('Error getting access logs: '.$e->getMessage());
 
@@ -447,7 +441,7 @@ class LogController extends Controller
     {
         $count = 0;
         foreach ($lines as $line) {
-            if (strpos($line, $level) !== false) {
+            if (str_contains($line, $level)) {
                 $count++;
             }
         }

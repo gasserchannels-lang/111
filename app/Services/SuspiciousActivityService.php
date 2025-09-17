@@ -130,11 +130,7 @@ final class SuspiciousActivityService
 
         $key = "failed_logins:{$userId}:{$ipAddress}";
         $failedCount = Cache::get($key, 0);
-        if (is_numeric($failedCount)) {
-            $failedCount = (int) $failedCount + 1;
-        } else {
-            $failedCount = 1;
-        }
+        $failedCount = is_numeric($failedCount) ? (int) $failedCount + 1 : 1;
 
         $timeWindow = is_numeric($rule['time_window'] ?? 60) ? (int) ($rule['time_window'] ?? 60) : 60;
         Cache::put($key, $failedCount, $timeWindow * 60);
@@ -173,9 +169,9 @@ final class SuspiciousActivityService
         }
 
         // Get user's previous login locations
-        $previousLocations = $this->getUserPreviousLocations($userId);
+        $previousLocations = $this->getUserPreviousLocations();
 
-        if (empty($previousLocations)) {
+        if ($previousLocations === []) {
             return []; // No previous locations to compare
         }
 
@@ -215,11 +211,7 @@ final class SuspiciousActivityService
 
         $key = "api_requests:{$userId}:{$ipAddress}";
         $requestCount = Cache::get($key, 0);
-        if (is_numeric($requestCount)) {
-            $requestCount = (int) $requestCount + 1;
-        } else {
-            $requestCount = 1;
-        }
+        $requestCount = is_numeric($requestCount) ? (int) $requestCount + 1 : 1;
 
         $timeWindow = is_numeric($rule['time_window'] ?? 60) ? (int) ($rule['time_window'] ?? 60) : 60;
         Cache::put($key, $requestCount, $timeWindow * 60);
@@ -259,11 +251,7 @@ final class SuspiciousActivityService
 
         $key = "data_access:{$userId}";
         $accessCount = Cache::get($key, 0);
-        if (is_numeric($accessCount)) {
-            $accessCount = (int) $accessCount + 1;
-        } else {
-            $accessCount = 1;
-        }
+        $accessCount = is_numeric($accessCount) ? (int) $accessCount + 1 : 1;
 
         $timeWindow = is_numeric($rule['time_window'] ?? 60) ? (int) ($rule['time_window'] ?? 60) : 60;
         Cache::put($key, $accessCount, $timeWindow * 60);
@@ -391,7 +379,7 @@ final class SuspiciousActivityService
                 $subject = 'Suspicious Activity Alert - '.$activityType;
                 $message = $this->formatActivityMessage($activity);
 
-                Mail::raw($message, function ($mail) use ($adminEmails, $subject) {
+                Mail::raw($message, function ($mail) use ($adminEmails, $subject): void {
                     $mail->to($adminEmails)->subject($subject);
                 });
             }
@@ -476,14 +464,10 @@ final class SuspiciousActivityService
         }
 
         // Medium severity actions
-        if ($severity === 'medium') {
-            switch ($type) {
-                case 'rapid_api_requests':
-                    $userId = $activity['user_id'] ?? 0;
-                    if (is_numeric($userId)) {
-                        $this->throttleUserRequests((int) $userId);
-                    }
-                    break;
+        if ($severity === 'medium' && $type === 'rapid_api_requests') {
+            $userId = $activity['user_id'] ?? 0;
+            if (is_numeric($userId)) {
+                $this->throttleUserRequests((int) $userId);
             }
         }
     }
@@ -559,9 +543,8 @@ final class SuspiciousActivityService
         $message .= 'IP Address: '.(is_string($activity['ip_address'] ?? null) ? $activity['ip_address'] : 'unknown')."\n";
         $message .= 'Timestamp: '.(is_string($activity['timestamp'] ?? null) ? $activity['timestamp'] : 'unknown')."\n\n";
         $message .= "Details:\n";
-        $message .= json_encode($activity['details'] ?? [], JSON_PRETTY_PRINT);
 
-        return $message;
+        return $message . json_encode($activity['details'] ?? [], JSON_PRETTY_PRINT);
     }
 
     /**
@@ -569,7 +552,7 @@ final class SuspiciousActivityService
      *
      * @return array<string, mixed>
      */
-    private function getUserPreviousLocations(int $userId): array
+    private function getUserPreviousLocations(): array
     {
         // This would query the login_logs table
         // For now, return empty array

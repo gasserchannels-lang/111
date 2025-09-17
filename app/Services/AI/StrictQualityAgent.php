@@ -167,11 +167,7 @@ class StrictQualityAgent
         try {
             $startTime = microtime(true);
 
-            if (isset($stage['files'])) {
-                $result = $this->executeFileBasedStage($stage);
-            } else {
-                $result = $this->executeCommandStage($stage);
-            }
+            $result = isset($stage['files']) ? $this->executeFileBasedStage($stage) : $this->executeCommandStage($stage);
 
             $endTime = microtime(true);
             $duration = round($endTime - $startTime, 2);
@@ -325,12 +321,8 @@ class StrictQualityAgent
             'timestamp' => now()->toISOString(),
             'overall_success' => $overallSuccess,
             'total_stages' => count($this->stages),
-            'successful_stages' => count(array_filter($this->results, function ($r) {
-                return is_array($r) && ($r['success'] ?? false) === true;
-            })),
-            'failed_stages' => count(array_filter($this->results, function ($r) {
-                return is_array($r) && ($r['success'] ?? false) !== true;
-            })),
+            'successful_stages' => count(array_filter($this->results, fn($r): bool => is_array($r) && ($r['success'] ?? false) === true)),
+            'failed_stages' => count(array_filter($this->results, fn($r): bool => is_array($r) && ($r['success'] ?? false) !== true)),
             'stages_details' => $this->results,
             'errors' => $this->errors,
             'fixes' => $this->fixes,
@@ -384,7 +376,7 @@ class StrictQualityAgent
         return [
             'total_errors' => count($this->errors),
             'errors_by_stage' => $this->errors,
-            'critical_errors' => array_filter($this->errors, fn ($error) => is_string($error) && str_contains($error, 'Fatal')),
+            'critical_errors' => array_filter($this->errors, fn ($error): bool => is_string($error) && str_contains($error, 'Fatal')),
         ];
     }
 }

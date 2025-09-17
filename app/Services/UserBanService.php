@@ -127,7 +127,7 @@ final class UserBanService
     public function getBannedUsers(): \Illuminate\Database\Eloquent\Collection
     {
         return User::where('is_blocked', true)
-            ->where(function ($query) {
+            ->where(function ($query): void {
                 $query->whereNull('ban_expires_at')
                     ->orWhere('ban_expires_at', '>', now());
             })
@@ -214,13 +214,8 @@ final class UserBanService
         if ($user->isAdmin()) {
             return false;
         }
-
         // Cannot ban already banned users
-        if ($user->isBanned()) {
-            return false;
-        }
-
-        return true;
+        return !$user->isBanned();
     }
 
     /**

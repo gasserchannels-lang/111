@@ -30,9 +30,7 @@ final class WatermarkService
             'font_family' => 'Arial',
         ]);
         if (is_array($config)) {
-            $this->config = array_merge($this->config, array_filter($config, function ($value) {
-                return is_string($value) || is_numeric($value) || is_bool($value);
-            }));
+            $this->config = array_merge($this->config, array_filter($config, fn($value): bool => is_string($value) || is_numeric($value) || is_bool($value)));
         }
     }
 
@@ -177,7 +175,7 @@ final class WatermarkService
      */
     private function createWatermarkedImageFromPath(string $imagePath, string $watermarkText, ?string $outputPath = null): string
     {
-        $outputPath = $outputPath ?? tempnam(sys_get_temp_dir(), 'watermarked_');
+        $outputPath ??= tempnam(sys_get_temp_dir(), 'watermarked_');
 
         // Get image info
         $imageInfo = getimagesize($imagePath);
@@ -215,20 +213,15 @@ final class WatermarkService
      *
      * @return \GdImage|false
      */
-    private function createImageResource(string $imagePath, string $mimeType)
+    private function createImageResource(string $imagePath, string $mimeType): \GdImage|false
     {
-        switch ($mimeType) {
-            case 'image/jpeg':
-                return imagecreatefromjpeg($imagePath);
-            case 'image/png':
-                return imagecreatefrompng($imagePath);
-            case 'image/gif':
-                return imagecreatefromgif($imagePath);
-            case 'image/webp':
-                return imagecreatefromwebp($imagePath);
-            default:
-                throw new Exception('Unsupported image type: '.$mimeType);
-        }
+        return match ($mimeType) {
+            'image/jpeg' => imagecreatefromjpeg($imagePath),
+            'image/png' => imagecreatefrompng($imagePath),
+            'image/gif' => imagecreatefromgif($imagePath),
+            'image/webp' => imagecreatefromwebp($imagePath),
+            default => throw new Exception('Unsupported image type: '.$mimeType),
+        };
     }
 
     /**
@@ -337,7 +330,7 @@ final class WatermarkService
             'x' => (int) max(0, $x),
             'y' => (int) max(0, $y),
             'width' => (int) $watermarkWidth,
-            'height' => (int) $watermarkHeight,
+            'height' => $watermarkHeight,
         ];
     }
 
@@ -346,22 +339,13 @@ final class WatermarkService
      */
     private function saveImage(\GdImage $image, string $outputPath, string $mimeType): void
     {
-        switch ($mimeType) {
-            case 'image/jpeg':
-                imagejpeg($image, $outputPath, 90);
-                break;
-            case 'image/png':
-                imagepng($image, $outputPath, 9);
-                break;
-            case 'image/gif':
-                imagegif($image, $outputPath);
-                break;
-            case 'image/webp':
-                imagewebp($image, $outputPath, 90);
-                break;
-            default:
-                throw new Exception('Unsupported output image type: '.$mimeType);
-        }
+        match ($mimeType) {
+            'image/jpeg' => imagejpeg($image, $outputPath, 90),
+            'image/png' => imagepng($image, $outputPath, 9),
+            'image/gif' => imagegif($image, $outputPath),
+            'image/webp' => imagewebp($image, $outputPath, 90),
+            default => throw new Exception('Unsupported output image type: '.$mimeType),
+        };
     }
 
     /**

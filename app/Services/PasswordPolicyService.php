@@ -76,7 +76,7 @@ class PasswordPolicyService
         }
 
         // Check for numbers
-        if (($this->config['require_numbers'] ?? false) && ! preg_match('/[0-9]/', $password)) {
+        if (($this->config['require_numbers'] ?? false) && ! preg_match('/d/', $password)) {
             $errors[] = 'Password must contain at least one number';
         }
 
@@ -104,7 +104,7 @@ class PasswordPolicyService
         $errors = array_merge($errors, $patternErrors);
 
         return [
-            'valid' => empty($errors),
+            'valid' => $errors === [],
             'errors' => $errors,
             'strength' => $this->calculatePasswordStrength($password),
         ];
@@ -150,7 +150,7 @@ class PasswordPolicyService
             'welcome' => ['w3lc0m3', 'w3lcome'],
         ];
 
-        foreach ($commonSubstitutions as $original => $substitutions) {
+        foreach ($commonSubstitutions as $substitutions) {
             foreach ($substitutions as $substitution) {
                 if (stripos($password, $substitution) !== false) {
                     $errors[] = 'Password contains common character substitutions';
@@ -188,7 +188,7 @@ class PasswordPolicyService
         if (preg_match('/[A-Z]/', $password)) {
             $score += 1;
         }
-        if (preg_match('/[0-9]/', $password)) {
+        if (preg_match('/d/', $password)) {
             $score += 1;
         }
         if (preg_match('/[^A-Za-z0-9]/', $password)) {
@@ -226,7 +226,7 @@ class PasswordPolicyService
             // This would query a password_history table
             // For now, we'll simulate the check
             $historyCountInt = is_numeric($historyCount) ? (int) $historyCount : 5;
-            $passwordHashes = $this->getUserPasswordHistory($userId, $historyCountInt);
+            $passwordHashes = $this->getUserPasswordHistory();
 
             foreach ($passwordHashes as $hash) {
                 if (Hash::check($password, $hash)) {
@@ -250,7 +250,7 @@ class PasswordPolicyService
      *
      * @return list<string>
      */
-    private function getUserPasswordHistory(int $userId, int $limit): array
+    private function getUserPasswordHistory(): array
     {
         // This would query the password_history table
         // For now, return empty array
@@ -293,7 +293,7 @@ class PasswordPolicyService
 
             // This would query the users table for password_updated_at
             // For now, we'll simulate the check
-            $lastPasswordChange = $this->getLastPasswordChange($userId);
+            $lastPasswordChange = $this->getLastPasswordChange();
 
             // Since getLastPasswordChange always returns null for now,
             // we return true (password is expired/needs to be set)
@@ -311,7 +311,7 @@ class PasswordPolicyService
     /**
      * Get last password change date.
      */
-    private function getLastPasswordChange(int $userId): null
+    private function getLastPasswordChange(): null
     {
         // This would query the users table
         // For now, return null
@@ -329,7 +329,7 @@ class PasswordPolicyService
 
             // This would query a failed_attempts table
             $lockoutDurationInt = is_numeric($lockoutDuration) ? (int) $lockoutDuration : 30;
-            $failedAttempts = $this->getFailedAttempts($userId, $lockoutDurationInt);
+            $failedAttempts = $this->getFailedAttempts();
 
             return $failedAttempts >= $lockoutAttempts;
         } catch (Exception $e) {
@@ -345,7 +345,7 @@ class PasswordPolicyService
     /**
      * Get failed login attempts.
      */
-    private function getFailedAttempts(int $userId, int $durationMinutes): int
+    private function getFailedAttempts(): int
     {
         // This would query the failed_attempts table
         // For now, return 0

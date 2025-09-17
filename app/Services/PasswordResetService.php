@@ -58,7 +58,7 @@ class PasswordResetService
                 'user' => $user,
                 'token' => $token,
                 'expiry' => self::TOKEN_EXPIRY,
-            ], function ($message) use ($user) {
+            ], function ($message) use ($user): void {
                 $message->to($user->email, $user->name)
                     ->subject('استعادة كلمة المرور - كوبرا');
             });
@@ -232,12 +232,9 @@ class PasswordResetService
      */
     public function cleanupExpiredTokens(): int
     {
-        $cleaned = 0;
-        $pattern = self::CACHE_PREFIX.'*';
-
         // This would need to be implemented based on your cache driver
         // For now, return 0
-        return $cleaned;
+        return 0;
     }
 
     /**

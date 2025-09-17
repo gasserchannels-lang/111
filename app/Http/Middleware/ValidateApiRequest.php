@@ -24,7 +24,7 @@ class ValidateApiRequest
         // Get validation rules from config
         $validationRules = $this->getValidationRules($rules);
 
-        if (empty($validationRules)) {
+        if ($validationRules === []) {
             return $next($request);
         }
 

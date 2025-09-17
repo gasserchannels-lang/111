@@ -27,7 +27,7 @@ class CacheService
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
 
-            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore')) {
+            if ($tags !== [] && is_object($cache) && method_exists($cache, 'getStore')) {
                 $store = $cache->getStore();
                 if (is_object($store) && method_exists($store, 'tags') && method_exists($cache, 'tags')) {
                     $cache = $cache->tags($tags);
@@ -72,7 +72,7 @@ class CacheService
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
 
-            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore')) {
+            if ($tags !== [] && is_object($cache) && method_exists($cache, 'getStore')) {
                 $store = $cache->getStore();
                 if (is_object($store) && method_exists($store, 'tags') && method_exists($cache, 'tags')) {
                     $cache = $cache->tags($tags);
@@ -124,7 +124,7 @@ class CacheService
             $cacheKey = $this->buildCacheKey($key);
             $cache = Cache::getFacadeRoot();
 
-            if (! empty($tags) && is_object($cache) && method_exists($cache, 'getStore')) {
+            if ($tags !== [] && is_object($cache) && method_exists($cache, 'getStore')) {
                 $store = $cache->getStore();
                 if (is_object($store) && method_exists($store, 'tags') && method_exists($cache, 'tags')) {
                     $cache = $cache->tags($tags);
@@ -215,9 +215,7 @@ class CacheService
     {
         $tags = $this->getModelTags($model);
 
-        return $this->remember($key, $ttl, function () use ($model) {
-            return $model->toArray();
-        }, $tags);
+        return $this->remember($key, $ttl, fn() => $model->toArray(), $tags);
     }
 
     /**
@@ -360,7 +358,7 @@ class CacheService
 
             return [
                 'driver' => $driver,
-                'store' => get_class($store),
+                'store' => $store::class,
                 'memory_usage' => memory_get_usage(true),
                 'peak_memory' => memory_get_peak_usage(true),
             ];
@@ -392,7 +390,7 @@ class CacheService
     private function getModelTags(Model $model): array
     {
         $tags = [];
-        $modelClass = get_class($model);
+        $modelClass = $model::class;
 
         // Add model type tag
         $tags[] = strtolower(class_basename($modelClass));
@@ -407,14 +405,14 @@ class CacheService
         }
 
         // Add related model tags
-        foreach ($model->getRelations() as $relation => $related) {
+        foreach ($model->getRelations() as $related) {
             if ($related instanceof Model) {
                 $relatedKey = $related->getKey();
                 if (is_string($relatedKey)) {
-                    $tags[] = strtolower(class_basename(get_class($related))).':'.$relatedKey;
+                    $tags[] = strtolower(class_basename($related::class)).':'.$relatedKey;
                 } else {
                     $relatedKeyString = is_scalar($relatedKey) ? (string) $relatedKey : '';
-                    $tags[] = strtolower(class_basename(get_class($related))).':'.$relatedKeyString;
+                    $tags[] = strtolower(class_basename($related::class)).':'.$relatedKeyString;
                 }
             }
         }
@@ -441,7 +439,7 @@ class CacheService
         $this->forgetByTags($tags);
 
         Log::info('Model cache invalidated', [
-            'model' => get_class($model),
+            'model' => $model::class,
             'id' => $model->getKey(),
             'tags' => $tags,
         ]);
