@@ -117,9 +117,8 @@ class DataTimelinessTest extends TestCase
     public function it_handles_data_backfill_scenarios(): void
     {
         $historicalData = [
-            '2024-01-15 09:00:00' => 100,
-            '2024-01-15 10:00:00' => 105,
-            '2024-01-15 11:00:00' => 110
+            '2024-01-15 08:00:00' => 100,
+            '2024-01-15 09:00:00' => 105
         ];
 
         $backfillData = [

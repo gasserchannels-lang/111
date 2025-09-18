@@ -1,0 +1,40 @@
+diff --git a/.eslintrc.js b/.eslintrc.js
+index 1234567..abcdefg 100644
+--- a/.eslintrc.js
++++ b/.eslintrc.js
+@@ -1,10 +1,20 @@
+ module.exports = {
+-    "env": {
+-        "browser": true,
+-        "es2021": true
+-    },
+-    "extends": "eslint:recommended",
+-    "parserOptions": {
+-        "ecmaVersion": "latest",
+-        "sourceType": "module"
+-    },
+-    "rules": {}
++    "env": {
++        "browser": true,
++        "es2021": true,
++        "node": true
++    },
++    "extends": [
++        "eslint:recommended",
++        "@typescript-eslint/recommended"
++    ],
++    "parser": "@typescript-eslint/parser",
++    "parserOptions": {
++        "ecmaVersion": "latest",
++        "sourceType": "module",
++        "project": "./tsconfig.json"
++    },
++    "plugins": ["@typescript-eslint"],
++    "rules": {
++        "no-unused-vars": "error",
++        "no-console": "warn",
++        "prefer-const": "error",
++        "no-var": "error"
++    },
++    "max-warnings": 0
+ };

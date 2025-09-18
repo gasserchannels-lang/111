@@ -1,0 +1,33 @@
+--- a/tests/Browser/ExampleTest.php
++++ b/tests/Browser/BrowserExampleTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Browser;
++namespace Tests\Browser;
+
+-class ExampleTest extends DuskTestCase
++class BrowserExampleTest extends DuskTestCase
+ {
+--- a/tests/Feature/ExampleTest.php
++++ b/tests/Feature/FeatureExampleTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Feature;
++namespace Tests\Feature;
+
+-class ExampleTest extends TestCase
++class FeatureExampleTest extends TestCase
+ {
+--- a/tests/Unit/ExampleTest.php
++++ b/tests/Unit/UnitExampleTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit;
++namespace Tests\Unit;
+
+-class ExampleTest extends TestCase
++class UnitExampleTest extends TestCase
+ {

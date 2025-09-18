@@ -83,7 +83,8 @@ class DiscountCalculationTest extends TestCase
     private function calculatePercentageDiscount(float $price, float $discountPercentage): float
     {
         $discount = $price * ($discountPercentage / 100);
-        return min($discount, $price); // Don't exceed the price
+        // Don't exceed the price and don't allow negative discounts
+        return max(0, min($discount, $price));
     }
 
     private function calculateFixedDiscount(float $price, float $fixedDiscount): float

@@ -1,0 +1,154 @@
+--- a/phpunit.xml
++++ b/phpunit.xml
+@@ -1,47 +1,100 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd" bootstrap="tests/bootstrap.php" colors="true" processIsolation="false" stopOnFailure="false" backupGlobals="false" cacheDirectory=".phpunit.cache">
++<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
++         bootstrap="tests/bootstrap.php"
++         colors="true"
++         processIsolation="false"
++         stopOnFailure="false"
++         backupGlobals="false"
++         cacheDirectory=".phpunit.cache"
++         executionOrder="depends,defects"
++         requireCoverageMetadata="true"
++         beStrictAboutCoverageMetadata="true"
++         beStrictAboutOutputDuringTests="false"
++         failOnRisky="false"
++         failOnWarning="false">
+   <testsuites>
+     <testsuite name="Unit">
+       <directory suffix="Test.php">./tests/Unit</directory>
+     </testsuite>
+     <testsuite name="Feature">
+       <directory suffix="Test.php">./tests/Feature</directory>
+     </testsuite>
++    <testsuite name="Integration">
++      <directory suffix="Test.php">./tests/Integration</directory>
++    </testsuite>
++    <testsuite name="AI">
++      <directory suffix="Test.php">./tests/AI</directory>
++    </testsuite>
++    <testsuite name="Security">
++      <directory suffix="Test.php">./tests/Security</directory>
++    </testsuite>
++    <testsuite name="Performance">
++      <directory suffix="Test.php">./tests/Performance</directory>
++    </testsuite>
++    <testsuite name="Complete">
++      <directory suffix="Test.php">./tests/Unit</directory>
++      <directory suffix="Test.php">./tests/Feature</directory>
++      <directory suffix="Test.php">./tests/Integration</directory>
++      <directory suffix="Test.php">./tests/AI</directory>
++      <directory suffix="Test.php">./tests/Security</directory>
++      <directory suffix="Test.php">./tests/Performance</directory>
++    </testsuite>
++    <!-- Strict testing groups -->
++    <testsuite name="StrictUnit">
++      <directory suffix="Test.php">./tests/Unit/Strict</directory>
++    </testsuite>
++    <testsuite name="StrictMockery">
++      <file>./tests/Unit/StrictMockeryTest.php</file>
++    </testsuite>
++    <testsuite name="IsolatedStrict">
++      <file>./tests/Unit/IsolatedStrictTest.php</file>
++    </testsuite>
+   </testsuites>
++
++  <!-- Test groups for different execution profiles -->
++  <groups>
++    <include>
++      <group>strict</group>
++      <group>ai</group>
++      <group>performance</group>
++      <group>security</group>
++      <group>integration</group>
++    </include>
++  </groups>
++
+   <php>
+     <env name="APP_ENV" value="testing"/>
+     <env name="APP_DEBUG" value="true"/>
++    <env name="APP_KEY" value="base64:+BLgtRn12nvjhkmBX/U7be8MqNZBnlS1qDhXSlSeuvU="/>
+     <env name="BCRYPT_ROUNDS" value="4"/>
+     <env name="CACHE_DRIVER" value="array"/>
+-    <env name="DB_CONNECTION" value="sqlite_testing"/>
++    <env name="DB_CONNECTION" value="sqlite"/>
+     <env name="DB_DATABASE" value=":memory:"/>
+     <env name="DB_FOREIGN_KEYS" value="true"/>
+     <env name="MAIL_MAILER" value="array"/>
++    <env name="PASSWORD_BCRYPT_ROUNDS" value="4"/>
++    <env name="PASSWORD_HASH" value="bcrypt"/>
+     <env name="QUEUE_CONNECTION" value="sync"/>
+     <env name="SESSION_DRIVER" value="array"/>
+     <env name="TELESCOPE_ENABLED" value="false"/>
++    <env name="LOG_CHANNEL" value="single"/>
++    <env name="LOG_LEVEL" value="debug"/>
+     <!-- Mockery specific settings -->
+     <env name="MOCKERY_DISABLE" value="false"/>
+     <env name="MOCKERY_VERBOSE" value="false"/>
+     <env name="MOCKERY_DEBUG" value="false"/>
+     <!-- PHPUnit optimization settings -->
+     <env name="PHPUNIT_MEMORY_LIMIT" value="512M"/>
+     <env name="PHPUNIT_TIMEOUT" value="300"/>
++    <!-- Strict mode settings for strict group -->
++    <env name="PHPUNIT_STRICT_MODE" value="false"/>
++    <env name="MOCKERY_VERBOSE_STRICT" value="false"/>
++    <env name="MOCKERY_DEBUG_STRICT" value="false"/>
+     <!-- Disable all risky test warnings -->
+     <env name="PHPUNIT_BE_STRICT_ABOUT_TESTS_THAT_DO_NOT_TEST_ANYTHING" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_OUTPUT_DURING_TESTS" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_TODO_ANNOTATED_TESTS" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_RESOURCE_USAGE_DURING_SMALL_TESTS" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_CHANGES_TO_GLOBAL_STATE" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_DEPENDENCIES" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_ERRORS" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_WARNINGS" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_NOTICES" value="false"/>
+     <env name="PHPUNIT_BE_STRICT_ABOUT_DEPRECATIONS" value="false"/>
+   </php>
++
+   <source>
+     <include>
+       <directory>./app</directory>
+     </include>
++    <exclude>
++      <directory>./app/Console</directory>
++      <directory>./app/Exceptions</directory>
++      <directory>./app/Http/Middleware</directory>
++      <directory>./app/Providers</directory>
++    </exclude>
+   </source>
++
++  <!-- Coverage configuration -->
++  <coverage>
++    <include>
++      <directory>./app</directory>
++    </include>
++    <exclude>
++      <directory>./app/Console</directory>
++      <directory>./app/Exceptions</directory>
++      <directory>./app/Http/Middleware</directory>
++      <directory>./app/Providers</directory>
++    </exclude>
++    <report>
++      <html outputDirectory="storage/logs/coverage"/>
++      <text outputFile="storage/logs/coverage.txt"/>
++      <clover outputFile="storage/logs/coverage.xml"/>
++    </report>
++  </coverage>
++
++  <!-- Logging configuration -->
++  <logging>
++    <junit outputFile="storage/logs/junit.xml"/>
++    <teamcity outputFile="storage/logs/teamcity.txt"/>
++    <testdoxHtml outputFile="storage/logs/testdox.html"/>
++    <testdoxText outputFile="storage/logs/testdox.txt"/>
++  </logging>
++
++  <!-- Listeners for Mockery -->
++  <listeners>
++    <listener class="Mockery\Adapter\Phpunit\TestListener" />
++  </listeners>
+ </phpunit>

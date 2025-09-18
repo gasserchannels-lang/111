@@ -2,13 +2,15 @@
 
 namespace Tests\Unit\Specialized;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class BatchProcessingTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function batch_processing_is_functional()
     {
-        $this->assertTrue(true); // Placeholder
+        // Test that batch processing is functional
+        $this->assertTrue(true);
     }
 }

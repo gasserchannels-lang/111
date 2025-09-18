@@ -1,0 +1,23 @@
+diff --git a/phpstan.neon b/phpstan.neon
+index 1234567..abcdefg 100644
+--- a/phpstan.neon
++++ b/phpstan.neon
+@@ -1,10 +1,15 @@
+ parameters:
+-    level: 5
++    level: max
+     paths:
+         - app
+         - config
+         - database
+         - routes
++    ignoreErrors:
++        - '#Call to an undefined method#'
++        - '#Access to an undefined property#'
++    checkMissingIterableValueType: true
++    checkGenericClassInNonGenericObjectType: true
++    reportUnmatchedIgnoredErrors: true
+     excludePaths:
+         - vendor
+         - storage
+         - bootstrap/cache

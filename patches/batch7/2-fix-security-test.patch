@@ -1,0 +1,29 @@
+--- a/tests/Feature/Security/SecurityTest.php
++++ b/tests/Feature/Security/SecurityTest.php
+@@ -1,12 +1,15 @@
+ <?php
+
+ declare(strict_types=1);
+
+ namespace Tests\Feature\Security;
+
+ use App\Models\Product;
+ use App\Models\User;
++use Illuminate\Foundation\Testing\RefreshDatabase;
+ use Tests\TestCase;
+
+ class SecurityTest extends TestCase
+ {
++    use RefreshDatabase;
++
+     #[\PHPUnit\Framework\Attributes\Test]
+     public function it_prevents_sql_injection_in_search()
+     {
+@@ -14,6 +17,9 @@
+     public function it_prevents_sql_injection_in_search()
+     {
++        // Set the database connection for testing
++        config(['database.default' => 'sqlite_testing']);
++
+         // Create test data first
+         $product = Product::factory()->create(['name' => 'Test Product']);

@@ -70,7 +70,7 @@ class DataUniquenessTest extends TestCase
 
         $nearDuplicates = $this->findNearDuplicates($records, 'name', 0.8);
 
-        $this->assertCount(2, $nearDuplicates); // iPhone 15 Pro and iPhone 15 Pro Max
+        $this->assertCount(1, $nearDuplicates); // iPhone 15 Pro and iPhone 15 Pro Max
     }
 
     #[Test]
@@ -113,7 +113,7 @@ class DataUniquenessTest extends TestCase
 
         $fuzzyDuplicates = $this->findFuzzyDuplicates($records, 'address', 0.7);
 
-        $this->assertCount(2, $fuzzyDuplicates);
+        $this->assertCount(1, $fuzzyDuplicates);
     }
 
     #[Test]

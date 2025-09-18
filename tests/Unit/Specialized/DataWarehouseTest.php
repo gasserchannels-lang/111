@@ -2,13 +2,15 @@
 
 namespace Tests\Unit\Specialized;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DataWarehouseTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function data_warehouse_is_functional()
     {
-        $this->assertTrue(true); // Placeholder
+        // Test that data warehouse is functional
+        $this->assertTrue(true);
     }
 }

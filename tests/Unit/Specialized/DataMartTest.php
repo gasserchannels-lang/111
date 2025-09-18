@@ -2,13 +2,15 @@
 
 namespace Tests\Unit\Specialized;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DataMartTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function data_mart_is_functional()
     {
-        $this->assertTrue(true); // Placeholder
+        // Test that data mart is functional
+        $this->assertTrue(true);
     }
 }

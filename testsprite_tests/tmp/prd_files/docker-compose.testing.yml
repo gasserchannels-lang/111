@@ -1,0 +1,409 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-app-testing
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - MAIL_MAILER=log
+      - MAIL_LOG_CHANNEL=testing
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  nginx:
+    image: nginx:alpine
+    container_name: cobra-nginx-testing
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/nginx.testing.conf:/etc/nginx/nginx.conf
+      - ./public:/var/www/html/public
+      - ./storage:/var/www/html/storage
+    depends_on:
+      - app
+    networks:
+      - cobra-testing-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: cobra-mysql-testing
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE_TEST}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql_testing_data:/var/lib/mysql
+      - ./docker/mysql/my.testing.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3307:3306"
+    networks:
+      - cobra-testing-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: cobra-redis-testing
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_testing_data:/data
+    ports:
+      - "6380:6379"
+    networks:
+      - cobra-testing-network
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-worker-testing
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - MAIL_MAILER=log
+      - MAIL_LOG_CHANNEL=testing
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-scheduler-testing
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - MAIL_MAILER=log
+      - MAIL_LOG_CHANNEL=testing
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan schedule:work
+
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: cobra-selenium-testing
+    restart: unless-stopped
+    ports:
+      - "4444:4444"
+    environment:
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_SESSION_TIMEOUT=300
+    networks:
+      - cobra-testing-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cobra-mailhog-testing
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - cobra-testing-network
+
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-test-runner
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=mailhog
+      - MAIL_PORT=1025
+      - MAIL_USERNAME=null
+      - MAIL_PASSWORD=null
+      - MAIL_ENCRYPTION=null
+      - MAIL_FROM_ADDRESS=test@example.com
+      - MAIL_FROM_NAME=Testing
+    depends_on:
+      - mysql
+      - redis
+      - mailhog
+    networks:
+      - cobra-testing-network
+    command: php artisan test --parallel
+
+  code-coverage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-code-coverage
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+      - ./coverage:/var/www/html/coverage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - XDEBUG_MODE=coverage
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan test --coverage --coverage-html=coverage
+
+  performance-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-performance-test
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan test --testsuite=Performance
+
+  security-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-security-test
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan test --testsuite=Security
+
+  integration-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-integration-test
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cobra-testing-network
+    command: php artisan test --testsuite=Integration
+
+  browser-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: cobra-app:testing
+    container_name: cobra-browser-test
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TEST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - DUSK_DRIVER_PATH=/usr/local/bin/chromedriver
+      - DUSK_DRIVER_PORT=9515
+    depends_on:
+      - mysql
+      - redis
+      - selenium
+    networks:
+      - cobra-testing-network
+    command: php artisan dusk
+
+volumes:
+  mysql_testing_data:
+    driver: local
+  redis_testing_data:
+    driver: local
+
+networks:
+  cobra-testing-network:
+    driver: bridge

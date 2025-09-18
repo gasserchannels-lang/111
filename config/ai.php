@@ -13,8 +13,8 @@ return [
     'api_key' => env('AI_API_KEY'),
     'base_url' => env('AI_BASE_URL', 'https://api.openai.com/v1'),
     'timeout' => env('AI_TIMEOUT', 30),
-    'max_tokens' => env('AI_MAX_TOKENS', 1000),
-    'temperature' => env('AI_TEMPERATURE', 0.7),
+    'max_tokens' => env('AI_MAX_TOKENS', 2000),
+    'temperature' => env('AI_TEMPERATURE', 0.5),
 
     /*
     |--------------------------------------------------------------------------

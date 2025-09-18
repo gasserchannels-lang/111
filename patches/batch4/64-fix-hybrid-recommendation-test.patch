@@ -1,0 +1,4 @@
+--- a/tests/Unit/Recommendations/HybridRecommendationTest.php
++++ b/tests/Unit/Recommendations/HybridRecommendationTest.php
+@@ -1,0 +1,0 @@
++// No changes needed - test was already working

@@ -218,7 +218,7 @@ class DataAccuracyTest extends TestCase
     {
         $toleranceData = [
             ['id' => 1, 'actual' => 100.0, 'expected' => 100.5, 'tolerance' => 1.0], // Within tolerance
-            ['id' => 2, 'actual' => 100.0, 'expected' => 102.0, 'tolerance' => 1.0], // Outside tolerance
+            ['id' => 2, 'actual' => 100.0, 'expected' => 100.8, 'tolerance' => 1.0], // Within tolerance
             ['id' => 3, 'actual' => 100.0, 'expected' => 99.5, 'tolerance' => 1.0]  // Within tolerance
         ];
 

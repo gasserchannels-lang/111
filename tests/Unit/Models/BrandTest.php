@@ -3,12 +3,12 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Brand;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class BrandTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_brand()

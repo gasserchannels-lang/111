@@ -1,0 +1,32 @@
+--- a/tests/Feature/Http/Controllers/PriceAlertControllerTest.php
++++ b/tests/Feature/Http/Controllers/PriceAlertControllerTest.php
+@@ -9,7 +9,7 @@
+ use App\Models\Brand;
+ use App\Models\Category;
+ use App\Models\PriceAlert;
+ use App\Models\Product;
+ use App\Models\User;
+-use Illuminate\Foundation\Testing\DatabaseTransactions;
++use Illuminate\Foundation\Testing\RefreshDatabase;
+ use PHPUnit\Framework\Attributes\DataProvider;
+ use PHPUnit\Framework\Attributes\Group;
+ use PHPUnit\Framework\Attributes\Test;
+@@ -25,7 +25,7 @@
+
+ class PriceAlertControllerTest extends TestCase
+ {
+-    use DatabaseTransactions;
++    use RefreshDatabase;
+
+     private User $user;
+
+@@ -35,6 +35,9 @@
+     {
+         parent::setUp();
+
++        // Set the database connection for testing
++        config(['database.default' => 'sqlite_testing']);
++
+         $this->user = User::factory()->create();
+         $this->anotherUser = User::factory()->create();
+         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);

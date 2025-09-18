@@ -16,7 +16,7 @@ class OrderAccuracyTest extends TestCase
             ['price' => 5.25, 'quantity' => 3]
         ];
 
-        $expectedTotal = 47.25; // (10*2) + (15.50*1) + (5.25*3)
+        $expectedTotal = 51.25; // (10*2) + (15.50*1) + (5.25*3)
         $actualTotal = $this->calculateOrderTotal($orderItems);
 
         $this->assertEquals($expectedTotal, $actualTotal);

@@ -23,6 +23,23 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        // Bind silent mocks for console input and output to prevent interactive prompts during tests
+        $app->bind(\Symfony\Component\Console\Input\InputInterface::class, function ($app) {
+            $mock = \Mockery::mock(\Symfony\Component\Console\Input\InputInterface::class);
+            $mock->shouldReceive('isInteractive')->andReturn(false);
+            $mock->shouldReceive('hasArgument')->andReturn(false);
+            $mock->shouldReceive('getArgument')->andReturn(null);
+            $mock->shouldReceive('hasOption')->andReturn(false);
+            $mock->shouldReceive('getOption')->andReturn(null);
+
+            return $mock;
+        });
+
+        // Use a lenient mock for the output style to ignore unexpected calls like askQuestion
+        $app->bind(\Symfony\Component\Console\Style\OutputStyle::class, function ($app) {
+            return \Mockery::mock(\Symfony\Component\Console\Style\SymfonyStyle::class)->shouldIgnoreMissing();
+        });
+
         return $app;
     }
 }

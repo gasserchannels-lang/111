@@ -2,7 +2,7 @@ includes:
     - ./vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 8
+    level: 7
     paths:
         - app/
         - config/
@@ -22,46 +22,4 @@ parameters:
         - database/migrations/2025_09_14_065423_create_permission_tables.php
     ignoreErrors:
         - '#Template type TDeclaringModel on class.*is not covariant#'
-        - '#Template type TValue on class.*is not covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant#'
-        - '#Template type TValue on class.*Support.*Collection.*is not covariant#'
-        - '#Template type TValue on class Illuminate\Support\Collection is not covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more#'
-        - '#Template type TValue on class Illuminate\Support\Collection is not covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog#'
         - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
-        - '#Method.*should return.*but returns.*#'
-        - '#Return type.*of method.*should be compatible with return type.*#'
-        - '#view expects view-string#'
-        - '#Method.*return type with generic class.*does not specify its types: TFactory#'
-        - '#Method.*has parameter.*with generic class.*but does not specify its types: TFactory#'
-        - '#PHPDoc tag.*contains generic class.*but does not specify its types: TFactory#'
-        - '#Cannot cast mixed to float#'
-        - '#Binary operation.*between mixed and.*results in an error#'
-        - '#Call to function is_numeric.*will always evaluate to true#'
-        - '#Call to function is_array.*will always evaluate to true#'
-        - '#function.alreadyNarrowedType#'
-        - '#cast.double#'
-        - '#binaryOp.invalid#'
-        - '#Class App\\Models\\Notification uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'

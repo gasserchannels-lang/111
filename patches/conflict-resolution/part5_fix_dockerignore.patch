@@ -1,0 +1,9 @@
+--- a/.dockerignore
++++ b/.dockerignore
+@@ -30,7 +30,6 @@
+
+ # Development and testing
+-/tests
+ /coverage
+ /.nyc_output
+ .phpunit.result.cache

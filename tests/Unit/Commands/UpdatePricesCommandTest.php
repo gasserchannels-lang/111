@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Commands;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UpdatePricesCommandTest extends TestCase
 {
+    use RefreshDatabase;
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_update_prices_command()
     {

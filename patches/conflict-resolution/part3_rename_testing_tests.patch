@@ -1,0 +1,71 @@
+--- a/tests/Unit/Performance/ScalabilityTestingTest.php
++++ b/tests/Unit/Performance/UnitScalabilityTestingTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Performance;
++namespace Tests\Unit\Performance;
+
+-class ScalabilityTestingTest extends TestCase
++class UnitScalabilityTestingTest extends TestCase
+ {
+--- a/tests/Unit/Specialized/ScalabilityTestingTest.php
++++ b/tests/Unit/Specialized/UnitScalabilityTestingTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Specialized;
++namespace Tests\Unit\Specialized;
+
+-class ScalabilityTestingTest extends TestCase
++class UnitScalabilityTestingTest extends TestCase
+ {
+--- a/tests/Unit/Performance/StressTestingTest.php
++++ b/tests/Unit/Performance/UnitStressTestingTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Performance;
++namespace Tests\Unit\Performance;
+
+-class StressTestingTest extends TestCase
++class UnitStressTestingTest extends TestCase
+ {
+--- a/tests/Unit/Specialized/StressTestingTest.php
++++ b/tests/Unit/Specialized/UnitStressTestingTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Specialized;
++namespace Tests\Unit\Specialized;
+
+
+-class StressTestingTest extends TestCase
++class UnitStressTestingTest extends TestCase
+ {
+--- a/tests/Unit/Performance/VolumeTestingTest.php
++++ b/tests/Unit/Performance/UnitVolumeTestingTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+
+-namespace Tests\Unit\Performance;
++namespace Tests\Unit\Performance;
+
+
+-class VolumeTestingTest extends TestCase
++class UnitVolumeTestingTest extends TestCase
+ {
+--- a/tests/Unit/Specialized/VolumeTestingTest.php
++++ b/tests/Unit/Specialized/UnitVolumeTestingTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+
+-namespace Tests\Unit\Specialized;
++namespace Tests\Unit\Specialized;
+
+
+-class VolumeTestingTest extends TestCase
++class UnitVolumeTestingTest extends TestCase
+ {

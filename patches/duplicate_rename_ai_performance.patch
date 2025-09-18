@@ -1,0 +1,17 @@
+diff --git a/tests/Unit/AI/AIModelPerformanceTest.php b/tests/Unit/AI/AIModelUnitPerformanceTest.php
+rename from tests/Unit/AI/AIModelPerformanceTest.php
+rename to tests/Unit/AI/AIModelUnitPerformanceTest.php
+@@ -1,6 +1,6 @@
+ <?php
+
+-namespace Tests\Unit\AI;
++namespace Tests\Unit\AI;
+
+ use PHPUnit\Framework\TestCase;
+ use PHPUnit\Framework\Attributes\Test;
+@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
+ class AIModelPerformanceTest extends TestCase
++class AIModelUnitPerformanceTest extends TestCase
+ {
+     #[Test]
+     public function it_measures_model_inference_time(): void

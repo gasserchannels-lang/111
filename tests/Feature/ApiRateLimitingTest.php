@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ApiRateLimitingTest extends TestCase
 {
+    use RefreshDatabase;
     #[Test]
     public function api_requests_are_rate_limited()
     {
@@ -22,6 +24,9 @@ class ApiRateLimitingTest extends TestCase
     #[Test]
     public function authenticated_users_have_higher_rate_limit()
     {
+        // Set the database connection for testing
+        config(['database.default' => 'sqlite_testing']);
+
         $user = User::factory()->create();
         $this->actingAs($user);
 

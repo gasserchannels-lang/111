@@ -9,4 +9,9 @@
     phpUnit: {
         configDir: '.',
     },
+    logs: {
+        json: 'infection-log.json',
+    },
+    minMsi: 90,
+    minCoveredMsi: 90,
 }

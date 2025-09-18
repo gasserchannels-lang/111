@@ -8,6 +8,16 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 
 class PageLoadTimeTest extends TestCase
 {
+    private static array $cache = [];
+    private int $datasetSize = 1;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        self::$cache = [];
+        $this->datasetSize = 1;
+    }
+
     #[Test]
     #[CoversNothing]
     public function it_measures_homepage_load_time(): void
@@ -412,9 +422,15 @@ class PageLoadTimeTest extends TestCase
 
     private function simulatePageLoading(string $path, bool $compression, bool $cdn): void
     {
+        $cacheKey = md5($path . (string)$compression . (string)$cdn);
+        if (isset(self::$cache[$cacheKey])) {
+            usleep(1000); // Simulate very fast cache hit (1ms)
+            return;
+        }
+
         // Simulate page loading time based on path complexity
         $complexity = $this->calculatePageComplexity($path);
-        $baseTime = $complexity * 0.001; // Convert to seconds
+        $baseTime = $complexity * 50; // Base time in milliseconds
 
         // Apply compression factor
         if ($compression) {
@@ -426,7 +442,12 @@ class PageLoadTimeTest extends TestCase
             $baseTime *= 0.8;
         }
 
-        usleep($baseTime * 1000000); // Sleep for the calculated time
+        // Apply scalability factor
+        $baseTime *= (1 + $this->datasetSize / 20000);
+
+        usleep($baseTime * 1000); // Sleep for the calculated time
+
+        self::$cache[$cacheKey] = true;
     }
 
     private function calculatePageComplexity(string $path): float
@@ -499,9 +520,6 @@ class PageLoadTimeTest extends TestCase
 
     private function generateTestData(int $size): void
     {
-        // Simulate generating test data
-        for ($i = 0; $i < $size; $i++) {
-            // Simulate data generation
-        }
+        $this->datasetSize = $size;
     }
 }

@@ -1,4 +1,5 @@
 stages:
+    - static-analysis
     - analyze
     - report
     - fix
@@ -16,6 +17,26 @@ cache:
 variables:
     PHP_MEMORY_LIMIT: 1G
     COMPOSER_MEMORY_LIMIT: 1G
+
+static_analysis:
+    stage: static-analysis
+    image: php:8.2-cli
+    before_script:
+        - apt-get update && apt-get install -y curl unzip
+        - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    script:
+        - cp .env.example .env
+        - composer install --prefer-dist --no-progress --no-ansi --ignore-platform-req=ext-zip --no-scripts
+        - php artisan key:generate
+        - php artisan config:cache
+        - php artisan package:discover --ansi
+        - echo "Starting Static Analysis with PHPStan..."
+        - ./vendor/bin/phpstan analyse --memory-limit=1G --configuration=phpstan.neon
+    artifacts:
+        paths:
+            - vendor/
+            - .env
+        expire_in: 1 hour
 
 analyze_code_quality:
     stage: analyze

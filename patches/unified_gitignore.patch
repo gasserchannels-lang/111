@@ -1,0 +1,126 @@
+diff --git a/.gitignore b/.gitignore
+index 1234567..abcdefg 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,71 +1,55 @@
+ # Laravel Framework
+ /vendor/
+ /node_modules/
+ .env
+ .env.*
+ !.env.example
+ !.env.testing
+-/public/build/
+-/public/hot
+-/public/storage
+-/storage/*.key
+-/storage/app/*.key
+-/storage/framework/
+-/storage/logs/
+-npm-debug.log*
+-yarn-debug.log*
+-yarn-error.log*
+-*.log
+-
+-# IDEs and Caches
+-.idea/
+-.vscode/
+-.phpunit.cache/
+-.blackfire.yml
+-.deptrac.cache
+-.php-cs-fixer.cache
+-_ide_helper.php
+-_ide_helper_models.php
+-.phpstorm.meta.php
+-
+-# Generated Reports & Documentation (Keep only source files)
+-*.json
+-!composer.json
+-!package.json
+-!tsconfig.json
+-!pint.json
+-!.stylelintrc.json
+-*.txt
+-*.xml
+-*.md
+-!README.md
+-!CONTRIBUTING.md
+-!CHANGELOG.md
+-!LICENSE.md
+-cs_fixer_report.json
+-cs_fixer_report.txt
+-test_results.xml
+-phpstan_report.json
+-phpstan-baseline.neon
+-phpmetrics.json
+-codecov.yml
+-sonar-project.properties
+-lighthouserc.js
+-
+-# OS Files
+-.DS_Store
+-Thumbs.db
+-
+-# Deployment/Build artifacts
+-deploy.sh
+-setup_hostinger.sh
+-test_deployment.sh
+-crontab.txt
+-Dockerfile
+-docker-compose.yml
+-nginx.conf
+-php.ini
+-
+-# Other specific files
+-*.lock
+-!composer.lock
++
++# Build files
++/public/build/
++/public/hot
++/public/storage
++/storage/*.key
++/storage/app/*.key
++/storage/framework/
++/storage/logs/
++
++# Logs
++*.log
++npm-debug.log*
++yarn-debug.log*
++yarn-error.log*
++
++# IDEs and Caches
++.idea/
++.vscode/
++.phpunit.cache/
++.blackfire.yml
++.deptrac.cache
++.php-cs-fixer.cache
++_ide_helper.php
++_ide_helper_models.php
++.phpstorm.meta.php
++
++# Generated Reports & Documentation
++*.json
++!composer.json
++!package.json
++!tsconfig.json
++!pint.json
++!.stylelintrc.json
++*.txt
++*.xml
++*.md
++!README.md
++!CONTRIBUTING.md
++!CHANGELOG.md
++!LICENSE.md
++
++# OS Files
++.DS_Store
++Thumbs.db
++
++# Lock files
++*.lock
++!composer.lock
++!package-lock.json

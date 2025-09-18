@@ -1,0 +1,36 @@
+--- /dev/null
++++ b/.eslintignore
+@@ -0,0 +1,30 @@
++# Dependencies
++node_modules/
++vendor/
++
++# Build outputs
++public/build/
++public/hot/
++public/storage/
++dist/
++build/
++
++# Cache directories
++.cache/
++.parcel-cache/
++.next/
++.nuxt/
++
++# Logs
++*.log
++logs/
++storage/logs/
++
++# Coverage
++coverage/
++.nyc_output/
++
++# IDE
++.vscode/
++.idea/
++
++# OS
++.DS_Store
++Thumbs.db

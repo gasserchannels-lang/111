@@ -1,0 +1,29 @@
+diff --git a/pint.json b/pint.json
+index 1234567..abcdefg 100644
+--- a/pint.json
++++ b/pint.json
+@@ -1,5 +1,15 @@
+ {
+-    "preset": "laravel",
+-    "rules": {
+-        "simplified_null_return": true
+-    }
++    "preset": "laravel",
++    "rules": {
++        "simplified_null_return": true,
++        "no_unused_imports": true,
++        "ordered_imports": true,
++        "single_quote": true,
++        "trailing_comma_in_multiline": true,
++        "blank_line_after_namespace": true,
++        "blank_line_after_opening_tag": true,
++        "method_argument_space": true,
++        "no_extra_blank_lines": true,
++        "no_trailing_whitespace": true
++    },
++    "exclude": [
++        "vendor/",
++        "storage/",
++        "bootstrap/cache/"
++    ]
+ }

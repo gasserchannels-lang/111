@@ -1,0 +1,22 @@
+--- a/tests/Feature/AuthenticationTest.php
++++ b/tests/Feature/FeatureAuthenticationTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Feature;
++namespace Tests\Feature;
+
+-class AuthenticationTest extends TestCase
++class FeatureAuthenticationTest extends TestCase
+ {
+--- a/tests/Unit/Security/AuthenticationTest.php
++++ b/tests/Unit/Security/UnitAuthenticationTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Security;
++namespace Tests\Unit\Security;
+
+-class AuthenticationTest extends TestCase
++class UnitAuthenticationTest extends TestCase
+ {

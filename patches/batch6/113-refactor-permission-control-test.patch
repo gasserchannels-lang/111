@@ -1,0 +1,4 @@
+--- a/tests/Feature/PermissionControlTest.php
++++ b/tests/Feature/PermissionControlTest.php
+@@ -1,0 +1,0 @@
++// No changes needed - test does not modify error handlers

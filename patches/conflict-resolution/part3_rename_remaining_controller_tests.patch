@@ -1,0 +1,66 @@
+--- a/tests/Feature/Http/Controllers/CategoryControllerTest.php
++++ b/tests/Feature/Http/Controllers/FeatureCategoryControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Feature\Http\Controllers;
++namespace Tests\Feature\Http\Controllers;
+
+-class CategoryControllerTest extends TestCase
++class FeatureCategoryControllerTest extends TestCase
+ {
+--- a/tests/Unit/Controllers/CategoryControllerTest.php
++++ b/tests/Unit/Controllers/UnitCategoryControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Controllers;
++namespace Tests\Unit\Controllers;
+
+-class CategoryControllerTest extends TestCase
++class UnitCategoryControllerTest extends TestCase
+ {
+--- a/tests/Feature/Http/Controllers/HomeControllerTest.php
++++ b/tests/Feature/Http/Controllers/FeatureHomeControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Feature\Http\Controllers;
++namespace Tests\Feature\Http\Controllers;
+
+-class HomeControllerTest extends TestCase
++class FeatureHomeControllerTest extends TestCase
+ {
+--- a/tests/Unit/Controllers/HomeControllerTest.php
++++ b/tests/Unit/Controllers/UnitHomeControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Controllers;
++namespace Tests\Unit\Controllers;
+
+-class HomeControllerTest extends TestCase
++class UnitHomeControllerTest extends TestCase
+ {
+--- a/tests/Feature/Http/Controllers/ProductControllerTest.php
++++ b/tests/Feature/Http/Controllers/FeatureProductControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Feature\Http\Controllers;
++namespace Tests\Feature\Http\Controllers;
+
+-class ProductControllerTest extends TestCase
++class FeatureProductControllerTest extends TestCase
+ {
+--- a/tests/Unit/Controllers/ProductControllerTest.php
++++ b/tests/Unit/Controllers/UnitProductControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Controllers;
++namespace Tests\Unit\Controllers;
+
+-class ProductControllerTest extends TestCase
++class UnitProductControllerTest extends TestCase
+ {

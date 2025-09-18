@@ -1,0 +1,297 @@
+--- /dev/null
++++ b/tests/Unit/Services/ProductServiceTest.php
+@@ -0,0 +1,200 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Tests\Unit\Services;
++
++use App\Models\Product;
++use App\Models\Category;
++use App\Models\Brand;
++use App\Repositories\ProductRepository;
++use App\Services\ProductService;
++use App\Services\CacheService;
++use Illuminate\Database\Eloquent\Collection;
++use Illuminate\Pagination\LengthAwarePaginator;
++use Illuminate\Foundation\Testing\RefreshDatabase;
++use Tests\TestCase;
++use Mockery;
++
++class ProductServiceTest extends TestCase
++{
++    use RefreshDatabase;
++
++    private ProductService $productService;
++    private ProductRepository $mockRepository;
++    private CacheService $mockCache;
++
++    protected function setUp(): void
++    {
++        parent::setUp();
++
++        $this->mockRepository = Mockery::mock(ProductRepository::class);
++        $this->mockCache = Mockery::mock(CacheService::class);
++        $this->productService = new ProductService($this->mockRepository, $this->mockCache);
++    }
++
++    protected function tearDown(): void
++    {
++        Mockery::close();
++        parent::tearDown();
++    }
++
++    public function test_get_paginated_products_returns_paginated_products(): void
++    {
++        // Arrange
++        $perPage = 15;
++        $pageNumber = 1;
++        $expectedProducts = new LengthAwarePaginator(
++            collect([]),
++            0,
++            $perPage,
++            $pageNumber,
++            ['path' => request()->url(), 'pageName' => 'page']
++        );
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('products.page.1', 3600, Mockery::type('Closure'), ['products'])
++            ->andReturn($expectedProducts);
++
++        // Act
++        $result = $this->productService->getPaginatedProducts($perPage);
++
++        // Assert
++        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
++        $this->assertEquals($perPage, $result->perPage());
++    }
++
++    public function test_get_paginated_products_returns_empty_paginator_when_cache_returns_null(): void
++    {
++        // Arrange
++        $perPage = 15;
++        $pageNumber = 1;
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('products.page.1', 3600, Mockery::type('Closure'), ['products'])
++            ->andReturn(null);
++
++        // Act
++        $result = $this->productService->getPaginatedProducts($perPage);
++
++        // Assert
++        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
++        $this->assertEquals(0, $result->total());
++        $this->assertEquals($perPage, $result->perPage());
++    }
++
++    public function test_get_by_slug_returns_product_when_found(): void
++    {
++        // Arrange
++        $slug = 'test-product';
++        $product = new Product(['id' => 1, 'name' => 'Test Product', 'slug' => $slug]);
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('product.slug.' . $slug, 3600, Mockery::type('Closure'), ['products'])
++            ->andReturn($product);
++
++        // Act
++        $result = $this->productService->getBySlug($slug);
++
++        // Assert
++        $this->assertInstanceOf(Product::class, $result);
++        $this->assertEquals($slug, $result->slug);
++    }
++
++    public function test_get_by_slug_throws_exception_when_product_not_found(): void
++    {
++        // Arrange
++        $slug = 'non-existent-product';
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('product.slug.' . $slug, 3600, Mockery::type('Closure'), ['products'])
++            ->andThrow(new \Illuminate\Database\Eloquent\ModelNotFoundException);
++
++        // Act & Assert
++        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
++        $this->productService->getBySlug($slug);
++    }
++
++    public function test_get_related_products_returns_collection(): void
++    {
++        // Arrange
++        $product = new Product(['id' => 1, 'category_id' => 1]);
++        $relatedProducts = new Collection([
++            new Product(['id' => 2, 'name' => 'Related Product 1']),
++            new Product(['id' => 3, 'name' => 'Related Product 2']),
++        ]);
++        $limit = 4;
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('product.related.1', 3600, Mockery::type('Closure'), ['products'])
++            ->andReturn($relatedProducts);
++
++        // Act
++        $result = $this->productService->getRelatedProducts($product, $limit);
++
++        // Assert
++        $this->assertInstanceOf(Collection::class, $result);
++        $this->assertCount(2, $result);
++    }
++
++    public function test_search_products_returns_paginated_results(): void
++    {
++        // Arrange
++        $query = 'test search';
++        $filters = ['category_id' => 1];
++        $perPage = 15;
++        $expectedResults = new LengthAwarePaginator(
++            collect([new Product(['id' => 1, 'name' => 'Test Product'])]),
++            1,
++            $perPage,
++            1,
++            ['path' => request()->url(), 'pageName' => 'page']
++        );
++
++        $this->mockRepository
++            ->shouldReceive('search')
++            ->once()
++            ->with($query, $filters, $perPage)
++            ->andReturn($expectedResults);
++
++        // Act
++        $result = $this->productService->searchProducts($query, $filters, $perPage);
++
++        // Assert
++        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
++        $this->assertEquals(1, $result->total());
++    }
++
++    public function test_update_price_returns_true_when_successful(): void
++    {
++        // Arrange
++        $product = new Product(['id' => 1, 'price' => 100.00]);
++        $newPrice = 150.00;
++
++        $this->mockRepository
++            ->shouldReceive('updatePrice')
++            ->once()
++            ->with($product, $newPrice)
++            ->andReturn(true);
++
++        $this->mockCache
++            ->shouldReceive('forgetByTags')
++            ->once()
++            ->with(['products']);
++
++        // Act
++        $result = $this->productService->updatePrice($product, $newPrice);
++
++        // Assert
++        $this->assertTrue($result);
++    }
++
++    public function test_update_price_returns_false_when_repository_fails(): void
++    {
++        // Arrange
++        $product = new Product(['id' => 1, 'price' => 100.00]);
++        $newPrice = 150.00;
++
++        $this->mockRepository
++            ->shouldReceive('updatePrice')
++            ->once()
++            ->with($product, $newPrice)
++            ->andReturn(false);
++
++        // Act
++        $result = $this->productService->updatePrice($product, $newPrice);
++
++        // Assert
++        $this->assertFalse($result);
++    }
++
++    public function test_update_price_returns_false_when_exception_occurs(): void
++    {
++        // Arrange
++        $product = new Product(['id' => 1, 'price' => 100.00]);
++        $newPrice = 150.00;
++
++        $this->mockRepository
++            ->shouldReceive('updatePrice')
++            ->once()
++            ->with($product, $newPrice)
++            ->andThrow(new \Exception('Database error'));
++
++        // Act
++        $result = $this->productService->updatePrice($product, $newPrice);
++
++        // Assert
++        $this->assertFalse($result);
++    }
++
++    public function test_get_paginated_products_uses_correct_page_number(): void
++    {
++        // Arrange
++        $perPage = 10;
++        $pageNumber = 3;
++        request()->merge(['page' => $pageNumber]);
++
++        $expectedProducts = new LengthAwarePaginator(
++            collect([]),
++            0,
++            $perPage,
++            $pageNumber,
++            ['path' => request()->url(), 'pageName' => 'page']
++        );
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('products.page.3', 3600, Mockery::type('Closure'), ['products'])
++            ->andReturn($expectedProducts);
++
++        // Act
++        $result = $this->productService->getPaginatedProducts($perPage);
++
++        // Assert
++        $this->assertEquals($pageNumber, $result->currentPage());
++    }
++
++    public function test_get_paginated_products_handles_invalid_page_number(): void
++    {
++        // Arrange
++        $perPage = 10;
++        request()->merge(['page' => 'invalid']);
++
++        $expectedProducts = new LengthAwarePaginator(
++            collect([]),
++            0,
++            $perPage,
++            1,
++            ['path' => request()->url(), 'pageName' => 'page']
++        );
++
++        $this->mockCache
++            ->shouldReceive('remember')
++            ->once()
++            ->with('products.page.1', 3600, Mockery::type('Closure'), ['products'])
++            ->andReturn($expectedProducts);
++
++        // Act
++        $result = $this->productService->getPaginatedProducts($perPage);
++
++        // Assert
++        $this->assertEquals(1, $result->currentPage());
++    }
++}

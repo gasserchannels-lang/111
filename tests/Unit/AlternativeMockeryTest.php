@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
 use Mockery;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Alternative Mockery Test

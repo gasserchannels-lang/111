@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -21,6 +22,16 @@ class AdminControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Set the database connection for testing
+        config(['database.default' => 'testing']);
+
+        // Manually run migrations to ensure a clean slate, and force it to avoid interactive prompts.
+        Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--database' => 'testing',
+            '--env' => 'testing'
+        ]);
 
         $this->adminUser = User::factory()->create(['is_admin' => true]);
         $this->regularUser = User::factory()->create(['is_admin' => false]);

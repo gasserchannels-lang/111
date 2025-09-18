@@ -1,0 +1,11 @@
+--- a/tests/Unit/AI/AIModelPerformanceTest.php
++++ b/tests/Unit/AI/UnitAIModelPerformanceTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\AI;
++namespace Tests\Unit\AI;
+
+-class AIModelPerformanceTest extends TestCase
++class UnitAIModelPerformanceTest extends TestCase
+ {

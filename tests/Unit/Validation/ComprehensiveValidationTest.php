@@ -3,16 +3,18 @@
 namespace Tests\Unit\Validation;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ComprehensiveValidationTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app['config']->set('database.default', 'testing');
-        $this->artisan('migrate:fresh');
+        $this->app['config']->set('database.default', 'sqlite_testing');
     }
 
     #[Test]

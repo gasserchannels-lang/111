@@ -3,11 +3,13 @@
 namespace Tests\Unit\Models;
 
 use App\Models\PriceAlert;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 class PriceAlertTest extends TestCase
 {
+    use RefreshDatabase;
     #[Test]
     public function it_can_create_a_price_alert()
     {

@@ -1,0 +1,22 @@
+--- a/tests/Feature/BrandControllerTest.php
++++ b/tests/Feature/FeatureBrandControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Feature;
++namespace Tests\Feature;
+
+-class BrandControllerTest extends TestCase
++class FeatureBrandControllerTest extends TestCase
+ {
+--- a/tests/Unit/Controllers/BrandControllerTest.php
++++ b/tests/Unit/Controllers/UnitBrandControllerTest.php
+@@ -1,4 +1,4 @@
+ <?php
+
+-namespace Tests\Unit\Controllers;
++namespace Tests\Unit\Controllers;
+
+-class BrandControllerTest extends TestCase
++class UnitBrandControllerTest extends TestCase
+ {

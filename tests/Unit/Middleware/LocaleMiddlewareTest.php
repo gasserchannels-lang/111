@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Middleware;
 
 use App\Http\Middleware\LocaleMiddleware;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
@@ -12,6 +13,7 @@ use Tests\TestCase;
 
 class LocaleMiddlewareTest extends TestCase
 {
+    use RefreshDatabase;
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_sets_locale_from_request_header()
     {

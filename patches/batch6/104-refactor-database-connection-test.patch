@@ -1,0 +1,4 @@
+--- a/tests/Feature/DatabaseConnectionTest.php
++++ b/tests/Feature/DatabaseConnectionTest.php
+@@ -1,0 +1,0 @@
++// No changes needed - test does not modify error handlers

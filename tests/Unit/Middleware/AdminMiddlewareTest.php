@@ -9,10 +9,25 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AdminMiddlewareTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Run migrations for testing database
+        $this->artisan('migrate', [
+            '--force' => true,
+            '--database' => 'testing'
+        ]);
+    }
+
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_admin_users()
     {

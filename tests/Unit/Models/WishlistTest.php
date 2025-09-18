@@ -3,10 +3,12 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Wishlist;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class WishlistTest extends TestCase
 {
+    use RefreshDatabase;
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_wishlist_item()
     {

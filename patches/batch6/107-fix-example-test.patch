@@ -1,0 +1,4 @@
+--- a/tests/Feature/ExampleTest.php
++++ b/tests/Feature/ExampleTest.php
+@@ -1,0 +1,0 @@
++// No changes needed - test was already working

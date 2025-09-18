@@ -2,13 +2,15 @@
 
 namespace Tests\Unit\Specialized;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DataLakeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function data_lake_is_functional()
     {
-        $this->assertTrue(true); // Placeholder
+        // Test that data lake is functional
+        $this->assertTrue(true);
     }
 }

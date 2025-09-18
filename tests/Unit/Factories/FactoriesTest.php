@@ -2,14 +2,11 @@
 
 namespace Tests\Unit\Factories;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FactoriesTest extends TestCase
 {
-    use DatabaseTransactions;
-
     #[Test]
     public function it_can_create_user_with_factory()
     {
