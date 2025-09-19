@@ -10,6 +10,8 @@ on:
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
+    env: # <-- القسم الجديد والمهم
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 
     steps:
       - name: Checkout code
