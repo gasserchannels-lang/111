@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,20 +19,20 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $name
  * @property string $email
  * @property string $password
- * @property \Carbon\Carbon|null $email_verified_at
+ * @property Carbon|null $email_verified_at
  * @property bool $is_admin
  * @property bool $is_active
  * @property bool $is_blocked
  * @property string|null $ban_reason
  * @property string|null $ban_description
- * @property \Carbon\Carbon|null $banned_at
- * @property \Carbon\Carbon|null $ban_expires_at
+ * @property Carbon|null $banned_at
+ * @property Carbon|null $ban_expires_at
  * @property string|null $session_id
  * @property-read bool $is_banned
  * @property-read bool $is_ban_expired
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
+ * @property-read Collection<int, Review> $reviews
+ * @property-read Collection<int, Wishlist> $wishlists
+ * @property-read Collection<int, PriceAlert> $priceAlerts
  * @property-read UserLocaleSetting|null $localeSetting
  *
  * @method static UserFactory factory(...$parameters)
@@ -44,13 +46,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens;
-
-    /**
-     * @use HasFactory<UserFactory>
-     */
-    use HasFactory;
-    use Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
@@ -153,6 +149,6 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->ban_expires_at && \Carbon\Carbon::parse($this->ban_expires_at)->isPast();
+        return $this->ban_expires_at && Carbon::parse($this->ban_expires_at)->isPast();
     }
 }
