@@ -25,11 +25,11 @@ jobs:
 
       - name: Prepare Laravel Environment
         run: |
-          php -r "file_exists('.env') || copy('.env.example', '.env');"
-          php artisan key:generate
           mkdir -p storage/framework/{sessions,views,cache}
           mkdir -p bootstrap/cache
           chmod -R 777 storage bootstrap/cache
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
           php artisan config:clear
           php artisan view:clear
           php artisan route:clear
