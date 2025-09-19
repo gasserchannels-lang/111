@@ -36,8 +36,18 @@ jobs:
           php artisan view:clear
           php artisan route:clear
 
-      - name: Check Code Style (Pint)
-        run: vendor/bin/pint --test
+      - name: Run Pint to FIX files
+        run: vendor/bin/pint
 
-      # - name: Run Static Analysis (PHPStan)
-      #   run: vendor/bin/phpstan analyse --memory-limit=1G --level=9
+      - name: Check for code style changes
+        id: pint_diff
+        run: |
+          git diff --exit-code --quiet || echo "PINT_DIFF_FOUND=true" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Show Pint changes and fail
+        if: env.PINT_DIFF_FOUND == 'true'
+        run: |
+          echo "Pint made the following changes:"
+          git diff
+          exit 1
