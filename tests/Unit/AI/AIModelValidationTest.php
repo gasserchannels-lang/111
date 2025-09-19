@@ -411,7 +411,7 @@ class AIModelValidationTest extends TestCase
         return new class
         {
             /**
-             * @param array<string, float> $input
+             * @param  array<string, float>  $input
              * @return array<string, mixed>
              */
             public function predict(array $input): array
@@ -589,7 +589,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, float> $input
+     * @param  array<string, float>  $input
      * @return array<string, mixed>
      */
     private function runModelInference(object $model, array $input): array
@@ -598,7 +598,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $input
+     * @param  array<string, mixed>  $input
      */
     private function validateInputFormat(object $model, array $input): bool
     {
@@ -616,7 +616,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $output
+     * @param  array<string, mixed>  $output
      */
     private function validateOutputFormat(object $model, array $output): bool
     {
@@ -629,8 +629,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $prediction1
-     * @param array<string, mixed> $prediction2
+     * @param  array<string, mixed>  $prediction1
+     * @param  array<string, mixed>  $prediction2
      */
     private function validatePredictionConsistency(array $prediction1, array $prediction2): bool
     {
@@ -641,7 +641,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $output
+     * @param  array<string, mixed>  $output
      */
     private function validatePredictionRange(array $output): bool
     {
@@ -649,7 +649,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $output
+     * @param  array<string, mixed>  $output
      */
     private function validatePredictionProbability(array $output): bool
     {
@@ -660,7 +660,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $output
+     * @param  array<string, mixed>  $output
      */
     private function validateConfidenceScores(array $output): bool
     {
@@ -668,7 +668,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $output
+     * @param  array<string, mixed>  $output
      */
     private function validateUncertaintyQuantification(array $output): bool
     {
@@ -678,7 +678,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, float> $input
+     * @param  array<string, float>  $input
      * @return array<string, float>
      */
     private function addNoiseToInput(array $input): array
@@ -692,8 +692,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $originalOutput
-     * @param array<string, mixed> $noisyOutput
+     * @param  array<string, mixed>  $originalOutput
+     * @param  array<string, mixed>  $noisyOutput
      */
     private function validateModelRobustness(array $originalOutput, array $noisyOutput): bool
     {
@@ -703,7 +703,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, array<int, array<string, mixed>>> $testData
+     * @param  array<string, array<int, array<string, mixed>>>  $testData
      * @return array<string, float>
      */
     private function validateModelFairness(object $model, array $testData): array
@@ -732,7 +732,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, array<string, array<int, array<string, mixed>>>> $testData
+     * @param  array<string, array<string, array<int, array<string, mixed>>>>  $testData
      * @return array<string, float>
      */
     private function validateModelBias(object $model, array $testData): array
@@ -745,7 +745,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, float> $input
+     * @param  array<string, float>  $input
      * @return array<string, mixed>
      */
     private function generateModelExplanation(object $model, array $input): array
@@ -762,7 +762,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, float> $input
+     * @param  array<string, float>  $input
      * @return array<string, mixed>
      */
     private function generateModelInterpretation(object $model, array $input): array
@@ -775,7 +775,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, float> $input
+     * @param  array<string, float>  $input
      * @return array<string, float>
      */
     private function generateAdversarialInput(array $input): array
@@ -789,8 +789,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $originalOutput
-     * @param array<string, mixed> $adversarialOutput
+     * @param  array<string, mixed>  $originalOutput
+     * @param  array<string, mixed>  $adversarialOutput
      */
     private function validateAdversarialRobustness(array $originalOutput, array $adversarialOutput): bool
     {
@@ -800,8 +800,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, float>> $trainData
-     * @param array<int, array<string, float>> $testData
+     * @param  array<int, array<string, float>>  $trainData
+     * @param  array<int, array<string, float>>  $testData
      * @return array<string, float>
      */
     private function validateModelGeneralization(object $model, array $trainData, array $testData): array
@@ -819,7 +819,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, mixed>> $testData
+     * @param  array<int, array<string, mixed>>  $testData
      * @return array<string, mixed>
      */
     private function validateModelCalibration(object $model, array $testData): array
@@ -832,7 +832,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, mixed>> $testData
+     * @param  array<int, array<string, mixed>>  $testData
      * @return array<string, mixed>
      */
     private function validateConfidenceCalibration(object $model, array $testData): array
@@ -845,7 +845,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, float> $input
+     * @param  array<string, float>  $input
      * @return array<string, float>
      */
     private function estimateModelUncertainty(object $model, array $input): array
@@ -858,8 +858,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, float>> $normalData
-     * @param array<int, array<string, float>> $anomalyData
+     * @param  array<int, array<string, float>>  $normalData
+     * @param  array<int, array<string, float>>  $anomalyData
      * @return array<string, float>
      */
     private function validateAnomalyDetection(object $model, array $normalData, array $anomalyData): array
@@ -878,8 +878,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, float>> $referenceData
-     * @param array<int, array<string, float>> $currentData
+     * @param  array<int, array<string, float>>  $referenceData
+     * @param  array<int, array<string, float>>  $currentData
      * @return array<string, mixed>
      */
     private function validateDriftDetection(object $model, array $referenceData, array $currentData): array
@@ -892,8 +892,8 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, mixed>> $baselineData
-     * @param array<int, array<string, mixed>> $currentData
+     * @param  array<int, array<string, mixed>>  $baselineData
+     * @param  array<int, array<string, mixed>>  $currentData
      * @return array<string, mixed>
      */
     private function validatePerformanceDegradation(object $model, array $baselineData, array $currentData): array
@@ -910,7 +910,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<string, array<int, array<string, float>>> $securityTests
+     * @param  array<string, array<int, array<string, float>>>  $securityTests
      * @return array<string, float>
      */
     private function validateModelSecurity(object $model, array $securityTests): array
@@ -924,7 +924,7 @@ class AIModelValidationTest extends TestCase
     }
 
     /**
-     * @param array<int, array<string, mixed>> $testData
+     * @param  array<int, array<string, mixed>>  $testData
      * @return array<string, mixed>
      */
     private function generateValidationReport(object $model, array $testData): array
