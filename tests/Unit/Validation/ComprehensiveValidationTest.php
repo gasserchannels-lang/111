@@ -17,7 +17,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function product_validation_rules_work()
+    public function product_validation_rules_work(): void
     {
         $rules = [
             'name' => 'required|string|max:255',
@@ -57,7 +57,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function user_validation_rules_work()
+    public function user_validation_rules_work(): void
     {
         $rules = [
             'name' => 'required|string|max:255',
@@ -90,7 +90,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function review_validation_rules_work()
+    public function review_validation_rules_work(): void
     {
         $rules = [
             'product_id' => 'required|integer|min:1',
@@ -120,7 +120,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function price_alert_validation_rules_work()
+    public function price_alert_validation_rules_work(): void
     {
         $rules = [
             'product_id' => 'required|integer|min:1',
@@ -147,7 +147,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function custom_validation_rules_work()
+    public function custom_validation_rules_work(): void
     {
         // اختبار قاعدة التحقق المخصصة للبريد الإلكتروني
         $rules = ['email' => 'required|email|unique:users,email'];
@@ -166,7 +166,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function validation_error_messages_are_meaningful()
+    public function validation_error_messages_are_meaningful(): void
     {
         $rules = [
             'name' => 'required|string|max:255',
@@ -195,7 +195,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function validation_works_with_file_uploads()
+    public function validation_works_with_file_uploads(): void
     {
         $rules = [
             'filename' => 'required|string|max:255',
@@ -222,7 +222,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function validation_works_with_arrays()
+    public function validation_works_with_arrays(): void
     {
         $rules = [
             'tags' => 'required|array|min:1|max:10',
@@ -251,7 +251,7 @@ class ComprehensiveValidationTest extends TestCase
     }
 
     #[Test]
-    public function validation_works_with_conditional_rules()
+    public function validation_works_with_conditional_rules(): void
     {
         $rules = [
             'type' => 'required|in:product,service',

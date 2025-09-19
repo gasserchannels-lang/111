@@ -444,6 +444,10 @@ class AIModelTrainingTest extends TestCase
     {
         return new class
         {
+            /**
+             * @param array<int, array<string, mixed>> $data
+             * @return array<string, mixed>
+             */
             public function train(array $data): array
             {
                 return [
@@ -456,6 +460,9 @@ class AIModelTrainingTest extends TestCase
         };
     }
 
+    /**
+     * @return array<int, object>
+     */
     private function createEnsembleModels(int $count): array
     {
         $models = [];
@@ -477,6 +484,9 @@ class AIModelTrainingTest extends TestCase
         };
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function generateTrainingData(int $count): array
     {
         $data = [];
@@ -494,6 +504,9 @@ class AIModelTrainingTest extends TestCase
         return $data;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function generateInvalidTrainingData(int $count): array
     {
         $data = [];
@@ -507,6 +520,9 @@ class AIModelTrainingTest extends TestCase
         return $data;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function generateRawTrainingData(int $count): array
     {
         $data = [];
@@ -522,6 +538,9 @@ class AIModelTrainingTest extends TestCase
         return $data;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function generateDataWithMissingValues(int $count): array
     {
         $data = [];
@@ -537,6 +556,9 @@ class AIModelTrainingTest extends TestCase
         return $data;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function generateDataWithOutliers(int $count): array
     {
         $data = [];
@@ -552,6 +574,9 @@ class AIModelTrainingTest extends TestCase
         return $data;
     }
 
+    /**
+     * @return array<int, array<int, array<string, mixed>>>
+     */
     private function generateFederatedData(int $clients, int $dataPerClient): array
     {
         $federatedData = [];
@@ -562,6 +587,9 @@ class AIModelTrainingTest extends TestCase
         return $federatedData;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function generateStreamingData(int $count): array
     {
         $data = [];
@@ -580,11 +608,18 @@ class AIModelTrainingTest extends TestCase
         return $data;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainModel(object $model, array $data): array
     {
         return $model->train($data);
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     */
     private function validateTrainingDataFormat(array $data): bool
     {
         if (empty($data)) {
@@ -604,6 +639,10 @@ class AIModelTrainingTest extends TestCase
         return true;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, array<int, array<string, mixed>>>
+     */
     private function splitData(array $data, float $trainRatio): array
     {
         $totalCount = count($data);
@@ -615,6 +654,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
+     */
     private function preprocessData(array $data): array
     {
         $preprocessed = [];
@@ -632,6 +675,10 @@ class AIModelTrainingTest extends TestCase
         return $preprocessed;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
+     */
     private function applyFeatureScaling(array $data): array
     {
         $scaled = [];
@@ -647,6 +694,10 @@ class AIModelTrainingTest extends TestCase
         return $scaled;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
+     */
     private function applyFeatureEngineering(array $data): array
     {
         $engineered = [];
@@ -663,6 +714,10 @@ class AIModelTrainingTest extends TestCase
         return $engineered;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
+     */
     private function handleMissingValues(array $data): array
     {
         $cleaned = [];
@@ -677,6 +732,10 @@ class AIModelTrainingTest extends TestCase
         return $cleaned;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
+     */
     private function handleOutliers(array $data): array
     {
         $cleaned = [];
@@ -695,6 +754,10 @@ class AIModelTrainingTest extends TestCase
         return $cleaned;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
+     */
     private function applyDataAugmentation(array $data): array
     {
         $augmented = $data;
@@ -711,6 +774,11 @@ class AIModelTrainingTest extends TestCase
         return $augmented;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $trainData
+     * @param array<int, array<string, mixed>> $valData
+     * @return array<string, mixed>
+     */
     private function trainWithEarlyStopping(object $model, array $trainData, array $valData, int $patience): array
     {
         $bestScore = 0;
@@ -747,6 +815,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithLearningRateScheduling(object $model, array $data): array
     {
         $learningRates = [0.1, 0.05, 0.01, 0.005, 0.001];
@@ -758,6 +830,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithRegularization(object $model, array $data, float $strength): array
     {
         return [
@@ -766,6 +842,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithDropout(object $model, array $data, float $rate): array
     {
         return [
@@ -774,6 +854,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithBatchNormalization(object $model, array $data): array
     {
         return [
@@ -785,6 +869,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithGradientClipping(object $model, array $data, float $clipValue): array
     {
         return [
@@ -793,6 +881,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithMomentum(object $model, array $data, float $momentum): array
     {
         return [
@@ -801,6 +893,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainWithAdaptiveLearningRates(object $model, array $data): array
     {
         return [
@@ -809,6 +905,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function performCrossValidation(object $model, array $data, int $folds): array
     {
         $scores = [];
@@ -828,6 +928,11 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $trainData
+     * @param array<int, array<string, mixed>> $valData
+     * @return array<string, mixed>
+     */
     private function performHyperparameterTuning(object $model, array $trainData, array $valData): array
     {
         return [
@@ -845,6 +950,11 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, object> $models
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function trainEnsemble(array $models, array $data): array
     {
         return [
@@ -854,6 +964,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function performTransferLearning(object $pretrainedModel, array $data): array
     {
         return [
@@ -863,6 +977,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<int, array<string, mixed>>> $federatedData
+     * @return array<string, mixed>
+     */
     private function performFederatedLearning(object $model, array $federatedData): array
     {
         return [
@@ -872,6 +990,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $streamingData
+     * @return array<string, mixed>
+     */
     private function performOnlineLearning(object $model, array $streamingData): array
     {
         return [
@@ -881,6 +1003,10 @@ class AIModelTrainingTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $data
+     * @return array<string, mixed>
+     */
     private function generateTrainingReport(object $model, array $data): array
     {
         return [

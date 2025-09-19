@@ -9,7 +9,7 @@ use Tests\TestCase;
 class SimpleValidationTest extends TestCase
 {
     #[Test]
-    public function product_validation_rules_work()
+    public function product_validation_rules_work(): void
     {
         $rules = [
             'name' => 'required|string|max:255',
@@ -51,7 +51,7 @@ class SimpleValidationTest extends TestCase
     }
 
     #[Test]
-    public function user_validation_rules_work()
+    public function user_validation_rules_work(): void
     {
         $rules = [
             'name' => 'required|string|max:255',
@@ -85,7 +85,7 @@ class SimpleValidationTest extends TestCase
     }
 
     #[Test]
-    public function review_validation_rules_work()
+    public function review_validation_rules_work(): void
     {
         // Create test data first
         \DB::table('users')->insert([

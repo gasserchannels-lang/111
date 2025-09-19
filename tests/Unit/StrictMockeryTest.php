@@ -15,7 +15,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict mock expectations with exact parameters
      */
-    public function test_strict_mock_expectations()
+    public function test_strict_mock_expectations(): void
     {
         $mock = Mockery::mock('stdClass');
 
@@ -41,7 +41,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict spy with exact call verification
      */
-    public function test_strict_spy_verification()
+    public function test_strict_spy_verification(): void
     {
         $spy = Mockery::spy('stdClass');
 
@@ -62,16 +62,16 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict partial mock with specific methods
      */
-    public function test_strict_partial_mock()
+    public function test_strict_partial_mock(): void
     {
         $service = new class
         {
-            public function publicMethod($param)
+            public function publicMethod(string $param): string
             {
                 return "public: {$param}";
             }
 
-            public function anotherMethod($param)
+            public function anotherMethod(string $param): string
             {
                 return "another: {$param}";
             }
@@ -92,7 +92,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict error handling and exceptions
      */
-    public function test_strict_error_handling()
+    public function test_strict_error_handling(): void
     {
         $mock = Mockery::mock('stdClass');
 
@@ -122,7 +122,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict database operations mocking
      */
-    public function test_strict_database_mocking()
+    public function test_strict_database_mocking(): void
     {
         $mockQuery = Mockery::mock('Illuminate\Database\Query\Builder');
 
@@ -143,7 +143,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test basic HTTP functionality
      */
-    public function test_basic_http_functionality()
+    public function test_basic_http_functionality(): void
     {
         // اختبار أساسي للتأكد من أن الاختبار يعمل
         $this->assertTrue(true);
@@ -174,7 +174,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict service mocking with dependencies
      */
-    public function test_strict_service_mocking()
+    public function test_strict_service_mocking(): void
     {
         $mockDependency = Mockery::mock('App\Services\DependencyService');
         $mockService = Mockery::mock('App\Services\MainService');
@@ -198,7 +198,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict validation mocking
      */
-    public function test_strict_validation_mocking()
+    public function test_strict_validation_mocking(): void
     {
         $mockValidator = Mockery::mock('Illuminate\Validation\Validator');
 
@@ -222,7 +222,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict event mocking
      */
-    public function test_strict_event_mocking()
+    public function test_strict_event_mocking(): void
     {
         $mockEvent = Mockery::mock('Illuminate\Events\Dispatcher');
 
@@ -247,7 +247,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict cache mocking
      */
-    public function test_strict_cache_mocking()
+    public function test_strict_cache_mocking(): void
     {
         $mockCache = Mockery::mock('Illuminate\Cache\Repository');
 
@@ -274,7 +274,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict queue mocking
      */
-    public function test_strict_queue_mocking()
+    public function test_strict_queue_mocking(): void
     {
         $mockQueue = Mockery::mock('Illuminate\Queue\QueueManager');
 
@@ -295,7 +295,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict container mocking
      */
-    public function test_strict_container_mocking()
+    public function test_strict_container_mocking(): void
     {
         $mockContainer = Mockery::mock('Illuminate\Container\Container');
 
@@ -320,7 +320,7 @@ class StrictMockeryTest extends TestCase
     /**
      * Test strict file system mocking
      */
-    public function test_strict_filesystem_mocking()
+    public function test_strict_filesystem_mocking(): void
     {
         $mockFilesystem = Mockery::mock('Illuminate\Filesystem\Filesystem');
 

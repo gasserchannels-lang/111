@@ -14,7 +14,7 @@ use Tests\TestCase;
 class ProductTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_can_create_a_product()
+    public function it_can_create_a_product(): void
     {
         // استخدام اتصال testing
         $this->app['config']->set('database.default', 'testing');
@@ -38,49 +38,49 @@ class ProductTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_has_brand_relationship()
+    public function it_has_brand_relationship(): void
     {
         // Skip this test as it requires database tables
         $this->markTestSkipped('Test requires database tables');
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_has_category_relationship()
+    public function it_has_category_relationship(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $product->category());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_has_store_relationship()
+    public function it_has_store_relationship(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $product->store());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_has_price_offers_relationship()
+    public function it_has_price_offers_relationship(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $product->priceOffers());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_has_reviews_relationship()
+    public function it_has_reviews_relationship(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $product->reviews());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_has_wishlist_relationship()
+    public function it_has_wishlist_relationship(): void
     {
         $product = Product::factory()->create();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class, $product->wishlists());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_can_scope_active_products()
+    public function it_can_scope_active_products(): void
     {
         // استخدام اتصال testing
         $this->app['config']->set('database.default', 'testing');
@@ -114,7 +114,7 @@ class ProductTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_can_scope_products_by_brand()
+    public function it_can_scope_products_by_brand(): void
     {
         // استخدام اتصال testing
         $this->app['config']->set('database.default', 'testing');
@@ -155,7 +155,7 @@ class ProductTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_can_scope_products_by_category()
+    public function it_can_scope_products_by_category(): void
     {
         // استخدام اتصال testing
         $this->app['config']->set('database.default', 'testing');
