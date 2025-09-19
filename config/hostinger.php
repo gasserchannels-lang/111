@@ -36,19 +36,19 @@ return [
     ],
 
     'database' => [
-        'host' => 'localhost',
-        'port' => 3306,
-        'database' => 'u990109832_coprra_db',
-        'username' => 'u990109832_gasser',
-        'password' => 'Hamo1510@Rayan146',
+        'host' => env('HOSTINGER_DB_HOST', 'localhost'),
+        'port' => env('HOSTINGER_DB_PORT', 3306),
+        'database' => env('HOSTINGER_DB_DATABASE'),
+        'username' => env('HOSTINGER_DB_USERNAME'),
+        'password' => env('HOSTINGER_DB_PASSWORD'),
     ],
 
     'mail' => [
-        'host' => 'mail.hostinger.com',
-        'port' => 587,
-        'encryption' => 'tls',
-        'username' => 'contact@coprra.com',
-        'password' => 'Hamo1510@Rayan146',
+        'host' => env('HOSTINGER_MAIL_HOST', 'mail.hostinger.com'),
+        'port' => env('HOSTINGER_MAIL_PORT', 587),
+        'encryption' => env('HOSTINGER_MAIL_ENCRYPTION', 'tls'),
+        'username' => env('HOSTINGER_MAIL_USERNAME'),
+        'password' => env('HOSTINGER_MAIL_PASSWORD'),
     ],
 
     'ssl' => [

@@ -71,16 +71,13 @@ class ImageOptimizationService
      */
     public function createOptimizedVersions(UploadedFile $file, string $path, string $baseName): array
     {
-        $versions = [];
-        // $image = $this->imageManager->read($file->getPathname());
-        $image = null; // Placeholder since ImageManager is commented out
+        $versions = []; // Placeholder since ImageManager is commented out
 
         $sizes = $this->config['sizes'] ?? [];
         if (is_array($sizes)) {
             foreach ($sizes as $sizeName => $dimensions) {
                 if (is_array($dimensions) && count($dimensions) >= 2) {
                     $versions[$sizeName] = $this->createOptimizedVersion(
-                        $image,
                         $path,
                         $baseName,
                         is_string($sizeName) ? $sizeName : '',
@@ -97,10 +94,9 @@ class ImageOptimizationService
     /**
      * Create a single optimized version.
      *
-     * @param  mixed  $image
      * @return array<string, mixed>
      */
-    private function createOptimizedVersion($image, string $path, string $baseName, string $sizeName, int $width, int $height): array
+    private function createOptimizedVersion(string $path, string $baseName, string $sizeName, int $width, int $height): array
     {
         $versions = []; // Placeholder
 
@@ -137,7 +133,7 @@ class ImageOptimizationService
      */
     private function optimizeForFormat(string $format): string
     {
-        $qualityValue = $this->config['quality'] ?? 85;
+        $this->config['quality'] ?? 85;
         // Placeholder implementation since ImageManager is commented out
         return match ($format) {
             'webp' => '',

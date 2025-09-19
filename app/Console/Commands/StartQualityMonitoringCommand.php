@@ -65,10 +65,8 @@ class StartQualityMonitoringCommand extends Command
             $this->info('استخدم: kill '.$pid.' لإيقاف العملية');
             return;
         }
-        else {
-            // Child process
-            $this->runMonitoringLoop($interval);
-        }
+        // Child process
+        $this->runMonitoringLoop($interval);
     }
 
     private function runMonitoringLoop(int $interval): void

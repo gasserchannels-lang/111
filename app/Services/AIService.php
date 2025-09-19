@@ -271,9 +271,8 @@ class AIService
 
         if ($negativeCount > $positiveCount) {
             return 'سلبي';
-        } else {
-            return 'محايد';
         }
+        return 'محايد';
     }
 
     /**

@@ -126,7 +126,7 @@ class DocumentationController extends Controller
         try {
             \DB::connection()->getPdo();
             $status['database'] = 'connected';
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $status['database'] = 'disconnected';
             $status['status'] = 'unhealthy';
         }

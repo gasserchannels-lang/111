@@ -598,9 +598,7 @@ class ReportService
         if ($percentage < -5) {
             return 'decreasing';
         }
-        else {
-            return 'stable';
-        }
+        return 'stable';
     }
 
     /**

@@ -1,0 +1,92 @@
+--- a/tests/Unit/Database/AdvancedDatabaseTest.php
++++ /dev/null
+@@ -1,89 +0,0 @@
+-<?php
+-
+-namespace Tests\Unit\Database;
+-
+-use Illuminate\Foundation\Testing\RefreshDatabase;
+-use PHPUnit\Framework\Attributes\Test;
+-use Tests\TestCase;
+-
+-class AdvancedDatabaseTest extends TestCase
+-{
+-    use RefreshDatabase;
+-
+-    #[Test]
+-    public function database_constraints_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function foreign_key_constraints_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_indexes_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_transactions_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_rollback_works()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_relationships_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_cascading_deletes_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_soft_deletes_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_migrations_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_seeders_work()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-
+-    #[Test]
+-    public function database_performance_with_large_datasets()
+-    {
+-        // اختبار أن قاعدة البيانات تعمل بشكل صحيح
+-        $this->assertTrue(true);
+-    }
+-}

@@ -271,8 +271,8 @@ class BackupService
 
         // Sort by creation date (newest first)
         usort($backups, function (array $a, array $b): int {
-            $timeA = isset($a['created_at']) ? strtotime((string) $a['created_at']) : 0;
-            $timeB = isset($b['created_at']) ? strtotime((string) $b['created_at']) : 0;
+            $timeA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
+            $timeB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
 
             return $timeB - $timeA;
         });

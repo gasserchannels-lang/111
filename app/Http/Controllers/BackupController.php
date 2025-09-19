@@ -277,7 +277,7 @@ class BackupController extends Controller
             }
 
             // Sort by creation time (newest first)
-            usort($backups, fn(array $a, array $b): int => strtotime((string) $b['created_at']) - strtotime((string) $a['created_at']));
+            usort($backups, fn(array $a, array $b): int => strtotime($b['created_at']) - strtotime($a['created_at']));
 
             return $backups;
         } catch (\Exception $e) {
@@ -549,9 +549,7 @@ class BackupController extends Controller
         if (str_contains($filename, 'files')) {
             return 'files';
         }
-        else {
-            return 'full';
-        }
+        return 'full';
     }
 
     /**

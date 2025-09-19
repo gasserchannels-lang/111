@@ -957,7 +957,7 @@ final class StatisticsService
         }
 
         $mean = array_sum($prices) / count($prices);
-        $variance = array_sum(array_map(fn($price): float|int => ($price - $mean) ** 2, $prices)) / count($prices);
+        $variance = array_sum(array_map(fn($price): float => ($price - $mean) ** 2, $prices)) / count($prices);
 
         return sqrt($variance);
     }
