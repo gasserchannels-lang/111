@@ -11,16 +11,14 @@ use Illuminate\Support\Facades\Log;
 class AIService
 {
     private string $apiKey;
-
     private string $baseUrl;
-
     private int $timeout;
 
     public function __construct()
     {
-        $this->apiKey = (string) config('services.openai.api_key');
-        $this->baseUrl = (string) config('services.openai.base_url', 'https://api.openai.com/v1' );
-        $this->timeout = (int) config('services.openai.timeout', 30);
+        $this->apiKey = (string)config('services.openai.api_key');
+        $this->baseUrl = (string)config('services.openai.base_url', 'https://api.openai.com/v1' );
+        $this->timeout = (int)config('services.openai.timeout', 30);
 
         if ($this->apiKey === '') {
             Log::error('OpenAI API key is not configured.');
@@ -40,7 +38,7 @@ class AIService
                 ->timeout($this->timeout)
                 ->post($fullUrl, $data);
 
-            if (! $response->successful()) {
+            if (!$response->successful()) {
                 Log::error('AI Service Request Failed', [
                     'url' => $fullUrl,
                     'status' => $response->status(),
