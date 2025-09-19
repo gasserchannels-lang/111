@@ -36,8 +36,14 @@ jobs:
           php artisan view:clear
           php artisan route:clear
 
-      - name: Check Code Style (Pint)
-        run: vendor/bin/pint --test
+      - name: Auto-fix Code Style with Pint
+        run: vendor/bin/pint
+
+      - name: Commit Pint Fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: Automatically fix code style issues"
+          file_pattern: '*.php'
 
       - name: Run Static Analysis (PHPStan)
         run: vendor/bin/phpstan analyse --memory-limit=1G --level=9
