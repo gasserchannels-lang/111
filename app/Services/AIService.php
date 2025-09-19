@@ -19,7 +19,7 @@ class AIService
     public function __construct()
     {
         $this->apiKey = (string) config('services.openai.api_key');
-        $this->baseUrl = (string) config('services.openai.base_url', 'https://api.openai.com/v1' );
+        $this->baseUrl = (string) config('services.openai.base_url', 'https://api.openai.com/v1');
         $this->timeout = (int) config('services.openai.timeout', 30);
 
         if ($this->apiKey === '') {
