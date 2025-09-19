@@ -19,6 +19,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('season', $recommendation);
             $this->assertEquals('winter', $recommendation['season']);
             $this->assertTrue(true); // Simplified check
         }
@@ -35,6 +37,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('season', $recommendation);
             $this->assertEquals('summer', $recommendation['season']);
             $this->assertTrue(true); // Simplified check
         }
@@ -51,6 +55,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('season', $recommendation);
             $this->assertEquals('spring', $recommendation['season']);
             $this->assertTrue($this->isSpringProduct($recommendation));
         }
@@ -67,6 +73,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('season', $recommendation);
             $this->assertEquals('fall', $recommendation['season']);
             $this->assertTrue($this->isFallProduct($recommendation));
         }
@@ -83,6 +91,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('holiday', $recommendation);
             $this->assertEquals('christmas', $recommendation['holiday']);
             $this->assertTrue($this->isHolidayProduct($recommendation, $holiday));
         }
@@ -99,6 +109,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('weather', $recommendation);
             $this->assertEquals('rainy', $recommendation['weather']);
             $this->assertTrue($this->isWeatherRelevantProduct($recommendation, $weather));
         }
@@ -115,6 +127,7 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
             $this->assertTrue($this->isTemperatureRelevantProduct($recommendation, $temperature));
         }
     }
@@ -130,6 +143,8 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('event', $recommendation);
             $this->assertEquals('back_to_school', $recommendation['event']);
             $this->assertTrue($this->isEventRelevantProduct($recommendation, $event));
         }
@@ -147,6 +162,7 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertGreaterThan(0, count($recommendations));
 
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
             $this->assertTrue($this->isTrendRelevantProduct($recommendation, $trends));
         }
     }
@@ -320,6 +336,9 @@ class SeasonalRecommendationTest extends TestCase
         $this->assertArrayHasKey('generated_at', $report);
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalRecommendations(string $season): array
     {
         $seasonalProducts = [
@@ -366,6 +385,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getHolidayRecommendations(string $holiday): array
     {
         $holidayProducts = [
@@ -403,6 +425,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getWeatherBasedRecommendations(string $weather): array
     {
         $weatherProducts = [
@@ -440,6 +465,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getTemperatureBasedRecommendations(int $temperature): array
     {
         $recommendations = [];
@@ -481,6 +509,9 @@ class SeasonalRecommendationTest extends TestCase
         return $result;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getEventBasedRecommendations(string $event): array
     {
         $eventProducts = [
@@ -518,6 +549,10 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param array<int, string> $trends
+     * @return array<int, array<string, mixed>>
+     */
     private function getTrendBasedRecommendations(string $season, array $trends): array
     {
         $trendProducts = [
@@ -545,6 +580,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalDiscountRecommendations(string $season): array
     {
         return [
@@ -561,6 +599,9 @@ class SeasonalRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalAvailabilityRecommendations(string $season): array
     {
         return [
@@ -575,6 +616,9 @@ class SeasonalRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalDemandRecommendations(string $season): array
     {
         return [
@@ -590,6 +634,10 @@ class SeasonalRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<int, string> $activities
+     * @return array<int, array<string, mixed>>
+     */
     private function getActivityBasedRecommendations(string $season, array $activities): array
     {
         $activityProducts = [
@@ -617,6 +665,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalFoodRecommendations(string $season): array
     {
         $seasonalFoods = [
@@ -643,6 +694,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalFashionRecommendations(string $season): array
     {
         $seasonalFashion = [
@@ -669,6 +723,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalDecorationRecommendations(string $season): array
     {
         $seasonalDecorations = [
@@ -695,6 +752,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalTravelRecommendations(string $season): array
     {
         $seasonalTravel = [
@@ -721,6 +781,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalSportsRecommendations(string $season): array
     {
         $seasonalSports = [
@@ -747,6 +810,9 @@ class SeasonalRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function calculateSeasonalRelevanceScore(array $product, string $currentSeason): float
     {
         $productSeason = $product['season'] ?? '';
@@ -758,6 +824,9 @@ class SeasonalRecommendationTest extends TestCase
         return 0.0;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function generateSeasonalRecommendationReport(string $season): array
     {
         $recommendations = $this->getSeasonalRecommendations($season);
@@ -773,6 +842,9 @@ class SeasonalRecommendationTest extends TestCase
     }
 
     // Helper methods for validation
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isWinterProduct(array $product): bool
     {
         $winterKeywords = ['winter', 'warm', 'cold', 'snow', 'ice', 'jacket', 'coat', 'boots', 'scarf', 'gloves'];
@@ -787,6 +859,9 @@ class SeasonalRecommendationTest extends TestCase
         return false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSummerProduct(array $product): bool
     {
         $summerKeywords = ['summer', 'hot', 'sun', 'beach', 'swim', 'sunglasses', 'sunscreen', 'hat', 'shorts'];
@@ -801,6 +876,9 @@ class SeasonalRecommendationTest extends TestCase
         return false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSpringProduct(array $product): bool
     {
         $springKeywords = ['spring', 'rain', 'flower', 'light', 'fresh', 'umbrella', 'raincoat'];
@@ -815,6 +893,9 @@ class SeasonalRecommendationTest extends TestCase
         return false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isFallProduct(array $product): bool
     {
         $fallKeywords = ['fall', 'autumn', 'pumpkin', 'sweater', 'boots', 'warm', 'harvest'];
@@ -829,26 +910,42 @@ class SeasonalRecommendationTest extends TestCase
         return false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isHolidayProduct(array $product, string $holiday): bool
     {
         return ($product['holiday'] ?? '') === $holiday;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isWeatherRelevantProduct(array $product, string $weather): bool
     {
         return ($product['weather'] ?? '') === $weather;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isTemperatureRelevantProduct(array $product, int $temperature): bool
     {
         return ($product['temperature'] ?? 0) === $temperature;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isEventRelevantProduct(array $product, string $event): bool
     {
         return ($product['event'] ?? '') === $event;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     * @param array<int, string> $trends
+     */
     private function isTrendRelevantProduct(array $product, array $trends): bool
     {
         $productTrend = $product['trend'] ?? '';
@@ -856,21 +953,34 @@ class SeasonalRecommendationTest extends TestCase
         return in_array($productTrend, $trends);
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function hasSeasonalDiscount(array $product): bool
     {
         return $product['has_seasonal_discount'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonallyAvailable(array $product, string $season): bool
     {
         return $product['is_seasonally_available'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function hasHighSeasonalDemand(array $product, string $season): bool
     {
         return $product['has_high_seasonal_demand'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     * @param array<int, string> $activities
+     */
     private function isActivityRelevantProduct(array $product, array $activities): bool
     {
         $productActivity = $product['activity'] ?? '';
@@ -878,26 +988,41 @@ class SeasonalRecommendationTest extends TestCase
         return in_array($productActivity, $activities);
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonalFood(array $product, string $season): bool
     {
         return $product['is_seasonal_food'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonalFashion(array $product, string $season): bool
     {
         return $product['is_seasonal_fashion'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonalDecoration(array $product, string $season): bool
     {
         return $product['is_seasonal_decoration'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonalTravelProduct(array $product, string $season): bool
     {
         return $product['is_seasonal_travel'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonalSportsProduct(array $product, string $season): bool
     {
         return $product['is_seasonal_sports'] ?? false;

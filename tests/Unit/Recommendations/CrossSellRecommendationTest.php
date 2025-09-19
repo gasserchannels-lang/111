@@ -205,6 +205,8 @@ class CrossSellRecommendationTest extends TestCase
 
         // Check that recommended products match brand preferences
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('brand', $recommendation);
             $this->assertTrue(in_array($recommendation['brand'], $brandPreferences));
         }
     }
@@ -228,6 +230,8 @@ class CrossSellRecommendationTest extends TestCase
 
         // Check that recommended products have good ratings
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('rating', $recommendation);
             $this->assertGreaterThanOrEqual(4.0, $recommendation['rating']);
         }
     }
@@ -250,6 +254,8 @@ class CrossSellRecommendationTest extends TestCase
 
         // Check that recommended products are available
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('in_stock', $recommendation);
             $this->assertTrue($recommendation['in_stock']);
         }
     }
@@ -272,6 +278,8 @@ class CrossSellRecommendationTest extends TestCase
 
         // Check that recommended products are popular
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('sales_count', $recommendation);
             $this->assertGreaterThan(100, $recommendation['sales_count']);
         }
     }
@@ -318,6 +326,9 @@ class CrossSellRecommendationTest extends TestCase
 
         // Check that recommended products are available in location
         foreach ($recommendations as $recommendation) {
+            $this->assertIsArray($recommendation);
+            $this->assertArrayHasKey('available_locations', $recommendation);
+            $this->assertIsArray($recommendation['available_locations']);
             $this->assertTrue(in_array($location, $recommendation['available_locations']));
         }
     }
@@ -436,6 +447,10 @@ class CrossSellRecommendationTest extends TestCase
         $this->assertArrayHasKey('generated_at', $report);
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getCrossSellRecommendations(array $currentProduct): array
     {
         // Mock cross-sell recommendations
@@ -467,6 +482,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getComplementaryProducts(array $currentProduct): array
     {
         $complementaryProducts = [
@@ -497,6 +516,10 @@ class CrossSellRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRelatedAccessories(array $currentProduct): array
     {
         return [
@@ -519,6 +542,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getBundledProducts(array $currentProduct): array
     {
         return [
@@ -541,6 +568,11 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<int, array<string, mixed>> $purchaseHistory
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsBasedOnHistory(array $currentProduct, array $purchaseHistory): array
     {
         $recommendations = [];
@@ -561,6 +593,11 @@ class CrossSellRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<string, mixed> $userBehavior
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsBasedOnBehavior(array $currentProduct, array $userBehavior): array
     {
         $recommendations = [];
@@ -579,6 +616,10 @@ class CrossSellRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalRecommendations(array $currentProduct, string $season): array
     {
         $seasonalProducts = [
@@ -605,6 +646,10 @@ class CrossSellRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByPriceRange(array $currentProduct): array
     {
         $price = $currentProduct['price'];
@@ -631,6 +676,11 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<int, string> $brandPreferences
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByBrand(array $currentProduct, array $brandPreferences): array
     {
         return [
@@ -655,6 +705,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByRatings(array $currentProduct): array
     {
         return [
@@ -677,6 +731,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByAvailability(array $currentProduct): array
     {
         return [
@@ -699,6 +757,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByPopularity(array $currentProduct): array
     {
         return [
@@ -721,6 +783,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsBySegment(array $currentProduct, string $customerSegment): array
     {
         return [
@@ -735,6 +801,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByLocation(array $currentProduct, string $location): array
     {
         return [
@@ -749,6 +819,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByTimeOfDay(array $currentProduct, string $timeOfDay): array
     {
         return [
@@ -763,6 +837,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByWeather(array $currentProduct, string $weather): array
     {
         return [
@@ -777,6 +855,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecommendationsByEvent(array $currentProduct, string $event): array
     {
         return [
@@ -791,6 +873,10 @@ class CrossSellRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<string, mixed> $recommendedProduct
+     */
     private function calculateRecommendationConfidence(array $currentProduct, array $recommendedProduct): float
     {
         // Simple confidence calculation based on category compatibility
@@ -804,6 +890,10 @@ class CrossSellRecommendationTest extends TestCase
         return 0.50; // Default confidence
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @return array<string, mixed>
+     */
     private function generateCrossSellReport(array $currentProduct): array
     {
         $recommendations = $this->getCrossSellRecommendations($currentProduct);
@@ -820,6 +910,10 @@ class CrossSellRecommendationTest extends TestCase
     }
 
     // Helper methods for validation
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<string, mixed> $recommendedProduct
+     */
     private function isComplementaryProduct(array $currentProduct, array $recommendedProduct): bool
     {
         $complementaryPairs = [
@@ -840,21 +934,35 @@ class CrossSellRecommendationTest extends TestCase
         return false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isAccessory(array $product): bool
     {
         return $product['is_accessory'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<string, mixed> $recommendedProduct
+     */
     private function canBeBundled(array $currentProduct, array $recommendedProduct): bool
     {
         return $recommendedProduct['can_bundle'] ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isSeasonalProduct(array $product, string $season): bool
     {
         return ($product['season'] ?? '') === $season;
     }
 
+    /**
+     * @param array<string, mixed> $currentProduct
+     * @param array<string, mixed> $recommendedProduct
+     */
     private function isInSimilarPriceRange(array $currentProduct, array $recommendedProduct): bool
     {
         $currentPrice = $currentProduct['price'];
@@ -865,21 +973,33 @@ class CrossSellRecommendationTest extends TestCase
         return $recommendedPrice >= $minPrice && $recommendedPrice <= $maxPrice;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function matchesCustomerSegment(array $product, string $segment): bool
     {
         return ($product['segment'] ?? '') === $segment;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isRelevantToTimeOfDay(array $product, string $timeOfDay): bool
     {
         return ($product['time_relevance'] ?? '') === $timeOfDay;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isRelevantToWeather(array $product, string $weather): bool
     {
         return ($product['weather_relevance'] ?? '') === $weather;
     }
 
+    /**
+     * @param array<string, mixed> $product
+     */
     private function isRelevantToEvent(array $product, string $event): bool
     {
         return ($product['event_relevance'] ?? '') === $event;
