@@ -15,6 +15,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create Bootstrap Cache Directory
+        run: mkdir -p bootstrap/cache
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -25,9 +28,6 @@ jobs:
 
       - name: Install Composer Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-      - name: Create Bootstrap Cache Directory
-        run: mkdir -p bootstrap/cache
 
       - name: Generate application key
         run: php artisan key:generate
