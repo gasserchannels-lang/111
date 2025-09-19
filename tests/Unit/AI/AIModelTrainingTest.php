@@ -445,7 +445,7 @@ class AIModelTrainingTest extends TestCase
         return new class
         {
             /**
-             * @param array<int, array<string, mixed>> $data
+             * @param  array<int, array<string, mixed>>  $data
              * @return array<string, mixed>
              */
             public function train(array $data): array
