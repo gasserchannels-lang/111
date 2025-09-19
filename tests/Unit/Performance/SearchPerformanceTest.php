@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Performance;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class SearchPerformanceTest extends TestCase
 {
@@ -33,7 +33,7 @@ class SearchPerformanceTest extends TestCase
             'Samsung Galaxy S24',
             'MacBook Pro',
             'Google Pixel 8',
-            'OnePlus 12'
+            'OnePlus 12',
         ];
 
         $startTime = microtime(true);
@@ -87,7 +87,7 @@ class SearchPerformanceTest extends TestCase
         $queries = [
             'iPhone 15' => ['iPhone 15', 'iPhone 15 Pro', 'iPhone 15 Pro Max'],
             'Samsung Galaxy' => ['Samsung Galaxy S24', 'Samsung Galaxy S24 Ultra'],
-            'MacBook' => ['MacBook Pro', 'MacBook Air']
+            'MacBook' => ['MacBook Pro', 'MacBook Air'],
         ];
 
         $accuracy = 0;
@@ -112,7 +112,7 @@ class SearchPerformanceTest extends TestCase
             'price_min' => 500,
             'price_max' => 1000,
             'brand' => 'Apple',
-            'category' => 'Electronics'
+            'category' => 'Electronics',
         ];
 
         $startTime = microtime(true);
@@ -205,7 +205,7 @@ class SearchPerformanceTest extends TestCase
             'Samsung Galaxy S24',
             'MacBook Pro',
             'Google Pixel 8',
-            'OnePlus 12'
+            'OnePlus 12',
         ];
 
         $startTime = microtime(true);
@@ -288,7 +288,7 @@ class SearchPerformanceTest extends TestCase
             'Samsung Galaxy' => ['Samsung Galaxy S24', 'Samsung Galaxy S24 Ultra'],
             'MacBook' => ['MacBook Pro', 'MacBook Air'],
             'Google Pixel' => ['Google Pixel 8', 'Google Pixel 8 Pro'],
-            'OnePlus' => ['OnePlus 12', 'OnePlus 12 Pro']
+            'OnePlus' => ['OnePlus 12', 'OnePlus 12 Pro'],
         ];
 
         $results = [];
@@ -306,6 +306,7 @@ class SearchPerformanceTest extends TestCase
         static $cache = [];
         if ($clearCache) {
             $cache = [];
+
             return [];
         }
 
@@ -316,6 +317,7 @@ class SearchPerformanceTest extends TestCase
         usleep(50000); // 50ms of simulated work
         $result = $this->performSearch($query); // Get the actual result
         $cache[$query] = $result;
+
         return $result;
     }
 
@@ -327,6 +329,7 @@ class SearchPerformanceTest extends TestCase
                 $results[] = $item;
             }
         }
+
         return $results;
     }
 
@@ -336,7 +339,7 @@ class SearchPerformanceTest extends TestCase
         $results = $this->performSearch($query);
 
         // Apply filters
-        $filteredResults = array_filter($results, function ($item) use ($filters) {
+        $filteredResults = array_filter($results, function ($item) {
             // Simulate filtering logic
             return true;
         });
@@ -350,7 +353,7 @@ class SearchPerformanceTest extends TestCase
         $suggestions = [
             'iPh' => ['iPhone 15', 'iPhone 15 Pro', 'iPhone 15 Pro Max'],
             'Sam' => ['Samsung Galaxy S24', 'Samsung Galaxy S24 Ultra'],
-            'Mac' => ['MacBook Pro', 'MacBook Air']
+            'Mac' => ['MacBook Pro', 'MacBook Air'],
         ];
 
         return $suggestions[$partialQuery] ?? [];
@@ -393,7 +396,7 @@ class SearchPerformanceTest extends TestCase
             'Samsung Galaxy S24',
             'Samsung Galaxy S24 Ultra',
             'MacBook Pro',
-            'MacBook Air'
+            'MacBook Air',
         ];
 
         $results = [];
@@ -414,6 +417,7 @@ class SearchPerformanceTest extends TestCase
         foreach ($queries as $query) {
             $results[] = $this->performSearch($query);
         }
+
         return $results;
     }
 
@@ -421,6 +425,7 @@ class SearchPerformanceTest extends TestCase
     {
         // Simulate search with query count tracking
         $this->performSearch($query);
+
         return 2; // Simulate 2 database queries
     }
 
@@ -431,6 +436,7 @@ class SearchPerformanceTest extends TestCase
         for ($i = 0; $i < $size; $i++) {
             $index[] = "Product $i";
         }
+
         return $index;
     }
 
@@ -444,7 +450,7 @@ class SearchPerformanceTest extends TestCase
             'Samsung Galaxy S24' => 899.00,
             'Samsung Galaxy S24 Ultra' => 1099.00,
             'MacBook Pro' => 1999.00,
-            'MacBook Air' => 1299.00
+            'MacBook Air' => 1299.00,
         ];
 
         return $prices[$product] ?? 0.0;
@@ -461,6 +467,7 @@ class SearchPerformanceTest extends TestCase
         }
 
         $distance = levenshtein($str1, $str2);
+
         return 1 - ($distance / $maxLength);
     }
 }

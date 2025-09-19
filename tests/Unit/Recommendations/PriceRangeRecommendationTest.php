@@ -17,7 +17,7 @@ class PriceRangeRecommendationTest extends TestCase
             ['name' => 'Product A', 'price' => 300],
             ['name' => 'Product B', 'price' => 450],
             ['name' => 'Product C', 'price' => 600],
-            ['name' => 'Product D', 'price' => 400]
+            ['name' => 'Product D', 'price' => 400],
         ];
 
         $recommendations = $this->getProductsWithinBudget($products, $userBudget);
@@ -38,7 +38,7 @@ class PriceRangeRecommendationTest extends TestCase
             ['name' => 'Product A', 'price' => 150], // Below range
             ['name' => 'Product B', 'price' => 300], // In range
             ['name' => 'Product C', 'price' => 600], // In range
-            ['name' => 'Product D', 'price' => 900]  // Above range
+            ['name' => 'Product D', 'price' => 900],  // Above range
         ];
 
         $recommendations = $this->getProductsInPriceRange($products, $minPrice, $maxPrice);
@@ -57,7 +57,7 @@ class PriceRangeRecommendationTest extends TestCase
             ['price' => 200, 'satisfaction' => 0.9],
             ['price' => 300, 'satisfaction' => 0.95],
             ['price' => 500, 'satisfaction' => 0.7],
-            ['price' => 800, 'satisfaction' => 0.6]
+            ['price' => 800, 'satisfaction' => 0.6],
         ];
 
         $optimalRange = $this->calculateOptimalPriceRange($purchaseHistory);
@@ -73,7 +73,7 @@ class PriceRangeRecommendationTest extends TestCase
         $products = [
             ['name' => 'Product A', 'price' => 100, 'rating' => 4.5, 'features' => 8],
             ['name' => 'Product B', 'price' => 200, 'rating' => 4.8, 'features' => 9],
-            ['name' => 'Product C', 'price' => 150, 'rating' => 4.2, 'features' => 7]
+            ['name' => 'Product C', 'price' => 150, 'rating' => 4.2, 'features' => 7],
         ];
 
         $recommendations = $this->getProductsByValueScore($products, 2);
@@ -104,14 +104,14 @@ class PriceRangeRecommendationTest extends TestCase
         $userProfile = [
             'price_sensitivity' => 'high',
             'budget' => 300,
-            'preferred_brands' => ['Brand A', 'Brand B']
+            'preferred_brands' => ['Brand A', 'Brand B'],
         ];
 
         $products = [
             ['name' => 'Product A', 'price' => 250, 'brand' => 'Brand A'],
             ['name' => 'Product B', 'price' => 400, 'brand' => 'Brand A'],
             ['name' => 'Product C', 'price' => 200, 'brand' => 'Brand C'],
-            ['name' => 'Product D', 'price' => 280, 'brand' => 'Brand B']
+            ['name' => 'Product D', 'price' => 280, 'brand' => 'Brand B'],
         ];
 
         $recommendations = $this->getProductsByPriceSensitivity($userProfile, $products);
@@ -127,7 +127,7 @@ class PriceRangeRecommendationTest extends TestCase
     {
         $priceChanges = [
             ['old_price' => 100, 'new_price' => 90, 'demand_change' => 0.15],
-            ['old_price' => 200, 'new_price' => 180, 'demand_change' => 0.12]
+            ['old_price' => 200, 'new_price' => 180, 'demand_change' => 0.12],
         ];
 
         $elasticity = $this->calculatePriceElasticity($priceChanges[0]);
@@ -142,7 +142,7 @@ class PriceRangeRecommendationTest extends TestCase
         $priceHistory = [
             'Product A' => [100, 95, 90, 85], // Decreasing trend
             'Product B' => [200, 210, 220, 230], // Increasing trend
-            'Product C' => [150, 150, 155, 150] // Stable trend
+            'Product C' => [150, 150, 155, 150], // Stable trend
         ];
 
         $trendingProducts = $this->getProductsByPriceTrends($priceHistory, 'decreasing');
@@ -159,7 +159,7 @@ class PriceRangeRecommendationTest extends TestCase
         $products = [
             ['name' => 'Product A', 'price' => 100, 'currency' => 'USD'],
             ['name' => 'Product B', 'price' => 80, 'currency' => 'EUR'],
-            ['name' => 'Product C', 'price' => 90, 'currency' => 'USD']
+            ['name' => 'Product C', 'price' => 90, 'currency' => 'USD'],
         ];
 
         $exchangeRates = ['USD' => 0.85, 'EUR' => 1.0];
@@ -178,7 +178,7 @@ class PriceRangeRecommendationTest extends TestCase
         $priceData = [
             'historical_prices' => [100, 105, 98, 102, 99],
             'market_average' => 101,
-            'competitor_prices' => [95, 100, 105, 98]
+            'competitor_prices' => [95, 100, 105, 98],
         ];
 
         $confidence = $this->calculatePriceRecommendationConfidence($priceData);
@@ -211,7 +211,7 @@ class PriceRangeRecommendationTest extends TestCase
 
         return [
             'min' => min($prices),
-            'max' => max($prices)
+            'max' => max($prices),
         ];
     }
 

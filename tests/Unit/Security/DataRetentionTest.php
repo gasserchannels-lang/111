@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataRetentionTest extends TestCase
 {
@@ -16,14 +16,14 @@ class DataRetentionTest extends TestCase
             'user_data' => 365, // 1 year
             'logs' => 90, // 3 months
             'sessions' => 30, // 1 month
-            'cookies' => 7 // 1 week
+            'cookies' => 7, // 1 week
         ];
 
         $data = [
             'user_data' => ['created_at' => '2022-01-01'],
             'logs' => ['created_at' => '2023-01-01'],
             'sessions' => ['created_at' => '2024-12-20'], // Very recent data, not expired
-            'cookies' => ['created_at' => '2024-12-25'] // Very recent data, not expired
+            'cookies' => ['created_at' => '2024-12-25'], // Very recent data, not expired
         ];
 
         $expiredData = $this->getExpiredData($data, $retentionPolicies);
@@ -43,7 +43,7 @@ class DataRetentionTest extends TestCase
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'created_at' => '2020-01-01',
-            'last_accessed' => '2022-01-01'
+            'last_accessed' => '2022-01-01',
         ];
 
         $archivedData = $this->archiveData($data);
@@ -61,7 +61,7 @@ class DataRetentionTest extends TestCase
             'id' => 1,
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'created_at' => '2020-01-01'
+            'created_at' => '2020-01-01',
         ];
 
         $deletionResult = $this->deleteData($data);
@@ -79,7 +79,7 @@ class DataRetentionTest extends TestCase
             'id' => 1,
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'phone' => '+1-555-123-4567'
+            'phone' => '+1-555-123-4567',
         ];
 
         $anonymizedData = $this->anonymizeBeforeDeletion($data);
@@ -99,8 +99,8 @@ class DataRetentionTest extends TestCase
             'email' => 'john@example.com',
             'orders' => [
                 ['id' => 1, 'product' => 'iPhone', 'price' => 999],
-                ['id' => 2, 'product' => 'MacBook', 'price' => 1999]
-            ]
+                ['id' => 2, 'product' => 'MacBook', 'price' => 1999],
+            ],
         ];
 
         $exportResult = $this->exportDataBeforeDeletion($data);
@@ -117,7 +117,7 @@ class DataRetentionTest extends TestCase
         $retentionPolicies = [
             'user_data' => 365,
             'logs' => 90,
-            'sessions' => 30
+            'sessions' => 30,
         ];
 
         $auditResult = $this->auditDataRetention($retentionPolicies);
@@ -136,7 +136,7 @@ class DataRetentionTest extends TestCase
             'id' => 1,
             'name' => 'John Doe',
             'created_at' => '2024-11-01', // Recent data that will expire soon
-            'retention_days' => 30 // Short retention period
+            'retention_days' => 30, // Short retention period
         ];
 
         $notifications = $this->getRetentionNotifications($data);
@@ -154,7 +154,7 @@ class DataRetentionTest extends TestCase
             'name' => 'John Doe',
             'created_at' => '2020-01-01',
             'legal_hold' => true,
-            'retention_days' => 365
+            'retention_days' => 365,
         ];
 
         $exceptionResult = $this->handleRetentionException($data);
@@ -171,7 +171,7 @@ class DataRetentionTest extends TestCase
         $retentionPolicies = [
             'user_data' => 365,
             'logs' => 90,
-            'sessions' => 30
+            'sessions' => 30,
         ];
 
         $complianceResult = $this->checkRetentionCompliance($retentionPolicies);
@@ -190,7 +190,7 @@ class DataRetentionTest extends TestCase
         $retentionPolicies = [
             'user_data' => 365,
             'logs' => 90,
-            'sessions' => 30
+            'sessions' => 30,
         ];
 
         $scheduleResult = $this->scheduleRetentionTasks($retentionPolicies);
@@ -244,7 +244,7 @@ class DataRetentionTest extends TestCase
             'id' => 1,
             'name' => 'John Doe',
             'created_at' => '2020-01-01',
-            'retention_days' => 365
+            'retention_days' => 365,
         ];
 
         $validationResult = $this->validateRetentionData($data);
@@ -262,7 +262,7 @@ class DataRetentionTest extends TestCase
             'id' => 1,
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'created_at' => '2020-01-01'
+            'created_at' => '2020-01-01',
         ];
 
         $encryptionResult = $this->encryptRetentionData($data);
@@ -280,7 +280,7 @@ class DataRetentionTest extends TestCase
             'id' => 1,
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'created_at' => '2020-01-01'
+            'created_at' => '2020-01-01',
         ];
 
         $backupResult = $this->backupRetentionData($data);
@@ -308,7 +308,7 @@ class DataRetentionTest extends TestCase
     private function getExpiredData(array $data, array $retentionPolicies): array
     {
         $expiredData = [];
-        $currentDate = new \DateTime();
+        $currentDate = new \DateTime;
 
         foreach ($data as $type => $record) {
             $retentionDays = $retentionPolicies[$type] ?? 365;
@@ -328,8 +328,8 @@ class DataRetentionTest extends TestCase
     {
         return array_merge($data, [
             'archived_at' => date('Y-m-d H:i:s'),
-            'archive_location' => 'archive_' . uniqid(),
-            'original_id' => $data['id']
+            'archive_location' => 'archive_'.uniqid(),
+            'original_id' => $data['id'],
         ]);
     }
 
@@ -339,7 +339,7 @@ class DataRetentionTest extends TestCase
             'success' => true,
             'deleted_at' => date('Y-m-d H:i:s'),
             'deletion_method' => 'secure_deletion',
-            'original_id' => $data['id']
+            'original_id' => $data['id'],
         ];
     }
 
@@ -347,9 +347,9 @@ class DataRetentionTest extends TestCase
     {
         return [
             'id' => $data['id'],
-            'name' => 'ANONYMIZED_' . substr(md5($data['name']), 0, 8),
-            'email' => 'user_' . substr(md5($data['email']), 0, 6) . '@example.com',
-            'phone' => 'XXX-XXX-' . substr($data['phone'], -4)
+            'name' => 'ANONYMIZED_'.substr(md5($data['name']), 0, 8),
+            'email' => 'user_'.substr(md5($data['email']), 0, 6).'@example.com',
+            'phone' => 'XXX-XXX-'.substr($data['phone'], -4),
         ];
     }
 
@@ -357,9 +357,9 @@ class DataRetentionTest extends TestCase
     {
         return [
             'success' => true,
-            'export_file' => 'export_' . uniqid() . '.json',
+            'export_file' => 'export_'.uniqid().'.json',
             'export_format' => 'JSON',
-            'export_size' => strlen(json_encode($data))
+            'export_size' => strlen(json_encode($data)),
         ];
     }
 
@@ -371,8 +371,8 @@ class DataRetentionTest extends TestCase
             'compliance_status' => 'compliant',
             'recommendations' => [
                 'Consider reducing retention period for logs',
-                'Implement automated cleanup processes'
-            ]
+                'Implement automated cleanup processes',
+            ],
         ];
     }
 
@@ -383,7 +383,7 @@ class DataRetentionTest extends TestCase
         $retentionDays = $data['retention_days'];
         $expirationDate = clone $createdDate;
         $expirationDate->modify("+$retentionDays days");
-        $currentDate = new \DateTime();
+        $currentDate = new \DateTime;
         $daysUntilExpiration = $currentDate->diff($expirationDate)->days;
 
         // Always generate at least one notification for testing
@@ -391,14 +391,14 @@ class DataRetentionTest extends TestCase
             $notifications[] = [
                 'type' => 'warning',
                 'message' => "Data will expire in $daysUntilExpiration days",
-                'action_required' => true
+                'action_required' => true,
             ];
         } else {
             // Generate a notification anyway for testing purposes
             $notifications[] = [
                 'type' => 'info',
                 'message' => "Data will expire in $daysUntilExpiration days",
-                'action_required' => false
+                'action_required' => false,
             ];
         }
 
@@ -411,7 +411,7 @@ class DataRetentionTest extends TestCase
             'exception_applied' => true,
             'exception_reason' => 'Legal hold in place',
             'new_retention_date' => date('Y-m-d', strtotime('+2 years')),
-            'exception_id' => 'EXC_' . uniqid()
+            'exception_id' => 'EXC_'.uniqid(),
         ];
     }
 
@@ -421,13 +421,13 @@ class DataRetentionTest extends TestCase
             'compliance_score' => 85,
             'violations' => [
                 'Some logs exceed retention period',
-                'User data not properly archived'
+                'User data not properly archived',
             ],
             'recommendations' => [
                 'Implement automated cleanup',
                 'Review retention policies',
-                'Train staff on compliance'
-            ]
+                'Train staff on compliance',
+            ],
         ];
     }
 
@@ -437,10 +437,10 @@ class DataRetentionTest extends TestCase
             'scheduled_tasks' => [
                 'daily_cleanup' => '0 2 * * *',
                 'weekly_archive' => '0 3 * * 0',
-                'monthly_audit' => '0 4 1 * *'
+                'monthly_audit' => '0 4 1 * *',
             ],
             'next_run' => date('Y-m-d H:i:s', strtotime('+1 day')),
-            'frequency' => 'daily'
+            'frequency' => 'daily',
         ];
     }
 
@@ -453,33 +453,33 @@ class DataRetentionTest extends TestCase
             'performance_metrics' => [
                 'average_processing_time' => '2.5 minutes',
                 'success_rate' => '98.7%',
-                'throughput' => '100 records/minute'
-            ]
+                'throughput' => '100 records/minute',
+            ],
         ];
     }
 
     private function generateRetentionReport(): array
     {
         return [
-            'report_id' => 'RPT_' . uniqid(),
+            'report_id' => 'RPT_'.uniqid(),
             'report_date' => date('Y-m-d H:i:s'),
             'summary' => [
                 'total_records' => 10000,
                 'expired_records' => 1500,
                 'archived_records' => 800,
-                'deleted_records' => 700
+                'deleted_records' => 700,
             ],
             'details' => [
                 'by_category' => [
                     'user_data' => 5000,
                     'logs' => 3000,
-                    'sessions' => 2000
+                    'sessions' => 2000,
                 ],
                 'by_status' => [
                     'active' => 8500,
-                    'expired' => 1500
-                ]
-            ]
+                    'expired' => 1500,
+                ],
+            ],
         ];
     }
 
@@ -489,7 +489,7 @@ class DataRetentionTest extends TestCase
             'cleaned_records' => 1500,
             'cleaned_size' => '2.5 GB',
             'cleanup_duration' => '15 minutes',
-            'errors' => []
+            'errors' => [],
         ];
     }
 
@@ -498,12 +498,12 @@ class DataRetentionTest extends TestCase
         $isValid = true;
         $errors = [];
 
-        if (!isset($data['created_at'])) {
+        if (! isset($data['created_at'])) {
             $isValid = false;
             $errors[] = 'Missing created_at field';
         }
 
-        if (!isset($data['retention_days'])) {
+        if (! isset($data['retention_days'])) {
             $isValid = false;
             $errors[] = 'Missing retention_days field';
         }
@@ -511,7 +511,7 @@ class DataRetentionTest extends TestCase
         return [
             'is_valid' => $isValid,
             'validation_errors' => $errors,
-            'retention_status' => $isValid ? 'valid' : 'invalid'
+            'retention_status' => $isValid ? 'valid' : 'invalid',
         ];
     }
 
@@ -519,28 +519,28 @@ class DataRetentionTest extends TestCase
     {
         return [
             'encrypted_data' => base64_encode(json_encode($data)),
-            'encryption_key' => 'key_' . uniqid(),
-            'encryption_method' => 'AES-256'
+            'encryption_key' => 'key_'.uniqid(),
+            'encryption_method' => 'AES-256',
         ];
     }
 
     private function backupRetentionData(array $data): array
     {
         return [
-            'backup_id' => 'BKP_' . uniqid(),
-            'backup_location' => '/backups/retention_' . date('Y-m-d') . '.json',
+            'backup_id' => 'BKP_'.uniqid(),
+            'backup_location' => '/backups/retention_'.date('Y-m-d').'.json',
             'backup_size' => strlen(json_encode($data)),
-            'backup_date' => date('Y-m-d H:i:s')
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
     private function restoreRetentionData(string $backupId): array
     {
         return [
-            'restoration_id' => 'RST_' . uniqid(),
+            'restoration_id' => 'RST_'.uniqid(),
             'restored_records' => 1000,
             'restoration_status' => 'completed',
-            'restoration_date' => date('Y-m-d H:i:s')
+            'restoration_date' => date('Y-m-d H:i:s'),
         ];
     }
 }

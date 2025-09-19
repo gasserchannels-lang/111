@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
-    public function __construct(private readonly Guard $auth)
-    {
-    }
+    public function __construct(private readonly Guard $auth) {}
 
     // تم إضافة هذا الثابت لتقليل التكرار
     private const VALIDATION_RULE_PRODUCT_ID = 'required|exists:products,id';

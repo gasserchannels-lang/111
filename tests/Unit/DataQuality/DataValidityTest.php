@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataValidityTest extends TestCase
 {
@@ -13,7 +13,7 @@ class DataValidityTest extends TestCase
         $validEmails = [
             'user@example.com',
             'test.email@domain.co.uk',
-            'user+tag@example.org'
+            'user+tag@example.org',
         ];
 
         foreach ($validEmails as $email) {
@@ -28,7 +28,7 @@ class DataValidityTest extends TestCase
             'invalid-email',
             '@example.com',
             'user@',
-            'user..double.dot@example.com'
+            'user..double.dot@example.com',
         ];
 
         foreach ($invalidEmails as $email) {
@@ -43,7 +43,7 @@ class DataValidityTest extends TestCase
             '+1234567890',
             '(555) 123-4567',
             '555-123-4567',
-            '555.123.4567'
+            '555.123.4567',
         ];
 
         foreach ($validPhones as $phone) {
@@ -58,7 +58,7 @@ class DataValidityTest extends TestCase
             'https://www.example.com',
             'http://example.com',
             'https://subdomain.example.com/path',
-            'https://example.com:8080/path?param=value'
+            'https://example.com:8080/path?param=value',
         ];
 
         foreach ($validUrls as $url) {
@@ -73,7 +73,7 @@ class DataValidityTest extends TestCase
             '2024-01-15',
             '2024/01/15',
             '15-01-2024',
-            'January 15, 2024'
+            'January 15, 2024',
         ];
 
         foreach ($validDates as $date) {
@@ -107,7 +107,7 @@ class DataValidityTest extends TestCase
         $data = [
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'age' => 30
+            'age' => 30,
         ];
 
         $requiredFields = ['name', 'email', 'age'];
@@ -120,7 +120,7 @@ class DataValidityTest extends TestCase
     {
         $data = [
             'name' => 'John Doe',
-            'email' => 'john@example.com'
+            'email' => 'john@example.com',
             // age is missing
         ];
 
@@ -138,6 +138,7 @@ class DataValidityTest extends TestCase
     {
         $pattern = '/^[\+]?[1-9][\d]{0,15}$/';
         $cleanPhone = preg_replace('/[^\d\+]/', '', $phone);
+
         return preg_match($pattern, $cleanPhone) === 1;
     }
 
@@ -168,13 +169,14 @@ class DataValidityTest extends TestCase
     private function isValidLength(string $string, int $minLength, int $maxLength): bool
     {
         $length = strlen($string);
+
         return $length >= $minLength && $length <= $maxLength;
     }
 
     private function hasRequiredFields(array $data, array $requiredFields): bool
     {
         foreach ($requiredFields as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
+            if (! isset($data[$field]) || empty($data[$field])) {
                 return false;
             }
         }

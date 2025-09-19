@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataBackupTest extends TestCase
 {
@@ -213,7 +213,7 @@ class DataBackupTest extends TestCase
         $scheduleConfig = [
             'frequency' => 'daily',
             'time' => '02:00',
-            'retention_days' => 30
+            'retention_days' => 30,
         ];
 
         $schedulingResult = $this->handleBackupScheduling($scheduleConfig);
@@ -272,11 +272,11 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
-            'backup_file' => 'full_backup_' . date('Y-m-d_H-i-s') . '.sql',
+            'backup_id' => 'backup_'.uniqid(),
+            'backup_file' => 'full_backup_'.date('Y-m-d_H-i-s').'.sql',
             'backup_size' => '2.5 GB',
             'backup_date' => date('Y-m-d H:i:s'),
-            'backup_type' => 'full'
+            'backup_type' => 'full',
         ];
     }
 
@@ -284,11 +284,11 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'backup_type' => 'incremental',
             'last_backup_date' => $lastBackupDate,
             'backup_size' => '500 MB',
-            'backup_date' => date('Y-m-d H:i:s')
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -296,11 +296,11 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'backup_type' => 'differential',
             'last_full_backup_date' => $lastFullBackupDate,
             'backup_size' => '1.2 GB',
-            'backup_date' => date('Y-m-d H:i:s')
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -308,11 +308,11 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'compression_ratio' => 0.3,
             'compressed_size' => '750 MB',
             'original_size' => '2.5 GB',
-            'backup_date' => date('Y-m-d H:i:s')
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -320,10 +320,10 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'encryption_method' => 'AES-256',
-            'encryption_key_id' => 'key_' . substr(md5($encryptionKey), 0, 8),
-            'backup_date' => date('Y-m-d H:i:s')
+            'encryption_key_id' => 'key_'.substr(md5($encryptionKey), 0, 8),
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -331,10 +331,10 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'cloud_provider' => $cloudProvider,
-            'cloud_location' => 's3://backups/' . date('Y-m-d') . '/',
-            'backup_date' => date('Y-m-d H:i:s')
+            'cloud_location' => 's3://backups/'.date('Y-m-d').'/',
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -342,10 +342,10 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'local_path' => $localPath,
             'file_permissions' => '644',
-            'backup_date' => date('Y-m-d H:i:s')
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -353,10 +353,10 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'backup_id' => 'backup_' . uniqid(),
+            'backup_id' => 'backup_'.uniqid(),
             'schedule' => $schedule,
             'next_run' => date('Y-m-d H:i:s', strtotime('+1 day')),
-            'backup_date' => date('Y-m-d H:i:s')
+            'backup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -365,9 +365,9 @@ class DataBackupTest extends TestCase
         return [
             'success' => true,
             'backup_id' => $backupId,
-            'checksum' => 'sha256:' . hash('sha256', $backupId),
+            'checksum' => 'sha256:'.hash('sha256', $backupId),
             'integrity_status' => 'valid',
-            'verification_date' => date('Y-m-d H:i:s')
+            'verification_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -375,11 +375,11 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'restore_id' => 'restore_' . uniqid(),
+            'restore_id' => 'restore_'.uniqid(),
             'backup_id' => $backupId,
             'restore_status' => 'completed',
             'restored_tables' => ['users', 'products', 'orders', 'categories'],
-            'restore_date' => date('Y-m-d H:i:s')
+            'restore_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -387,10 +387,10 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'restore_id' => 'restore_' . uniqid(),
+            'restore_id' => 'restore_'.uniqid(),
             'backup_id' => $backupId,
             'restored_tables' => $tables,
-            'restore_date' => date('Y-m-d H:i:s')
+            'restore_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -398,10 +398,10 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'restore_id' => 'restore_' . uniqid(),
+            'restore_id' => 'restore_'.uniqid(),
             'backup_id' => $backupId,
             'restore_point' => $pointInTime,
-            'restore_date' => date('Y-m-d H:i:s')
+            'restore_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -412,7 +412,7 @@ class DataBackupTest extends TestCase
             'retention_days' => $retentionDays,
             'expired_backups' => 5,
             'deleted_backups' => 5,
-            'retention_date' => date('Y-m-d H:i:s')
+            'retention_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -424,7 +424,7 @@ class DataBackupTest extends TestCase
             'failed_backups' => 3,
             'backup_health' => 'good',
             'last_backup' => date('Y-m-d H:i:s'),
-            'next_backup' => date('Y-m-d H:i:s', strtotime('+1 day'))
+            'next_backup' => date('Y-m-d H:i:s', strtotime('+1 day')),
         ];
     }
 
@@ -435,14 +435,14 @@ class DataBackupTest extends TestCase
             'failure_reasons' => [
                 'Insufficient disk space',
                 'Network timeout',
-                'Database connection error'
+                'Database connection error',
             ],
             'recovery_actions' => [
                 'Free up disk space',
                 'Check network connectivity',
-                'Verify database connection'
+                'Verify database connection',
             ],
-            'next_retry' => date('Y-m-d H:i:s', strtotime('+1 hour'))
+            'next_retry' => date('Y-m-d H:i:s', strtotime('+1 hour')),
         ];
     }
 
@@ -453,7 +453,7 @@ class DataBackupTest extends TestCase
             'encryption_method' => 'AES-256',
             'key_rotation' => 'monthly',
             'key_storage' => 'secure_vault',
-            'encryption_date' => date('Y-m-d H:i:s')
+            'encryption_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -464,7 +464,7 @@ class DataBackupTest extends TestCase
             'compression_algorithm' => 'gzip',
             'compression_ratio' => 0.3,
             'compression_time' => '2 minutes',
-            'compression_date' => date('Y-m-d H:i:s')
+            'compression_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -472,11 +472,11 @@ class DataBackupTest extends TestCase
     {
         return [
             'success' => true,
-            'schedule_id' => 'schedule_' . uniqid(),
+            'schedule_id' => 'schedule_'.uniqid(),
             'frequency' => $scheduleConfig['frequency'],
             'time' => $scheduleConfig['time'],
             'next_run' => date('Y-m-d H:i:s', strtotime('+1 day')),
-            'cron_expression' => '0 2 * * *'
+            'cron_expression' => '0 2 * * *',
         ];
     }
 
@@ -485,7 +485,7 @@ class DataBackupTest extends TestCase
         return [
             'notification_types' => ['success', 'failure', 'warning'],
             'notification_channels' => ['email', 'sms', 'webhook'],
-            'notification_recipients' => ['admin@example.com', 'backup@example.com']
+            'notification_recipients' => ['admin@example.com', 'backup@example.com'],
         ];
     }
 
@@ -498,11 +498,11 @@ class DataBackupTest extends TestCase
                 'file_exists' => true,
                 'file_size' => true,
                 'checksum' => true,
-                'format' => true
+                'format' => true,
             ],
             'validation_status' => 'valid',
             'validation_errors' => [],
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -513,26 +513,26 @@ class DataBackupTest extends TestCase
             'cleaned_backups' => 10,
             'freed_space' => '25 GB',
             'cleanup_duration' => '5 minutes',
-            'cleanup_date' => date('Y-m-d H:i:s')
+            'cleanup_date' => date('Y-m-d H:i:s'),
         ];
     }
 
     private function generateBackupReport(): array
     {
         return [
-            'report_id' => 'report_' . uniqid(),
+            'report_id' => 'report_'.uniqid(),
             'report_date' => date('Y-m-d H:i:s'),
             'backup_summary' => [
                 'total_backups' => 150,
                 'successful_backups' => 147,
                 'failed_backups' => 3,
-                'total_size' => '500 GB'
+                'total_size' => '500 GB',
             ],
             'backup_statistics' => [
                 'average_backup_time' => '15 minutes',
                 'average_backup_size' => '3.3 GB',
-                'success_rate' => '98%'
-            ]
+                'success_rate' => '98%',
+            ],
         ];
     }
 }

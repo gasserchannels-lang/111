@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class SecurityAuditTest extends TestCase
 {
@@ -14,7 +14,7 @@ class SecurityAuditTest extends TestCase
             'authentication' => true,
             'authorization' => true,
             'data_encryption' => true,
-            'network_security' => true
+            'network_security' => true,
         ];
 
         $auditResult = $this->performSecurityAudit($auditScope);
@@ -33,7 +33,7 @@ class SecurityAuditTest extends TestCase
             'password_policy' => 'strong',
             'mfa_enabled' => true,
             'session_timeout' => 1800,
-            'max_login_attempts' => 5
+            'max_login_attempts' => 5,
         ];
 
         $authAudit = $this->auditAuthentication($authConfig);
@@ -50,7 +50,7 @@ class SecurityAuditTest extends TestCase
             'rbac_enabled' => true,
             'principle_of_least_privilege' => true,
             'regular_access_reviews' => true,
-            'privilege_escalation_controls' => true
+            'privilege_escalation_controls' => true,
         ];
 
         $authzAudit = $this->auditAuthorization($authzConfig);
@@ -68,7 +68,7 @@ class SecurityAuditTest extends TestCase
             'encryption_in_transit' => true,
             'data_classification' => true,
             'data_retention_policy' => true,
-            'backup_encryption' => true
+            'backup_encryption' => true,
         ];
 
         $dataAudit = $this->auditDataProtection($dataConfig);
@@ -86,7 +86,7 @@ class SecurityAuditTest extends TestCase
             'intrusion_detection' => true,
             'vpn_required' => true,
             'network_segmentation' => true,
-            'ssl_tls_enabled' => true
+            'ssl_tls_enabled' => true,
         ];
 
         $networkAudit = $this->auditNetworkSecurity($networkConfig);
@@ -104,7 +104,7 @@ class SecurityAuditTest extends TestCase
             'output_encoding' => true,
             'sql_injection_protection' => true,
             'xss_protection' => true,
-            'csrf_protection' => true
+            'csrf_protection' => true,
         ];
 
         $appAudit = $this->auditApplicationSecurity($appConfig);
@@ -122,7 +122,7 @@ class SecurityAuditTest extends TestCase
             'patch_management' => true,
             'antivirus_enabled' => true,
             'log_monitoring' => true,
-            'backup_strategy' => true
+            'backup_strategy' => true,
         ];
 
         $infraAudit = $this->auditInfrastructure($infraConfig);
@@ -155,7 +155,7 @@ class SecurityAuditTest extends TestCase
             'outdated_software' => true,
             'weak_passwords' => true,
             'unencrypted_data' => true,
-            'missing_patches' => true
+            'missing_patches' => true,
         ];
 
         $vulnerabilities = $this->identifyVulnerabilities($systemConfig);
@@ -178,7 +178,7 @@ class SecurityAuditTest extends TestCase
             'data_sensitivity' => 'high',
             'threat_landscape' => 'medium',
             'security_controls' => 'low',
-            'business_impact' => 'high'
+            'business_impact' => 'high',
         ];
 
         $riskAssessment = $this->assessRiskLevels($riskFactors);
@@ -196,13 +196,13 @@ class SecurityAuditTest extends TestCase
             'overall_score' => 85,
             'findings' => [
                 ['type' => 'vulnerability', 'severity' => 'medium', 'count' => 3],
-                ['type' => 'compliance_gap', 'severity' => 'low', 'count' => 2]
+                ['type' => 'compliance_gap', 'severity' => 'low', 'count' => 2],
             ],
             'recommendations' => [
                 'Implement MFA for all users',
                 'Update security patches',
-                'Enhance monitoring capabilities'
-            ]
+                'Enhance monitoring capabilities',
+            ],
         ];
 
         $report = $this->generateAuditReport($auditData);
@@ -219,7 +219,7 @@ class SecurityAuditTest extends TestCase
         $findings = [
             ['id' => 1, 'status' => 'open', 'priority' => 'high'],
             ['id' => 2, 'status' => 'in_progress', 'priority' => 'medium'],
-            ['id' => 3, 'status' => 'closed', 'priority' => 'low']
+            ['id' => 3, 'status' => 'closed', 'priority' => 'low'],
         ];
 
         $progress = $this->trackRemediationProgress($findings);
@@ -236,7 +236,7 @@ class SecurityAuditTest extends TestCase
         $integrations = [
             ['name' => 'Payment Gateway', 'security_rating' => 'A', 'data_shared' => 'payment_info'],
             ['name' => 'Analytics Service', 'security_rating' => 'B', 'data_shared' => 'usage_data'],
-            ['name' => 'Email Service', 'security_rating' => 'C', 'data_shared' => 'contact_info']
+            ['name' => 'Email Service', 'security_rating' => 'C', 'data_shared' => 'contact_info'],
         ];
 
         $integrationAudit = $this->auditThirdPartyIntegrations($integrations);
@@ -254,7 +254,7 @@ class SecurityAuditTest extends TestCase
             'incident_team' => true,
             'communication_procedures' => true,
             'recovery_procedures' => true,
-            'lessons_learned_process' => true
+            'lessons_learned_process' => true,
         ];
 
         $incidentAudit = $this->auditIncidentResponse($incidentConfig);
@@ -272,7 +272,7 @@ class SecurityAuditTest extends TestCase
             'surveillance' => true,
             'environmental_controls' => true,
             'equipment_security' => true,
-            'visitor_management' => true
+            'visitor_management' => true,
         ];
 
         $physicalAudit = $this->auditPhysicalSecurity($physicalConfig);
@@ -290,7 +290,7 @@ class SecurityAuditTest extends TestCase
             'backup_systems' => true,
             'alternate_sites' => true,
             'communication_plan' => true,
-            'testing_procedures' => true
+            'testing_procedures' => true,
         ];
 
         $bcAudit = $this->auditBusinessContinuity($bcConfig);
@@ -315,7 +315,7 @@ class SecurityAuditTest extends TestCase
                     $findings[] = [
                         'area' => $area,
                         'severity' => $areaScore < 70 ? 'high' : 'medium',
-                        'description' => "Security controls in {$area} need improvement"
+                        'description' => "Security controls in {$area} need improvement",
                     ];
                 }
             }
@@ -333,7 +333,7 @@ class SecurityAuditTest extends TestCase
             'overall_score' => round($overallScore, 2),
             'area_scores' => $scores,
             'findings' => $findings,
-            'recommendations' => $recommendations
+            'recommendations' => $recommendations,
         ];
     }
 
@@ -342,10 +342,18 @@ class SecurityAuditTest extends TestCase
         $score = 0;
         $vulnerabilities = [];
 
-        if ($config['password_policy'] === 'strong') $score += 20;
-        if ($config['mfa_enabled']) $score += 25;
-        if ($config['session_timeout'] <= 1800) $score += 20;
-        if ($config['max_login_attempts'] <= 5) $score += 15;
+        if ($config['password_policy'] === 'strong') {
+            $score += 20;
+        }
+        if ($config['mfa_enabled']) {
+            $score += 25;
+        }
+        if ($config['session_timeout'] <= 1800) {
+            $score += 20;
+        }
+        if ($config['max_login_attempts'] <= 5) {
+            $score += 15;
+        }
 
         $score += 20; // Base score
 
@@ -356,7 +364,7 @@ class SecurityAuditTest extends TestCase
         return [
             'score' => $score,
             'vulnerabilities' => $vulnerabilities,
-            'compliance' => $score >= 80 ? 'compliant' : 'non_compliant'
+            'compliance' => $score >= 80 ? 'compliant' : 'non_compliant',
         ];
     }
 
@@ -364,15 +372,23 @@ class SecurityAuditTest extends TestCase
     {
         $score = 0;
 
-        if ($config['rbac_enabled']) $score += 25;
-        if ($config['principle_of_least_privilege']) $score += 25;
-        if ($config['regular_access_reviews']) $score += 25;
-        if ($config['privilege_escalation_controls']) $score += 25;
+        if ($config['rbac_enabled']) {
+            $score += 25;
+        }
+        if ($config['principle_of_least_privilege']) {
+            $score += 25;
+        }
+        if ($config['regular_access_reviews']) {
+            $score += 25;
+        }
+        if ($config['privilege_escalation_controls']) {
+            $score += 25;
+        }
 
         return [
             'score' => $score,
             'access_control_effectiveness' => $score >= 80 ? 'effective' : 'needs_improvement',
-            'policy_compliance' => $score >= 80 ? 'compliant' : 'non_compliant'
+            'policy_compliance' => $score >= 80 ? 'compliant' : 'non_compliant',
         ];
     }
 
@@ -381,13 +397,15 @@ class SecurityAuditTest extends TestCase
         $score = 0;
 
         foreach ($config as $control => $enabled) {
-            if ($enabled) $score += 20;
+            if ($enabled) {
+                $score += 20;
+            }
         }
 
         return [
             'score' => $score,
             'encryption_status' => $config['encryption_at_rest'] && $config['encryption_in_transit'] ? 'complete' : 'partial',
-            'data_governance' => $config['data_classification'] && $config['data_retention_policy'] ? 'effective' : 'needs_improvement'
+            'data_governance' => $config['data_classification'] && $config['data_retention_policy'] ? 'effective' : 'needs_improvement',
         ];
     }
 
@@ -396,13 +414,15 @@ class SecurityAuditTest extends TestCase
         $score = 0;
 
         foreach ($config as $control => $enabled) {
-            if ($enabled) $score += 20;
+            if ($enabled) {
+                $score += 20;
+            }
         }
 
         return [
             'score' => $score,
             'network_controls' => $score >= 80 ? 'comprehensive' : 'basic',
-            'traffic_monitoring' => $config['intrusion_detection'] ? 'enabled' : 'disabled'
+            'traffic_monitoring' => $config['intrusion_detection'] ? 'enabled' : 'disabled',
         ];
     }
 
@@ -422,7 +442,7 @@ class SecurityAuditTest extends TestCase
         return [
             'score' => $score,
             'vulnerability_scan' => $vulnerabilities,
-            'secure_coding' => $score >= 80 ? 'good' : 'needs_improvement'
+            'secure_coding' => $score >= 80 ? 'good' : 'needs_improvement',
         ];
     }
 
@@ -431,13 +451,15 @@ class SecurityAuditTest extends TestCase
         $score = 0;
 
         foreach ($config as $control => $enabled) {
-            if ($enabled) $score += 20;
+            if ($enabled) {
+                $score += 20;
+            }
         }
 
         return [
             'score' => $score,
             'system_hardening' => $config['server_hardening'] ? 'hardened' : 'basic',
-            'maintenance_practices' => $config['patch_management'] ? 'current' : 'outdated'
+            'maintenance_practices' => $config['patch_management'] ? 'current' : 'outdated',
         ];
     }
 
@@ -460,7 +482,7 @@ class SecurityAuditTest extends TestCase
         return [
             'overall_compliance' => $overallCompliance >= 80 ? 'compliant' : 'non_compliant',
             'framework_scores' => $frameworkScores,
-            'gaps' => $gaps
+            'gaps' => $gaps,
         ];
     }
 
@@ -473,7 +495,7 @@ class SecurityAuditTest extends TestCase
                 'type' => 'outdated_software',
                 'severity' => 'high',
                 'description' => 'Outdated software versions detected',
-                'remediation' => 'Update to latest versions'
+                'remediation' => 'Update to latest versions',
             ];
         }
 
@@ -482,7 +504,7 @@ class SecurityAuditTest extends TestCase
                 'type' => 'weak_passwords',
                 'severity' => 'medium',
                 'description' => 'Weak password policies detected',
-                'remediation' => 'Implement strong password requirements'
+                'remediation' => 'Implement strong password requirements',
             ];
         }
 
@@ -491,7 +513,7 @@ class SecurityAuditTest extends TestCase
                 'type' => 'unencrypted_data',
                 'severity' => 'high',
                 'description' => 'Sensitive data stored unencrypted',
-                'remediation' => 'Implement data encryption'
+                'remediation' => 'Implement data encryption',
             ];
         }
 
@@ -500,7 +522,7 @@ class SecurityAuditTest extends TestCase
                 'type' => 'missing_patches',
                 'severity' => 'medium',
                 'description' => 'Security patches not applied',
-                'remediation' => 'Apply security patches immediately'
+                'remediation' => 'Apply security patches immediately',
             ];
         }
 
@@ -513,7 +535,7 @@ class SecurityAuditTest extends TestCase
             'data_sensitivity' => ['low' => 1, 'medium' => 2, 'high' => 3],
             'threat_landscape' => ['low' => 1, 'medium' => 2, 'high' => 3],
             'security_controls' => ['low' => 3, 'medium' => 2, 'high' => 1],
-            'business_impact' => ['low' => 1, 'medium' => 2, 'high' => 3]
+            'business_impact' => ['low' => 1, 'medium' => 2, 'high' => 3],
         ];
 
         $totalRisk = 0;
@@ -526,7 +548,7 @@ class SecurityAuditTest extends TestCase
         return [
             'overall_risk' => $overallRisk,
             'risk_factors' => $riskFactors,
-            'mitigation_priority' => $overallRisk === 'critical' ? 'immediate' : ($overallRisk === 'high' ? 'urgent' : 'planned')
+            'mitigation_priority' => $overallRisk === 'critical' ? 'immediate' : ($overallRisk === 'high' ? 'urgent' : 'planned'),
         ];
     }
 
@@ -538,15 +560,15 @@ class SecurityAuditTest extends TestCase
                 'key_findings' => count($auditData['findings']),
                 'critical_issues' => count(array_filter($auditData['findings'], function ($f) {
                     return $f['severity'] === 'high';
-                }))
+                })),
             ],
             'detailed_findings' => $auditData['findings'],
             'recommendations' => $auditData['recommendations'],
             'action_plan' => [
                 'immediate_actions' => array_slice($auditData['recommendations'], 0, 2),
                 'short_term_actions' => array_slice($auditData['recommendations'], 2),
-                'timeline' => '30-90 days'
-            ]
+                'timeline' => '30-90 days',
+            ],
         ];
     }
 
@@ -565,7 +587,7 @@ class SecurityAuditTest extends TestCase
             'total_findings' => $totalFindings,
             'closed_findings' => $closedFindings,
             'completion_percentage' => round($completionPercentage, 2),
-            'overdue_items' => $overdueItems
+            'overdue_items' => $overdueItems,
         ];
     }
 
@@ -592,8 +614,8 @@ class SecurityAuditTest extends TestCase
             'recommendations' => [
                 'Review low-rated integrations',
                 'Implement additional security controls',
-                'Regular security assessments'
-            ]
+                'Regular security assessments',
+            ],
         ];
     }
 
@@ -613,7 +635,7 @@ class SecurityAuditTest extends TestCase
         return [
             'score' => $score,
             'response_readiness' => $score >= 80 ? 'ready' : 'needs_improvement',
-            'improvement_areas' => $improvementAreas
+            'improvement_areas' => $improvementAreas,
         ];
     }
 
@@ -622,13 +644,15 @@ class SecurityAuditTest extends TestCase
         $score = 0;
 
         foreach ($config as $control => $enabled) {
-            if ($enabled) $score += 20;
+            if ($enabled) {
+                $score += 20;
+            }
         }
 
         return [
             'score' => $score,
             'access_control_effectiveness' => $config['access_controls'] ? 'effective' : 'needs_improvement',
-            'environmental_security' => $config['environmental_controls'] ? 'adequate' : 'inadequate'
+            'environmental_security' => $config['environmental_controls'] ? 'adequate' : 'inadequate',
         ];
     }
 
@@ -637,13 +661,15 @@ class SecurityAuditTest extends TestCase
         $score = 0;
 
         foreach ($config as $control => $enabled) {
-            if ($enabled) $score += 20;
+            if ($enabled) {
+                $score += 20;
+            }
         }
 
         return [
             'score' => $score,
             'recovery_capability' => $config['disaster_recovery_plan'] ? 'comprehensive' : 'basic',
-            'testing_effectiveness' => $config['testing_procedures'] ? 'regular' : 'irregular'
+            'testing_effectiveness' => $config['testing_procedures'] ? 'regular' : 'irregular',
         ];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Performance;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class PaginationPerformanceTest extends TestCase
 {
@@ -37,7 +37,7 @@ class PaginationPerformanceTest extends TestCase
             ['page' => 2, 'perPage' => 20],
             ['page' => 3, 'perPage' => 50],
             ['page' => 4, 'perPage' => 100],
-            ['page' => 5, 'perPage' => 200]
+            ['page' => 5, 'perPage' => 200],
         ];
 
         $startTime = microtime(true);
@@ -252,7 +252,7 @@ class PaginationPerformanceTest extends TestCase
             ['page' => 2, 'perPage' => 20],
             ['page' => 3, 'perPage' => 20],
             ['page' => 4, 'perPage' => 20],
-            ['page' => 5, 'perPage' => 20]
+            ['page' => 5, 'perPage' => 20],
         ];
 
         $startTime = microtime(true);
@@ -298,7 +298,7 @@ class PaginationPerformanceTest extends TestCase
             ['page' => 100, 'perPage' => 1], // Page beyond available data
             ['page' => 0, 'perPage' => 10], // Invalid page
             ['page' => 1, 'perPage' => 0], // Invalid per page
-            ['page' => -1, 'perPage' => 10] // Negative page
+            ['page' => -1, 'perPage' => 10], // Negative page
         ];
 
         foreach ($edgeCases as $case) {
@@ -325,6 +325,7 @@ class PaginationPerformanceTest extends TestCase
             // Custom sorting by price per rating ratio
             $ratioA = $a['price'] / $a['rating'];
             $ratioB = $b['price'] / $b['rating'];
+
             return $ratioA <=> $ratioB;
         };
 
@@ -348,12 +349,12 @@ class PaginationPerformanceTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $products[] = [
                 'id' => $i + 1,
-                'name' => "Product " . ($i + 1),
+                'name' => 'Product '.($i + 1),
                 'category' => $categories[$i % count($categories)],
                 'brand' => $brands[$i % count($brands)],
                 'price' => rand(100, 2000),
                 'rating' => round(rand(30, 50) / 10, 1),
-                'created_at' => date('Y-m-d H:i:s', time() - rand(0, 365 * 24 * 3600))
+                'created_at' => date('Y-m-d H:i:s', time() - rand(0, 365 * 24 * 3600)),
             ];
         }
 
@@ -379,6 +380,7 @@ class PaginationPerformanceTest extends TestCase
         }
 
         $offset = ($page - 1) * $perPage;
+
         return array_slice($products, $offset, $perPage);
     }
 
@@ -421,6 +423,7 @@ class PaginationPerformanceTest extends TestCase
                     return false;
                 }
             }
+
             return true;
         });
 
@@ -454,7 +457,7 @@ class PaginationPerformanceTest extends TestCase
             'has_next_page' => $totalPages > 1,
             'has_prev_page' => false,
             'next_page' => $totalPages > 1 ? 2 : null,
-            'prev_page' => null
+            'prev_page' => null,
         ];
     }
 
@@ -470,6 +473,7 @@ class PaginationPerformanceTest extends TestCase
         foreach ($paginationConfigs as $config) {
             $results[] = $this->paginateProducts($products, $config['page'], $config['perPage']);
         }
+
         return $results;
     }
 

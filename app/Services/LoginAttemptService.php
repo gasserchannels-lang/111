@@ -68,7 +68,7 @@ class LoginAttemptService
      */
     public function isEmailBlocked(string $email): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $attempts = Cache::get($key, []);
 
         return is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS;
@@ -79,7 +79,7 @@ class LoginAttemptService
      */
     public function isIpBlocked(string $ip): bool
     {
-        $key = self::IP_PREFIX.md5($ip);
+        $key = self::IP_PREFIX.hash('sha256', $ip);
         $attempts = Cache::get($key, []);
 
         return is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS;
@@ -90,7 +90,7 @@ class LoginAttemptService
      */
     public function getRemainingAttempts(string $email): int
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $attempts = Cache::get($key, []);
 
         return max(0, self::MAX_ATTEMPTS - (is_array($attempts) ? count($attempts) : 0));
@@ -101,7 +101,7 @@ class LoginAttemptService
      */
     public function getRemainingIpAttempts(string $ip): int
     {
-        $key = self::IP_PREFIX.md5($ip);
+        $key = self::IP_PREFIX.hash('sha256', $ip);
         $attempts = Cache::get($key, []);
 
         return max(0, self::MAX_ATTEMPTS - (is_array($attempts) ? count($attempts) : 0));
@@ -112,7 +112,7 @@ class LoginAttemptService
      */
     public function getLockoutTimeRemaining(string $email): ?int
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $attempts = Cache::get($key, []);
 
         if (is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS) {
@@ -134,7 +134,7 @@ class LoginAttemptService
      */
     public function getIpLockoutTimeRemaining(string $ip): ?int
     {
-        $key = self::IP_PREFIX.md5($ip);
+        $key = self::IP_PREFIX.hash('sha256', $ip);
         $attempts = Cache::get($key, []);
 
         if (is_array($attempts) && count($attempts) >= self::MAX_ATTEMPTS) {
@@ -156,7 +156,7 @@ class LoginAttemptService
      */
     private function recordIpAttempt(string $ip): void
     {
-        $key = self::IP_PREFIX.md5($ip);
+        $key = self::IP_PREFIX.hash('sha256', $ip);
         $attempts = Cache::get($key, []);
 
         if (! is_array($attempts)) {
@@ -179,7 +179,7 @@ class LoginAttemptService
      */
     private function recordEmailAttempt(string $email, string $ip, string $userAgent): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $attempts = Cache::get($key, []);
 
         if (! is_array($attempts)) {
@@ -203,7 +203,7 @@ class LoginAttemptService
      */
     private function clearEmailAttempts(string $email): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         Cache::forget($key);
     }
 
@@ -212,7 +212,7 @@ class LoginAttemptService
      */
     private function clearIpAttempts(string $ip): void
     {
-        $key = self::IP_PREFIX.md5($ip);
+        $key = self::IP_PREFIX.hash('sha256', $ip);
         Cache::forget($key);
     }
 

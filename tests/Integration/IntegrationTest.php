@@ -43,7 +43,7 @@ class IntegrationTest extends TestCase
 
         $response = $this->post('/login', [
             'email' => 'test@example.com',
-            'password' => 'password'
+            'password' => 'password',
         ]);
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 422, 500, 405]));
     }

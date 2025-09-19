@@ -24,7 +24,7 @@ final class StatisticsService
      */
     public function getRealTimeStats(): array
     {
-        return Cache::remember('real_time_stats', 60, fn(): array => [
+        return Cache::remember('real_time_stats', 60, fn (): array => [
             'total_users' => User::count(),
             'total_products' => Product::count(),
             'total_offers' => PriceOffer::count(),
@@ -47,7 +47,7 @@ final class StatisticsService
     {
         $cacheKey = "daily_stats_{$date->format('Y-m-d')}";
 
-        return Cache::remember($cacheKey, 3600, fn(): array => [
+        return Cache::remember($cacheKey, 3600, fn (): array => [
             'date' => $date->format('Y-m-d'),
             'new_users' => User::whereDate('created_at', $date)->count(),
             'new_products' => Product::whereDate('created_at', $date)->count(),
@@ -71,7 +71,7 @@ final class StatisticsService
         $endDate = $startDate->copy()->addWeek();
         $cacheKey = "weekly_stats_{$startDate->format('Y-m-d')}";
 
-        return Cache::remember($cacheKey, 3600, fn(): array => [
+        return Cache::remember($cacheKey, 3600, fn (): array => [
             'week_start' => $startDate->format('Y-m-d'),
             'week_end' => $endDate->format('Y-m-d'),
             'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -98,7 +98,7 @@ final class StatisticsService
         $endDate = $date->copy()->endOfMonth();
         $cacheKey = "monthly_stats_{$date->format('Y-m')}";
 
-        return Cache::remember($cacheKey, 3600, fn(): array => [
+        return Cache::remember($cacheKey, 3600, fn (): array => [
             'month' => $date->format('Y-m'),
             'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
             'new_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -126,7 +126,7 @@ final class StatisticsService
         $endDate = Carbon::createFromDate($year, 12, 31);
         $cacheKey = "yearly_stats_{$year}";
 
-        return Cache::remember($cacheKey, 3600, fn(): array => [
+        return Cache::remember($cacheKey, 3600, fn (): array => [
             'year' => $year,
             'total_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
             'total_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -244,7 +244,7 @@ final class StatisticsService
      */
     public function getSystemHealthStats(): array
     {
-        return Cache::remember('system_health_stats', 300, fn(): array => [
+        return Cache::remember('system_health_stats', 300, fn (): array => [
             'database_health' => $this->getDatabaseHealth(),
             'cache_health' => $this->getCacheHealth(),
             'queue_health' => $this->getQueueHealth(),
@@ -658,7 +658,7 @@ final class StatisticsService
                 'min' => empty($prices) ? 0 : min($prices),
                 'max' => empty($prices) ? 0 : max($prices),
             ],
-            'price_volatility' => $this->calculatePriceVolatility(array_map(fn($price): float => is_numeric($price) ? (float) $price : 0.0, $prices)),
+            'price_volatility' => $this->calculatePriceVolatility(array_map(fn ($price): float => is_numeric($price) ? (float) $price : 0.0, $prices)),
         ];
     }
 
@@ -957,7 +957,7 @@ final class StatisticsService
         }
 
         $mean = array_sum($prices) / count($prices);
-        $variance = array_sum(array_map(fn($price): float => ($price - $mean) ** 2, $prices)) / count($prices);
+        $variance = array_sum(array_map(fn ($price): float => ($price - $mean) ** 2, $prices)) / count($prices);
 
         return sqrt($variance);
     }

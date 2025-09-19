@@ -544,7 +544,7 @@ final class SuspiciousActivityService
         $message .= 'Timestamp: '.(is_string($activity['timestamp'] ?? null) ? $activity['timestamp'] : 'unknown')."\n\n";
         $message .= "Details:\n";
 
-        return $message . json_encode($activity['details'] ?? [], JSON_PRETTY_PRINT);
+        return $message.json_encode($activity['details'] ?? [], JSON_PRETTY_PRINT);
     }
 
     /**

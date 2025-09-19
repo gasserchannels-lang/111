@@ -16,7 +16,7 @@ class BrandRecommendationTest extends TestCase
             'Apple' => 0.9,
             'Samsung' => 0.7,
             'Sony' => 0.6,
-            'LG' => 0.4
+            'LG' => 0.4,
         ];
 
         $recommendations = $this->getBrandRecommendations($userPreferences, 3);
@@ -37,13 +37,13 @@ class BrandRecommendationTest extends TestCase
                 'Apple' => 1000,
                 'Samsung' => 800,
                 'Sony' => 600,
-                'LG' => 400
+                'LG' => 400,
             ],
             'Clothing' => [
                 'Nike' => 1200,
                 'Adidas' => 900,
-                'Puma' => 500
-            ]
+                'Puma' => 500,
+            ],
         ];
 
         $recommendations = $this->getPopularBrandsInCategory($category, $brandPopularity, 2);
@@ -61,7 +61,7 @@ class BrandRecommendationTest extends TestCase
         $brandSimilarity = [
             'Apple' => ['Samsung', 'Google', 'Microsoft'],
             'Nike' => ['Adidas', 'Puma', 'Under Armour'],
-            'Coca-Cola' => ['Pepsi', 'Sprite', 'Fanta']
+            'Coca-Cola' => ['Pepsi', 'Sprite', 'Fanta'],
         ];
 
         $recommendations = $this->getSimilarBrandRecommendations($currentBrand, $brandSimilarity);
@@ -80,7 +80,7 @@ class BrandRecommendationTest extends TestCase
             'Apple' => ['min' => 800, 'max' => 2000],
             'Samsung' => ['min' => 300, 'max' => 1500],
             'Xiaomi' => ['min' => 100, 'max' => 600],
-            'OnePlus' => ['min' => 400, 'max' => 800]
+            'OnePlus' => ['min' => 400, 'max' => 800],
         ];
 
         $recommendations = $this->getBrandsInPriceRange($userBudget, $brandPriceRanges);
@@ -99,7 +99,7 @@ class BrandRecommendationTest extends TestCase
             'Samsung' => 4.5,
             'Sony' => 4.3,
             'LG' => 4.0,
-            'Xiaomi' => 3.8
+            'Xiaomi' => 3.8,
         ];
 
         $minRating = 4.2;
@@ -121,7 +121,7 @@ class BrandRecommendationTest extends TestCase
             'Apple' => ['US', 'EU', 'Asia'],
             'Samsung' => ['US', 'EU', 'Asia'],
             'Xiaomi' => ['Asia', 'EU'],
-            'Huawei' => ['Asia', 'EU']
+            'Huawei' => ['Asia', 'EU'],
         ];
 
         $availableBrands = $this->getAvailableBrandsInRegion($userRegion, $brandAvailability);
@@ -140,7 +140,7 @@ class BrandRecommendationTest extends TestCase
             ['brand' => 'Apple', 'amount' => 1200, 'date' => '2024-01-15'],
             ['brand' => 'Apple', 'amount' => 800, 'date' => '2024-02-10'],
             ['brand' => 'Samsung', 'amount' => 600, 'date' => '2024-01-20'],
-            ['brand' => 'Sony', 'amount' => 400, 'date' => '2024-03-05']
+            ['brand' => 'Sony', 'amount' => 400, 'date' => '2024-03-05'],
         ];
 
         $recommendations = $this->getBrandsFromPurchaseHistory($purchaseHistory, 2);
@@ -157,7 +157,7 @@ class BrandRecommendationTest extends TestCase
         $userPurchases = [
             'Apple' => 5,
             'Samsung' => 2,
-            'Sony' => 1
+            'Sony' => 1,
         ];
 
         $brand = 'Apple';
@@ -174,7 +174,7 @@ class BrandRecommendationTest extends TestCase
             'Apple' => ['trend' => 'stable', 'growth' => 0.05],
             'Samsung' => ['trend' => 'up', 'growth' => 0.15],
             'Xiaomi' => ['trend' => 'up', 'growth' => 0.25],
-            'LG' => ['trend' => 'down', 'growth' => -0.10]
+            'LG' => ['trend' => 'down', 'growth' => -0.10],
         ];
 
         $trendingBrands = $this->getTrendingBrands($brandTrends);
@@ -191,7 +191,7 @@ class BrandRecommendationTest extends TestCase
         $brands = [
             'Apple' => ['preference' => 0.8, 'popularity' => 0.9, 'quality' => 0.95],
             'Samsung' => ['preference' => 0.6, 'popularity' => 0.8, 'quality' => 0.85],
-            'Sony' => ['preference' => 0.7, 'popularity' => 0.6, 'quality' => 0.9]
+            'Sony' => ['preference' => 0.7, 'popularity' => 0.6, 'quality' => 0.9],
         ];
 
         $weights = ['preference' => 0.4, 'popularity' => 0.3, 'quality' => 0.3];
@@ -205,12 +205,13 @@ class BrandRecommendationTest extends TestCase
     private function getBrandRecommendations(array $userPreferences, int $limit): array
     {
         arsort($userPreferences);
+
         return array_slice(array_keys($userPreferences), 0, $limit);
     }
 
     private function getPopularBrandsInCategory(string $category, array $brandPopularity, int $limit): array
     {
-        if (!isset($brandPopularity[$category])) {
+        if (! isset($brandPopularity[$category])) {
             return [];
         }
 
@@ -305,7 +306,7 @@ class BrandRecommendationTest extends TestCase
 
             $rankedBrands[] = [
                 'brand' => $brand,
-                'score' => $weightedScore
+                'score' => $weightedScore,
             ];
         }
 

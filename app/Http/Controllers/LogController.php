@@ -36,7 +36,7 @@ class LogController extends Controller
             // Filter by level if specified
             if ($request->has('level')) {
                 $level = $request->get('level');
-                $reversedLines = array_filter($reversedLines, fn($line): bool => str_contains($line, (string) $level));
+                $reversedLines = array_filter($reversedLines, fn ($line): bool => str_contains($line, (string) $level));
             }
 
             // Limit results

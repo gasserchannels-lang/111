@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataProtectionTest extends TestCase
 {
@@ -30,7 +30,7 @@ class DataProtectionTest extends TestCase
             'email' => 'user@example.com',
             'phone' => '+1234567890',
             'ssn' => '123-45-6789',
-            'credit_card' => '4111-1111-1111-1111'
+            'credit_card' => '4111-1111-1111-1111',
         ];
 
         $maskedData = $this->maskSensitiveData($sensitiveData);
@@ -49,7 +49,7 @@ class DataProtectionTest extends TestCase
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'phone' => '+1234567890',
-            'address' => '123 Main St, New York, NY'
+            'address' => '123 Main St, New York, NY',
         ];
 
         $anonymizedData = $this->anonymizeData($personalData);
@@ -81,7 +81,7 @@ class DataProtectionTest extends TestCase
             'public_info' => 'This is public information',
             'internal_info' => 'This is internal information',
             'confidential_info' => 'This is confidential information',
-            'restricted_info' => 'This is restricted information'
+            'restricted_info' => 'This is restricted information',
         ];
 
         $classifiedData = $this->classifyData($data);
@@ -157,7 +157,7 @@ class DataProtectionTest extends TestCase
         $personalData = [
             'user_id' => 123,
             'name' => 'John Doe',
-            'email' => 'john.doe@example.com'
+            'email' => 'john.doe@example.com',
         ];
 
         $pseudonymizedData = $this->pseudonymizeData($personalData);
@@ -189,7 +189,7 @@ class DataProtectionTest extends TestCase
         $sensitivePatterns = [
             'SSN' => '/\d{3}-\d{2}-\d{4}/',
             'email' => '/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/',
-            'phone' => '/\+?1?[-.\s]?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}/'
+            'phone' => '/\+?1?[-.\s]?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}/',
         ];
 
         $redactedDocument = $this->redactSensitiveData($document, $sensitivePatterns);
@@ -208,7 +208,7 @@ class DataProtectionTest extends TestCase
             'owner' => 'data_team',
             'classification' => 'confidential',
             'retention_period' => 2555, // 7 years in days
-            'access_level' => 'restricted'
+            'access_level' => 'restricted',
         ];
 
         $governanceResult = $this->applyDataGovernance($dataAsset);
@@ -226,7 +226,7 @@ class DataProtectionTest extends TestCase
         $breachPatterns = [
             'credit_card' => '/\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}/',
             'ssn' => '/\d{3}-\d{2}-\d{4}/',
-            'email' => '/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/'
+            'email' => '/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/',
         ];
 
         $breachDetected = $this->detectDataBreach($sensitiveData, $breachPatterns);
@@ -275,7 +275,7 @@ class DataProtectionTest extends TestCase
             'phone' => '+1234567890',
             'address' => '123 Main St',
             'ssn' => '123-45-6789',
-            'preferences' => ['theme' => 'dark', 'language' => 'en']
+            'preferences' => ['theme' => 'dark', 'language' => 'en'],
         ];
 
         $minimizedData = $this->minimizeData($userData, ['name', 'email']);
@@ -291,7 +291,8 @@ class DataProtectionTest extends TestCase
     {
         $iv = random_bytes(16);
         $encrypted = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
-        return base64_encode($iv . $encrypted);
+
+        return base64_encode($iv.$encrypted);
     }
 
     private function decryptData(string $encryptedData, string $key): string
@@ -299,6 +300,7 @@ class DataProtectionTest extends TestCase
         $data = base64_decode($encryptedData);
         $iv = substr($data, 0, 16);
         $encrypted = substr($data, 16);
+
         return openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
     }
 
@@ -335,16 +337,16 @@ class DataProtectionTest extends TestCase
         foreach ($data as $key => $value) {
             switch ($key) {
                 case 'name':
-                    $anonymized[$key] = 'User_' . substr(md5($value), 0, 8);
+                    $anonymized[$key] = 'User_'.substr(md5($value), 0, 8);
                     break;
                 case 'email':
-                    $anonymized[$key] = 'user_' . substr(md5($value), 0, 8) . '@example.com';
+                    $anonymized[$key] = 'user_'.substr(md5($value), 0, 8).'@example.com';
                     break;
                 case 'phone':
-                    $anonymized[$key] = '+1-555-' . rand(100, 999) . '-' . rand(1000, 9999);
+                    $anonymized[$key] = '+1-555-'.rand(100, 999).'-'.rand(1000, 9999);
                     break;
                 case 'address':
-                    $anonymized[$key] = 'Address_' . substr(md5($value), 0, 8);
+                    $anonymized[$key] = 'Address_'.substr(md5($value), 0, 8);
                     break;
                 default:
                     $anonymized[$key] = $value;
@@ -356,7 +358,7 @@ class DataProtectionTest extends TestCase
 
     private function tokenizeData(string $value): string
     {
-        return 'token_' . bin2hex(random_bytes(16));
+        return 'token_'.bin2hex(random_bytes(16));
     }
 
     private function detokenizeData(string $token): string
@@ -371,7 +373,7 @@ class DataProtectionTest extends TestCase
             'public' => [],
             'internal' => [],
             'confidential' => [],
-            'restricted' => []
+            'restricted' => [],
         ];
 
         foreach ($data as $key => $value) {
@@ -392,6 +394,7 @@ class DataProtectionTest extends TestCase
     private function shouldRetainData(int $dataId, string $dataType, int $creationDate, int $retentionPeriod): bool
     {
         $ageInDays = (time() - $creationDate) / (24 * 60 * 60);
+
         return $ageInDays <= $retentionPeriod;
     }
 
@@ -401,7 +404,7 @@ class DataProtectionTest extends TestCase
         return [
             'data_id' => 123,
             'data_type' => $dataType,
-            'created_at' => time() - (($retentionPeriod + 1) * 24 * 60 * 60)
+            'created_at' => time() - (($retentionPeriod + 1) * 24 * 60 * 60),
         ];
     }
 
@@ -418,7 +421,7 @@ class DataProtectionTest extends TestCase
     private function encryptInTransit(string $data, string $publicKey): string
     {
         // Simulate public key encryption
-        return 'encrypted_' . base64_encode($data);
+        return 'encrypted_'.base64_encode($data);
     }
 
     private function decryptInTransit(string $encryptedData, string $privateKey): string
@@ -437,11 +440,11 @@ class DataProtectionTest extends TestCase
         $pseudonymized = $data;
 
         if (isset($data['name'])) {
-            $pseudonymized['name'] = 'User_' . substr(md5($data['name']), 0, 8);
+            $pseudonymized['name'] = 'User_'.substr(md5($data['name']), 0, 8);
         }
 
         if (isset($data['email'])) {
-            $pseudonymized['email'] = 'user_' . substr(md5($data['email']), 0, 8) . '@example.com';
+            $pseudonymized['email'] = 'user_'.substr(md5($data['email']), 0, 8).'@example.com';
         }
 
         return $pseudonymized;
@@ -449,7 +452,7 @@ class DataProtectionTest extends TestCase
 
     private function addWatermark(string $data, string $watermark): string
     {
-        return $data . '|WATERMARK:' . $watermark;
+        return $data.'|WATERMARK:'.$watermark;
     }
 
     private function extractWatermark(string $watermarkedData): string
@@ -479,12 +482,12 @@ class DataProtectionTest extends TestCase
             'access_controls' => [
                 'encryption' => true,
                 'access_logging' => true,
-                'audit_trail' => true
+                'audit_trail' => true,
             ],
             'retention_schedule' => [
                 'retention_period' => $dataAsset['retention_period'],
-                'disposal_method' => 'secure_deletion'
-            ]
+                'disposal_method' => 'secure_deletion',
+            ],
         ];
     }
 
@@ -499,8 +502,8 @@ class DataProtectionTest extends TestCase
         }
 
         return [
-            'breach_detected' => !empty($detectedPatterns),
-            'sensitive_patterns' => $detectedPatterns
+            'breach_detected' => ! empty($detectedPatterns),
+            'sensitive_patterns' => $detectedPatterns,
         ];
     }
 
@@ -525,7 +528,7 @@ class DataProtectionTest extends TestCase
             'data_type' => $dataType,
             'purpose' => $purpose,
             'consent' => $consent,
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
     }
 
@@ -536,9 +539,9 @@ class DataProtectionTest extends TestCase
             'exported_data' => [
                 'profile' => ['name' => 'John Doe', 'email' => 'john@example.com'],
                 'preferences' => ['theme' => 'dark', 'language' => 'en'],
-                'activity_logs' => ['login' => '2024-01-15', 'last_action' => 'view_profile']
+                'activity_logs' => ['login' => '2024-01-15', 'last_action' => 'view_profile'],
             ],
-            'export_timestamp' => time()
+            'export_timestamp' => time(),
         ];
     }
 
@@ -548,7 +551,7 @@ class DataProtectionTest extends TestCase
             'success' => true,
             'user_id' => $userId,
             'imported_records' => count($data['exported_data']),
-            'import_timestamp' => time()
+            'import_timestamp' => time(),
         ];
     }
 

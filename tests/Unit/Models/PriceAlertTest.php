@@ -3,13 +3,11 @@
 namespace Tests\Unit\Models;
 
 use App\Models\PriceAlert;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class PriceAlertTest extends TestCase
 {
-    use RefreshDatabase;
     #[Test]
     public function it_can_create_a_price_alert()
     {
@@ -38,7 +36,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_has_user_relationship()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $relation = $priceAlert->user();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
         $this->assertEquals('users', $relation->getRelated()->getTable());
@@ -48,7 +46,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_has_product_relationship()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $relation = $priceAlert->product();
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
         $this->assertEquals('products', $relation->getRelated()->getTable());
@@ -58,7 +56,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_validate_required_fields()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
 
         $this->assertFalse($priceAlert->validate());
         $errors = $priceAlert->getErrors();
@@ -114,7 +112,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_scope_active_alerts()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'scopeActive'));
         $this->assertTrue(method_exists(PriceAlert::class, 'scopeActive'));
     }
@@ -122,7 +120,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_scope_alerts_for_user()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'scopeForUser'));
         $this->assertTrue(method_exists(PriceAlert::class, 'scopeForUser'));
     }
@@ -130,7 +128,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_scope_alerts_for_product()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'scopeForProduct'));
         $this->assertTrue(method_exists(PriceAlert::class, 'scopeForProduct'));
     }
@@ -138,7 +136,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_soft_delete_price_alert()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'delete'));
         $this->assertTrue(in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($priceAlert)));
     }
@@ -146,7 +144,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_restore_soft_deleted_price_alert()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'restore'));
         $this->assertTrue(in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($priceAlert)));
     }
@@ -166,7 +164,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_activate_alert()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'activate'));
         $this->assertTrue(method_exists(PriceAlert::class, 'activate'));
     }
@@ -174,7 +172,7 @@ class PriceAlertTest extends TestCase
     #[Test]
     public function it_can_deactivate_alert()
     {
-        $priceAlert = new PriceAlert();
+        $priceAlert = new PriceAlert;
         $this->assertTrue(method_exists($priceAlert, 'deactivate'));
         $this->assertTrue(method_exists(PriceAlert::class, 'deactivate'));
     }

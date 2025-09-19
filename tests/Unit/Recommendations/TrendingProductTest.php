@@ -16,7 +16,7 @@ class TrendingProductTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'views' => 1000, 'purchases' => 50],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'views' => 800, 'purchases' => 30],
             ['id' => 3, 'name' => 'Google Pixel 8', 'views' => 600, 'purchases' => 20],
-            ['id' => 4, 'name' => 'OnePlus 12', 'views' => 400, 'purchases' => 10]
+            ['id' => 4, 'name' => 'OnePlus 12', 'views' => 400, 'purchases' => 10],
         ];
 
         $trendingProducts = $this->getTrendingProducts($products);
@@ -34,7 +34,7 @@ class TrendingProductTest extends TestCase
             'views' => 1000,
             'purchases' => 50,
             'recent_views' => 200,
-            'recent_purchases' => 15
+            'recent_purchases' => 15,
         ];
 
         $score = $this->calculateTrendingScore($product);
@@ -49,7 +49,7 @@ class TrendingProductTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'current_week_views' => 100, 'previous_week_views' => 50],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'current_week_views' => 80, 'previous_week_views' => 90],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'current_week_views' => 60, 'previous_week_views' => 30]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'current_week_views' => 60, 'previous_week_views' => 30],
         ];
 
         $risingTrends = $this->getRisingTrends($products);
@@ -64,7 +64,7 @@ class TrendingProductTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'current_week_views' => 50, 'previous_week_views' => 100],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'current_week_views' => 90, 'previous_week_views' => 80],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'current_week_views' => 30, 'previous_week_views' => 60]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'current_week_views' => 30, 'previous_week_views' => 60],
         ];
 
         $fallingTrends = $this->getFallingTrends($products);
@@ -79,7 +79,7 @@ class TrendingProductTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'Winter Jacket', 'season' => 'winter', 'current_season_views' => 500],
             ['id' => 2, 'name' => 'Summer Dress', 'season' => 'summer', 'current_season_views' => 50],
-            ['id' => 3, 'name' => 'Sunglasses', 'season' => 'summer', 'current_season_views' => 300]
+            ['id' => 3, 'name' => 'Sunglasses', 'season' => 'summer', 'current_season_views' => 300],
         ];
 
         $seasonalTrends = $this->getSeasonalTrends($products, 'winter');
@@ -95,7 +95,7 @@ class TrendingProductTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'category' => 'Smartphones', 'views' => 1000],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'views' => 800],
             ['id' => 3, 'name' => 'MacBook Pro', 'category' => 'Laptops', 'views' => 600],
-            ['id' => 4, 'name' => 'Dell XPS', 'category' => 'Laptops', 'views' => 400]
+            ['id' => 4, 'name' => 'Dell XPS', 'category' => 'Laptops', 'views' => 400],
         ];
 
         $categoryTrends = $this->getCategoryTrends($products);
@@ -111,7 +111,7 @@ class TrendingProductTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'brand' => 'Apple', 'views' => 1000],
             ['id' => 2, 'name' => 'MacBook Pro', 'brand' => 'Apple', 'views' => 800],
             ['id' => 3, 'name' => 'Samsung Galaxy S24', 'brand' => 'Samsung', 'views' => 600],
-            ['id' => 4, 'name' => 'Samsung TV', 'brand' => 'Samsung', 'views' => 400]
+            ['id' => 4, 'name' => 'Samsung TV', 'brand' => 'Samsung', 'views' => 400],
         ];
 
         $brandTrends = $this->getBrandTrends($products);
@@ -127,7 +127,7 @@ class TrendingProductTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'views' => 1000],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'views' => 800],
             ['id' => 3, 'name' => 'Budget Phone', 'price' => 199.00, 'views' => 600],
-            ['id' => 4, 'name' => 'Luxury Phone', 'price' => 1999.00, 'views' => 200]
+            ['id' => 4, 'name' => 'Luxury Phone', 'price' => 1999.00, 'views' => 200],
         ];
 
         $priceRangeTrends = $this->getPriceRangeTrends($products);
@@ -142,7 +142,7 @@ class TrendingProductTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'views_today' => 100, 'views_yesterday' => 50],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'views_today' => 80, 'views_yesterday' => 90],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'views_today' => 60, 'views_yesterday' => 30]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'views_today' => 60, 'views_yesterday' => 30],
         ];
 
         $timeBasedTrends = $this->getTimeBasedTrends($products);
@@ -158,7 +158,7 @@ class TrendingProductTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'region' => 'US', 'views' => 1000],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'region' => 'EU', 'views' => 800],
             ['id' => 3, 'name' => 'Google Pixel 8', 'region' => 'US', 'views' => 600],
-            ['id' => 4, 'name' => 'OnePlus 12', 'region' => 'Asia', 'views' => 400]
+            ['id' => 4, 'name' => 'OnePlus 12', 'region' => 'Asia', 'views' => 400],
         ];
 
         $geographicTrends = $this->getGeographicTrends($products);
@@ -174,7 +174,7 @@ class TrendingProductTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'age_group' => '18-25', 'views' => 1000],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'age_group' => '26-35', 'views' => 800],
             ['id' => 3, 'name' => 'Google Pixel 8', 'age_group' => '18-25', 'views' => 600],
-            ['id' => 4, 'name' => 'OnePlus 12', 'age_group' => '36-45', 'views' => 400]
+            ['id' => 4, 'name' => 'OnePlus 12', 'age_group' => '36-45', 'views' => 400],
         ];
 
         $demographicTrends = $this->getDemographicTrends($products);
@@ -285,11 +285,11 @@ class TrendingProductTest extends TestCase
 
         foreach ($products as $product) {
             $category = $product['category'] ?? 'Unknown';
-            if (!isset($categoryStats[$category])) {
+            if (! isset($categoryStats[$category])) {
                 $categoryStats[$category] = [
                     'category' => $category,
                     'total_views' => 0,
-                    'product_count' => 0
+                    'product_count' => 0,
                 ];
             }
             $categoryStats[$category]['total_views'] += $product['views'] ?? 0;
@@ -310,11 +310,11 @@ class TrendingProductTest extends TestCase
 
         foreach ($products as $product) {
             $brand = $product['brand'] ?? 'Unknown';
-            if (!isset($brandStats[$brand])) {
+            if (! isset($brandStats[$brand])) {
                 $brandStats[$brand] = [
                     'brand' => $brand,
                     'total_views' => 0,
-                    'product_count' => 0
+                    'product_count' => 0,
                 ];
             }
             $brandStats[$brand]['total_views'] += $product['views'] ?? 0;
@@ -335,7 +335,7 @@ class TrendingProductTest extends TestCase
             'budget' => ['min' => 0, 'max' => 299],
             'mid-range' => ['min' => 300, 'max' => 999],
             'premium' => ['min' => 1000, 'max' => 1999],
-            'luxury' => ['min' => 2000, 'max' => PHP_FLOAT_MAX]
+            'luxury' => ['min' => 2000, 'max' => PHP_FLOAT_MAX],
         ];
 
         $rangeStats = [];
@@ -344,7 +344,7 @@ class TrendingProductTest extends TestCase
             $rangeStats[$range] = [
                 'range' => $range,
                 'total_views' => 0,
-                'product_count' => 0
+                'product_count' => 0,
             ];
 
             foreach ($products as $product) {
@@ -395,11 +395,11 @@ class TrendingProductTest extends TestCase
 
         foreach ($products as $product) {
             $region = $product['region'] ?? 'Unknown';
-            if (!isset($regionStats[$region])) {
+            if (! isset($regionStats[$region])) {
                 $regionStats[$region] = [
                     'region' => $region,
                     'total_views' => 0,
-                    'product_count' => 0
+                    'product_count' => 0,
                 ];
             }
             $regionStats[$region]['total_views'] += $product['views'] ?? 0;
@@ -420,11 +420,11 @@ class TrendingProductTest extends TestCase
 
         foreach ($products as $product) {
             $ageGroup = $product['age_group'] ?? 'Unknown';
-            if (!isset($demographicStats[$ageGroup])) {
+            if (! isset($demographicStats[$ageGroup])) {
                 $demographicStats[$ageGroup] = [
                     'age_group' => $ageGroup,
                     'total_views' => 0,
-                    'product_count' => 0
+                    'product_count' => 0,
                 ];
             }
             $demographicStats[$ageGroup]['total_views'] += $product['views'] ?? 0;

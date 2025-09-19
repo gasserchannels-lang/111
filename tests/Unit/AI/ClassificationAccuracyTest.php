@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ClassificationAccuracyTest extends TestCase
 {
@@ -16,7 +16,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Clothing', 'predicted' => 'Clothing'],
             ['actual' => 'Books', 'predicted' => 'Books'],
-            ['actual' => 'Home', 'predicted' => 'Electronics']
+            ['actual' => 'Home', 'predicted' => 'Electronics'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($classifications);
@@ -31,7 +31,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'positive', 'predicted' => 'positive'],
             ['actual' => 'negative', 'predicted' => 'negative'],
             ['actual' => 'neutral', 'predicted' => 'neutral'],
-            ['actual' => 'positive', 'predicted' => 'negative']
+            ['actual' => 'positive', 'predicted' => 'negative'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($sentiments);
@@ -46,7 +46,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Apple', 'predicted' => 'Apple'],
             ['actual' => 'Samsung', 'predicted' => 'Samsung'],
             ['actual' => 'Google', 'predicted' => 'Google'],
-            ['actual' => 'Apple', 'predicted' => 'Samsung']
+            ['actual' => 'Apple', 'predicted' => 'Samsung'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($brands);
@@ -61,7 +61,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'budget', 'predicted' => 'budget'],
             ['actual' => 'mid-range', 'predicted' => 'mid-range'],
             ['actual' => 'premium', 'predicted' => 'premium'],
-            ['actual' => 'luxury', 'predicted' => 'premium']
+            ['actual' => 'luxury', 'predicted' => 'premium'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($priceRanges);
@@ -76,7 +76,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'high', 'predicted' => 'high'],
             ['actual' => 'medium', 'predicted' => 'medium'],
             ['actual' => 'low', 'predicted' => 'low'],
-            ['actual' => 'high', 'predicted' => 'medium']
+            ['actual' => 'high', 'predicted' => 'medium'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($qualities);
@@ -91,7 +91,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'urgent', 'predicted' => 'urgent'],
             ['actual' => 'normal', 'predicted' => 'normal'],
             ['actual' => 'low', 'predicted' => 'low'],
-            ['actual' => 'urgent', 'predicted' => 'normal']
+            ['actual' => 'urgent', 'predicted' => 'normal'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($urgencies);
@@ -106,7 +106,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'high', 'predicted' => 'high'],
             ['actual' => 'medium', 'predicted' => 'medium'],
             ['actual' => 'low', 'predicted' => 'low'],
-            ['actual' => 'high', 'predicted' => 'low']
+            ['actual' => 'high', 'predicted' => 'low'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($priorities);
@@ -121,7 +121,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'low', 'predicted' => 'low'],
             ['actual' => 'medium', 'predicted' => 'medium'],
             ['actual' => 'high', 'predicted' => 'high'],
-            ['actual' => 'low', 'predicted' => 'high']
+            ['actual' => 'low', 'predicted' => 'high'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($risks);
@@ -136,7 +136,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'simple', 'predicted' => 'simple'],
             ['actual' => 'moderate', 'predicted' => 'moderate'],
             ['actual' => 'complex', 'predicted' => 'complex'],
-            ['actual' => 'simple', 'predicted' => 'complex']
+            ['actual' => 'simple', 'predicted' => 'complex'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($complexities);
@@ -152,7 +152,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'B', 'predicted' => 'B'],
             ['actual' => 'C', 'predicted' => 'C'],
             ['actual' => 'D', 'predicted' => 'D'],
-            ['actual' => 'A', 'predicted' => 'B']
+            ['actual' => 'A', 'predicted' => 'B'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($multiClass);
@@ -167,7 +167,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'yes', 'predicted' => 'yes'],
             ['actual' => 'no', 'predicted' => 'no'],
             ['actual' => 'yes', 'predicted' => 'no'],
-            ['actual' => 'no', 'predicted' => 'yes']
+            ['actual' => 'no', 'predicted' => 'yes'],
         ];
 
         $accuracy = $this->calculateClassificationAccuracy($binary);
@@ -182,7 +182,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics', 'confidence' => 0.95],
             ['actual' => 'Clothing', 'predicted' => 'Clothing', 'confidence' => 0.87],
             ['actual' => 'Books', 'predicted' => 'Electronics', 'confidence' => 0.45],
-            ['actual' => 'Home', 'predicted' => 'Home', 'confidence' => 0.92]
+            ['actual' => 'Home', 'predicted' => 'Home', 'confidence' => 0.92],
         ];
 
         $avgConfidence = $this->calculateAverageConfidence($classifications);
@@ -197,7 +197,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Clothing', 'predicted' => 'Electronics'],
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
-            ['actual' => 'Books', 'predicted' => 'Electronics']
+            ['actual' => 'Books', 'predicted' => 'Electronics'],
         ];
 
         $precision = $this->calculatePrecision($classifications, 'Electronics');
@@ -212,7 +212,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Electronics', 'predicted' => 'Clothing'],
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
-            ['actual' => 'Books', 'predicted' => 'Books']
+            ['actual' => 'Books', 'predicted' => 'Books'],
         ];
 
         $recall = $this->calculateRecall($classifications, 'Electronics');
@@ -227,7 +227,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Clothing', 'predicted' => 'Electronics'],
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
-            ['actual' => 'Books', 'predicted' => 'Books']
+            ['actual' => 'Books', 'predicted' => 'Books'],
         ];
 
         $f1Score = $this->calculateF1Score($classifications, 'Electronics');
@@ -242,7 +242,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Clothing', 'predicted' => 'Electronics'],
             ['actual' => 'Electronics', 'predicted' => 'Clothing'],
-            ['actual' => 'Books', 'predicted' => 'Books']
+            ['actual' => 'Books', 'predicted' => 'Books'],
         ];
 
         $confusionMatrix = $this->calculateConfusionMatrix($classifications);
@@ -259,7 +259,7 @@ class ClassificationAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Clothing', 'predicted' => 'Clothing'],
-            ['actual' => 'Books', 'predicted' => 'Books']
+            ['actual' => 'Books', 'predicted' => 'Books'],
         ];
 
         $classBalance = $this->calculateClassBalance($classifications);
@@ -310,6 +310,7 @@ class ClassificationAccuracyTest extends TestCase
         }
 
         $totalPredictions = $truePositives + $falsePositives;
+
         return $totalPredictions > 0 ? $truePositives / $totalPredictions : 0;
     }
 
@@ -329,6 +330,7 @@ class ClassificationAccuracyTest extends TestCase
         }
 
         $totalActual = $truePositives + $falseNegatives;
+
         return $totalActual > 0 ? $truePositives / $totalActual : 0;
     }
 
@@ -375,7 +377,7 @@ class ClassificationAccuracyTest extends TestCase
 
         foreach ($classifications as $classification) {
             $actual = $classification['actual'];
-            if (!isset($classCounts[$actual])) {
+            if (! isset($classCounts[$actual])) {
                 $classCounts[$actual] = 0;
             }
             $classCounts[$actual]++;

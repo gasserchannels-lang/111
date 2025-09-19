@@ -15,12 +15,12 @@ class AuthenticateWithBasicAuth
     {
         $username = $request->getUser();
         $password = $request->getPassword();
-        if (!$username) {
+        if (! $username) {
             return response('Unauthorized', 401, [
                 'WWW-Authenticate' => 'Basic realm="API"',
             ]);
         }
-        if (!$password) {
+        if (! $password) {
             return response('Unauthorized', 401, [
                 'WWW-Authenticate' => 'Basic realm="API"',
             ]);

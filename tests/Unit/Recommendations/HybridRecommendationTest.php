@@ -29,7 +29,7 @@ class HybridRecommendationTest extends TestCase
         $recommendations = [
             ['item_id' => 'item1', 'collaborative_score' => 0.9, 'content_score' => 0.6],
             ['item_id' => 'item2', 'collaborative_score' => 0.7, 'content_score' => 0.8],
-            ['item_id' => 'item3', 'collaborative_score' => 0.5, 'content_score' => 0.9]
+            ['item_id' => 'item3', 'collaborative_score' => 0.5, 'content_score' => 0.9],
         ];
 
         $weights = ['collaborative' => 0.5, 'content_based' => 0.5];
@@ -46,7 +46,7 @@ class HybridRecommendationTest extends TestCase
         $userProfile = [
             'interaction_count' => 5,
             'preferences_available' => true,
-            'cold_start' => false
+            'cold_start' => false,
         ];
 
         $method = $this->selectRecommendationMethod($userProfile);
@@ -60,12 +60,12 @@ class HybridRecommendationTest extends TestCase
     {
         $collaborativeRecommendations = [
             ['item_id' => 'item1', 'score' => 0.9],
-            ['item_id' => 'item2', 'score' => 0.8]
+            ['item_id' => 'item2', 'score' => 0.8],
         ];
 
         $contentBasedRecommendations = [
             ['item_id' => 'item2', 'score' => 0.7],
-            ['item_id' => 'item3', 'score' => 0.6]
+            ['item_id' => 'item3', 'score' => 0.6],
         ];
 
         $mixedRecommendations = $this->createMixedHybrid($collaborativeRecommendations, $contentBasedRecommendations, 3);
@@ -83,12 +83,12 @@ class HybridRecommendationTest extends TestCase
         $primaryRecommendations = [
             ['item_id' => 'item1', 'score' => 0.9],
             ['item_id' => 'item2', 'score' => 0.8],
-            ['item_id' => 'item3', 'score' => 0.7]
+            ['item_id' => 'item3', 'score' => 0.7],
         ];
 
         $secondaryRecommendations = [
             ['item_id' => 'item2', 'score' => 0.6],
-            ['item_id' => 'item4', 'score' => 0.5]
+            ['item_id' => 'item4', 'score' => 0.5],
         ];
 
         $cascadeRecommendations = $this->createCascadeHybrid($primaryRecommendations, $secondaryRecommendations, 3);
@@ -118,7 +118,7 @@ class HybridRecommendationTest extends TestCase
         $userHistory = [
             ['method' => 'collaborative', 'accuracy' => 0.8, 'coverage' => 0.6],
             ['method' => 'content_based', 'accuracy' => 0.7, 'coverage' => 0.9],
-            ['method' => 'hybrid', 'accuracy' => 0.85, 'coverage' => 0.8]
+            ['method' => 'hybrid', 'accuracy' => 0.85, 'coverage' => 0.8],
         ];
 
         $bestMethod = $this->selectBestMethodByMetaLearning($userHistory);
@@ -133,7 +133,7 @@ class HybridRecommendationTest extends TestCase
         $userProfile = [
             'interaction_count' => 100,
             'preference_stability' => 0.8,
-            'diversity_preference' => 0.6
+            'diversity_preference' => 0.6,
         ];
 
         $weights = $this->adjustWeightsDynamically($userProfile);
@@ -149,7 +149,7 @@ class HybridRecommendationTest extends TestCase
     {
         $recommendations = [
             ['item_id' => 'item1', 'collaborative_score' => 0.9, 'collaborative_confidence' => 0.8],
-            ['item_id' => 'item2', 'content_score' => 0.7, 'content_confidence' => 0.9]
+            ['item_id' => 'item2', 'content_score' => 0.7, 'content_confidence' => 0.9],
         ];
 
         $confidenceWeightedRecommendations = $this->createConfidenceWeightedHybrid($recommendations);
@@ -164,12 +164,12 @@ class HybridRecommendationTest extends TestCase
     {
         $recentRecommendations = [
             ['item_id' => 'item1', 'score' => 0.9, 'timestamp' => '2024-01-15'],
-            ['item_id' => 'item2', 'score' => 0.8, 'timestamp' => '2024-01-14']
+            ['item_id' => 'item2', 'score' => 0.8, 'timestamp' => '2024-01-14'],
         ];
 
         $historicalRecommendations = [
             ['item_id' => 'item1', 'score' => 0.7, 'timestamp' => '2024-01-10'],
-            ['item_id' => 'item3', 'score' => 0.6, 'timestamp' => '2024-01-05']
+            ['item_id' => 'item3', 'score' => 0.6, 'timestamp' => '2024-01-05'],
         ];
 
         $temporalScore = $this->createTemporalHybrid($recentRecommendations, $historicalRecommendations, 0.7);
@@ -185,7 +185,7 @@ class HybridRecommendationTest extends TestCase
         $recommendations = [
             ['item_id' => 'item1', 'score' => 0.9, 'user_rating' => 5],
             ['item_id' => 'item2', 'score' => 0.8, 'user_rating' => 4],
-            ['item_id' => 'item3', 'score' => 0.7, 'user_rating' => 3]
+            ['item_id' => 'item3', 'score' => 0.7, 'user_rating' => 3],
         ];
 
         $qualityMetrics = $this->evaluateHybridQuality($recommendations);
@@ -249,7 +249,7 @@ class HybridRecommendationTest extends TestCase
         foreach ($allRecommendations as $rec) {
             $itemId = $rec['item_id'];
             if (
-                !isset($uniqueRecommendations[$itemId]) ||
+                ! isset($uniqueRecommendations[$itemId]) ||
                 $rec['score'] > $uniqueRecommendations[$itemId]['score']
             ) {
                 $uniqueRecommendations[$itemId] = $rec;
@@ -271,15 +271,19 @@ class HybridRecommendationTest extends TestCase
 
         // Add primary recommendations
         foreach ($primaryRecs as $rec) {
-            if (count($recommendations) >= $limit) break;
+            if (count($recommendations) >= $limit) {
+                break;
+            }
             $recommendations[] = $rec;
             $usedItems[] = $rec['item_id'];
         }
 
         // Add secondary recommendations for remaining slots
         foreach ($secondaryRecs as $rec) {
-            if (count($recommendations) >= $limit) break;
-            if (!in_array($rec['item_id'], $usedItems)) {
+            if (count($recommendations) >= $limit) {
+                break;
+            }
+            if (! in_array($rec['item_id'], $usedItems)) {
                 $recommendations[] = $rec;
                 $usedItems[] = $rec['item_id'];
             }
@@ -293,7 +297,7 @@ class HybridRecommendationTest extends TestCase
         $weights = [
             'collaborative' => 0.4,
             'content' => 0.4,
-            'demographic' => 0.2
+            'demographic' => 0.2,
         ];
 
         $collaborativeScore = array_sum($collaborativeFeatures) / count($collaborativeFeatures);
@@ -313,7 +317,7 @@ class HybridRecommendationTest extends TestCase
             $method = $record['method'];
             $score = ($record['accuracy'] * 0.7) + ($record['coverage'] * 0.3);
 
-            if (!isset($methodScores[$method])) {
+            if (! isset($methodScores[$method])) {
                 $methodScores[$method] = [];
             }
             $methodScores[$method][] = $score;
@@ -400,7 +404,7 @@ class HybridRecommendationTest extends TestCase
         return [
             'precision' => $precision,
             'recall' => $recall,
-            'f1_score' => $f1Score
+            'f1_score' => $f1Score,
         ];
     }
 }

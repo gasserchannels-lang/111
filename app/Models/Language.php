@@ -18,8 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $direction
  * @property bool $is_active
  * @property int $sort_order
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency> $currencies
- * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting> $userLocaleSettings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency<Database\Factories\CurrencyFactory>> $currencies
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>> $userLocaleSettings
  *
  * @method static LanguageFactory factory(...$parameters)
  *
@@ -55,7 +55,7 @@ class Language extends Model
     /**
      * العملات المرتبطة بهذه اللغة.
      *
-     * @return BelongsToMany<Currency, Language>
+     * @return BelongsToMany<Currency<Database\Factories\CurrencyFactory>, Language<Database\Factories\LanguageFactory>>
      */
     public function currencies(): BelongsToMany
     {
@@ -75,7 +75,7 @@ class Language extends Model
     /**
      * إعدادات المستخدمين لهذه اللغة.
      *
-     * @return HasMany<UserLocaleSetting, Language>
+     * @return HasMany<UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>, Language<Database\Factories\LanguageFactory>>
      */
     public function userLocaleSettings(): HasMany
     {

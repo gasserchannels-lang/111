@@ -262,7 +262,7 @@ class ContinuousQualityMonitor
             $memoryUsage = (int) $matches[1];
             $maxMemory = 512;
 
-            return max(0, 100 - (($memoryUsage / $maxMemory) * 100));
+            return (int) max(0, 100 - (($memoryUsage / $maxMemory) * 100));
         }
 
         return 100;
@@ -357,8 +357,8 @@ class ContinuousQualityMonitor
      */
     public function getAlertsSummary(): array
     {
-        $criticalAlerts = array_filter($this->alerts, fn($alert): bool => is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'critical');
-        $warningAlerts = array_filter($this->alerts, fn($alert): bool => is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'warning');
+        $criticalAlerts = array_filter($this->alerts, fn ($alert): bool => is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'critical');
+        $warningAlerts = array_filter($this->alerts, fn ($alert): bool => is_array($alert) && is_string($alert['type'] ?? null) && $alert['type'] === 'warning');
 
         return [
             'total' => count($this->alerts),

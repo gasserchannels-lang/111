@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Performance;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class CacheHitRateTest extends TestCase
 {
@@ -230,7 +230,7 @@ class CacheHitRateTest extends TestCase
         $patterns = [
             'product_*' => ['product_1', 'product_2', 'product_3'],
             'user_*' => ['user_1', 'user_2', 'user_3'],
-            'category_*' => ['category_1', 'category_2', 'category_3']
+            'category_*' => ['category_1', 'category_2', 'category_3'],
         ];
 
         // Fill cache with different patterns
@@ -336,7 +336,7 @@ class CacheHitRateTest extends TestCase
             'evictions' => 0,
             'size' => 0,
             'max_size' => 1000,
-            'ttl' => 3600 // 1 hour default
+            'ttl' => 3600, // 1 hour default
         ];
     }
 
@@ -344,6 +344,7 @@ class CacheHitRateTest extends TestCase
     {
         $cache = $this->createCache();
         $cache['max_size'] = $limit;
+
         return $cache;
     }
 
@@ -351,6 +352,7 @@ class CacheHitRateTest extends TestCase
     {
         $cache = $this->createCache();
         $cache['ttl'] = $ttl;
+
         return $cache;
     }
 
@@ -364,14 +366,17 @@ class CacheHitRateTest extends TestCase
                 unset($cache['data'][$key]);
                 $cache['misses']++;
                 $cache['size']--;
+
                 return false;
             }
 
             $cache['hits']++;
+
             return true;
         }
 
         $cache['misses']++;
+
         return false;
     }
 
@@ -385,7 +390,7 @@ class CacheHitRateTest extends TestCase
         $cache['data'][$key] = [
             'value' => $compress ? gzcompress($value) : $value,
             'timestamp' => time(),
-            'compressed' => $compress
+            'compressed' => $compress,
         ];
 
         $cache['size']++;
@@ -413,18 +418,21 @@ class CacheHitRateTest extends TestCase
     private function calculateCacheHitRate(array $cache): float
     {
         $total = $cache['hits'] + $cache['misses'];
+
         return $total > 0 ? $cache['hits'] / $total : 0;
     }
 
     private function calculateCacheMissRate(array $cache): float
     {
         $total = $cache['hits'] + $cache['misses'];
+
         return $total > 0 ? $cache['misses'] / $total : 0;
     }
 
     private function calculateCacheEvictionRate(array $cache): float
     {
         $totalOperations = $cache['hits'] + $cache['misses'];
+
         return $totalOperations > 0 ? $cache['evictions'] / $totalOperations : 0;
     }
 
@@ -440,6 +448,7 @@ class CacheHitRateTest extends TestCase
         if (isset($cache['data'][$key])) {
             return strlen($cache['data'][$key]['value']);
         }
+
         return 0;
     }
 
@@ -483,8 +492,10 @@ class CacheHitRateTest extends TestCase
     {
         if (isset($cache['data'][$key])) {
             $item = $cache['data'][$key];
+
             return $item['compressed'] ? gzuncompress($item['value']) : $item['value'];
         }
+
         return null;
     }
 }

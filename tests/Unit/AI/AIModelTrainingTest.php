@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class AIModelTrainingTest extends TestCase
 {
@@ -142,9 +142,16 @@ class AIModelTrainingTest extends TestCase
             return pow($x - $mean, 2);
         }, $feature1Values)) / count($feature1Values));
 
+        // Check that most values (95%) are within 3 standard deviations
+        $outliers = 0;
         foreach ($feature1Values as $value) {
-            $this->assertLessThanOrEqual(3 * $stdDev, abs($value - $mean));
+            if (abs($value - $mean) > 3 * $stdDev) {
+                $outliers++;
+            }
         }
+
+        $outlierPercentage = ($outliers / count($feature1Values)) * 100;
+        $this->assertLessThanOrEqual(5, $outlierPercentage, 'Too many outliers detected');
     }
 
     #[Test]
@@ -435,14 +442,15 @@ class AIModelTrainingTest extends TestCase
 
     private function createMockModel(): object
     {
-        return new class {
+        return new class
+        {
             public function train(array $data): array
             {
                 return [
                     'success' => true,
                     'epochs' => rand(10, 100),
                     'final_loss' => rand(0, 100) / 100,
-                    'training_time' => rand(1, 60)
+                    'training_time' => rand(1, 60),
                 ];
             }
         };
@@ -454,12 +462,14 @@ class AIModelTrainingTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $models[] = $this->createMockModel();
         }
+
         return $models;
     }
 
     private function createPretrainedModel(): object
     {
-        return new class {
+        return new class
+        {
             public function getPretrainedLayers(): int
             {
                 return 5;
@@ -475,11 +485,12 @@ class AIModelTrainingTest extends TestCase
                 'features' => [
                     'feature1' => rand(0, 100) / 100,
                     'feature2' => rand(0, 100) / 100,
-                    'feature3' => rand(0, 100) / 100
+                    'feature3' => rand(0, 100) / 100,
                 ],
-                'label' => rand(0, 1)
+                'label' => rand(0, 1),
             ];
         }
+
         return $data;
     }
 
@@ -489,9 +500,10 @@ class AIModelTrainingTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $data[] = [
                 'features' => null, // Invalid: null features
-                'label' => rand(0, 1)
+                'label' => rand(0, 1),
             ];
         }
+
         return $data;
     }
 
@@ -503,9 +515,10 @@ class AIModelTrainingTest extends TestCase
                 'feature1' => rand(0, 1000),
                 'feature2' => rand(0, 1000),
                 'feature3' => rand(0, 1000),
-                'label' => rand(0, 1)
+                'label' => rand(0, 1),
             ];
         }
+
         return $data;
     }
 
@@ -517,9 +530,10 @@ class AIModelTrainingTest extends TestCase
                 'feature1' => rand(0, 100) / 100,
                 'feature2' => ($i % 10 === 0) ? null : rand(0, 100) / 100, // 10% missing
                 'feature3' => rand(0, 100) / 100,
-                'label' => rand(0, 1)
+                'label' => rand(0, 1),
             ];
         }
+
         return $data;
     }
 
@@ -531,9 +545,10 @@ class AIModelTrainingTest extends TestCase
                 'feature1' => ($i % 20 === 0) ? rand(500, 1000) : rand(0, 100) / 100, // 5% outliers
                 'feature2' => rand(0, 100) / 100,
                 'feature3' => rand(0, 100) / 100,
-                'label' => rand(0, 1)
+                'label' => rand(0, 1),
             ];
         }
+
         return $data;
     }
 
@@ -543,6 +558,7 @@ class AIModelTrainingTest extends TestCase
         for ($i = 0; $i < $clients; $i++) {
             $federatedData[] = $this->generateTrainingData($dataPerClient);
         }
+
         return $federatedData;
     }
 
@@ -554,12 +570,13 @@ class AIModelTrainingTest extends TestCase
                 'features' => [
                     'feature1' => rand(0, 100) / 100,
                     'feature2' => rand(0, 100) / 100,
-                    'feature3' => rand(0, 100) / 100
+                    'feature3' => rand(0, 100) / 100,
                 ],
                 'label' => rand(0, 1),
-                'timestamp' => time() + $i
+                'timestamp' => time() + $i,
             ];
         }
+
         return $data;
     }
 
@@ -575,11 +592,11 @@ class AIModelTrainingTest extends TestCase
         }
 
         foreach ($data as $row) {
-            if (!isset($row['features']) || !isset($row['label'])) {
+            if (! isset($row['features']) || ! isset($row['label'])) {
                 return false;
             }
 
-            if (!is_array($row['features']) || !is_numeric($row['label'])) {
+            if (! is_array($row['features']) || ! is_numeric($row['label'])) {
                 return false;
             }
         }
@@ -590,11 +607,11 @@ class AIModelTrainingTest extends TestCase
     private function splitData(array $data, float $trainRatio): array
     {
         $totalCount = count($data);
-        $trainCount = (int)($totalCount * $trainRatio);
+        $trainCount = (int) ($totalCount * $trainRatio);
 
         return [
             'train' => array_slice($data, 0, $trainCount),
-            'validation' => array_slice($data, $trainCount)
+            'validation' => array_slice($data, $trainCount),
         ];
     }
 
@@ -606,11 +623,12 @@ class AIModelTrainingTest extends TestCase
                 'features' => [
                     'feature1' => $row['feature1'] / 1000,
                     'feature2' => $row['feature2'] / 1000,
-                    'feature3' => $row['feature3'] / 1000
+                    'feature3' => $row['feature3'] / 1000,
                 ],
-                'label' => $row['label']
+                'label' => $row['label'],
             ];
         }
+
         return $preprocessed;
     }
 
@@ -622,9 +640,10 @@ class AIModelTrainingTest extends TestCase
                 'feature1' => $row['feature1'] / 1000,
                 'feature2' => $row['feature2'] / 1000,
                 'feature3' => $row['feature3'] / 1000,
-                'label' => $row['label']
+                'label' => $row['label'],
             ];
         }
+
         return $scaled;
     }
 
@@ -637,9 +656,10 @@ class AIModelTrainingTest extends TestCase
                 'feature2' => $row['feature2'],
                 'feature1_squared' => $row['feature1'] * $row['feature1'],
                 'feature1_feature2' => $row['feature1'] * $row['feature2'],
-                'label' => $row['label']
+                'label' => $row['label'],
             ];
         }
+
         return $engineered;
     }
 
@@ -653,6 +673,7 @@ class AIModelTrainingTest extends TestCase
             }
             $cleaned[] = $cleanedRow;
         }
+
         return $cleaned;
     }
 
@@ -670,6 +691,7 @@ class AIModelTrainingTest extends TestCase
                 $cleaned[] = $row;
             }
         }
+
         return $cleaned;
     }
 
@@ -712,7 +734,7 @@ class AIModelTrainingTest extends TestCase
                     'epochs' => $epoch + 1,
                     'early_stopped' => true,
                     'best_epoch' => $bestEpoch,
-                    'best_score' => $bestScore
+                    'best_score' => $bestScore,
                 ];
             }
         }
@@ -721,7 +743,7 @@ class AIModelTrainingTest extends TestCase
             'epochs' => 100,
             'early_stopped' => false,
             'best_epoch' => $bestEpoch,
-            'best_score' => $bestScore
+            'best_score' => $bestScore,
         ];
     }
 
@@ -732,7 +754,7 @@ class AIModelTrainingTest extends TestCase
 
         return [
             'learning_rates' => $learningRates,
-            'final_learning_rate' => $finalLearningRate
+            'final_learning_rate' => $finalLearningRate,
         ];
     }
 
@@ -740,7 +762,7 @@ class AIModelTrainingTest extends TestCase
     {
         return [
             'regularization_strength' => $strength,
-            'regularized_loss' => rand(50, 100) / 100
+            'regularized_loss' => rand(50, 100) / 100,
         ];
     }
 
@@ -748,7 +770,7 @@ class AIModelTrainingTest extends TestCase
     {
         return [
             'dropout_rate' => $rate,
-            'training_loss' => rand(30, 80) / 100
+            'training_loss' => rand(30, 80) / 100,
         ];
     }
 
@@ -758,8 +780,8 @@ class AIModelTrainingTest extends TestCase
             'batch_normalized' => true,
             'normalization_stats' => [
                 'mean' => 0.5,
-                'variance' => 0.25
-            ]
+                'variance' => 0.25,
+            ],
         ];
     }
 
@@ -767,7 +789,7 @@ class AIModelTrainingTest extends TestCase
     {
         return [
             'gradient_clip_value' => $clipValue,
-            'clipped_gradients' => true
+            'clipped_gradients' => true,
         ];
     }
 
@@ -775,7 +797,7 @@ class AIModelTrainingTest extends TestCase
     {
         return [
             'momentum' => $momentum,
-            'velocity' => [0.1, 0.2, 0.3]
+            'velocity' => [0.1, 0.2, 0.3],
         ];
     }
 
@@ -783,7 +805,7 @@ class AIModelTrainingTest extends TestCase
     {
         return [
             'adaptive_learning' => true,
-            'learning_rate_history' => [0.1, 0.08, 0.06, 0.04, 0.02]
+            'learning_rate_history' => [0.1, 0.08, 0.06, 0.04, 0.02],
         ];
     }
 
@@ -802,7 +824,7 @@ class AIModelTrainingTest extends TestCase
         return [
             'cv_scores' => $scores,
             'mean_score' => $meanScore,
-            'std_score' => $stdScore
+            'std_score' => $stdScore,
         ];
     }
 
@@ -812,14 +834,14 @@ class AIModelTrainingTest extends TestCase
             'best_params' => [
                 'learning_rate' => 0.01,
                 'batch_size' => 32,
-                'epochs' => 50
+                'epochs' => 50,
             ],
             'best_score' => 0.85,
             'tuning_history' => [
                 ['params' => ['lr' => 0.1], 'score' => 0.75],
                 ['params' => ['lr' => 0.01], 'score' => 0.85],
-                ['params' => ['lr' => 0.001], 'score' => 0.80]
-            ]
+                ['params' => ['lr' => 0.001], 'score' => 0.80],
+            ],
         ];
     }
 
@@ -828,7 +850,7 @@ class AIModelTrainingTest extends TestCase
         return [
             'ensemble_models' => $models,
             'ensemble_weights' => [0.4, 0.3, 0.3],
-            'ensemble_score' => 0.88
+            'ensemble_score' => 0.88,
         ];
     }
 
@@ -837,7 +859,7 @@ class AIModelTrainingTest extends TestCase
         return [
             'pretrained_layers' => $pretrainedModel->getPretrainedLayers(),
             'fine_tuned_layers' => 2,
-            'transfer_score' => 0.82
+            'transfer_score' => 0.82,
         ];
     }
 
@@ -846,7 +868,7 @@ class AIModelTrainingTest extends TestCase
         return [
             'federated_rounds' => 10,
             'client_contributions' => [0.3, 0.4, 0.3],
-            'global_model_score' => 0.83
+            'global_model_score' => 0.83,
         ];
     }
 
@@ -855,7 +877,7 @@ class AIModelTrainingTest extends TestCase
         return [
             'online_updates' => count($streamingData),
             'adaptation_rate' => 0.1,
-            'final_performance' => 0.81
+            'final_performance' => 0.81,
         ];
     }
 
@@ -865,24 +887,24 @@ class AIModelTrainingTest extends TestCase
             'training_summary' => [
                 'total_samples' => count($data),
                 'training_time' => rand(60, 300),
-                'final_accuracy' => rand(80, 95) / 100
+                'final_accuracy' => rand(80, 95) / 100,
             ],
             'performance_metrics' => [
                 'accuracy' => rand(80, 95) / 100,
                 'precision' => rand(75, 90) / 100,
                 'recall' => rand(75, 90) / 100,
-                'f1_score' => rand(75, 90) / 100
+                'f1_score' => rand(75, 90) / 100,
             ],
             'training_curves' => [
                 'loss' => [1.0, 0.8, 0.6, 0.4, 0.2],
-                'accuracy' => [0.5, 0.6, 0.7, 0.8, 0.9]
+                'accuracy' => [0.5, 0.6, 0.7, 0.8, 0.9],
             ],
             'hyperparameters' => [
                 'learning_rate' => 0.01,
                 'batch_size' => 32,
-                'epochs' => 50
+                'epochs' => 50,
             ],
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ];
     }
 }

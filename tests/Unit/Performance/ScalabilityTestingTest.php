@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Performance;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ScalabilityTestingTest extends TestCase
 {

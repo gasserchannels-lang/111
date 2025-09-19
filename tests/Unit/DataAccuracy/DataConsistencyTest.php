@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataConsistencyTest extends TestCase
 {
@@ -12,12 +12,12 @@ class DataConsistencyTest extends TestCase
     {
         $source1Data = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00]
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
         ];
 
         $source2Data = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00]
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
         ];
 
         $this->assertTrue($this->validateDataConsistencyAcrossSources($source1Data, $source2Data));
@@ -28,12 +28,12 @@ class DataConsistencyTest extends TestCase
     {
         $source1Data = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00]
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
         ];
 
         $source2Data = [
             ['id' => 1, 'name' => 'Product A', 'price' => 105.00], // Different price
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00]
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
         ];
 
         $this->assertFalse($this->validateDataConsistencyAcrossSources($source1Data, $source2Data));
@@ -44,12 +44,12 @@ class DataConsistencyTest extends TestCase
     {
         $consistentData = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'currency' => 'USD'],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'currency' => 'USD']
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'currency' => 'USD'],
         ];
 
         $inconsistentData = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'currency' => 'USD'],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'currency' => 'EUR']
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'currency' => 'EUR'],
         ];
 
         $this->assertTrue($this->validateCurrencyConsistency($consistentData));
@@ -61,12 +61,12 @@ class DataConsistencyTest extends TestCase
     {
         $consistentDates = [
             ['id' => 1, 'created_at' => '2024-01-15 10:30:00'],
-            ['id' => 2, 'created_at' => '2024-01-16 14:45:00']
+            ['id' => 2, 'created_at' => '2024-01-16 14:45:00'],
         ];
 
         $inconsistentDates = [
             ['id' => 1, 'created_at' => '2024-01-15 10:30:00'],
-            ['id' => 2, 'created_at' => '15/01/2024 14:45:00'] // Different format
+            ['id' => 2, 'created_at' => '15/01/2024 14:45:00'], // Different format
         ];
 
         $this->assertTrue($this->validateDateFormatConsistency($consistentDates, 'created_at'));
@@ -79,13 +79,13 @@ class DataConsistencyTest extends TestCase
         $consistentNames = [
             ['id' => 1, 'product_name' => 'Laptop Computer'],
             ['id' => 2, 'product_name' => 'Wireless Mouse'],
-            ['id' => 3, 'product_name' => 'USB Cable']
+            ['id' => 3, 'product_name' => 'USB Cable'],
         ];
 
         $inconsistentNames = [
             ['id' => 1, 'product_name' => 'Laptop Computer'],
             ['id' => 2, 'product_name' => 'wireless_mouse'], // Different separator
-            ['id' => 3, 'product_name' => 'USB123CABLE'] // Different format with numbers
+            ['id' => 3, 'product_name' => 'USB123CABLE'], // Different format with numbers
         ];
 
         $this->assertTrue($this->validateNamingConventionConsistency($consistentNames, 'product_name'));
@@ -97,12 +97,12 @@ class DataConsistencyTest extends TestCase
     {
         $consistentTypes = [
             ['id' => 1, 'price' => 100.00, 'quantity' => 5],
-            ['id' => 2, 'price' => 200.50, 'quantity' => 10]
+            ['id' => 2, 'price' => 200.50, 'quantity' => 10],
         ];
 
         $inconsistentTypes = [
             ['id' => 1, 'price' => 100.00, 'quantity' => 5],
-            ['id' => 2, 'price' => '200.50', 'quantity' => '10'] // String instead of numeric
+            ['id' => 2, 'price' => '200.50', 'quantity' => '10'], // String instead of numeric
         ];
 
         $this->assertTrue($this->validateDataTypeConsistency($consistentTypes));
@@ -115,17 +115,17 @@ class DataConsistencyTest extends TestCase
         $referenceData = [
             'categories' => [
                 ['id' => 1, 'name' => 'Electronics'],
-                ['id' => 2, 'name' => 'Clothing']
+                ['id' => 2, 'name' => 'Clothing'],
             ],
             'statuses' => [
                 ['id' => 1, 'name' => 'Active'],
-                ['id' => 2, 'name' => 'Inactive']
-            ]
+                ['id' => 2, 'name' => 'Inactive'],
+            ],
         ];
 
         $transactionData = [
             ['id' => 1, 'category_id' => 1, 'status_id' => 1],
-            ['id' => 2, 'category_id' => 2, 'status_id' => 1]
+            ['id' => 2, 'category_id' => 2, 'status_id' => 1],
         ];
 
         $this->assertTrue($this->validateReferenceDataConsistency($referenceData, $transactionData));
@@ -136,12 +136,12 @@ class DataConsistencyTest extends TestCase
     {
         $consistentCalculations = [
             ['id' => 1, 'price' => 100.00, 'tax_rate' => 0.10, 'tax_amount' => 10.00, 'total' => 110.00],
-            ['id' => 2, 'price' => 200.00, 'tax_rate' => 0.15, 'tax_amount' => 30.00, 'total' => 230.00]
+            ['id' => 2, 'price' => 200.00, 'tax_rate' => 0.15, 'tax_amount' => 30.00, 'total' => 230.00],
         ];
 
         $inconsistentCalculations = [
             ['id' => 1, 'price' => 100.00, 'tax_rate' => 0.10, 'tax_amount' => 10.00, 'total' => 110.00],
-            ['id' => 2, 'price' => 200.00, 'tax_rate' => 0.15, 'tax_amount' => 30.00, 'total' => 250.00] // Wrong total
+            ['id' => 2, 'price' => 200.00, 'tax_rate' => 0.15, 'tax_amount' => 30.00, 'total' => 250.00], // Wrong total
         ];
 
         $this->assertTrue($this->validateCalculationConsistency($consistentCalculations));
@@ -156,13 +156,13 @@ class DataConsistencyTest extends TestCase
         $consistentEnumData = [
             ['id' => 1, 'status' => 'Active'],
             ['id' => 2, 'status' => 'Inactive'],
-            ['id' => 3, 'status' => 'Pending']
+            ['id' => 3, 'status' => 'Pending'],
         ];
 
         $inconsistentEnumData = [
             ['id' => 1, 'status' => 'Active'],
             ['id' => 2, 'status' => 'Inactive'],
-            ['id' => 3, 'status' => 'InvalidStatus'] // Not in valid values
+            ['id' => 3, 'status' => 'InvalidStatus'], // Not in valid values
         ];
 
         $this->assertTrue($this->validateEnumValueConsistency($consistentEnumData, 'status', $validEnumValues));
@@ -174,13 +174,13 @@ class DataConsistencyTest extends TestCase
     {
         $parentData = [
             ['id' => 1, 'name' => 'Category A'],
-            ['id' => 2, 'name' => 'Category B']
+            ['id' => 2, 'name' => 'Category B'],
         ];
 
         $childData = [
             ['id' => 1, 'name' => 'Product 1', 'category_id' => 1],
             ['id' => 2, 'name' => 'Product 2', 'category_id' => 2],
-            ['id' => 3, 'name' => 'Product 3', 'category_id' => 1]
+            ['id' => 3, 'name' => 'Product 3', 'category_id' => 1],
         ];
 
         $this->assertTrue($this->validateRelationshipConsistency($parentData, $childData, 'id', 'category_id'));
@@ -191,7 +191,7 @@ class DataConsistencyTest extends TestCase
     {
         $temporalData = [
             ['id' => 1, 'created_at' => '2024-01-15 10:00:00', 'updated_at' => '2024-01-15 11:00:00'],
-            ['id' => 2, 'created_at' => '2024-01-16 09:00:00', 'updated_at' => '2024-01-16 10:00:00']
+            ['id' => 2, 'created_at' => '2024-01-16 09:00:00', 'updated_at' => '2024-01-16 10:00:00'],
         ];
 
         $this->assertTrue($this->validateTemporalConsistency($temporalData));
@@ -202,7 +202,7 @@ class DataConsistencyTest extends TestCase
     {
         $inconsistentTemporalData = [
             ['id' => 1, 'created_at' => '2024-01-15 10:00:00', 'updated_at' => '2024-01-15 09:00:00'], // updated before created
-            ['id' => 2, 'created_at' => '2024-01-16 09:00:00', 'updated_at' => '2024-01-16 10:00:00']
+            ['id' => 2, 'created_at' => '2024-01-16 09:00:00', 'updated_at' => '2024-01-16 10:00:00'],
         ];
 
         $this->assertFalse($this->validateTemporalConsistency($inconsistentTemporalData));
@@ -214,17 +214,17 @@ class DataConsistencyTest extends TestCase
         $businessRules = [
             'min_order_amount' => 50.00,
             'max_discount_percentage' => 20.0,
-            'required_fields' => ['name', 'email', 'phone']
+            'required_fields' => ['name', 'email', 'phone'],
         ];
 
         $consistentData = [
             ['id' => 1, 'order_amount' => 100.00, 'discount_percentage' => 10.0, 'name' => 'John', 'email' => 'john@example.com', 'phone' => '123-456-7890'],
-            ['id' => 2, 'order_amount' => 75.00, 'discount_percentage' => 15.0, 'name' => 'Jane', 'email' => 'jane@example.com', 'phone' => '987-654-3210']
+            ['id' => 2, 'order_amount' => 75.00, 'discount_percentage' => 15.0, 'name' => 'Jane', 'email' => 'jane@example.com', 'phone' => '987-654-3210'],
         ];
 
         $inconsistentData = [
             ['id' => 1, 'order_amount' => 25.00, 'discount_percentage' => 10.0, 'name' => 'John', 'email' => 'john@example.com', 'phone' => '123-456-7890'], // Below min order
-            ['id' => 2, 'order_amount' => 75.00, 'discount_percentage' => 25.0, 'name' => 'Jane', 'email' => 'jane@example.com', 'phone' => '987-654-3210'] // Exceeds max discount
+            ['id' => 2, 'order_amount' => 75.00, 'discount_percentage' => 25.0, 'name' => 'Jane', 'email' => 'jane@example.com', 'phone' => '987-654-3210'], // Exceeds max discount
         ];
 
         $this->assertTrue($this->validateBusinessRuleConsistency($consistentData, $businessRules));
@@ -237,7 +237,7 @@ class DataConsistencyTest extends TestCase
         $versionedData = [
             ['id' => 1, 'version' => 1, 'data' => 'Initial version'],
             ['id' => 1, 'version' => 2, 'data' => 'Updated version'],
-            ['id' => 1, 'version' => 3, 'data' => 'Latest version']
+            ['id' => 1, 'version' => 3, 'data' => 'Latest version'],
         ];
 
         $this->assertTrue($this->validateDataVersionConsistency($versionedData));
@@ -248,13 +248,13 @@ class DataConsistencyTest extends TestCase
     {
         $orders = [
             ['id' => 1, 'customer_id' => 1, 'total_amount' => 150.00],
-            ['id' => 2, 'customer_id' => 2, 'total_amount' => 200.00]
+            ['id' => 2, 'customer_id' => 2, 'total_amount' => 200.00],
         ];
 
         $orderItems = [
             ['id' => 1, 'order_id' => 1, 'quantity' => 2, 'unit_price' => 50.00, 'total_price' => 100.00],
             ['id' => 2, 'order_id' => 1, 'quantity' => 1, 'unit_price' => 50.00, 'total_price' => 50.00],
-            ['id' => 3, 'order_id' => 2, 'quantity' => 1, 'unit_price' => 200.00, 'total_price' => 200.00]
+            ['id' => 3, 'order_id' => 2, 'quantity' => 1, 'unit_price' => 200.00, 'total_price' => 200.00],
         ];
 
         $this->assertTrue($this->validateCrossTableConsistency($orders, $orderItems));
@@ -265,12 +265,12 @@ class DataConsistencyTest extends TestCase
     {
         $masterData = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'last_sync' => '2024-01-15 10:00:00'],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'last_sync' => '2024-01-15 10:00:00']
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'last_sync' => '2024-01-15 10:00:00'],
         ];
 
         $replicaData = [
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'last_sync' => '2024-01-15 10:00:00'],
-            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'last_sync' => '2024-01-15 10:00:00']
+            ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'last_sync' => '2024-01-15 10:00:00'],
         ];
 
         $this->assertTrue($this->validateDataSynchronizationConsistency($masterData, $replicaData));
@@ -283,14 +283,14 @@ class DataConsistencyTest extends TestCase
         }
 
         foreach ($source1Data as $index => $record1) {
-            if (!isset($source2Data[$index])) {
+            if (! isset($source2Data[$index])) {
                 return false;
             }
 
             $record2 = $source2Data[$index];
 
             foreach ($record1 as $key => $value) {
-                if (!array_key_exists($key, $record2) || $record2[$key] !== $value) {
+                if (! array_key_exists($key, $record2) || $record2[$key] !== $value) {
                     return false;
                 }
             }
@@ -302,6 +302,7 @@ class DataConsistencyTest extends TestCase
     private function validateCurrencyConsistency(array $data): bool
     {
         $currencies = array_column($data, 'currency');
+
         return count(array_unique($currencies)) === 1;
     }
 
@@ -312,7 +313,7 @@ class DataConsistencyTest extends TestCase
         foreach ($data as $record) {
             if (isset($record[$dateField])) {
                 $date = \DateTime::createFromFormat($expectedFormat, $record[$dateField]);
-                if (!$date || $date->format($expectedFormat) !== $record[$dateField]) {
+                if (! $date || $date->format($expectedFormat) !== $record[$dateField]) {
                     return false;
                 }
             }
@@ -353,7 +354,7 @@ class DataConsistencyTest extends TestCase
 
         foreach ($data as $record) {
             foreach ($record as $field => $value) {
-                if (!isset($fieldTypes[$field])) {
+                if (! isset($fieldTypes[$field])) {
                     $fieldTypes[$field] = gettype($value);
                 } elseif ($fieldTypes[$field] !== gettype($value)) {
                     return false;
@@ -369,14 +370,14 @@ class DataConsistencyTest extends TestCase
         foreach ($transactionData as $record) {
             if (isset($record['category_id'])) {
                 $categoryIds = array_column($referenceData['categories'], 'id');
-                if (!in_array($record['category_id'], $categoryIds)) {
+                if (! in_array($record['category_id'], $categoryIds)) {
                     return false;
                 }
             }
 
             if (isset($record['status_id'])) {
                 $statusIds = array_column($referenceData['statuses'], 'id');
-                if (!in_array($record['status_id'], $statusIds)) {
+                if (! in_array($record['status_id'], $statusIds)) {
                     return false;
                 }
             }
@@ -408,7 +409,7 @@ class DataConsistencyTest extends TestCase
     private function validateEnumValueConsistency(array $data, string $field, array $validValues): bool
     {
         foreach ($data as $record) {
-            if (isset($record[$field]) && !in_array($record[$field], $validValues)) {
+            if (isset($record[$field]) && ! in_array($record[$field], $validValues)) {
                 return false;
             }
         }
@@ -421,7 +422,7 @@ class DataConsistencyTest extends TestCase
         $parentIds = array_column($parentData, $parentKey);
 
         foreach ($childData as $record) {
-            if (isset($record[$foreignKey]) && !in_array($record[$foreignKey], $parentIds)) {
+            if (isset($record[$foreignKey]) && ! in_array($record[$foreignKey], $parentIds)) {
                 return false;
             }
         }
@@ -465,7 +466,7 @@ class DataConsistencyTest extends TestCase
             // Check required fields
             if (isset($businessRules['required_fields'])) {
                 foreach ($businessRules['required_fields'] as $field) {
-                    if (!isset($record[$field]) || empty($record[$field])) {
+                    if (! isset($record[$field]) || empty($record[$field])) {
                         return false;
                     }
                 }
@@ -494,7 +495,7 @@ class DataConsistencyTest extends TestCase
     {
         foreach ($orders as $order) {
             $orderId = $order['id'];
-            $orderItemsForOrder = array_filter($orderItems, fn($item) => $item['order_id'] === $orderId);
+            $orderItemsForOrder = array_filter($orderItems, fn ($item) => $item['order_id'] === $orderId);
 
             $calculatedTotal = 0;
             foreach ($orderItemsForOrder as $item) {
@@ -516,7 +517,7 @@ class DataConsistencyTest extends TestCase
         }
 
         foreach ($masterData as $index => $masterRecord) {
-            if (!isset($replicaData[$index])) {
+            if (! isset($replicaData[$index])) {
                 return false;
             }
 
@@ -524,7 +525,7 @@ class DataConsistencyTest extends TestCase
 
             // Compare all fields except last_sync
             foreach ($masterRecord as $key => $value) {
-                if ($key !== 'last_sync' && (!array_key_exists($key, $replicaRecord) || $replicaRecord[$key] !== $value)) {
+                if ($key !== 'last_sync' && (! array_key_exists($key, $replicaRecord) || $replicaRecord[$key] !== $value)) {
                     return false;
                 }
             }

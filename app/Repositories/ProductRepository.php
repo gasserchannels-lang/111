@@ -66,7 +66,7 @@ class ProductRepository
         // Cache key includes version to allow mass cache invalidation
         $cacheKey = "product:slug:{$slug}:v1";
 
-        return Cache::remember($cacheKey, now()->addHours(1), fn() => Product::query()
+        return Cache::remember($cacheKey, now()->addHours(1), fn () => Product::query()
             ->with(['category', 'brand', 'reviews'])
             ->where('slug', $slug)
             ->where('is_active', true)
@@ -92,7 +92,7 @@ class ProductRepository
         $cacheKey = "product:{$product->id}:related:limit:{$limit}:v1";
         $cacheDuration = now()->addHours(1);
 
-        return Cache::remember($cacheKey, $cacheDuration, fn() => Product::query()
+        return Cache::remember($cacheKey, $cacheDuration, fn () => Product::query()
             ->select(['id', 'name', 'slug', 'price', 'image', 'category_id'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
@@ -131,9 +131,9 @@ class ProductRepository
         }
 
         // Generate cache key based on parameters
-        $queryHash = md5($query ?: '');
+        $queryHash = hash('sha256', $query ?: '');
         $filtersJson = json_encode($filters);
-        $filtersHash = md5(is_string($filtersJson) ? $filtersJson : '');
+        $filtersHash = hash('sha256', is_string($filtersJson) ? $filtersJson : '');
         $cacheKey = sprintf(
             'products:search:%s:%s:%d:%d',
             $queryHash,

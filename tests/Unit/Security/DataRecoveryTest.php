@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataRecoveryTest extends TestCase
 {
@@ -13,7 +13,7 @@ class DataRecoveryTest extends TestCase
         $corruptionData = [
             'corrupted_tables' => ['users', 'products'],
             'corruption_type' => 'index_corruption',
-            'backup_available' => true
+            'backup_available' => true,
         ];
 
         $recoveryResult = $this->recoverFromCorruption($corruptionData);
@@ -30,7 +30,7 @@ class DataRecoveryTest extends TestCase
         $dataLoss = [
             'lost_tables' => ['orders', 'order_items'],
             'loss_type' => 'accidental_deletion',
-            'backup_date' => '2024-01-15 10:30:00'
+            'backup_date' => '2024-01-15 10:30:00',
         ];
 
         $recoveryResult = $this->recoverFromDataLoss($dataLoss);
@@ -47,7 +47,7 @@ class DataRecoveryTest extends TestCase
         $systemFailure = [
             'failure_type' => 'hardware_failure',
             'affected_components' => ['database', 'storage'],
-            'recovery_point' => '2024-01-15 14:00:00'
+            'recovery_point' => '2024-01-15 14:00:00',
         ];
 
         $recoveryResult = $this->recoverFromSystemFailure($systemFailure);
@@ -64,7 +64,7 @@ class DataRecoveryTest extends TestCase
         $attackData = [
             'encrypted_files' => ['database.sql', 'backups/'],
             'ransom_note' => 'Your files are encrypted',
-            'backup_available' => true
+            'backup_available' => true,
         ];
 
         $recoveryResult = $this->recoverFromRansomware($attackData);
@@ -81,7 +81,7 @@ class DataRecoveryTest extends TestCase
         $networkFailure = [
             'failure_type' => 'network_partition',
             'affected_services' => ['database', 'api'],
-            'recovery_time' => '5 minutes'
+            'recovery_time' => '5 minutes',
         ];
 
         $recoveryResult = $this->recoverFromNetworkFailure($networkFailure);
@@ -98,7 +98,7 @@ class DataRecoveryTest extends TestCase
         $powerOutage = [
             'outage_duration' => '2 hours',
             'affected_systems' => ['database', 'storage', 'servers'],
-            'ups_available' => true
+            'ups_available' => true,
         ];
 
         $recoveryResult = $this->recoverFromPowerOutage($powerOutage);
@@ -115,7 +115,7 @@ class DataRecoveryTest extends TestCase
         $crashData = [
             'crashed_process' => 'database_engine',
             'crash_reason' => 'memory_overflow',
-            'recovery_point' => '2024-01-15 16:30:00'
+            'recovery_point' => '2024-01-15 16:30:00',
         ];
 
         $recoveryResult = $this->recoverFromSoftwareCrash($crashData);
@@ -132,7 +132,7 @@ class DataRecoveryTest extends TestCase
         $errorData = [
             'error_type' => 'accidental_deletion',
             'affected_data' => 'user_accounts',
-            'error_time' => '2024-01-15 18:00:00'
+            'error_time' => '2024-01-15 18:00:00',
         ];
 
         $recoveryResult = $this->recoverFromHumanError($errorData);
@@ -149,7 +149,7 @@ class DataRecoveryTest extends TestCase
         $attackData = [
             'attack_type' => 'sql_injection',
             'affected_tables' => ['users', 'orders'],
-            'attack_time' => '2024-01-15 20:00:00'
+            'attack_time' => '2024-01-15 20:00:00',
         ];
 
         $recoveryResult = $this->recoverFromCyberAttack($attackData);
@@ -166,7 +166,7 @@ class DataRecoveryTest extends TestCase
         $disasterData = [
             'disaster_type' => 'earthquake',
             'affected_facility' => 'primary_data_center',
-            'backup_location' => 'secondary_data_center'
+            'backup_location' => 'secondary_data_center',
         ];
 
         $recoveryResult = $this->recoverFromNaturalDisaster($disasterData);
@@ -183,7 +183,7 @@ class DataRecoveryTest extends TestCase
         $hardwareFailure = [
             'failed_component' => 'storage_drive',
             'failure_type' => 'mechanical_failure',
-            'replacement_available' => true
+            'replacement_available' => true,
         ];
 
         $recoveryResult = $this->recoverFromHardwareFailure($hardwareFailure);
@@ -200,7 +200,7 @@ class DataRecoveryTest extends TestCase
         $configError = [
             'error_type' => 'incorrect_database_config',
             'affected_services' => ['database', 'api'],
-            'error_time' => '2024-01-15 22:00:00'
+            'error_time' => '2024-01-15 22:00:00',
         ];
 
         $recoveryResult = $this->recoverFromConfigError($configError);
@@ -217,7 +217,7 @@ class DataRecoveryTest extends TestCase
         $corruptionData = [
             'corruption_type' => 'bit_flip',
             'affected_tables' => ['products', 'categories'],
-            'corruption_extent' => 'partial'
+            'corruption_extent' => 'partial',
         ];
 
         $recoveryResult = $this->recoverFromDataCorruption($corruptionData);
@@ -234,7 +234,7 @@ class DataRecoveryTest extends TestCase
         $outageData = [
             'service_name' => 'database_service',
             'outage_duration' => '1 hour',
-            'root_cause' => 'resource_exhaustion'
+            'root_cause' => 'resource_exhaustion',
         ];
 
         $recoveryResult = $this->recoverFromServiceOutage($outageData);
@@ -251,7 +251,7 @@ class DataRecoveryTest extends TestCase
         $breachData = [
             'breach_type' => 'unauthorized_access',
             'affected_systems' => ['database', 'user_management'],
-            'breach_time' => '2024-01-15 23:00:00'
+            'breach_time' => '2024-01-15 23:00:00',
         ];
 
         $recoveryResult = $this->recoverFromSecurityBreach($breachData);
@@ -268,7 +268,7 @@ class DataRecoveryTest extends TestCase
         $backupCorruption = [
             'corrupted_backup' => 'backup_20240115_020000.sql',
             'corruption_type' => 'file_corruption',
-            'alternative_backup' => 'backup_20240114_020000.sql'
+            'alternative_backup' => 'backup_20240114_020000.sql',
         ];
 
         $recoveryResult = $this->recoverFromBackupCorruption($backupCorruption);
@@ -285,7 +285,7 @@ class DataRecoveryTest extends TestCase
         $partitionData = [
             'partition_type' => 'split_brain',
             'affected_nodes' => ['node1', 'node2'],
-            'recovery_time' => '10 minutes'
+            'recovery_time' => '10 minutes',
         ];
 
         $recoveryResult = $this->recoverFromNetworkPartition($partitionData);
@@ -302,7 +302,7 @@ class DataRecoveryTest extends TestCase
         $crashData = [
             'crashed_application' => 'web_application',
             'crash_reason' => 'unhandled_exception',
-            'recovery_point' => '2024-01-15 24:00:00'
+            'recovery_point' => '2024-01-15 24:00:00',
         ];
 
         $recoveryResult = $this->recoverFromApplicationCrash($crashData);
@@ -319,7 +319,7 @@ class DataRecoveryTest extends TestCase
         $diskFailure = [
             'failed_disk' => 'disk_1',
             'failure_type' => 'bad_sectors',
-            'raid_level' => 'RAID5'
+            'raid_level' => 'RAID5',
         ];
 
         $recoveryResult = $this->recoverFromDiskFailure($diskFailure);
@@ -336,7 +336,7 @@ class DataRecoveryTest extends TestCase
         $memoryCorruption = [
             'corruption_type' => 'buffer_overflow',
             'affected_process' => 'database_engine',
-            'corruption_extent' => 'critical'
+            'corruption_extent' => 'critical',
         ];
 
         $recoveryResult = $this->recoverFromMemoryCorruption($memoryCorruption);
@@ -353,7 +353,7 @@ class DataRecoveryTest extends TestCase
         $attackData = [
             'attack_type' => 'ddos',
             'target_services' => ['database', 'api', 'web'],
-            'attack_duration' => '2 hours'
+            'attack_duration' => '2 hours',
         ];
 
         $recoveryResult = $this->recoverFromNetworkAttack($attackData);
@@ -370,7 +370,7 @@ class DataRecoveryTest extends TestCase
         $compromiseData = [
             'compromise_type' => 'rootkit_installation',
             'affected_systems' => ['database_server', 'web_server'],
-            'compromise_time' => '2024-01-15 25:00:00'
+            'compromise_time' => '2024-01-15 25:00:00',
         ];
 
         $recoveryResult = $this->recoverFromSystemCompromise($compromiseData);
@@ -388,7 +388,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'backup_restoration',
             'recovered_tables' => $data['corrupted_tables'],
             'recovery_time' => '30 minutes',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -399,7 +399,7 @@ class DataRecoveryTest extends TestCase
             'restored_records' => 1000,
             'recovery_source' => 'backup_restoration',
             'data_integrity' => 'verified',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -410,7 +410,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'failover_activation',
             'recovery_duration' => '1 hour',
             'system_status' => 'operational',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -421,7 +421,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'backup_restoration',
             'decrypted_files' => count($data['encrypted_files']),
             'security_measures' => ['antivirus_update', 'firewall_enhancement'],
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -432,7 +432,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'network_restoration',
             'network_status' => 'restored',
             'service_restoration' => $data['affected_services'],
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -443,7 +443,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'ups_activation',
             'system_restart' => 'completed',
             'data_consistency' => 'verified',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -454,7 +454,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'process_restart',
             'process_restart' => 'completed',
             'memory_cleanup' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -465,7 +465,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'backup_restoration',
             'restored_data' => $data['affected_data'],
             'prevention_measures' => ['access_control', 'audit_logging'],
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -476,7 +476,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'security_restoration',
             'security_patches' => 'applied',
             'monitoring_enhancement' => 'implemented',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -487,7 +487,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'disaster_recovery',
             'failover_activation' => 'completed',
             'recovery_time' => '4 hours',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -498,7 +498,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'hardware_replacement',
             'hardware_replacement' => 'completed',
             'data_restoration' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -509,7 +509,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'config_restoration',
             'config_restoration' => 'completed',
             'service_restart' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -520,7 +520,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'data_repair',
             'data_repair' => 'completed',
             'integrity_verification' => 'passed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -531,7 +531,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'service_restart',
             'service_restart' => 'completed',
             'resource_optimization' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -542,7 +542,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'security_restoration',
             'security_restoration' => 'completed',
             'access_control' => 'restored',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -553,7 +553,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'alternative_backup',
             'alternative_backup_used' => $data['alternative_backup'],
             'data_restoration' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -564,7 +564,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'consensus_restoration',
             'consensus_restoration' => 'completed',
             'data_synchronization' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -575,7 +575,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'application_restart',
             'application_restart' => 'completed',
             'error_handling' => 'enhanced',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -586,7 +586,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'raid_rebuild',
             'raid_rebuild' => 'completed',
             'data_reconstruction' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -597,7 +597,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'memory_cleanup',
             'memory_cleanup' => 'completed',
             'process_restart' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -608,7 +608,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'traffic_filtering',
             'traffic_filtering' => 'completed',
             'service_restoration' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -619,7 +619,7 @@ class DataRecoveryTest extends TestCase
             'recovery_method' => 'system_rebuild',
             'malware_removal' => 'completed',
             'system_rebuild' => 'completed',
-            'recovery_date' => date('Y-m-d H:i:s')
+            'recovery_date' => date('Y-m-d H:i:s'),
         ];
     }
 }

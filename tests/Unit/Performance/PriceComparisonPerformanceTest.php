@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performance;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class PriceComparisonPerformanceTest extends TestCase
@@ -98,7 +98,7 @@ class PriceComparisonPerformanceTest extends TestCase
     public function it_caches_price_comparison_results(): void
     {
         $products = $this->generateTestProducts(100);
-        $cacheKey = 'price_comparison_' . md5(serialize($products));
+        $cacheKey = 'price_comparison_'.md5(serialize($products));
 
         // First call - should populate cache
         $startTime = microtime(true);
@@ -160,7 +160,7 @@ class PriceComparisonPerformanceTest extends TestCase
         $filters = [
             'min_price' => 100.00,
             'max_price' => 500.00,
-            'brand' => 'Apple'
+            'brand' => 'Apple',
         ];
 
         $startTime = microtime(true);
@@ -219,9 +219,9 @@ class PriceComparisonPerformanceTest extends TestCase
     {
         $products = $this->generateTestProducts(1000);
         $operations = [
-            'compare' => fn($p) => $this->comparePrices($p),
-            'sort' => fn($p) => $this->sortProductsByPrice($p),
-            'filter' => fn($p) => $this->filterProducts($p, ['min_price' => 100])
+            'compare' => fn ($p) => $this->comparePrices($p),
+            'sort' => fn ($p) => $this->sortProductsByPrice($p),
+            'filter' => fn ($p) => $this->filterProducts($p, ['min_price' => 100]),
         ];
 
         $startTime = microtime(true);
@@ -244,10 +244,10 @@ class PriceComparisonPerformanceTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $products[] = [
                 'id' => $i + 1,
-                'name' => 'Product ' . ($i + 1),
+                'name' => 'Product '.($i + 1),
                 'brand' => $brands[array_rand($brands)],
                 'price' => rand(50, 2000) + (rand(0, 99) / 100),
-                'category' => 'Electronics'
+                'category' => 'Electronics',
             ];
         }
 
@@ -263,7 +263,7 @@ class PriceComparisonPerformanceTest extends TestCase
                 'product_id' => $product['id'],
                 'price' => $product['price'],
                 'is_competitive' => $product['price'] < 1000,
-                'price_tier' => $this->getPriceTier($product['price'])
+                'price_tier' => $this->getPriceTier($product['price']),
             ];
         }
 
@@ -272,9 +272,16 @@ class PriceComparisonPerformanceTest extends TestCase
 
     private function getPriceTier(float $price): string
     {
-        if ($price < 100) return 'budget';
-        if ($price < 500) return 'mid-range';
-        if ($price < 1000) return 'premium';
+        if ($price < 100) {
+            return 'budget';
+        }
+        if ($price < 500) {
+            return 'mid-range';
+        }
+        if ($price < 1000) {
+            return 'premium';
+        }
+
         return 'luxury';
     }
 
@@ -282,6 +289,7 @@ class PriceComparisonPerformanceTest extends TestCase
     {
         // Simulate database query with minimal delay
         usleep(1000); // 1ms delay
+
         return $this->generateTestProducts(100);
     }
 
@@ -302,7 +310,8 @@ class PriceComparisonPerformanceTest extends TestCase
 
     private function sortProductsByPrice(array $products): array
     {
-        usort($products, fn($a, $b) => $b['price'] <=> $a['price']);
+        usort($products, fn ($a, $b) => $b['price'] <=> $a['price']);
+
         return $products;
     }
 
@@ -318,6 +327,7 @@ class PriceComparisonPerformanceTest extends TestCase
             if (isset($filters['brand']) && $product['brand'] !== $filters['brand']) {
                 return false;
             }
+
             return true;
         });
     }
@@ -325,6 +335,7 @@ class PriceComparisonPerformanceTest extends TestCase
     private function paginateProducts(array $products, int $page, int $perPage): array
     {
         $offset = ($page - 1) * $perPage;
+
         return array_slice($products, $offset, $perPage);
     }
 

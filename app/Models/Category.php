@@ -100,7 +100,7 @@ class Category extends Model
     /**
      * Parent category relationship.
      *
-     * @return BelongsTo<Category, $this>
+     * @return BelongsTo<Category, Category>
      */
     public function parent(): BelongsTo
     {
@@ -110,7 +110,7 @@ class Category extends Model
     /**
      * Children categories relationship.
      *
-     * @return HasMany<Category, $this>
+     * @return HasMany<Category, Category>
      */
     public function children(): HasMany
     {
@@ -120,7 +120,7 @@ class Category extends Model
     /**
      * Products relationship.
      *
-     * @return HasMany<Product, $this>
+     * @return HasMany<Product, Category>
      */
     public function products(): HasMany
     {

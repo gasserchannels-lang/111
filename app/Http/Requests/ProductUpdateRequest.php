@@ -235,8 +235,8 @@ class ProductUpdateRequest extends FormRequest
                 $newPrice = $this->input('price');
 
                 if ($oldPrice && $newPrice && $oldPrice > 0) {
-                    $oldPriceFloat = is_numeric($oldPrice) ? (float) $oldPrice : 0.0;
-                    $newPriceFloat = is_numeric($newPrice) ? (float) $newPrice : 0.0;
+                    $oldPriceFloat = (float) $oldPrice;
+                    $newPriceFloat = (float) $newPrice;
                     if ($oldPriceFloat > 0) {
                         $changePercentage = abs($newPriceFloat - $oldPriceFloat) / $oldPriceFloat * 100;
 

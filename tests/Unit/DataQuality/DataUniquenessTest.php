@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataUniquenessTest extends TestCase
 {
@@ -14,7 +14,7 @@ class DataUniquenessTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'sku' => 'SKU001'],
             ['id' => 2, 'name' => 'Product B', 'sku' => 'SKU002'],
             ['id' => 3, 'name' => 'Product A', 'sku' => 'SKU001'], // Duplicate
-            ['id' => 4, 'name' => 'Product C', 'sku' => 'SKU003']
+            ['id' => 4, 'name' => 'Product C', 'sku' => 'SKU003'],
         ];
 
         $duplicates = $this->findDuplicateRecords($records, ['name', 'sku']);
@@ -29,12 +29,12 @@ class DataUniquenessTest extends TestCase
         $data = [
             'email' => 'user@example.com',
             'username' => 'user123',
-            'phone' => '+1234567890'
+            'phone' => '+1234567890',
         ];
 
         $existingData = [
             ['email' => 'other@example.com', 'username' => 'other', 'phone' => '+0987654321'],
-            ['email' => 'user@example.com', 'username' => 'different', 'phone' => '+1111111111'] // Email duplicate
+            ['email' => 'user@example.com', 'username' => 'different', 'phone' => '+1111111111'], // Email duplicate
         ];
 
         $isUnique = $this->validateUniqueConstraints($data, $existingData, ['email']);
@@ -50,7 +50,7 @@ class DataUniquenessTest extends TestCase
             ['id' => 2, 'value' => 'B'],
             ['id' => 3, 'value' => 'A'], // Duplicate
             ['id' => 4, 'value' => 'C'],
-            ['id' => 5, 'value' => 'B']  // Duplicate
+            ['id' => 5, 'value' => 'B'],  // Duplicate
         ];
 
         $uniquenessPercentage = $this->calculateUniquenessPercentage($records, 'value');
@@ -65,7 +65,7 @@ class DataUniquenessTest extends TestCase
             ['name' => 'iPhone 15 Pro'],
             ['name' => 'iPhone 15 Pro Max'],
             ['name' => 'Samsung Galaxy S24'],
-            ['name' => 'iPhone 15 Pro '] // Near duplicate with extra space
+            ['name' => 'iPhone 15 Pro '], // Near duplicate with extra space
         ];
 
         $nearDuplicates = $this->findNearDuplicates($records, 'name', 0.8);
@@ -80,7 +80,7 @@ class DataUniquenessTest extends TestCase
             ['id' => 1, 'name' => 'Product A'],
             ['id' => 2, 'name' => 'Product B'],
             ['id' => 1, 'name' => 'Product C'], // Duplicate ID
-            ['id' => 3, 'name' => 'Product D']
+            ['id' => 3, 'name' => 'Product D'],
         ];
 
         $isUnique = $this->validatePrimaryKeyUniqueness($records, 'id');
@@ -94,7 +94,7 @@ class DataUniquenessTest extends TestCase
         $records = [
             ['email' => 'user@example.com'],
             ['email' => 'USER@EXAMPLE.COM'], // Case insensitive duplicate
-            ['email' => 'admin@example.com']
+            ['email' => 'admin@example.com'],
         ];
 
         $duplicates = $this->findCaseInsensitiveDuplicates($records, 'email');
@@ -108,7 +108,7 @@ class DataUniquenessTest extends TestCase
         $records = [
             ['address' => '123 Main Street, New York, NY'],
             ['address' => '123 Main St, New York, NY'], // Fuzzy duplicate
-            ['address' => '456 Oak Avenue, Los Angeles, CA']
+            ['address' => '456 Oak Avenue, Los Angeles, CA'],
         ];
 
         $fuzzyDuplicates = $this->findFuzzyDuplicates($records, 'address', 0.7);
@@ -123,7 +123,7 @@ class DataUniquenessTest extends TestCase
             ['user_id' => 1, 'product_id' => 100, 'quantity' => 2],
             ['user_id' => 1, 'product_id' => 101, 'quantity' => 1],
             ['user_id' => 1, 'product_id' => 100, 'quantity' => 3], // Duplicate composite key
-            ['user_id' => 2, 'product_id' => 100, 'quantity' => 1]
+            ['user_id' => 2, 'product_id' => 100, 'quantity' => 1],
         ];
 
         $isUnique = $this->validateCompositeKeyUniqueness($records, ['user_id', 'product_id']);
@@ -139,7 +139,7 @@ class DataUniquenessTest extends TestCase
             ['category' => 'Clothing'],
             ['category' => 'Electronics'],
             ['category' => 'Books'],
-            ['category' => 'Electronics']
+            ['category' => 'Electronics'],
         ];
 
         $diversityScore = $this->calculateDataDiversityScore($data, 'category');
@@ -154,7 +154,7 @@ class DataUniquenessTest extends TestCase
             ['name' => 'Product A', 'description' => 'Description A'],
             ['name' => '', 'description' => 'Description B'], // Empty name
             ['name' => null, 'description' => 'Description C'], // Null name
-            ['name' => 'Product D', 'description' => 'Description D']
+            ['name' => 'Product D', 'description' => 'Description D'],
         ];
 
         $duplicates = $this->findDuplicateRecords($records, ['name']);
@@ -170,7 +170,7 @@ class DataUniquenessTest extends TestCase
         foreach ($records as $record) {
             $key = '';
             foreach ($fields as $field) {
-                $key .= ($record[$field] ?? '') . '|';
+                $key .= ($record[$field] ?? '').'|';
             }
 
             if (isset($seen[$key])) {
@@ -232,6 +232,7 @@ class DataUniquenessTest extends TestCase
     private function validatePrimaryKeyUniqueness(array $records, string $keyField): bool
     {
         $keys = array_column($records, $keyField);
+
         return count($keys) === count(array_unique($keys));
     }
 
@@ -280,7 +281,7 @@ class DataUniquenessTest extends TestCase
         foreach ($records as $record) {
             $key = '';
             foreach ($keyFields as $field) {
-                $key .= ($record[$field] ?? '') . '|';
+                $key .= ($record[$field] ?? '').'|';
             }
 
             if (isset($seen[$key])) {

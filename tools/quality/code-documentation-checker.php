@@ -4,7 +4,6 @@
  * Code Documentation Checker Tool
  * Analyzes PHP code documentation coverage and quality
  */
-
 class CodeDocumentationChecker
 {
     private array $documentationRules = [
@@ -12,12 +11,12 @@ class CodeDocumentationChecker
         'method_documentation' => true,
         'property_documentation' => true,
         'parameter_documentation' => true,
-        'return_documentation' => true
+        'return_documentation' => true,
     ];
 
     public function checkFile(string $filePath): array
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return ['error' => 'File not found'];
         }
 
@@ -29,7 +28,7 @@ class CodeDocumentationChecker
             'classes' => $this->checkClasses($tokens),
             'methods' => $this->checkMethods($tokens),
             'properties' => $this->checkProperties($tokens),
-            'documentation_coverage' => $this->calculateDocumentationCoverage($tokens)
+            'documentation_coverage' => $this->calculateDocumentationCoverage($tokens),
         ];
     }
 
@@ -46,7 +45,7 @@ class CodeDocumentationChecker
                     'name' => $className,
                     'line' => $tokens[$i][2],
                     'has_documentation' => $hasDocumentation,
-                    'documentation_quality' => $this->assessDocumentationQuality($tokens, $i)
+                    'documentation_quality' => $this->assessDocumentationQuality($tokens, $i),
                 ];
             }
         }
@@ -70,7 +69,7 @@ class CodeDocumentationChecker
                     'has_documentation' => $hasDocumentation,
                     'parameters' => $parameters,
                     'has_return_documentation' => $this->hasReturnDocumentation($tokens, $i),
-                    'documentation_quality' => $this->assessDocumentationQuality($tokens, $i)
+                    'documentation_quality' => $this->assessDocumentationQuality($tokens, $i),
                 ];
             }
         }
@@ -95,7 +94,7 @@ class CodeDocumentationChecker
                             'line' => $tokens[$j][2],
                             'visibility' => $tokens[$i][1],
                             'has_documentation' => $hasDocumentation,
-                            'documentation_quality' => $this->assessDocumentationQuality($tokens, $i)
+                            'documentation_quality' => $this->assessDocumentationQuality($tokens, $i),
                         ];
                         break;
                     }
@@ -113,6 +112,7 @@ class CodeDocumentationChecker
                 return $tokens[$i][1];
             }
         }
+
         return '';
     }
 
@@ -128,6 +128,7 @@ class CodeDocumentationChecker
                 break;
             }
         }
+
         return false;
     }
 
@@ -138,14 +139,15 @@ class CodeDocumentationChecker
         $currentParam = '';
 
         for ($i = $functionIndex; $i < count($tokens); $i++) {
-            if (!$inParams && is_string($tokens[$i]) && $tokens[$i] === '(') {
+            if (! $inParams && is_string($tokens[$i]) && $tokens[$i] === '(') {
                 $inParams = true;
+
                 continue;
             }
 
             if ($inParams) {
                 if (is_string($tokens[$i]) && $tokens[$i] === ')') {
-                    if (!empty($currentParam)) {
+                    if (! empty($currentParam)) {
                         $parameters[] = trim($currentParam);
                     }
                     break;
@@ -154,7 +156,7 @@ class CodeDocumentationChecker
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_VARIABLE) {
                     $currentParam = $tokens[$i][1];
                 } elseif (is_string($tokens[$i]) && $tokens[$i] === ',') {
-                    if (!empty($currentParam)) {
+                    if (! empty($currentParam)) {
                         $parameters[] = trim($currentParam);
                         $currentParam = '';
                     }
@@ -173,6 +175,7 @@ class CodeDocumentationChecker
                 return strpos($tokens[$i][1], '@return') !== false;
             }
         }
+
         return false;
     }
 
@@ -180,7 +183,7 @@ class CodeDocumentationChecker
     {
         $quality = [
             'score' => 0,
-            'issues' => []
+            'issues' => [],
         ];
 
         // Find the documentation comment
@@ -192,8 +195,9 @@ class CodeDocumentationChecker
             }
         }
 
-        if (!$docComment) {
+        if (! $docComment) {
             $quality['issues'][] = 'No documentation found';
+
             return $quality;
         }
 
@@ -243,15 +247,21 @@ class CodeDocumentationChecker
         $documentedElements = 0;
 
         foreach ($classes as $class) {
-            if ($class['has_documentation']) $documentedElements++;
+            if ($class['has_documentation']) {
+                $documentedElements++;
+            }
         }
 
         foreach ($methods as $method) {
-            if ($method['has_documentation']) $documentedElements++;
+            if ($method['has_documentation']) {
+                $documentedElements++;
+            }
         }
 
         foreach ($properties as $property) {
-            if ($property['has_documentation']) $documentedElements++;
+            if ($property['has_documentation']) {
+                $documentedElements++;
+            }
         }
 
         $coverage = $totalElements > 0 ? ($documentedElements / $totalElements) * 100 : 0;
@@ -263,17 +273,17 @@ class CodeDocumentationChecker
             'breakdown' => [
                 'classes' => [
                     'total' => count($classes),
-                    'documented' => count(array_filter($classes, fn($c) => $c['has_documentation']))
+                    'documented' => count(array_filter($classes, fn ($c) => $c['has_documentation'])),
                 ],
                 'methods' => [
                     'total' => count($methods),
-                    'documented' => count(array_filter($methods, fn($m) => $m['has_documentation']))
+                    'documented' => count(array_filter($methods, fn ($m) => $m['has_documentation'])),
                 ],
                 'properties' => [
                     'total' => count($properties),
-                    'documented' => count(array_filter($properties, fn($p) => $p['has_documentation']))
-                ]
-            ]
+                    'documented' => count(array_filter($properties, fn ($p) => $p['has_documentation'])),
+                ],
+            ],
         ];
     }
 
@@ -300,11 +310,11 @@ class CodeDocumentationChecker
         $overallStats = [
             'classes' => ['total' => 0, 'documented' => 0],
             'methods' => ['total' => 0, 'documented' => 0],
-            'properties' => ['total' => 0, 'documented' => 0]
+            'properties' => ['total' => 0, 'documented' => 0],
         ];
 
         foreach ($results as $result) {
-            if (!isset($result['error'])) {
+            if (! isset($result['error'])) {
                 $totalCoverage += $result['documentation_coverage']['coverage_percentage'];
                 $totalFiles++;
 
@@ -321,7 +331,7 @@ class CodeDocumentationChecker
             'total_files_checked' => $totalFiles,
             'average_coverage' => round($averageCoverage, 2),
             'overall_statistics' => $overallStats,
-            'files' => $results
+            'files' => $results,
         ];
     }
 
@@ -334,7 +344,7 @@ class CodeDocumentationChecker
             case 'method':
                 $template = "/**\n * Method description\n *\n";
 
-                if (!empty($elementInfo['parameters'])) {
+                if (! empty($elementInfo['parameters'])) {
                     foreach ($elementInfo['parameters'] as $param) {
                         $template .= " * @param mixed {$param} Parameter description\n";
                     }

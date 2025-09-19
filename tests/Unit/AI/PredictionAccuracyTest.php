@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class PredictionAccuracyTest extends TestCase
 {
@@ -14,7 +14,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 999.00, 'predicted' => 950.00],
             ['actual' => 899.00, 'predicted' => 920.00],
             ['actual' => 799.00, 'predicted' => 780.00],
-            ['actual' => 699.00, 'predicted' => 720.00]
+            ['actual' => 699.00, 'predicted' => 720.00],
         ];
 
         $accuracy = $this->calculatePredictionAccuracy($predictions);
@@ -28,7 +28,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 100, 'predicted' => 95],
             ['actual' => 150, 'predicted' => 160],
             ['actual' => 200, 'predicted' => 190],
-            ['actual' => 80, 'predicted' => 85]
+            ['actual' => 80, 'predicted' => 85],
         ];
 
         $accuracy = $this->calculatePredictionAccuracy($predictions);
@@ -43,7 +43,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'down', 'predicted' => 'down'],
             ['actual' => 'stable', 'predicted' => 'stable'],
             ['actual' => 'up', 'predicted' => 'down'],
-            ['actual' => 'down', 'predicted' => 'up']
+            ['actual' => 'down', 'predicted' => 'up'],
         ];
 
         $accuracy = $this->calculateTrendPredictionAccuracy($trends);
@@ -57,7 +57,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'winter', 'predicted' => 'winter'],
             ['actual' => 'spring', 'predicted' => 'spring'],
             ['actual' => 'summer', 'predicted' => 'summer'],
-            ['actual' => 'fall', 'predicted' => 'winter']
+            ['actual' => 'fall', 'predicted' => 'winter'],
         ];
 
         $accuracy = $this->calculateSeasonalPredictionAccuracy($seasonalPredictions);
@@ -71,7 +71,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'Electronics', 'predicted' => 'Electronics'],
             ['actual' => 'Clothing', 'predicted' => 'Clothing'],
             ['actual' => 'Books', 'predicted' => 'Books'],
-            ['actual' => 'Home', 'predicted' => 'Electronics']
+            ['actual' => 'Home', 'predicted' => 'Electronics'],
         ];
 
         $accuracy = $this->calculateCategoryPredictionAccuracy($categoryPredictions);
@@ -85,7 +85,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 4.5, 'predicted' => 4.3],
             ['actual' => 3.8, 'predicted' => 3.9],
             ['actual' => 4.2, 'predicted' => 4.0],
-            ['actual' => 3.5, 'predicted' => 3.7]
+            ['actual' => 3.5, 'predicted' => 3.7],
         ];
 
         $accuracy = $this->calculateRatingPredictionAccuracy($ratingPredictions);
@@ -99,7 +99,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 1000, 'predicted' => 950],
             ['actual' => 1500, 'predicted' => 1600],
             ['actual' => 800, 'predicted' => 820],
-            ['actual' => 1200, 'predicted' => 1150]
+            ['actual' => 1200, 'predicted' => 1150],
         ];
 
         $accuracy = $this->calculateSalesPredictionAccuracy($salesPredictions);
@@ -113,7 +113,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 50, 'predicted' => 45],
             ['actual' => 30, 'predicted' => 35],
             ['actual' => 75, 'predicted' => 70],
-            ['actual' => 20, 'predicted' => 25]
+            ['actual' => 20, 'predicted' => 25],
         ];
 
         $accuracy = $this->calculateStockPredictionAccuracy($stockPredictions);
@@ -127,7 +127,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 10000.00, 'predicted' => 9500.00],
             ['actual' => 15000.00, 'predicted' => 16000.00],
             ['actual' => 8000.00, 'predicted' => 8200.00],
-            ['actual' => 12000.00, 'predicted' => 11500.00]
+            ['actual' => 12000.00, 'predicted' => 11500.00],
         ];
 
         $accuracy = $this->calculateRevenuePredictionAccuracy($revenuePredictions);
@@ -141,7 +141,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'buy', 'predicted' => 'buy'],
             ['actual' => 'browse', 'predicted' => 'browse'],
             ['actual' => 'buy', 'predicted' => 'browse'],
-            ['actual' => 'browse', 'predicted' => 'buy']
+            ['actual' => 'browse', 'predicted' => 'buy'],
         ];
 
         $accuracy = $this->calculateBehaviorPredictionAccuracy($behaviorPredictions);
@@ -155,7 +155,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'bullish', 'predicted' => 'bullish'],
             ['actual' => 'bearish', 'predicted' => 'bearish'],
             ['actual' => 'neutral', 'predicted' => 'neutral'],
-            ['actual' => 'bullish', 'predicted' => 'bearish']
+            ['actual' => 'bullish', 'predicted' => 'bearish'],
         ];
 
         $accuracy = $this->calculateMarketTrendPredictionAccuracy($marketPredictions);
@@ -169,7 +169,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'high', 'predicted' => 'high'],
             ['actual' => 'medium', 'predicted' => 'medium'],
             ['actual' => 'low', 'predicted' => 'low'],
-            ['actual' => 'high', 'predicted' => 'medium']
+            ['actual' => 'high', 'predicted' => 'medium'],
         ];
 
         $accuracy = $this->calculateCompetitorAnalysisPredictionAccuracy($competitorPredictions);
@@ -183,7 +183,7 @@ class PredictionAccuracyTest extends TestCase
             ['period' => 1, 'actual' => 100, 'predicted' => 95],
             ['period' => 2, 'actual' => 110, 'predicted' => 105],
             ['period' => 3, 'actual' => 120, 'predicted' => 115],
-            ['period' => 4, 'actual' => 130, 'predicted' => 125]
+            ['period' => 4, 'actual' => 130, 'predicted' => 125],
         ];
 
         $accuracy = $this->calculateForecastingAccuracy($forecastData);
@@ -198,7 +198,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'anomaly', 'predicted' => 'anomaly'],
             ['actual' => 'normal', 'predicted' => 'normal'],
             ['actual' => 'anomaly', 'predicted' => 'normal'],
-            ['actual' => 'normal', 'predicted' => 'anomaly']
+            ['actual' => 'normal', 'predicted' => 'anomaly'],
         ];
 
         $accuracy = $this->calculateAnomalyDetectionAccuracy($anomalyData);
@@ -212,7 +212,7 @@ class PredictionAccuracyTest extends TestCase
             ['actual' => 'relevant', 'predicted' => 'relevant'],
             ['actual' => 'irrelevant', 'predicted' => 'irrelevant'],
             ['actual' => 'relevant', 'predicted' => 'relevant'],
-            ['actual' => 'irrelevant', 'predicted' => 'relevant']
+            ['actual' => 'irrelevant', 'predicted' => 'relevant'],
         ];
 
         $accuracy = $this->calculateRecommendationAccuracy($recommendations);
@@ -232,6 +232,7 @@ class PredictionAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError; // Convert error to accuracy
     }
 
@@ -290,6 +291,7 @@ class PredictionAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError;
     }
 
@@ -306,6 +308,7 @@ class PredictionAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError;
     }
 
@@ -322,6 +325,7 @@ class PredictionAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError;
     }
 
@@ -338,6 +342,7 @@ class PredictionAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError;
     }
 
@@ -396,6 +401,7 @@ class PredictionAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError;
     }
 

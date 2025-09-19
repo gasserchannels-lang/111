@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_approved
  * @property array $helpful_votes
  * @property int $helpful_count
- * @property-read User $user
- * @property-read Product $product
+ * @property-read User<Database\Factories\UserFactory> $user
+ * @property-read Product<Database\Factories\ProductFactory> $product
  *
  * @method static ReviewFactory factory(...$parameters)
  *
@@ -63,7 +63,7 @@ class Review extends Model
     ];
 
     /**
-     * @return BelongsTo<User<\Database\Factories\UserFactory>, Review<\Database\Factories\ReviewFactory>>
+     * @return BelongsTo<User<Database\Factories\UserFactory>, Review<Database\Factories\ReviewFactory>>
      */
     public function user(): BelongsTo
     {
@@ -71,7 +71,7 @@ class Review extends Model
     }
 
     /**
-     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, Review<\Database\Factories\ReviewFactory>>
+     * @return BelongsTo<Product<Database\Factories\ProductFactory>, Review<Database\Factories\ReviewFactory>>
      */
     public function product(): BelongsTo
     {

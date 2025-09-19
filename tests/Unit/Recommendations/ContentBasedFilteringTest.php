@@ -19,7 +19,7 @@ class ContentBasedFilteringTest extends TestCase
                 'category' => 'Electronics',
                 'brand' => 'Apple',
                 'price' => 1199,
-                'features' => ['camera', 'battery', 'display']
+                'features' => ['camera', 'battery', 'display'],
             ],
             [
                 'id' => 'item2',
@@ -27,8 +27,8 @@ class ContentBasedFilteringTest extends TestCase
                 'category' => 'Electronics',
                 'brand' => 'Samsung',
                 'price' => 999,
-                'features' => ['camera', 'battery', 'display']
-            ]
+                'features' => ['camera', 'battery', 'display'],
+            ],
         ];
 
         $features = $this->extractItemFeatures($items[0]);
@@ -47,14 +47,14 @@ class ContentBasedFilteringTest extends TestCase
             'category' => 'Electronics',
             'brand' => 'Apple',
             'price_range' => 'high',
-            'keywords' => ['smartphone', 'camera', 'battery']
+            'keywords' => ['smartphone', 'camera', 'battery'],
         ];
 
         $item2 = [
             'category' => 'Electronics',
             'brand' => 'Samsung',
             'price_range' => 'high',
-            'keywords' => ['smartphone', 'camera', 'display']
+            'keywords' => ['smartphone', 'camera', 'display'],
         ];
 
         $similarity = $this->calculateItemSimilarity($item1, $item2);
@@ -69,7 +69,7 @@ class ContentBasedFilteringTest extends TestCase
         $userInteractions = [
             ['item_id' => 'item1', 'rating' => 5, 'features' => ['Electronics', 'Apple', 'high', 'smartphone']],
             ['item_id' => 'item2', 'rating' => 4, 'features' => ['Electronics', 'Apple', 'high', 'laptop']],
-            ['item_id' => 'item3', 'rating' => 2, 'features' => ['Clothing', 'Nike', 'medium', 'shoes']]
+            ['item_id' => 'item3', 'rating' => 2, 'features' => ['Clothing', 'Nike', 'medium', 'shoes']],
         ];
 
         $userProfile = $this->buildUserProfile($userInteractions);
@@ -88,7 +88,7 @@ class ContentBasedFilteringTest extends TestCase
             'preferred_categories' => ['Electronics' => 0.8],
             'preferred_brands' => ['Apple' => 0.9, 'Samsung' => 0.6],
             'preferred_price_range' => ['high' => 0.7, 'medium' => 0.3],
-            'preferred_keywords' => ['smartphone' => 0.8, 'camera' => 0.6]
+            'preferred_keywords' => ['smartphone' => 0.8, 'camera' => 0.6],
         ];
 
         $candidateItems = [
@@ -97,15 +97,15 @@ class ContentBasedFilteringTest extends TestCase
                 'category' => 'Electronics',
                 'brand' => 'Apple',
                 'price_range' => 'high',
-                'keywords' => ['smartphone', 'camera']
+                'keywords' => ['smartphone', 'camera'],
             ],
             [
                 'id' => 'item2',
                 'category' => 'Clothing',
                 'brand' => 'Nike',
                 'price_range' => 'medium',
-                'keywords' => ['shoes', 'sports']
-            ]
+                'keywords' => ['shoes', 'sports'],
+            ],
         ];
 
         $recommendations = $this->getContentBasedRecommendations($userProfile, $candidateItems, 1);
@@ -145,7 +145,7 @@ class ContentBasedFilteringTest extends TestCase
         $documents = [
             'doc1' => ['smartphone', 'camera', 'battery'],
             'doc2' => ['smartphone', 'display', 'camera'],
-            'doc3' => ['laptop', 'keyboard', 'display']
+            'doc3' => ['laptop', 'keyboard', 'display'],
         ];
 
         $term = 'smartphone';
@@ -192,20 +192,20 @@ class ContentBasedFilteringTest extends TestCase
             'category' => 'Electronics',
             'brand' => 'Apple',
             'price' => 1000,
-            'keywords' => ['smartphone', 'camera']
+            'keywords' => ['smartphone', 'camera'],
         ];
 
         $item2 = [
             'category' => 'Electronics',
             'brand' => 'Samsung',
             'price' => 1200,
-            'keywords' => ['smartphone', 'display']
+            'keywords' => ['smartphone', 'display'],
         ];
 
         $weights = [
             'categorical' => 0.3,
             'numerical' => 0.2,
-            'textual' => 0.5
+            'textual' => 0.5,
         ];
 
         $combinedSimilarity = $this->calculateCombinedSimilarity($item1, $item2, $weights);
@@ -220,7 +220,7 @@ class ContentBasedFilteringTest extends TestCase
             'category' => $item['category'] ?? '',
             'brand' => $item['brand'] ?? '',
             'price_range' => $this->categorizePrice($item['price'] ?? 0),
-            'keywords' => $this->extractKeywords($item['title'] ?? '')
+            'keywords' => $this->extractKeywords($item['title'] ?? ''),
         ];
 
         if (isset($item['features'])) {
@@ -232,9 +232,16 @@ class ContentBasedFilteringTest extends TestCase
 
     private function categorizePrice(float $price): string
     {
-        if ($price < 100) return 'low';
-        if ($price < 500) return 'medium';
-        if ($price < 1000) return 'high';
+        if ($price < 100) {
+            return 'low';
+        }
+        if ($price < 500) {
+            return 'medium';
+        }
+        if ($price < 1000) {
+            return 'high';
+        }
+
         return 'premium';
     }
 
@@ -244,7 +251,7 @@ class ContentBasedFilteringTest extends TestCase
             'category' => 0.3,
             'brand' => 0.2,
             'price_range' => 0.2,
-            'keywords' => 0.3
+            'keywords' => 0.3,
         ];
 
         $similarities = [];
@@ -280,7 +287,7 @@ class ContentBasedFilteringTest extends TestCase
             'preferred_categories' => [],
             'preferred_brands' => [],
             'preferred_price_range' => [],
-            'preferred_keywords' => []
+            'preferred_keywords' => [],
         ];
 
         foreach ($userInteractions as $interaction) {
@@ -358,7 +365,7 @@ class ContentBasedFilteringTest extends TestCase
             'category' => 0.3,
             'brand' => 0.2,
             'price_range' => 0.2,
-            'keywords' => 0.3
+            'keywords' => 0.3,
         ];
 
         $similarities = [];
@@ -380,7 +387,7 @@ class ContentBasedFilteringTest extends TestCase
         $userKeywords = $userProfile['preferred_keywords'];
         $keywordSimilarity = 0;
 
-        if (!empty($itemKeywords)) {
+        if (! empty($itemKeywords)) {
             foreach ($itemKeywords as $keyword) {
                 $keywordSimilarity += $userKeywords[$keyword] ?? 0;
             }
@@ -420,7 +427,7 @@ class ContentBasedFilteringTest extends TestCase
         // Remove common stop words
         $stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
         $words = array_filter($words, function ($word) use ($stopWords) {
-            return !in_array($word, $stopWords) && strlen($word) > 2;
+            return ! in_array($word, $stopWords) && strlen($word) > 2;
         });
 
         return array_values($words);

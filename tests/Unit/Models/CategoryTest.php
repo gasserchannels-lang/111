@@ -4,16 +4,14 @@ namespace Tests\Unit\Models;
 
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
 {
-    use RefreshDatabase;
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_category()
     {
-        config(['database.default' => 'sqlite_testing']);
+        config(['database.default' => 'testing']);
         $category = Category::factory()->create([
             'name' => 'Test Category',
             'description' => 'Test Description',
@@ -31,7 +29,7 @@ class CategoryTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_products_relationship()
     {
-        config(['database.default' => 'sqlite_testing']);
+        config(['database.default' => 'testing']);
         $category = Category::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
 

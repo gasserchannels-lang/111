@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -94,7 +94,7 @@ class PriceAccuracyTest extends TestCase
     {
         // ⚠️ تحذير: قواعد التحقق من السعر يجب أن تكون شاملة
         $rules = [
-            'price' => 'required|numeric|min:0|max:999999.99'
+            'price' => 'required|numeric|min:0|max:999999.99',
         ];
 
         $this->assertArrayHasKey('price', $rules, '⚠️ تحذير: قاعدة التحقق من السعر مفقودة!');
@@ -108,7 +108,7 @@ class PriceAccuracyTest extends TestCase
     {
         // ⚠️ تحذير: تنسيق العملة يجب أن يكون صحيحاً
         $price = 100.50;
-        $formatted = '$' . number_format($price, 2);
+        $formatted = '$'.number_format($price, 2);
 
         $this->assertEquals('$100.50', $formatted, '⚠️ تحذير: تنسيق العملة غير صحيح!');
     }

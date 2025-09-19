@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class MachineLearningAccuracyTest extends TestCase
 {
@@ -17,7 +17,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 0, 'predicted' => 0],
             ['actual' => 1, 'predicted' => 1],
             ['actual' => 0, 'predicted' => 1],
-            ['actual' => 1, 'predicted' => 0]
+            ['actual' => 1, 'predicted' => 0],
         ];
 
         $accuracy = $this->calculateAccuracy($predictions);
@@ -33,7 +33,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 0, 'predicted' => 1],
             ['actual' => 1, 'predicted' => 1],
             ['actual' => 0, 'predicted' => 0],
-            ['actual' => 1, 'predicted' => 1]
+            ['actual' => 1, 'predicted' => 1],
         ];
 
         $precision = $this->calculatePrecision($predictions);
@@ -49,7 +49,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 1, 'predicted' => 0],
             ['actual' => 1, 'predicted' => 1],
             ['actual' => 0, 'predicted' => 0],
-            ['actual' => 1, 'predicted' => 1]
+            ['actual' => 1, 'predicted' => 1],
         ];
 
         $recall = $this->calculateRecall($predictions);
@@ -65,7 +65,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 0, 'predicted' => 1],
             ['actual' => 1, 'predicted' => 1],
             ['actual' => 0, 'predicted' => 0],
-            ['actual' => 1, 'predicted' => 1]
+            ['actual' => 1, 'predicted' => 1],
         ];
 
         $f1Score = $this->calculateF1Score($predictions);
@@ -81,7 +81,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 0, 'predicted' => 0],
             ['actual' => 1, 'predicted' => 0],
             ['actual' => 0, 'predicted' => 1],
-            ['actual' => 1, 'predicted' => 1]
+            ['actual' => 1, 'predicted' => 1],
         ];
 
         $confusionMatrix = $this->calculateConfusionMatrix($predictions);
@@ -100,7 +100,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 0, 'predicted' => 0.1],
             ['actual' => 1, 'predicted' => 0.8],
             ['actual' => 0, 'predicted' => 0.2],
-            ['actual' => 1, 'predicted' => 0.7]
+            ['actual' => 1, 'predicted' => 0.7],
         ];
 
         $auc = $this->calculateROCAUC($predictions);
@@ -116,7 +116,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 100.0, 'predicted' => 95.0],
             ['actual' => 200.0, 'predicted' => 210.0],
             ['actual' => 150.0, 'predicted' => 145.0],
-            ['actual' => 300.0, 'predicted' => 290.0]
+            ['actual' => 300.0, 'predicted' => 290.0],
         ];
 
         $mse = $this->calculateMSE($predictions);
@@ -131,7 +131,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 100.0, 'predicted' => 95.0],
             ['actual' => 200.0, 'predicted' => 210.0],
             ['actual' => 150.0, 'predicted' => 145.0],
-            ['actual' => 300.0, 'predicted' => 290.0]
+            ['actual' => 300.0, 'predicted' => 290.0],
         ];
 
         $mae = $this->calculateMAE($predictions);
@@ -146,7 +146,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['actual' => 100.0, 'predicted' => 95.0],
             ['actual' => 200.0, 'predicted' => 210.0],
             ['actual' => 150.0, 'predicted' => 145.0],
-            ['actual' => 300.0, 'predicted' => 290.0]
+            ['actual' => 300.0, 'predicted' => 290.0],
         ];
 
         $r2 = $this->calculateR2Score($predictions);
@@ -162,7 +162,7 @@ class MachineLearningAccuracyTest extends TestCase
             ['features' => [2, 3, 4], 'target' => 0],
             ['features' => [3, 4, 5], 'target' => 1],
             ['features' => [4, 5, 6], 'target' => 0],
-            ['features' => [5, 6, 7], 'target' => 1]
+            ['features' => [5, 6, 7], 'target' => 1],
         ];
 
         $cvScores = $this->performCrossValidation($data, 3);
@@ -204,7 +204,7 @@ class MachineLearningAccuracyTest extends TestCase
         $models = [
             'Random Forest' => ['accuracy' => 0.85, 'precision' => 0.82, 'recall' => 0.88],
             'SVM' => ['accuracy' => 0.83, 'precision' => 0.85, 'recall' => 0.81],
-            'Logistic Regression' => ['accuracy' => 0.80, 'precision' => 0.78, 'recall' => 0.82]
+            'Logistic Regression' => ['accuracy' => 0.80, 'precision' => 0.78, 'recall' => 0.82],
         ];
 
         $bestModel = $this->compareModels($models);
@@ -241,6 +241,7 @@ class MachineLearningAccuracyTest extends TestCase
         }
 
         $totalPositivePredictions = $truePositives + $falsePositives;
+
         return $totalPositivePredictions > 0 ? $truePositives / $totalPositivePredictions : 0;
     }
 
@@ -260,6 +261,7 @@ class MachineLearningAccuracyTest extends TestCase
         }
 
         $totalActualPositives = $truePositives + $falseNegatives;
+
         return $totalActualPositives > 0 ? $truePositives / $totalActualPositives : 0;
     }
 
@@ -301,7 +303,7 @@ class MachineLearningAccuracyTest extends TestCase
             'true_positive' => $truePositives,
             'true_negative' => $trueNegatives,
             'false_positive' => $falsePositives,
-            'false_negative' => $falseNegatives
+            'false_negative' => $falseNegatives,
         ];
     }
 
@@ -432,7 +434,7 @@ class MachineLearningAccuracyTest extends TestCase
         return [
             'training_scores' => $trainingScores,
             'validation_scores' => $validationScores,
-            'gap' => $gap
+            'gap' => $gap,
         ];
     }
 
@@ -442,7 +444,7 @@ class MachineLearningAccuracyTest extends TestCase
         for ($i = 0; $i < count($features); $i++) {
             $featureImportance[] = [
                 'feature' => $features[$i],
-                'importance' => $importance[$i]
+                'importance' => $importance[$i],
             ];
         }
 
@@ -468,7 +470,7 @@ class MachineLearningAccuracyTest extends TestCase
                 $bestModel = [
                     'name' => $name,
                     'score' => $score,
-                    'metrics' => $metrics
+                    'metrics' => $metrics,
                 ];
             }
         }

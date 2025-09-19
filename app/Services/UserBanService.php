@@ -214,8 +214,9 @@ final class UserBanService
         if ($user->isAdmin()) {
             return false;
         }
+
         // Cannot ban already banned users
-        return !$user->isBanned();
+        return ! $user->isBanned();
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class NLPAccuracyTest extends TestCase
 {
@@ -16,7 +16,7 @@ class NLPAccuracyTest extends TestCase
             ['text' => 'I love this product!', 'actual' => 'positive', 'predicted' => 'positive'],
             ['text' => 'This is terrible quality', 'actual' => 'negative', 'predicted' => 'negative'],
             ['text' => 'The product is okay', 'actual' => 'neutral', 'predicted' => 'neutral'],
-            ['text' => 'Amazing quality!', 'actual' => 'positive', 'predicted' => 'negative']
+            ['text' => 'Amazing quality!', 'actual' => 'positive', 'predicted' => 'negative'],
         ];
 
         $accuracy = $this->calculateTextClassificationAccuracy($texts);
@@ -30,7 +30,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['text' => 'Apple iPhone 15 is great', 'entities' => ['Apple' => 'ORG', 'iPhone 15' => 'PRODUCT']],
             ['text' => 'John Smith from New York', 'entities' => ['John Smith' => 'PERSON', 'New York' => 'LOCATION']],
-            ['text' => 'Microsoft Office 365', 'entities' => ['Microsoft' => 'ORG', 'Office 365' => 'PRODUCT']]
+            ['text' => 'Microsoft Office 365', 'entities' => ['Microsoft' => 'ORG', 'Office 365' => 'PRODUCT']],
         ];
 
         $accuracy = $this->calculateNERAccuracy($texts);
@@ -45,7 +45,7 @@ class NLPAccuracyTest extends TestCase
             ['text' => 'I absolutely love this!', 'actual' => 'positive', 'predicted' => 'positive'],
             ['text' => 'This is the worst product ever', 'actual' => 'negative', 'predicted' => 'negative'],
             ['text' => 'It is okay, nothing special', 'actual' => 'neutral', 'predicted' => 'neutral'],
-            ['text' => 'Great quality and fast delivery', 'actual' => 'positive', 'predicted' => 'positive']
+            ['text' => 'Great quality and fast delivery', 'actual' => 'positive', 'predicted' => 'positive'],
         ];
 
         $accuracy = $this->calculateSentimentAnalysisAccuracy($sentiments);
@@ -60,7 +60,7 @@ class NLPAccuracyTest extends TestCase
             ['text' => 'Hello, how are you?', 'actual' => 'en', 'predicted' => 'en'],
             ['text' => 'Bonjour, comment allez-vous?', 'actual' => 'fr', 'predicted' => 'fr'],
             ['text' => 'Hola, ¿cómo estás?', 'actual' => 'es', 'predicted' => 'es'],
-            ['text' => 'مرحبا، كيف حالك؟', 'actual' => 'ar', 'predicted' => 'ar']
+            ['text' => 'مرحبا، كيف حالك؟', 'actual' => 'ar', 'predicted' => 'ar'],
         ];
 
         $accuracy = $this->calculateLanguageDetectionAccuracy($texts);
@@ -74,7 +74,7 @@ class NLPAccuracyTest extends TestCase
         $pairs = [
             ['text1' => 'iPhone 15 Pro', 'text2' => 'Apple iPhone 15 Pro', 'similarity' => 0.9],
             ['text1' => 'Samsung Galaxy S24', 'text2' => 'Samsung Galaxy S24 Ultra', 'similarity' => 0.8],
-            ['text1' => 'MacBook Pro', 'text2' => 'Dell Laptop', 'similarity' => 0.3]
+            ['text1' => 'MacBook Pro', 'text2' => 'Dell Laptop', 'similarity' => 0.3],
         ];
 
         $accuracy = $this->calculateTextSimilarityAccuracy($pairs);
@@ -88,7 +88,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['text' => 'Apple iPhone 15 Pro Max with 256GB storage', 'keywords' => ['Apple', 'iPhone', 'Pro', 'Max', '256GB', 'storage']],
             ['text' => 'Samsung Galaxy S24 Ultra camera phone', 'keywords' => ['Samsung', 'Galaxy', 'S24', 'Ultra', 'camera', 'phone']],
-            ['text' => 'MacBook Pro M3 chip laptop', 'keywords' => ['MacBook', 'Pro', 'M3', 'chip', 'laptop']]
+            ['text' => 'MacBook Pro M3 chip laptop', 'keywords' => ['MacBook', 'Pro', 'M3', 'chip', 'laptop']],
         ];
 
         $accuracy = $this->calculateKeywordExtractionAccuracy($texts);
@@ -102,7 +102,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['original' => 'The iPhone 15 Pro Max is Apple\'s latest flagship smartphone with advanced features.', 'summary' => 'iPhone 15 Pro Max is Apple\'s latest flagship smartphone.'],
             ['original' => 'Samsung Galaxy S24 Ultra offers excellent camera quality and performance.', 'summary' => 'Samsung Galaxy S24 Ultra has excellent camera and performance.'],
-            ['original' => 'MacBook Pro with M3 chip provides exceptional performance for professionals.', 'summary' => 'MacBook Pro M3 offers exceptional performance for professionals.']
+            ['original' => 'MacBook Pro with M3 chip provides exceptional performance for professionals.', 'summary' => 'MacBook Pro M3 offers exceptional performance for professionals.'],
         ];
 
         $accuracy = $this->calculateTextSummarizationAccuracy($texts);
@@ -116,7 +116,7 @@ class NLPAccuracyTest extends TestCase
         $qaPairs = [
             ['question' => 'What is the price of iPhone 15?', 'answer' => 'The iPhone 15 starts at $799', 'context' => 'iPhone 15 pricing information'],
             ['question' => 'When was Samsung Galaxy S24 released?', 'answer' => 'Samsung Galaxy S24 was released in January 2024', 'context' => 'Samsung Galaxy S24 release information'],
-            ['question' => 'What processor does MacBook Pro use?', 'answer' => 'MacBook Pro uses the M3 chip', 'context' => 'MacBook Pro specifications']
+            ['question' => 'What processor does MacBook Pro use?', 'answer' => 'MacBook Pro uses the M3 chip', 'context' => 'MacBook Pro specifications'],
         ];
 
         $accuracy = $this->calculateQuestionAnsweringAccuracy($qaPairs);
@@ -130,7 +130,7 @@ class NLPAccuracyTest extends TestCase
         $translations = [
             ['source' => 'Hello, how are you?', 'target' => 'مرحبا، كيف حالك؟', 'source_lang' => 'en', 'target_lang' => 'ar'],
             ['source' => 'This product is excellent', 'target' => 'Ce produit est excellent', 'source_lang' => 'en', 'target_lang' => 'fr'],
-            ['source' => 'I love this phone', 'target' => 'Me encanta este teléfono', 'source_lang' => 'en', 'target_lang' => 'es']
+            ['source' => 'I love this phone', 'target' => 'Me encanta este teléfono', 'source_lang' => 'en', 'target_lang' => 'es'],
         ];
 
         $accuracy = $this->calculateTranslationAccuracy($translations);
@@ -144,7 +144,7 @@ class NLPAccuracyTest extends TestCase
         $prompts = [
             ['prompt' => 'Write a product description for iPhone 15', 'generated' => 'The iPhone 15 features advanced technology and sleek design.'],
             ['prompt' => 'Describe the benefits of Samsung Galaxy S24', 'generated' => 'Samsung Galaxy S24 offers cutting-edge features and superior performance.'],
-            ['prompt' => 'Explain MacBook Pro advantages', 'generated' => 'MacBook Pro provides professional-grade performance and reliability.']
+            ['prompt' => 'Explain MacBook Pro advantages', 'generated' => 'MacBook Pro provides professional-grade performance and reliability.'],
         ];
 
         $accuracy = $this->calculateTextGenerationAccuracy($prompts);
@@ -158,7 +158,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['text' => 'The iPhone 15 costs $799', 'parsed' => ['subject' => 'iPhone 15', 'verb' => 'costs', 'object' => '$799']],
             ['text' => 'Samsung Galaxy S24 has a great camera', 'parsed' => ['subject' => 'Samsung Galaxy S24', 'verb' => 'has', 'object' => 'great camera']],
-            ['text' => 'MacBook Pro is perfect for work', 'parsed' => ['subject' => 'MacBook Pro', 'verb' => 'is', 'object' => 'perfect for work']]
+            ['text' => 'MacBook Pro is perfect for work', 'parsed' => ['subject' => 'MacBook Pro', 'verb' => 'is', 'object' => 'perfect for work']],
         ];
 
         $accuracy = $this->calculateTextParsingAccuracy($texts);
@@ -172,7 +172,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['text' => 'iPhone 15 Pro Max', 'embedding' => [0.1, 0.2, 0.3, 0.4, 0.5]],
             ['text' => 'Apple iPhone 15 Pro Max', 'embedding' => [0.11, 0.21, 0.31, 0.41, 0.51]],
-            ['text' => 'Samsung Galaxy S24', 'embedding' => [0.9, 0.8, 0.7, 0.6, 0.5]]
+            ['text' => 'Samsung Galaxy S24', 'embedding' => [0.9, 0.8, 0.7, 0.6, 0.5]],
         ];
 
         $accuracy = $this->calculateTextEmbeddingsAccuracy($texts);
@@ -186,7 +186,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['original' => '  iPhone 15 Pro Max!!!  ', 'processed' => 'iPhone 15 Pro Max'],
             ['original' => 'Samsung Galaxy S24-Ultra', 'processed' => 'Samsung Galaxy S24 Ultra'],
-            ['original' => 'MacBook Pro M3-Chip', 'processed' => 'MacBook Pro M3 Chip']
+            ['original' => 'MacBook Pro M3-Chip', 'processed' => 'MacBook Pro M3 Chip'],
         ];
 
         $accuracy = $this->calculateTextPreprocessingAccuracy($texts);
@@ -200,7 +200,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['text' => 'iPhone 15 Pro Max', 'tokens' => ['iPhone', '15', 'Pro', 'Max']],
             ['text' => 'Samsung Galaxy S24 Ultra', 'tokens' => ['Samsung', 'Galaxy', 'S24', 'Ultra']],
-            ['text' => 'MacBook Pro M3 Chip', 'tokens' => ['MacBook', 'Pro', 'M3', 'Chip']]
+            ['text' => 'MacBook Pro M3 Chip', 'tokens' => ['MacBook', 'Pro', 'M3', 'Chip']],
         ];
 
         $accuracy = $this->calculateTokenizationAccuracy($texts);
@@ -214,7 +214,7 @@ class NLPAccuracyTest extends TestCase
         $texts = [
             ['original' => 'iPhone 15 Pro Max', 'normalized' => 'iphone 15 pro max'],
             ['original' => 'Samsung Galaxy S24 Ultra', 'normalized' => 'samsung galaxy s24 ultra'],
-            ['original' => 'MacBook Pro M3 Chip', 'normalized' => 'macbook pro m3 chip']
+            ['original' => 'MacBook Pro M3 Chip', 'normalized' => 'macbook pro m3 chip'],
         ];
 
         $accuracy = $this->calculateTextNormalizationAccuracy($texts);
@@ -298,6 +298,7 @@ class NLPAccuracyTest extends TestCase
         }
 
         $averageError = $totalError / $count;
+
         return 1 - $averageError;
     }
 
@@ -560,7 +561,7 @@ class NLPAccuracyTest extends TestCase
         $stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'with', 'has', 'have', 'had'];
 
         $keywords = array_filter($words, function ($word) use ($stopWords) {
-            return strlen($word) > 2 && !in_array($word, $stopWords);
+            return strlen($word) > 2 && ! in_array($word, $stopWords);
         });
 
         // Add specific keywords if they exist
@@ -639,6 +640,7 @@ class NLPAccuracyTest extends TestCase
         if (strpos($question, 'processor') !== false) {
             return 'It uses the M3 chip';
         }
+
         return 'I cannot answer that question';
     }
 
@@ -648,10 +650,11 @@ class NLPAccuracyTest extends TestCase
         $translations = [
             'en-ar' => 'مرحبا، كيف حالك؟',
             'en-fr' => 'Ce produit est excellent',
-            'en-es' => 'Me encanta este teléfono'
+            'en-es' => 'Me encanta este teléfono',
         ];
 
-        $key = $sourceLang . '-' . $targetLang;
+        $key = $sourceLang.'-'.$targetLang;
+
         return $translations[$key] ?? $text;
     }
 
@@ -667,6 +670,7 @@ class NLPAccuracyTest extends TestCase
         if (strpos($prompt, 'MacBook Pro') !== false) {
             return 'MacBook Pro provides professional-grade performance and reliability.';
         }
+
         return 'This is a generated response.';
     }
 
@@ -704,7 +708,7 @@ class NLPAccuracyTest extends TestCase
         return [
             'subject' => $subject,
             'verb' => $verb,
-            'object' => $object
+            'object' => $object,
         ];
     }
 
@@ -732,6 +736,7 @@ class NLPAccuracyTest extends TestCase
         $text = preg_replace('/[-]{1,}/', ' ', $text); // Replace single or multiple dashes with space
         // Remove extra spaces
         $text = preg_replace('/\s+/', ' ', $text);
+
         return trim($text);
     }
 

@@ -4,14 +4,13 @@
  * Code Quality Metrics Tool
  * Calculates various code quality metrics
  */
-
 class CodeQualityMetrics
 {
     private array $metrics = [];
 
     public function analyzeFile(string $filePath): array
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return ['error' => 'File not found'];
         }
 
@@ -26,7 +25,7 @@ class CodeQualityMetrics
             'code_duplication' => $this->detectCodeDuplication($content),
             'method_count' => $this->countMethods($tokens),
             'class_count' => $this->countClasses($tokens),
-            'comment_ratio' => $this->calculateCommentRatio($content)
+            'comment_ratio' => $this->calculateCommentRatio($content),
         ];
     }
 
@@ -54,7 +53,7 @@ class CodeQualityMetrics
             'total' => $totalLines,
             'code' => $codeLines,
             'comments' => $commentLines,
-            'blank' => $blankLines
+            'blank' => $blankLines,
         ];
     }
 
@@ -73,7 +72,7 @@ class CodeQualityMetrics
             T_WHILE,
             T_DO,
             T_TRY,
-            T_CATCH
+            T_CATCH,
         ];
 
         foreach ($tokens as $token) {
@@ -106,14 +105,14 @@ class CodeQualityMetrics
 
         foreach ($lines as $lineNumber => $line) {
             $trimmedLine = trim($line);
-            if (!empty($trimmedLine) && !preg_match('/^\s*(\/\/|\/\*|\*)/', $trimmedLine)) {
+            if (! empty($trimmedLine) && ! preg_match('/^\s*(\/\/|\/\*|\*)/', $trimmedLine)) {
                 $hash = md5($trimmedLine);
 
                 if (isset($lineHashes[$hash])) {
                     $duplicates[] = [
                         'line1' => $lineHashes[$hash],
                         'line2' => $lineNumber + 1,
-                        'content' => $trimmedLine
+                        'content' => $trimmedLine,
                     ];
                 } else {
                     $lineHashes[$hash] = $lineNumber + 1;
@@ -123,7 +122,7 @@ class CodeQualityMetrics
 
         return [
             'duplicated_lines' => count($duplicates),
-            'duplicates' => $duplicates
+            'duplicates' => $duplicates,
         ];
     }
 
@@ -191,14 +190,14 @@ class CodeQualityMetrics
             'average_maintainability' => 0,
             'total_methods' => 0,
             'total_classes' => 0,
-            'files' => $results
+            'files' => $results,
         ];
 
         $totalComplexity = 0;
         $totalMaintainability = 0;
 
         foreach ($results as $result) {
-            if (!isset($result['error'])) {
+            if (! isset($result['error'])) {
                 $summary['total_lines'] += $result['lines_of_code']['total'];
                 $summary['total_code_lines'] += $result['lines_of_code']['code'];
                 $summary['total_comment_lines'] += $result['lines_of_code']['comments'];
@@ -222,7 +221,7 @@ class CodeQualityMetrics
         $csvData = "File,Total Lines,Code Lines,Comment Lines,Cyclomatic Complexity,Maintainability Index,Methods,Classes,Comment Ratio\n";
 
         foreach ($metrics['files'] as $file) {
-            if (!isset($file['error'])) {
+            if (! isset($file['error'])) {
                 $csvData .= sprintf(
                     "%s,%d,%d,%d,%d,%.2f,%d,%d,%.2f\n",
                     $file['file'],

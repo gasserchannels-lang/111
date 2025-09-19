@@ -9,19 +9,15 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Store;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    use RefreshDatabase;
-
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_product()
     {
-        // استخدام اتصال sqlite_testing
-        $this->app['config']->set('database.default', 'sqlite_testing');
+        // استخدام اتصال testing
+        $this->app['config']->set('database.default', 'testing');
 
         $currency = Currency::factory()->create();
         $store = Store::factory()->create(['currency_id' => $currency->id]);
@@ -86,8 +82,8 @@ class ProductTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_active_products()
     {
-        // استخدام اتصال sqlite_testing
-        $this->app['config']->set('database.default', 'sqlite_testing');
+        // استخدام اتصال testing
+        $this->app['config']->set('database.default', 'testing');
 
         // إنشاء البيانات المطلوبة
         $currency = Currency::factory()->create();
@@ -120,8 +116,8 @@ class ProductTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_products_by_brand()
     {
-        // استخدام اتصال sqlite_testing
-        $this->app['config']->set('database.default', 'sqlite_testing');
+        // استخدام اتصال testing
+        $this->app['config']->set('database.default', 'testing');
 
         $brand = Brand::factory()->create();
         $otherBrand = Brand::factory()->create();
@@ -161,8 +157,8 @@ class ProductTest extends TestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_scope_products_by_category()
     {
-        // استخدام اتصال sqlite_testing
-        $this->app['config']->set('database.default', 'sqlite_testing');
+        // استخدام اتصال testing
+        $this->app['config']->set('database.default', 'testing');
 
         $category = Category::factory()->create();
         $otherCategory = Category::factory()->create();

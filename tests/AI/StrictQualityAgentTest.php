@@ -3,7 +3,6 @@
 namespace Tests\AI;
 
 use App\Services\AI\StrictQualityAgent;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Tests\TestCase;

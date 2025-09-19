@@ -98,7 +98,7 @@ class StatsCommand extends Command
 
         if ($topCategories->isNotEmpty()) {
             $this->info('🏆 Top 5 Categories by Product Count');
-            $categoryData = $topCategories->map(fn($category): array => [$category->name, $category->products_count])->toArray();
+            $categoryData = $topCategories->map(fn ($category): array => [$category->name, $category->products_count])->toArray();
 
             $this->table(['Category', 'Products'], $categoryData);
         }
@@ -111,7 +111,7 @@ class StatsCommand extends Command
 
         if ($topBrands->isNotEmpty()) {
             $this->info('🏆 Top 5 Brands by Product Count');
-            $brandData = $topBrands->map(fn($brand): array => [$brand->name, $brand->products_count])->toArray();
+            $brandData = $topBrands->map(fn ($brand): array => [$brand->name, $brand->products_count])->toArray();
 
             $this->table(['Brand', 'Products'], $brandData);
         }
@@ -124,7 +124,7 @@ class StatsCommand extends Command
 
         if ($storeStats->isNotEmpty()) {
             $this->info('🏪 Top 5 Stores by Price Offers');
-            $storeData = $storeStats->map(fn($store): array => [$store->name, $store->price_offers_count])->toArray();
+            $storeData = $storeStats->map(fn ($store): array => [$store->name, $store->price_offers_count])->toArray();
 
             $this->table(['Store', 'Price Offers'], $storeData);
         }
@@ -157,7 +157,8 @@ class StatsCommand extends Command
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-        for ($i = 0; $size > 1024 && $i < count($units) - 1; $i++) {
+        $unitsCount = count($units) - 1;
+        for ($i = 0; $size > 1024 && $i < $unitsCount; $i++) {
             $size /= 1024;
         }
 

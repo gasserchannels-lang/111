@@ -17,7 +17,7 @@ class DataCompletenessTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'brand' => 'Apple',
             'price' => 999.99,
-            'category' => 'Smartphones'
+            'category' => 'Smartphones',
         ];
 
         $requiredFields = ['id', 'name', 'brand', 'price', 'category'];
@@ -36,7 +36,7 @@ class DataCompletenessTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'description' => null,
             'image_url' => null,
-            'specifications' => null
+            'specifications' => null,
         ];
 
         $optionalFields = ['description', 'image_url', 'specifications'];
@@ -53,7 +53,7 @@ class DataCompletenessTest extends TestCase
         $product = [
             'name' => 'iPhone 15 Pro',
             'brand' => 'Apple',
-            'category' => 'Smartphones'
+            'category' => 'Smartphones',
         ];
 
         foreach ($product as $field => $value) {
@@ -70,7 +70,7 @@ class DataCompletenessTest extends TestCase
             'id' => 1,
             'price' => 999.99,
             'stock_quantity' => 50,
-            'rating' => 4.5
+            'rating' => 4.5,
         ];
 
         $this->assertIsInt($product['id']);
@@ -90,7 +90,7 @@ class DataCompletenessTest extends TestCase
     {
         $user = [
             'email' => 'user@example.com',
-            'contact_email' => 'contact@company.com'
+            'contact_email' => 'contact@company.com',
         ];
 
         foreach ($user as $field => $email) {
@@ -107,7 +107,7 @@ class DataCompletenessTest extends TestCase
         $product = [
             'website_url' => 'https://www.apple.com',
             'image_url' => 'https://example.com/image.jpg',
-            'manual_url' => 'https://support.apple.com/manual.pdf'
+            'manual_url' => 'https://support.apple.com/manual.pdf',
         ];
 
         foreach ($product as $field => $url) {
@@ -124,7 +124,7 @@ class DataCompletenessTest extends TestCase
         $product = [
             'created_at' => '2025-01-15 10:30:00',
             'updated_at' => '2025-01-15 15:45:00',
-            'release_date' => '2024-09-15'
+            'release_date' => '2024-09-15',
         ];
 
         foreach ($product as $field => $date) {
@@ -143,13 +143,13 @@ class DataCompletenessTest extends TestCase
             'specifications' => [
                 'storage' => '256GB',
                 'color' => 'Space Black',
-                'screen_size' => '6.1 inches'
+                'screen_size' => '6.1 inches',
             ],
             'tags' => ['smartphone', 'apple', 'premium'],
             'images' => [
                 'https://example.com/image1.jpg',
-                'https://example.com/image2.jpg'
-            ]
+                'https://example.com/image2.jpg',
+            ],
         ];
 
         $this->assertIsArray($product['specifications']);
@@ -168,7 +168,7 @@ class DataCompletenessTest extends TestCase
             'is_active' => true,
             'is_featured' => false,
             'is_available' => true,
-            'has_warranty' => true
+            'has_warranty' => true,
         ];
 
         foreach ($product as $field => $value) {
@@ -182,7 +182,7 @@ class DataCompletenessTest extends TestCase
         $product = [
             'status' => 'active',
             'condition' => 'new',
-            'shipping_method' => 'standard'
+            'shipping_method' => 'standard',
         ];
 
         $validStatuses = ['active', 'inactive', 'pending'];
@@ -201,7 +201,7 @@ class DataCompletenessTest extends TestCase
             'id' => 1,
             'brand_id' => 5,
             'category_id' => 12,
-            'store_id' => 8
+            'store_id' => 8,
         ];
 
         $foreignKeys = ['brand_id', 'category_id', 'store_id'];
@@ -219,12 +219,12 @@ class DataCompletenessTest extends TestCase
         $product = [
             'id' => 1,
             'name' => 'iPhone 15 Pro',
-            'brand_id' => 5
+            'brand_id' => 5,
         ];
 
         $brand = [
             'id' => 5,
-            'name' => 'Apple'
+            'name' => 'Apple',
         ];
 
         $this->assertEquals($product['brand_id'], $brand['id']);
@@ -241,7 +241,7 @@ class DataCompletenessTest extends TestCase
             'category' => 'Smartphones',
             'description' => 'Latest iPhone model',
             'image_url' => 'https://example.com/image.jpg',
-            'specifications' => ['storage' => '256GB']
+            'specifications' => ['storage' => '256GB'],
         ];
 
         $requiredFields = ['id', 'name', 'brand', 'price', 'category'];

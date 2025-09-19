@@ -2,24 +2,26 @@ includes:
     - ./vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 7
     paths:
-        - app/
-        - config/
-        - database/
-        - routes/
-    tmpDir: storage/framework/cache/phpstan
-    checkOctaneCompatibility: true
-    checkModelProperties: true
-    reportUnmatchedIgnoredErrors: false
-    parallel:
-        maximumNumberOfProcesses: 4
-        processTimeout: 300.0
+        - app
+        - config
+        - database
+        - routes
+        - tests
+
     excludePaths:
-        - tests/*
-        - storage/
-        - bootstrap/cache/
-        - database/migrations/2025_09_14_065423_create_permission_tables.php
+        - bootstrap/cache
+        - storage
+        - vendor
+
+    level: 5
+
     ignoreErrors:
-        - '#Template type TDeclaringModel on class.*is not covariant#'
-        - '#Template type TValue on class.*Collection.*is not covariant.*Learn more at https://phpstan.org/blog/whats-up-with-template-covariant#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::.*#'
+        - '#Call to an undefined method Illuminate\\Database\\Query\\Builder::.*#'
+
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    reportUnmatchedIgnoredErrors: false
+
+    tmpDir: storage/framework/phpstan

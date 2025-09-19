@@ -215,7 +215,7 @@ class CacheService
     {
         $tags = $this->getModelTags($model);
 
-        return $this->remember($key, $ttl, fn() => $model->toArray(), $tags);
+        return $this->remember($key, $ttl, fn () => $model->toArray(), $tags);
     }
 
     /**
@@ -237,7 +237,7 @@ class CacheService
      */
     public function rememberApiResponse(string $endpoint, array $params, callable $callback, int $ttl = 300): mixed
     {
-        $key = 'api:'.$endpoint.':'.md5(serialize($params));
+        $key = 'api:'.$endpoint.':'.hash('sha256', serialize($params));
         $tags = ['api', $endpoint];
 
         return $this->remember($key, $ttl, $callback, $tags);
@@ -251,7 +251,7 @@ class CacheService
      */
     public function rememberSearch(string $query, array $filters, callable $callback, int $ttl = 600): mixed
     {
-        $key = 'search:'.md5($query.serialize($filters));
+        $key = 'search:'.hash('sha256', $query.serialize($filters));
         $tags = ['search', 'products'];
 
         return $this->remember($key, $ttl, $callback, $tags);

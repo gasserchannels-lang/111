@@ -30,7 +30,7 @@ final class WatermarkService
             'font_family' => 'Arial',
         ]);
         if (is_array($config)) {
-            $this->config = array_merge($this->config, array_filter($config, fn($value): bool => is_string($value) || is_numeric($value) || is_bool($value)));
+            $this->config = array_merge($this->config, array_filter($config, fn ($value): bool => is_string($value) || is_numeric($value) || is_bool($value)));
         }
     }
 
@@ -210,8 +210,6 @@ final class WatermarkService
 
     /**
      * Create image resource from file.
-     *
-     * @return \GdImage|false
      */
     private function createImageResource(string $imagePath, string $mimeType): \GdImage|false
     {
@@ -399,7 +397,7 @@ final class WatermarkService
      */
     public function isEnabled(): bool
     {
-        return $this->config['enabled'];
+        return (bool) $this->config['enabled'];
     }
 
     /**

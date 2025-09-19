@@ -16,7 +16,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Laptop',
             'category' => 'Electronics',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $recommendations = $this->getCrossSellRecommendations($currentProduct);
@@ -36,7 +36,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'iPhone',
             'category' => 'Electronics',
-            'price' => 799.99
+            'price' => 799.99,
         ];
 
         $recommendations = $this->getComplementaryProducts($currentProduct);
@@ -58,7 +58,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Camera',
             'category' => 'Electronics',
-            'price' => 599.99
+            'price' => 599.99,
         ];
 
         $recommendations = $this->getRelatedAccessories($currentProduct);
@@ -80,7 +80,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Gaming Console',
             'category' => 'Electronics',
-            'price' => 399.99
+            'price' => 399.99,
         ];
 
         $recommendations = $this->getBundledProducts($currentProduct);
@@ -102,13 +102,13 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Laptop',
             'category' => 'Electronics',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $purchaseHistory = [
             ['product_id' => 2, 'name' => 'Mouse', 'category' => 'Accessories'],
             ['product_id' => 3, 'name' => 'Keyboard', 'category' => 'Accessories'],
-            ['product_id' => 4, 'name' => 'Monitor', 'category' => 'Electronics']
+            ['product_id' => 4, 'name' => 'Monitor', 'category' => 'Electronics'],
         ];
 
         $recommendations = $this->getRecommendationsBasedOnHistory($currentProduct, $purchaseHistory);
@@ -125,13 +125,13 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Smartphone',
             'category' => 'Electronics',
-            'price' => 699.99
+            'price' => 699.99,
         ];
 
         $userBehavior = [
             'viewed_products' => ['Case', 'Screen Protector', 'Charger'],
             'searched_terms' => ['phone accessories', 'mobile protection'],
-            'time_spent' => 300 // seconds
+            'time_spent' => 300, // seconds
         ];
 
         $recommendations = $this->getRecommendationsBasedOnBehavior($currentProduct, $userBehavior);
@@ -148,7 +148,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Winter Jacket',
             'category' => 'Clothing',
-            'price' => 149.99
+            'price' => 149.99,
         ];
 
         $season = 'winter';
@@ -171,7 +171,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Budget Laptop',
             'category' => 'Electronics',
-            'price' => 299.99
+            'price' => 299.99,
         ];
 
         $recommendations = $this->getRecommendationsByPriceRange($currentProduct);
@@ -194,7 +194,7 @@ class CrossSellRecommendationTest extends TestCase
             'name' => 'Apple iPhone',
             'category' => 'Electronics',
             'brand' => 'Apple',
-            'price' => 799.99
+            'price' => 799.99,
         ];
 
         $brandPreferences = ['Apple', 'Samsung', 'Google'];
@@ -218,7 +218,7 @@ class CrossSellRecommendationTest extends TestCase
             'name' => 'High-Rated Laptop',
             'category' => 'Electronics',
             'rating' => 4.8,
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $recommendations = $this->getRecommendationsByRatings($currentProduct);
@@ -240,7 +240,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Available Product',
             'category' => 'Electronics',
-            'price' => 199.99
+            'price' => 199.99,
         ];
 
         $recommendations = $this->getRecommendationsByAvailability($currentProduct);
@@ -262,7 +262,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Popular Product',
             'category' => 'Electronics',
-            'price' => 299.99
+            'price' => 299.99,
         ];
 
         $recommendations = $this->getRecommendationsByPopularity($currentProduct);
@@ -284,7 +284,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Professional Laptop',
             'category' => 'Electronics',
-            'price' => 1299.99
+            'price' => 1299.99,
         ];
 
         $customerSegment = 'professional';
@@ -307,7 +307,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Regional Product',
             'category' => 'Electronics',
-            'price' => 199.99
+            'price' => 199.99,
         ];
 
         $location = 'US';
@@ -330,7 +330,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Coffee Maker',
             'category' => 'Appliances',
-            'price' => 89.99
+            'price' => 89.99,
         ];
 
         $timeOfDay = 'morning';
@@ -353,7 +353,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Umbrella',
             'category' => 'Accessories',
-            'price' => 19.99
+            'price' => 19.99,
         ];
 
         $weather = 'rainy';
@@ -376,7 +376,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Gift Card',
             'category' => 'Gifts',
-            'price' => 50.00
+            'price' => 50.00,
         ];
 
         $event = 'birthday';
@@ -399,14 +399,14 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Laptop',
             'category' => 'Electronics',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $recommendedProduct = [
             'id' => 2,
             'name' => 'Mouse',
             'category' => 'Accessories',
-            'price' => 29.99
+            'price' => 29.99,
         ];
 
         $confidence = $this->calculateRecommendationConfidence($currentProduct, $recommendedProduct);
@@ -424,7 +424,7 @@ class CrossSellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Laptop',
             'category' => 'Electronics',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $report = $this->generateCrossSellReport($currentProduct);
@@ -446,7 +446,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 29.99,
                 'confidence_score' => 0.85,
-                'reason' => 'Frequently bought together'
+                'reason' => 'Frequently bought together',
             ],
             [
                 'product_id' => 3,
@@ -454,7 +454,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 49.99,
                 'confidence_score' => 0.78,
-                'reason' => 'Complementary product'
+                'reason' => 'Complementary product',
             ],
             [
                 'product_id' => 4,
@@ -462,8 +462,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 19.99,
                 'confidence_score' => 0.72,
-                'reason' => 'Related accessory'
-            ]
+                'reason' => 'Related accessory',
+            ],
         ];
     }
 
@@ -473,7 +473,7 @@ class CrossSellRecommendationTest extends TestCase
             'iPhone' => ['Case', 'Screen Protector', 'Charger', 'AirPods'],
             'Laptop' => ['Mouse', 'Keyboard', 'Monitor', 'Laptop Stand'],
             'Camera' => ['Lens', 'Memory Card', 'Tripod', 'Camera Bag'],
-            'Gaming Console' => ['Controller', 'Game', 'Headset', 'Charging Station']
+            'Gaming Console' => ['Controller', 'Game', 'Headset', 'Charging Station'],
         ];
 
         $productName = $currentProduct['name'];
@@ -487,7 +487,7 @@ class CrossSellRecommendationTest extends TestCase
                         'name' => $complement,
                         'category' => 'Accessories',
                         'price' => rand(10, 100),
-                        'confidence_score' => rand(70, 95) / 100
+                        'confidence_score' => rand(70, 95) / 100,
                     ];
                 }
                 break;
@@ -506,7 +506,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 199.99,
                 'confidence_score' => 0.90,
-                'is_accessory' => true
+                'is_accessory' => true,
             ],
             [
                 'product_id' => 6,
@@ -514,8 +514,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 39.99,
                 'confidence_score' => 0.85,
-                'is_accessory' => true
-            ]
+                'is_accessory' => true,
+            ],
         ];
     }
 
@@ -528,7 +528,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 59.99,
                 'confidence_score' => 0.88,
-                'can_bundle' => true
+                'can_bundle' => true,
             ],
             [
                 'product_id' => 8,
@@ -536,8 +536,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 79.99,
                 'confidence_score' => 0.82,
-                'can_bundle' => true
-            ]
+                'can_bundle' => true,
+            ],
         ];
     }
 
@@ -553,7 +553,7 @@ class CrossSellRecommendationTest extends TestCase
                     'category' => $item['category'],
                     'price' => rand(20, 100),
                     'confidence_score' => 0.75,
-                    'reason' => 'Based on purchase history'
+                    'reason' => 'Based on purchase history',
                 ];
             }
         }
@@ -572,7 +572,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => rand(10, 50),
                 'confidence_score' => 0.80,
-                'reason' => 'Based on user behavior'
+                'reason' => 'Based on user behavior',
             ];
         }
 
@@ -585,7 +585,7 @@ class CrossSellRecommendationTest extends TestCase
             'winter' => ['Gloves', 'Scarf', 'Winter Boots', 'Hot Chocolate'],
             'summer' => ['Sunglasses', 'Sunscreen', 'Summer Hat', 'Ice Cream'],
             'spring' => ['Rain Jacket', 'Umbrella', 'Spring Flowers', 'Light Jacket'],
-            'fall' => ['Sweater', 'Boots', 'Pumpkin Spice', 'Warm Scarf']
+            'fall' => ['Sweater', 'Boots', 'Pumpkin Spice', 'Warm Scarf'],
         ];
 
         $recommendations = [];
@@ -598,7 +598,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Seasonal',
                 'price' => rand(15, 80),
                 'confidence_score' => 0.85,
-                'season' => $season
+                'season' => $season,
             ];
         }
 
@@ -618,7 +618,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => $minPrice + 10,
                 'confidence_score' => 0.75,
-                'price_range_match' => true
+                'price_range_match' => true,
             ],
             [
                 'product_id' => 10,
@@ -626,8 +626,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => $maxPrice - 10,
                 'confidence_score' => 0.70,
-                'price_range_match' => true
-            ]
+                'price_range_match' => true,
+            ],
         ];
     }
 
@@ -641,7 +641,7 @@ class CrossSellRecommendationTest extends TestCase
                 'brand' => 'Apple',
                 'price' => 159.99,
                 'confidence_score' => 0.90,
-                'brand_match' => true
+                'brand_match' => true,
             ],
             [
                 'product_id' => 12,
@@ -650,8 +650,8 @@ class CrossSellRecommendationTest extends TestCase
                 'brand' => 'Samsung',
                 'price' => 129.99,
                 'confidence_score' => 0.85,
-                'brand_match' => true
-            ]
+                'brand_match' => true,
+            ],
         ];
     }
 
@@ -664,7 +664,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 39.99,
                 'rating' => 4.7,
-                'confidence_score' => 0.88
+                'confidence_score' => 0.88,
             ],
             [
                 'product_id' => 14,
@@ -672,8 +672,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 79.99,
                 'rating' => 4.9,
-                'confidence_score' => 0.92
-            ]
+                'confidence_score' => 0.92,
+            ],
         ];
     }
 
@@ -686,7 +686,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 29.99,
                 'in_stock' => true,
-                'confidence_score' => 0.80
+                'confidence_score' => 0.80,
             ],
             [
                 'product_id' => 16,
@@ -694,8 +694,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 49.99,
                 'in_stock' => true,
-                'confidence_score' => 0.75
-            ]
+                'confidence_score' => 0.75,
+            ],
         ];
     }
 
@@ -708,7 +708,7 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 19.99,
                 'sales_count' => 1500,
-                'confidence_score' => 0.85
+                'confidence_score' => 0.85,
             ],
             [
                 'product_id' => 18,
@@ -716,8 +716,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 35.99,
                 'sales_count' => 2000,
-                'confidence_score' => 0.90
-            ]
+                'confidence_score' => 0.90,
+            ],
         ];
     }
 
@@ -730,8 +730,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 99.99,
                 'confidence_score' => 0.88,
-                'segment' => $customerSegment
-            ]
+                'segment' => $customerSegment,
+            ],
         ];
     }
 
@@ -744,8 +744,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 24.99,
                 'confidence_score' => 0.75,
-                'available_locations' => [$location, 'CA', 'UK']
-            ]
+                'available_locations' => [$location, 'CA', 'UK'],
+            ],
         ];
     }
 
@@ -758,8 +758,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 15.99,
                 'confidence_score' => 0.70,
-                'time_relevance' => $timeOfDay
-            ]
+                'time_relevance' => $timeOfDay,
+            ],
         ];
     }
 
@@ -772,8 +772,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 12.99,
                 'confidence_score' => 0.65,
-                'weather_relevance' => $weather
-            ]
+                'weather_relevance' => $weather,
+            ],
         ];
     }
 
@@ -786,8 +786,8 @@ class CrossSellRecommendationTest extends TestCase
                 'category' => 'Accessories',
                 'price' => 18.99,
                 'confidence_score' => 0.68,
-                'event_relevance' => $event
-            ]
+                'event_relevance' => $event,
+            ],
         ];
     }
 
@@ -815,7 +815,7 @@ class CrossSellRecommendationTest extends TestCase
             'recommendations' => $recommendations,
             'total_recommendations' => $totalRecommendations,
             'average_confidence' => $averageConfidence,
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -825,7 +825,7 @@ class CrossSellRecommendationTest extends TestCase
         $complementaryPairs = [
             'iPhone' => ['Case', 'Screen Protector', 'Charger'],
             'Laptop' => ['Mouse', 'Keyboard', 'Monitor'],
-            'Camera' => ['Lens', 'Memory Card', 'Tripod']
+            'Camera' => ['Lens', 'Memory Card', 'Tripod'],
         ];
 
         $currentName = $currentProduct['name'];

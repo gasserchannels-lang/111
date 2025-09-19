@@ -9,6 +9,7 @@ use Tests\TestCase;
 class E2ETest extends TestCase
 {
     use RefreshDatabase;
+
     #[Test]
     public function can_load_homepage()
     {

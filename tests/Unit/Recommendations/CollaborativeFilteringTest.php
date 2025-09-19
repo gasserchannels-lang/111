@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Recommendations;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class CollaborativeFilteringTest extends TestCase
 {
@@ -16,7 +16,7 @@ class CollaborativeFilteringTest extends TestCase
             'user1' => ['item1' => 5, 'item2' => 3, 'item3' => 4],
             'user2' => ['item1' => 4, 'item2' => 2, 'item3' => 5],
             'user3' => ['item1' => 1, 'item2' => 5, 'item3' => 2],
-            'user4' => ['item1' => 5, 'item2' => 3, 'item3' => 4]
+            'user4' => ['item1' => 5, 'item2' => 3, 'item3' => 4],
         ];
 
         $targetUser = 'user1';
@@ -46,7 +46,7 @@ class CollaborativeFilteringTest extends TestCase
         $userRatings = [
             'user1' => ['item1' => 5, 'item2' => 3, 'item3' => 4],
             'user2' => ['item1' => 4, 'item2' => 2, 'item3' => 5],
-            'user3' => ['item1' => 1, 'item2' => 5, 'item3' => 2]
+            'user3' => ['item1' => 1, 'item2' => 5, 'item3' => 2],
         ];
 
         $targetUser = 'user1';
@@ -68,7 +68,7 @@ class CollaborativeFilteringTest extends TestCase
             'item1' => 100,
             'item2' => 80,
             'item3' => 60,
-            'item4' => 40
+            'item4' => 40,
         ];
 
         $recommendations = $this->handleColdStart($newUser, $popularItems, 3);
@@ -115,7 +115,7 @@ class CollaborativeFilteringTest extends TestCase
         $itemRatings = [
             'item1' => ['user1' => 5, 'user2' => 4, 'user3' => 3],
             'item2' => ['user1' => 4, 'user2' => 3, 'user3' => 2],
-            'item3' => ['user1' => 1, 'user2' => 2, 'user3' => 5]
+            'item3' => ['user1' => 1, 'user2' => 2, 'user3' => 5],
         ];
 
         $similarity = $this->calculateItemBasedSimilarity($itemRatings, 'item1', 'item2');
@@ -131,7 +131,7 @@ class CollaborativeFilteringTest extends TestCase
             'user1' => ['item1' => 5],
             'user2' => ['item2' => 4],
             'user3' => ['item3' => 3],
-            'user4' => ['item1' => 4, 'item2' => 3]
+            'user4' => ['item1' => 4, 'item2' => 3],
         ];
 
         $targetUser = 'user1';
@@ -149,7 +149,7 @@ class CollaborativeFilteringTest extends TestCase
         $userRatings = [
             'user1' => ['item1' => 5, 'item2' => 3],
             'user2' => ['item1' => 4, 'item2' => 2, 'item3' => 4],
-            'user3' => ['item1' => 5, 'item2' => 3, 'item3' => 5]
+            'user3' => ['item1' => 5, 'item2' => 3, 'item3' => 5],
         ];
 
         $targetUser = 'user1';
@@ -171,7 +171,7 @@ class CollaborativeFilteringTest extends TestCase
             [4, 0, 0, 1],
             [1, 1, 0, 5],
             [1, 0, 0, 4],
-            [0, 1, 5, 4]
+            [0, 1, 5, 4],
         ];
 
         $factors = $this->performMatrixFactorization($ratingsMatrix, 2);
@@ -187,13 +187,16 @@ class CollaborativeFilteringTest extends TestCase
         $similarities = [];
 
         foreach ($userRatings as $user => $ratings) {
-            if ($user === $targetUser) continue;
+            if ($user === $targetUser) {
+                continue;
+            }
 
             $similarity = $this->calculateCosineSimilarity($targetRatings, $ratings);
             $similarities[$user] = $similarity;
         }
 
         arsort($similarities);
+
         return array_slice(array_keys($similarities), 0, $limit);
     }
 
@@ -232,7 +235,9 @@ class CollaborativeFilteringTest extends TestCase
         $totalWeight = 0;
 
         foreach ($similarUsers as $similarUser) {
-            if (!isset($userRatings[$similarUser][$item])) continue;
+            if (! isset($userRatings[$similarUser][$item])) {
+                continue;
+            }
 
             $similarity = $this->calculateCosineSimilarity($targetRatings, $userRatings[$similarUser]);
             $rating = $userRatings[$similarUser][$item];
@@ -252,6 +257,7 @@ class CollaborativeFilteringTest extends TestCase
     private function handleColdStart(array $newUser, array $popularItems, int $limit): array
     {
         arsort($popularItems);
+
         return array_slice(array_keys($popularItems), 0, $limit);
     }
 
@@ -282,7 +288,9 @@ class CollaborativeFilteringTest extends TestCase
         $num = $pSum - ($sum1 * $sum2 / $n);
         $den = sqrt(($sum1Sq - $sum1 * $sum1 / $n) * ($sum2Sq - $sum2 * $sum2 / $n));
 
-        if ($den == 0) return 0;
+        if ($den == 0) {
+            return 0;
+        }
 
         return $num / $den;
     }
@@ -294,7 +302,7 @@ class CollaborativeFilteringTest extends TestCase
 
     private function calculateItemBasedSimilarity(array $itemRatings, string $item1, string $item2): float
     {
-        if (!isset($itemRatings[$item1]) || !isset($itemRatings[$item2])) {
+        if (! isset($itemRatings[$item1]) || ! isset($itemRatings[$item2])) {
             return 0;
         }
 
@@ -310,7 +318,9 @@ class CollaborativeFilteringTest extends TestCase
         $similarUsers = [];
 
         foreach ($userRatings as $user => $ratings) {
-            if ($user === $targetUser) continue;
+            if ($user === $targetUser) {
+                continue;
+            }
 
             $commonItems = array_intersect_key($targetRatings, $ratings);
 
@@ -321,6 +331,7 @@ class CollaborativeFilteringTest extends TestCase
         }
 
         arsort($similarUsers);
+
         return array_keys($similarUsers);
     }
 
@@ -338,7 +349,9 @@ class CollaborativeFilteringTest extends TestCase
             }
         }
 
-        if ($commonItems == 0) return 0;
+        if ($commonItems == 0) {
+            return 0;
+        }
 
         return min(1.0, $commonItems / 5.0) * min(1.0, $totalSimilarity / $commonItems);
     }
@@ -366,7 +379,7 @@ class CollaborativeFilteringTest extends TestCase
 
         return [
             'user_factors' => $userFactors,
-            'item_factors' => $itemFactors
+            'item_factors' => $itemFactors,
         ];
     }
 }

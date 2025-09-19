@@ -17,7 +17,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Basic Laptop',
             'category' => 'Electronics',
             'price' => 599.99,
-            'tier' => 'basic'
+            'tier' => 'basic',
         ];
 
         $recommendations = $this->getUpsellRecommendations($currentProduct);
@@ -39,7 +39,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Standard iPhone',
             'category' => 'Electronics',
             'price' => 699.99,
-            'model' => 'standard'
+            'model' => 'standard',
         ];
 
         $recommendations = $this->getPremiumVersions($currentProduct);
@@ -62,7 +62,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Basic Camera',
             'category' => 'Electronics',
             'price' => 299.99,
-            'features' => ['Basic Zoom', 'Auto Focus']
+            'features' => ['Basic Zoom', 'Auto Focus'],
         ];
 
         $recommendations = $this->getFeatureRichProducts($currentProduct);
@@ -85,7 +85,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => '8GB RAM Laptop',
             'category' => 'Electronics',
             'price' => 799.99,
-            'specifications' => ['RAM' => '8GB', 'Storage' => '256GB', 'CPU' => 'i5']
+            'specifications' => ['RAM' => '8GB', 'Storage' => '256GB', 'CPU' => 'i5'],
         ];
 
         $recommendations = $this->getBetterSpecProducts($currentProduct);
@@ -108,7 +108,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Laptop with 1 Year Warranty',
             'category' => 'Electronics',
             'price' => 999.99,
-            'warranty' => '1 year'
+            'warranty' => '1 year',
         ];
 
         $recommendations = $this->getExtendedWarrantyProducts($currentProduct);
@@ -131,7 +131,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Plastic Headphones',
             'category' => 'Electronics',
             'price' => 49.99,
-            'material' => 'plastic'
+            'material' => 'plastic',
         ];
 
         $recommendations = $this->getPremiumMaterialProducts($currentProduct);
@@ -154,7 +154,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Generic Laptop',
             'category' => 'Electronics',
             'price' => 499.99,
-            'brand' => 'Generic'
+            'brand' => 'Generic',
         ];
 
         $recommendations = $this->getBetterBrandProducts($currentProduct);
@@ -177,7 +177,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => '256GB SSD',
             'category' => 'Electronics',
             'price' => 79.99,
-            'capacity' => '256GB'
+            'capacity' => '256GB',
         ];
 
         $recommendations = $this->getHigherCapacityProducts($currentProduct);
@@ -200,7 +200,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Mid-Range GPU',
             'category' => 'Electronics',
             'price' => 299.99,
-            'performance_score' => 75
+            'performance_score' => 75,
         ];
 
         $recommendations = $this->getBetterPerformanceProducts($currentProduct);
@@ -223,7 +223,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => '128GB Phone',
             'category' => 'Electronics',
             'price' => 599.99,
-            'storage' => '128GB'
+            'storage' => '128GB',
         ];
 
         $recommendations = $this->getMoreStorageProducts($currentProduct);
@@ -246,7 +246,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'HD Laptop',
             'category' => 'Electronics',
             'price' => 699.99,
-            'display' => 'HD'
+            'display' => 'HD',
         ];
 
         $recommendations = $this->getBetterDisplayProducts($currentProduct);
@@ -269,7 +269,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'WiFi 5 Router',
             'category' => 'Electronics',
             'price' => 99.99,
-            'connectivity' => 'WiFi 5'
+            'connectivity' => 'WiFi 5',
         ];
 
         $recommendations = $this->getBetterConnectivityProducts($currentProduct);
@@ -292,7 +292,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => '8 Hour Laptop',
             'category' => 'Electronics',
             'price' => 799.99,
-            'battery_life' => '8 hours'
+            'battery_life' => '8 hours',
         ];
 
         $recommendations = $this->getBetterBatteryProducts($currentProduct);
@@ -315,7 +315,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => '12MP Phone',
             'category' => 'Electronics',
             'price' => 499.99,
-            'camera' => '12MP'
+            'camera' => '12MP',
         ];
 
         $recommendations = $this->getBetterCameraProducts($currentProduct);
@@ -338,7 +338,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Basic Headphones',
             'category' => 'Electronics',
             'price' => 29.99,
-            'audio_quality' => 'basic'
+            'audio_quality' => 'basic',
         ];
 
         $recommendations = $this->getBetterAudioProducts($currentProduct);
@@ -361,7 +361,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Basic Security Software',
             'category' => 'Software',
             'price' => 29.99,
-            'security_features' => ['Basic Antivirus']
+            'security_features' => ['Basic Antivirus'],
         ];
 
         $recommendations = $this->getBetterSecurityProducts($currentProduct);
@@ -384,7 +384,7 @@ class UpsellRecommendationTest extends TestCase
             'name' => 'Basic Support Plan',
             'category' => 'Service',
             'price' => 99.99,
-            'support_level' => 'basic'
+            'support_level' => 'basic',
         ];
 
         $recommendations = $this->getBetterSupportProducts($currentProduct);
@@ -406,14 +406,14 @@ class UpsellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Basic Laptop',
             'category' => 'Electronics',
-            'price' => 599.99
+            'price' => 599.99,
         ];
 
         $recommendedProduct = [
             'id' => 2,
             'name' => 'Premium Laptop',
             'category' => 'Electronics',
-            'price' => 1299.99
+            'price' => 1299.99,
         ];
 
         $upsellPotential = $this->calculateUpsellPotential($currentProduct, $recommendedProduct);
@@ -430,7 +430,7 @@ class UpsellRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Basic Laptop',
             'category' => 'Electronics',
-            'price' => 599.99
+            'price' => 599.99,
         ];
 
         $report = $this->generateUpsellReport($currentProduct);
@@ -450,12 +450,12 @@ class UpsellRecommendationTest extends TestCase
         $upsellProducts = [
             'basic' => [
                 ['name' => 'Professional Laptop', 'price' => $price * 1.5, 'tier' => 'professional'],
-                ['name' => 'Enterprise Laptop', 'price' => $price * 2.0, 'tier' => 'enterprise']
+                ['name' => 'Enterprise Laptop', 'price' => $price * 2.0, 'tier' => 'enterprise'],
             ],
             'standard' => [
                 ['name' => 'Premium iPhone', 'price' => $price * 1.3, 'model' => 'premium'],
-                ['name' => 'Pro iPhone', 'price' => $price * 1.6, 'model' => 'pro']
-            ]
+                ['name' => 'Pro iPhone', 'price' => $price * 1.6, 'model' => 'pro'],
+            ],
         ];
 
         $recommendations = [];
@@ -468,7 +468,7 @@ class UpsellRecommendationTest extends TestCase
                 'category' => $currentProduct['category'],
                 'price' => $product['price'],
                 'upsell_ratio' => $product['price'] / $price,
-                'reason' => 'Higher tier product'
+                'reason' => 'Higher tier product',
             ];
         }
 
@@ -484,8 +484,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.4,
                 'model' => 'premium',
-                'is_premium' => true
-            ]
+                'is_premium' => true,
+            ],
         ];
     }
 
@@ -498,8 +498,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.8,
                 'features' => ['4K Video', 'Night Mode', 'Optical Zoom', 'Image Stabilization'],
-                'feature_count' => 4
-            ]
+                'feature_count' => 4,
+            ],
         ];
     }
 
@@ -512,8 +512,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.3,
                 'specifications' => ['RAM' => '16GB', 'Storage' => '512GB', 'CPU' => 'i7'],
-                'is_better_spec' => true
-            ]
+                'is_better_spec' => true,
+            ],
         ];
     }
 
@@ -526,8 +526,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.2,
                 'warranty' => '3 years',
-                'has_extended_warranty' => true
-            ]
+                'has_extended_warranty' => true,
+            ],
         ];
     }
 
@@ -540,8 +540,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 2.0,
                 'material' => 'aluminum',
-                'is_premium_material' => true
-            ]
+                'is_premium_material' => true,
+            ],
         ];
     }
 
@@ -554,8 +554,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 2.5,
                 'brand' => 'Apple',
-                'is_better_brand' => true
-            ]
+                'is_better_brand' => true,
+            ],
         ];
     }
 
@@ -568,8 +568,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 2.0,
                 'capacity' => '1TB',
-                'has_higher_capacity' => true
-            ]
+                'has_higher_capacity' => true,
+            ],
         ];
     }
 
@@ -582,8 +582,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 2.5,
                 'performance_score' => 95,
-                'has_better_performance' => true
-            ]
+                'has_better_performance' => true,
+            ],
         ];
     }
 
@@ -596,8 +596,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.5,
                 'storage' => '512GB',
-                'has_more_storage' => true
-            ]
+                'has_more_storage' => true,
+            ],
         ];
     }
 
@@ -610,8 +610,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.4,
                 'display' => '4K',
-                'has_better_display' => true
-            ]
+                'has_better_display' => true,
+            ],
         ];
     }
 
@@ -624,8 +624,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.5,
                 'connectivity' => 'WiFi 6',
-                'has_better_connectivity' => true
-            ]
+                'has_better_connectivity' => true,
+            ],
         ];
     }
 
@@ -638,8 +638,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.3,
                 'battery_life' => '16 hours',
-                'has_better_battery' => true
-            ]
+                'has_better_battery' => true,
+            ],
         ];
     }
 
@@ -652,8 +652,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 1.6,
                 'camera' => '48MP',
-                'has_better_camera' => true
-            ]
+                'has_better_camera' => true,
+            ],
         ];
     }
 
@@ -666,8 +666,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Electronics',
                 'price' => $currentProduct['price'] * 3.0,
                 'audio_quality' => 'premium',
-                'has_better_audio' => true
-            ]
+                'has_better_audio' => true,
+            ],
         ];
     }
 
@@ -680,8 +680,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Software',
                 'price' => $currentProduct['price'] * 2.0,
                 'security_features' => ['Advanced Antivirus', 'Firewall', 'VPN', 'Identity Protection'],
-                'has_better_security' => true
-            ]
+                'has_better_security' => true,
+            ],
         ];
     }
 
@@ -694,8 +694,8 @@ class UpsellRecommendationTest extends TestCase
                 'category' => 'Service',
                 'price' => $currentProduct['price'] * 1.5,
                 'support_level' => 'premium',
-                'has_better_support' => true
-            ]
+                'has_better_support' => true,
+            ],
         ];
     }
 
@@ -718,7 +718,7 @@ class UpsellRecommendationTest extends TestCase
             'recommendations' => $recommendations,
             'total_recommendations' => $totalRecommendations,
             'average_upsell_ratio' => $averageUpsellRatio,
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ];
     }
 

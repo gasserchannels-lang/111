@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class PriceSearchService
 {
-    public function __construct(private readonly ValidationFactory $validationFactory)
-    {
-    }
+    public function __construct(private readonly ValidationFactory $validationFactory) {}
 
     /**
      * Find the best offer for a product in a specific country.
@@ -128,7 +126,7 @@ class PriceSearchService
             ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy('store.name')
-            ->map(fn($offers) => $offers->map(fn($offer): array => [
+            ->map(fn ($offers) => $offers->map(fn ($offer): array => [
                 'price' => $offer->price,
                 'currency' => $offer->currency,
                 'date' => $offer->created_at?->format('Y-m-d H:i:s') ?? '',
@@ -176,7 +174,7 @@ class PriceSearchService
             ];
         }
 
-        $comparison = $offers->map(fn($offer): array => [
+        $comparison = $offers->map(fn ($offer): array => [
             'store_name' => $offer->store->name ?? 'Unknown Store',
             'price' => $offer->price,
             'currency' => $offer->currency,
@@ -213,8 +211,9 @@ class PriceSearchService
     public function validateSearchRequest(Request $request): array
     {
         $validator = $this->validationFactory->make($request->all(), [
-            'product' => 'required|string|min:3|max:255',
-            'country' => 'required|string|size:2',
+            'product' => 'sometimes|string|min:3|max:255',
+            'country' => 'sometimes|string|size:2',
+            'query' => 'sometimes|string|min:1|max:255',
         ]);
 
         if ($validator->fails()) {

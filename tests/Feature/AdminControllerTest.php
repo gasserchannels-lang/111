@@ -9,12 +9,15 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdminControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     private User $adminUser;
 
     private User $regularUser;
@@ -30,7 +33,7 @@ class AdminControllerTest extends TestCase
         Artisan::call('migrate:fresh', [
             '--force' => true,
             '--database' => 'testing',
-            '--env' => 'testing'
+            '--env' => 'testing',
         ]);
 
         $this->adminUser = User::factory()->create(['is_admin' => true]);

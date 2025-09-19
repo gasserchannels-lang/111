@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class FinancialTransactionService
 {
-    public function __construct(private readonly AuditService $auditService)
-    {
-    }
+    public function __construct(private readonly AuditService $auditService) {}
 
     /**
      * Update product price with transaction safety.

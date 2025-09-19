@@ -56,6 +56,7 @@ class StartQualityMonitoringCommand extends Command
         $pid = pcntl_fork();
         if ($pid == -1) {
             $this->error('فشل في إنشاء العملية الخلفية');
+
             return;
         }
 
@@ -63,6 +64,7 @@ class StartQualityMonitoringCommand extends Command
             // Parent process
             $this->info("✅ تم تشغيل العملية الخلفية برقم: {$pid}");
             $this->info('استخدم: kill '.$pid.' لإيقاف العملية');
+
             return;
         }
         // Child process

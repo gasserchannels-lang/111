@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Integration;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class EndToEndIntegrationTest extends TestCase
 {
@@ -186,17 +186,28 @@ class EndToEndIntegrationTest extends TestCase
 
     private function createWorkflowMock(): object
     {
-        return new class {
+        return new class
+        {
             private string $language = 'en';
+
             private string $currency = 'USD';
+
             private bool $errorMode = false;
+
             private string $deviceType = 'desktop';
+
             private bool $offlineMode = false;
+
             private array $users = [];
+
             private array $wishlists = [];
+
             private array $priceAlerts = [];
+
             private array $notifications = [];
+
             private array $products = [];
+
             private array $cache = [];
 
             public function registerUser(string $email, string $password): array
@@ -208,10 +219,11 @@ class EndToEndIntegrationTest extends TestCase
                 $user = [
                     'id' => count($this->users) + 1,
                     'email' => $email,
-                    'created_at' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
 
                 $this->users[] = $user;
+
                 return $user;
             }
 
@@ -221,7 +233,7 @@ class EndToEndIntegrationTest extends TestCase
                     return false;
                 }
 
-                return !empty($email) && !empty($password);
+                return ! empty($email) && ! empty($password);
             }
 
             public function searchProducts(string $query): array
@@ -238,7 +250,7 @@ class EndToEndIntegrationTest extends TestCase
                         'price' => 1000.00,
                         'price_formatted' => $this->formatPrice(1000.00),
                         'mobile_image' => 'laptop-mobile.jpg',
-                        'mobile_price' => '1000'
+                        'mobile_price' => '1000',
                     ],
                     [
                         'id' => 2,
@@ -247,8 +259,8 @@ class EndToEndIntegrationTest extends TestCase
                         'price' => 1500.00,
                         'price_formatted' => $this->formatPrice(1500.00),
                         'mobile_image' => 'gaming-mobile.jpg',
-                        'mobile_price' => '1500'
-                    ]
+                        'mobile_price' => '1500',
+                    ],
                 ];
 
                 return array_filter($products, function ($product) use ($query) {
@@ -266,7 +278,7 @@ class EndToEndIntegrationTest extends TestCase
                 $this->wishlists[] = [
                     'user_id' => $userId,
                     'product_id' => $productId,
-                    'created_at' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
 
                 return true;
@@ -282,7 +294,7 @@ class EndToEndIntegrationTest extends TestCase
                     'user_id' => $userId,
                     'product_id' => $productId,
                     'target_price' => $targetPrice,
-                    'created_at' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
 
                 return true;
@@ -294,8 +306,8 @@ class EndToEndIntegrationTest extends TestCase
                     'stores' => [
                         ['name' => 'Store A', 'price' => 1000.00],
                         ['name' => 'Store B', 'price' => 950.00],
-                        ['name' => 'Store C', 'price' => 1050.00]
-                    ]
+                        ['name' => 'Store C', 'price' => 1050.00],
+                    ],
                 ];
             }
 
@@ -314,7 +326,7 @@ class EndToEndIntegrationTest extends TestCase
                         $this->notifications[] = [
                             'user_id' => $alert['user_id'],
                             'message' => 'Price alert: Product price dropped!',
-                            'created_at' => date('Y-m-d H:i:s')
+                            'created_at' => date('Y-m-d H:i:s'),
                         ];
                     }
                 }
@@ -367,10 +379,11 @@ class EndToEndIntegrationTest extends TestCase
                 $formatters = [
                     'USD' => '$%s',
                     'EUR' => '€%s',
-                    'GBP' => '£%s'
+                    'GBP' => '£%s',
                 ];
 
                 $format = $formatters[$this->currency] ?? '$%s';
+
                 return sprintf($format, number_format($price, 2));
             }
         };

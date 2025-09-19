@@ -4,11 +4,12 @@
  * Performance Profiler Tool
  * Analyzes application performance and identifies bottlenecks
  */
-
 class PerformanceProfiler
 {
     private array $profiles = [];
+
     private float $startTime;
+
     private array $memoryUsage = [];
 
     public function startProfiling(): void
@@ -25,7 +26,7 @@ class PerformanceProfiler
         return [
             'execution_time' => $endTime - $this->startTime,
             'memory_usage' => $this->memoryUsage['end'] - $this->memoryUsage['start'],
-            'peak_memory' => memory_get_peak_usage(true)
+            'peak_memory' => memory_get_peak_usage(true),
         ];
     }
 
@@ -43,7 +44,7 @@ class PerformanceProfiler
             'name' => $name,
             'execution_time' => $end - $start,
             'memory_usage' => $memEnd - $memStart,
-            'result' => $result
+            'result' => $result,
         ];
 
         $this->profiles[] = $profile;
@@ -65,7 +66,7 @@ class PerformanceProfiler
             'total_profiles' => count($this->profiles),
             'total_execution_time' => $totalTime,
             'total_memory_usage' => $totalMemory,
-            'profiles' => $this->profiles
+            'profiles' => $this->profiles,
         ];
     }
 }

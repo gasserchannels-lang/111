@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class StoreDataValidationTest extends TestCase
 {
@@ -15,7 +15,7 @@ class StoreDataValidationTest extends TestCase
             'eBay',
             'Best Buy',
             'Walmart',
-            'Target'
+            'Target',
         ];
 
         foreach ($validStoreNames as $storeName) {
@@ -31,7 +31,7 @@ class StoreDataValidationTest extends TestCase
             'https://www.ebay.com',
             'https://bestbuy.com',
             'https://walmart.com',
-            'https://target.com'
+            'https://target.com',
         ];
 
         foreach ($validUrls as $url) {
@@ -46,7 +46,7 @@ class StoreDataValidationTest extends TestCase
             'name' => 'Test Store',
             'email' => 'contact@teststore.com',
             'phone' => '+1-555-123-4567',
-            'address' => '123 Main St, City, State 12345'
+            'address' => '123 Main St, City, State 12345',
         ];
 
         $this->assertTrue($this->validateStoreContactInfo($storeData));
@@ -72,7 +72,7 @@ class StoreDataValidationTest extends TestCase
     {
         $supportedCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'AED', 'EGP'];
         $storeData = [
-            'currencies' => $supportedCurrencies
+            'currencies' => $supportedCurrencies,
         ];
 
         $this->assertTrue($this->validateCurrencySupport($storeData));
@@ -84,7 +84,7 @@ class StoreDataValidationTest extends TestCase
         $shippingOptions = [
             ['name' => 'Standard', 'cost' => 5.99, 'days' => 5],
             ['name' => 'Express', 'cost' => 12.99, 'days' => 2],
-            ['name' => 'Overnight', 'cost' => 24.99, 'days' => 1]
+            ['name' => 'Overnight', 'cost' => 24.99, 'days' => 1],
         ];
 
         $this->assertTrue($this->validateShippingOptions($shippingOptions));
@@ -95,7 +95,7 @@ class StoreDataValidationTest extends TestCase
     {
         $paymentMethods = ['credit_card', 'paypal', 'apple_pay', 'google_pay'];
         $storeData = [
-            'payment_methods' => $paymentMethods
+            'payment_methods' => $paymentMethods,
         ];
 
         $this->assertTrue($this->validatePaymentMethods($storeData));
@@ -111,7 +111,7 @@ class StoreDataValidationTest extends TestCase
             'thursday' => '9:00-17:00',
             'friday' => '9:00-17:00',
             'saturday' => '10:00-16:00',
-            'sunday' => 'closed'
+            'sunday' => 'closed',
         ];
 
         $this->assertTrue($this->validateBusinessHours($businessHours));
@@ -124,7 +124,7 @@ class StoreDataValidationTest extends TestCase
             'return_days' => 30,
             'refund_method' => 'original_payment',
             'restocking_fee' => 0.0,
-            'conditions' => 'unused items only'
+            'conditions' => 'unused items only',
         ];
 
         $this->assertTrue($this->validateReturnPolicy($returnPolicy));
@@ -135,7 +135,7 @@ class StoreDataValidationTest extends TestCase
     {
         $verifiedStores = [
             ['name' => 'Amazon', 'verified' => true, 'verification_date' => '2024-01-15'],
-            ['name' => 'eBay', 'verified' => true, 'verification_date' => '2024-02-20']
+            ['name' => 'eBay', 'verified' => true, 'verification_date' => '2024-02-20'],
         ];
 
         foreach ($verifiedStores as $store) {
@@ -145,7 +145,7 @@ class StoreDataValidationTest extends TestCase
 
     private function isValidStoreName(string $name): bool
     {
-        return !empty($name) && strlen($name) >= 2 && strlen($name) <= 100;
+        return ! empty($name) && strlen($name) >= 2 && strlen($name) <= 100;
     }
 
     private function isValidStoreUrl(string $url): bool
@@ -171,12 +171,12 @@ class StoreDataValidationTest extends TestCase
     {
         $validCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'AED', 'EGP', 'CAD', 'AUD'];
 
-        if (!isset($data['currencies']) || !is_array($data['currencies'])) {
+        if (! isset($data['currencies']) || ! is_array($data['currencies'])) {
             return false;
         }
 
         foreach ($data['currencies'] as $currency) {
-            if (!in_array($currency, $validCurrencies)) {
+            if (! in_array($currency, $validCurrencies)) {
                 return false;
             }
         }
@@ -187,7 +187,7 @@ class StoreDataValidationTest extends TestCase
     private function validateShippingOptions(array $options): bool
     {
         foreach ($options as $option) {
-            if (!isset($option['name']) || !isset($option['cost']) || !isset($option['days'])) {
+            if (! isset($option['name']) || ! isset($option['cost']) || ! isset($option['days'])) {
                 return false;
             }
 
@@ -203,12 +203,12 @@ class StoreDataValidationTest extends TestCase
     {
         $validMethods = ['credit_card', 'paypal', 'apple_pay', 'google_pay', 'bank_transfer'];
 
-        if (!isset($data['payment_methods']) || !is_array($data['payment_methods'])) {
+        if (! isset($data['payment_methods']) || ! is_array($data['payment_methods'])) {
             return false;
         }
 
         foreach ($data['payment_methods'] as $method) {
-            if (!in_array($method, $validMethods)) {
+            if (! in_array($method, $validMethods)) {
                 return false;
             }
         }
@@ -221,7 +221,7 @@ class StoreDataValidationTest extends TestCase
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
         foreach ($days as $day) {
-            if (!isset($hours[$day])) {
+            if (! isset($hours[$day])) {
                 return false;
             }
         }

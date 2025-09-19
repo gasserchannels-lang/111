@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class PaymentAccuracyTest extends TestCase
 {

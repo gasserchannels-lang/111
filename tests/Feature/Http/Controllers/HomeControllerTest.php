@@ -8,13 +8,13 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Product;
-use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class HomeControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();

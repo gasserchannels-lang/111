@@ -18,9 +18,9 @@ use InvalidArgumentException;
  * @property int $currency_id
  * @property string|null $ip_address
  * @property string|null $country_code
- * @property-read User|null $user
- * @property-read Language $language
- * @property-read Currency $currency
+ * @property-read User<Database\Factories\UserFactory>|null $user
+ * @property-read Language<Database\Factories\LanguageFactory> $language
+ * @property-read Currency<Database\Factories\CurrencyFactory> $currency
  *
  * @method static UserLocaleSettingFactory factory(...$parameters)
  *
@@ -56,7 +56,7 @@ class UserLocaleSetting extends Model
     /**
      * المستخدم المرتبط بهذا الإعداد.
      *
-     * @return BelongsTo<User<\Database\Factories\UserFactory>, UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
+     * @return BelongsTo<User<Database\Factories\UserFactory>, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>>
      */
     public function user(): BelongsTo
     {
@@ -66,7 +66,7 @@ class UserLocaleSetting extends Model
     /**
      * اللغة المحددة.
      *
-     * @return BelongsTo<Language<\Database\Factories\LanguageFactory>, UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
+     * @return BelongsTo<Language<Database\Factories\LanguageFactory>, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>>
      */
     public function language(): BelongsTo
     {
@@ -76,7 +76,7 @@ class UserLocaleSetting extends Model
     /**
      * العملة المحددة.
      *
-     * @return BelongsTo<Currency<\Database\Factories\CurrencyFactory>, UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
+     * @return BelongsTo<Currency<Database\Factories\CurrencyFactory>, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>>
      */
     public function currency(): BelongsTo
     {

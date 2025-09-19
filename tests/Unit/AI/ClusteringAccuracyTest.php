@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ClusteringAccuracyTest extends TestCase
 {
@@ -14,7 +14,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $accuracy = $this->calculateClusteringAccuracy($clusters);
@@ -28,7 +28,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $silhouetteScore = $this->calculateSilhouetteScore($clusters);
@@ -42,7 +42,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $inertia = $this->calculateInertia($clusters);
@@ -56,7 +56,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $dbScore = $this->calculateDaviesBouldinScore($clusters);
@@ -70,7 +70,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $chScore = $this->calculateCalinskiHarabaszScore($clusters);
@@ -84,7 +84,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $separation = $this->calculateClusterSeparation($clusters);
@@ -98,7 +98,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $cohesion = $this->calculateClusterCohesion($clusters);
@@ -114,7 +114,7 @@ class ClusteringAccuracyTest extends TestCase
             ['features' => [10, 11, 12]],
             ['features' => [11, 12, 13]],
             ['features' => [20, 21, 22]],
-            ['features' => [21, 22, 23]]
+            ['features' => [21, 22, 23]],
         ];
 
         $optimalK = $this->findOptimalClusterNumber($data);
@@ -129,7 +129,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $stability = $this->calculateClusterStability($clusters);
@@ -144,7 +144,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'label' => 'A'],
             ['id' => 2, 'cluster' => 0, 'label' => 'A'],
             ['id' => 3, 'cluster' => 1, 'label' => 'B'],
-            ['id' => 4, 'cluster' => 1, 'label' => 'B']
+            ['id' => 4, 'cluster' => 1, 'label' => 'B'],
         ];
 
         $purity = $this->calculateClusterPurity($clusters);
@@ -158,7 +158,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'label' => 'A'],
             ['id' => 2, 'cluster' => 0, 'label' => 'A'],
             ['id' => 3, 'cluster' => 1, 'label' => 'B'],
-            ['id' => 4, 'cluster' => 1, 'label' => 'B']
+            ['id' => 4, 'cluster' => 1, 'label' => 'B'],
         ];
 
         $entropy = $this->calculateClusterEntropy($clusters);
@@ -172,7 +172,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $centroids = $this->calculateClusterCentroids($clusters);
@@ -188,7 +188,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $sizes = $this->calculateClusterSizes($clusters);
@@ -204,7 +204,7 @@ class ClusteringAccuracyTest extends TestCase
             ['id' => 1, 'cluster' => 0, 'features' => [1, 2, 3]],
             ['id' => 2, 'cluster' => 0, 'features' => [1, 3, 4]],
             ['id' => 3, 'cluster' => 1, 'features' => [10, 11, 12]],
-            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]]
+            ['id' => 4, 'cluster' => 1, 'features' => [11, 12, 13]],
         ];
 
         $metrics = $this->calculateClusterQualityMetrics($clusters);
@@ -443,7 +443,7 @@ class ClusteringAccuracyTest extends TestCase
             $clusterId = $cluster['cluster'];
             $label = $cluster['label'];
 
-            if (!isset($clusterLabels[$clusterId])) {
+            if (! isset($clusterLabels[$clusterId])) {
                 $clusterLabels[$clusterId] = [];
             }
             $clusterLabels[$clusterId][] = $label;
@@ -468,7 +468,7 @@ class ClusteringAccuracyTest extends TestCase
             $clusterId = $cluster['cluster'];
             $label = $cluster['label'];
 
-            if (!isset($clusterLabels[$clusterId])) {
+            if (! isset($clusterLabels[$clusterId])) {
                 $clusterLabels[$clusterId] = [];
             }
             $clusterLabels[$clusterId][] = $label;
@@ -503,7 +503,7 @@ class ClusteringAccuracyTest extends TestCase
             $clusterId = $cluster['cluster'];
             $features = $cluster['features'];
 
-            if (!isset($clusterSums[$clusterId])) {
+            if (! isset($clusterSums[$clusterId])) {
                 $clusterSums[$clusterId] = array_fill(0, count($features), 0);
                 $clusterCounts[$clusterId] = 0;
             }
@@ -530,6 +530,7 @@ class ClusteringAccuracyTest extends TestCase
             $clusterId = $cluster['cluster'];
             $sizes[$clusterId] = ($sizes[$clusterId] ?? 0) + 1;
         }
+
         return array_values($sizes);
     }
 
@@ -539,7 +540,7 @@ class ClusteringAccuracyTest extends TestCase
             'silhouette_score' => $this->calculateSilhouetteScore($clusters),
             'inertia' => $this->calculateInertia($clusters),
             'davies_bouldin' => $this->calculateDaviesBouldinScore($clusters),
-            'calinski_harabasz' => $this->calculateCalinskiHarabaszScore($clusters)
+            'calinski_harabasz' => $this->calculateCalinskiHarabaszScore($clusters),
         ];
     }
 
@@ -549,6 +550,7 @@ class ClusteringAccuracyTest extends TestCase
         for ($i = 0; $i < count($point1); $i++) {
             $sum += pow($point1[$i] - $point2[$i], 2);
         }
+
         return sqrt($sum);
     }
 
@@ -560,6 +562,7 @@ class ClusteringAccuracyTest extends TestCase
                 $distances[] = $this->calculateEuclideanDistance($cluster['features'], $centroid);
             }
         }
+
         return count($distances) > 0 ? array_sum($distances) / count($distances) : 0;
     }
 
@@ -590,7 +593,7 @@ class ClusteringAccuracyTest extends TestCase
             $clusters[] = [
                 'id' => $i + 1,
                 'cluster' => floor($i / $clusterSize),
-                'features' => $data[$i]['features']
+                'features' => $data[$i]['features'],
             ];
         }
 

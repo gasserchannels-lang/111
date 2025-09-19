@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -315,7 +314,7 @@ abstract class BaseApiController extends Controller
         $filters = $request->except(['page', 'per_page', 'sort_by', 'sort_order', 'search']);
 
         // Remove empty values
-        return array_filter($filters, fn($value): bool => $value !== null && $value !== '');
+        return array_filter($filters, fn ($value): bool => $value !== null && $value !== '');
     }
 
     /**

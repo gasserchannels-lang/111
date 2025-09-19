@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class OrderAccuracyTest extends TestCase
 {
@@ -13,7 +13,7 @@ class OrderAccuracyTest extends TestCase
         $orderItems = [
             ['price' => 10.00, 'quantity' => 2],
             ['price' => 15.50, 'quantity' => 1],
-            ['price' => 5.25, 'quantity' => 3]
+            ['price' => 5.25, 'quantity' => 3],
         ];
 
         $expectedTotal = 51.25; // (10*2) + (15.50*1) + (5.25*3)
@@ -81,7 +81,7 @@ class OrderAccuracyTest extends TestCase
             'shipped' => ['delivered', 'returned'],
             'delivered' => ['returned'],
             'cancelled' => [],
-            'returned' => []
+            'returned' => [],
         ];
 
         $this->assertTrue($this->isValidStatusTransition('pending', 'confirmed', $validTransitions));
@@ -95,7 +95,7 @@ class OrderAccuracyTest extends TestCase
         $orderItems = [
             ['product_id' => 1, 'quantity' => 2, 'available_stock' => 10],
             ['product_id' => 2, 'quantity' => 5, 'available_stock' => 3], // Insufficient stock
-            ['product_id' => 3, 'quantity' => 1, 'available_stock' => 1]
+            ['product_id' => 3, 'quantity' => 1, 'available_stock' => 1],
         ];
 
         $validItems = $this->validateOrderItemQuantities($orderItems);
@@ -110,6 +110,7 @@ class OrderAccuracyTest extends TestCase
         foreach ($orderItems as $item) {
             $total += $item['price'] * $item['quantity'];
         }
+
         return $total;
     }
 

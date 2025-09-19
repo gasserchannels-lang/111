@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataAnonymizationTest extends TestCase
 {
@@ -14,7 +14,7 @@ class DataAnonymizationTest extends TestCase
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'phone' => '+1-555-123-4567',
-            'address' => '123 Main St, New York, NY 10001'
+            'address' => '123 Main St, New York, NY 10001',
         ];
 
         $anonymizedData = $this->anonymizePersonalData($personalData);
@@ -32,7 +32,7 @@ class DataAnonymizationTest extends TestCase
             'user_id' => 12345,
             'username' => 'johndoe',
             'session_id' => 'sess_abc123def456',
-            'ip_address' => '192.168.1.100'
+            'ip_address' => '192.168.1.100',
         ];
 
         $anonymizedData = $this->anonymizeUserIdentifiers($userData);
@@ -50,7 +50,7 @@ class DataAnonymizationTest extends TestCase
             'credit_card' => '4111-1111-1111-1111',
             'bank_account' => '1234567890',
             'routing_number' => '021000021',
-            'ssn' => '123-45-6789'
+            'ssn' => '123-45-6789',
         ];
 
         $anonymizedData = $this->anonymizeFinancialData($financialData);
@@ -68,7 +68,7 @@ class DataAnonymizationTest extends TestCase
             'medical_record_id' => 'MR123456789',
             'diagnosis' => 'Hypertension',
             'medication' => 'Lisinopril 10mg',
-            'doctor_name' => 'Dr. Smith'
+            'doctor_name' => 'Dr. Smith',
         ];
 
         $anonymizedData = $this->anonymizeHealthData($healthData);
@@ -86,7 +86,7 @@ class DataAnonymizationTest extends TestCase
             'latitude' => 40.7128,
             'longitude' => -74.0060,
             'address' => '123 Main St, New York, NY 10001',
-            'zip_code' => '10001'
+            'zip_code' => '10001',
         ];
 
         $anonymizedData = $this->anonymizeLocationData($locationData);
@@ -104,7 +104,7 @@ class DataAnonymizationTest extends TestCase
             'fingerprint_hash' => 'abc123def456ghi789',
             'face_template' => 'face_template_data_123',
             'voice_print' => 'voice_print_data_456',
-            'iris_scan' => 'iris_scan_data_789'
+            'iris_scan' => 'iris_scan_data_789',
         ];
 
         $anonymizedData = $this->anonymizeBiometricData($biometricData);
@@ -122,7 +122,7 @@ class DataAnonymizationTest extends TestCase
             'message_content' => 'This is a private message',
             'sender_id' => 12345,
             'recipient_id' => 67890,
-            'timestamp' => '2024-01-15 10:30:00'
+            'timestamp' => '2024-01-15 10:30:00',
         ];
 
         $anonymizedData = $this->anonymizeCommunicationData($communicationData);
@@ -140,7 +140,7 @@ class DataAnonymizationTest extends TestCase
             'url' => 'https://example.com/private-page',
             'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'referrer' => 'https://google.com/search?q=private+search',
-            'cookies' => 'session_id=abc123; user_pref=xyz789'
+            'cookies' => 'session_id=abc123; user_pref=xyz789',
         ];
 
         $anonymizedData = $this->anonymizeBrowsingData($browsingData);
@@ -158,7 +158,7 @@ class DataAnonymizationTest extends TestCase
             'order_id' => 'ORD-123456789',
             'product_name' => 'iPhone 15 Pro Max',
             'price' => 1199.00,
-            'payment_method' => 'Credit Card ending in 1234'
+            'payment_method' => 'Credit Card ending in 1234',
         ];
 
         $anonymizedData = $this->anonymizePurchaseData($purchaseData);
@@ -176,7 +176,7 @@ class DataAnonymizationTest extends TestCase
             'social_security_number' => '123-45-6789',
             'drivers_license' => 'DL123456789',
             'passport_number' => 'P123456789',
-            'date_of_birth' => '1990-01-15'
+            'date_of_birth' => '1990-01-15',
         ];
 
         $anonymizedData = $this->anonymizeSocialData($socialData);
@@ -194,7 +194,7 @@ class DataAnonymizationTest extends TestCase
             'employee_id' => 'EMP123456',
             'salary' => 75000.00,
             'department' => 'Engineering',
-            'manager_name' => 'Jane Smith'
+            'manager_name' => 'Jane Smith',
         ];
 
         $anonymizedData = $this->anonymizeWorkplaceData($workplaceData);
@@ -212,7 +212,7 @@ class DataAnonymizationTest extends TestCase
             'student_id' => 'STU123456',
             'gpa' => 3.75,
             'major' => 'Computer Science',
-            'university' => 'University of California'
+            'university' => 'University of California',
         ];
 
         $anonymizedData = $this->anonymizeEducationalData($educationalData);
@@ -230,7 +230,7 @@ class DataAnonymizationTest extends TestCase
             'case_number' => 'CASE-123456789',
             'client_name' => 'John Doe',
             'attorney_name' => 'Jane Smith',
-            'case_details' => 'Confidential legal matter'
+            'case_details' => 'Confidential legal matter',
         ];
 
         $anonymizedData = $this->anonymizeLegalData($legalData);
@@ -248,7 +248,7 @@ class DataAnonymizationTest extends TestCase
             'tax_id' => '12-3456789',
             'voter_id' => 'V123456789',
             'license_plate' => 'ABC123',
-            'government_id' => 'GOV123456789'
+            'government_id' => 'GOV123456789',
         ];
 
         $anonymizedData = $this->anonymizeGovernmentData($governmentData);
@@ -266,7 +266,7 @@ class DataAnonymizationTest extends TestCase
             'child_name' => 'Little John',
             'age' => 8,
             'school' => 'Elementary School',
-            'parent_contact' => 'parent@example.com'
+            'parent_contact' => 'parent@example.com',
         ];
 
         $anonymizedData = $this->anonymizeChildrenData($childrenData);
@@ -284,7 +284,7 @@ class DataAnonymizationTest extends TestCase
             'race' => 'African American',
             'religion' => 'Christian',
             'political_affiliation' => 'Democrat',
-            'sexual_orientation' => 'Heterosexual'
+            'sexual_orientation' => 'Heterosexual',
         ];
 
         $anonymizedData = $this->anonymizeSensitiveCategories($sensitiveData);
@@ -302,7 +302,7 @@ class DataAnonymizationTest extends TestCase
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'age' => 30,
-            'active' => true
+            'active' => true,
         ];
 
         $anonymizedData = $this->anonymizeWithPreservedStructure($data);
@@ -325,7 +325,7 @@ class DataAnonymizationTest extends TestCase
     {
         $data = [
             'name' => 'John Doe',
-            'email' => 'john.doe@example.com'
+            'email' => 'john.doe@example.com',
         ];
 
         $anonymizedData = $this->anonymizeWithReversibleEncryption($data);
@@ -340,7 +340,7 @@ class DataAnonymizationTest extends TestCase
             'name' => $this->anonymizeString($data['name']),
             'email' => $this->anonymizeEmail($data['email']),
             'phone' => $this->anonymizePhone($data['phone']),
-            'address' => $this->anonymizeString($data['address'])
+            'address' => $this->anonymizeString($data['address']),
         ];
     }
 
@@ -350,7 +350,7 @@ class DataAnonymizationTest extends TestCase
             'user_id' => $this->anonymizeNumber($data['user_id']),
             'username' => $this->anonymizeString($data['username']),
             'session_id' => $this->anonymizeString($data['session_id']),
-            'ip_address' => $this->anonymizeIP($data['ip_address'])
+            'ip_address' => $this->anonymizeIP($data['ip_address']),
         ];
     }
 
@@ -360,7 +360,7 @@ class DataAnonymizationTest extends TestCase
             'credit_card' => $this->anonymizeCreditCard($data['credit_card']),
             'bank_account' => $this->anonymizeNumber($data['bank_account']),
             'routing_number' => $this->anonymizeNumber($data['routing_number']),
-            'ssn' => $this->anonymizeSSN($data['ssn'])
+            'ssn' => $this->anonymizeSSN($data['ssn']),
         ];
     }
 
@@ -370,7 +370,7 @@ class DataAnonymizationTest extends TestCase
             'medical_record_id' => $this->anonymizeString($data['medical_record_id']),
             'diagnosis' => $this->anonymizeString($data['diagnosis']),
             'medication' => $this->anonymizeString($data['medication']),
-            'doctor_name' => $this->anonymizeString($data['doctor_name'])
+            'doctor_name' => $this->anonymizeString($data['doctor_name']),
         ];
     }
 
@@ -380,7 +380,7 @@ class DataAnonymizationTest extends TestCase
             'latitude' => $this->anonymizeCoordinate($data['latitude']),
             'longitude' => $this->anonymizeCoordinate($data['longitude']),
             'address' => $this->anonymizeString($data['address']),
-            'zip_code' => $this->anonymizeString($data['zip_code'])
+            'zip_code' => $this->anonymizeString($data['zip_code']),
         ];
     }
 
@@ -390,7 +390,7 @@ class DataAnonymizationTest extends TestCase
             'fingerprint_hash' => $this->anonymizeString($data['fingerprint_hash']),
             'face_template' => $this->anonymizeString($data['face_template']),
             'voice_print' => $this->anonymizeString($data['voice_print']),
-            'iris_scan' => $this->anonymizeString($data['iris_scan'])
+            'iris_scan' => $this->anonymizeString($data['iris_scan']),
         ];
     }
 
@@ -400,7 +400,7 @@ class DataAnonymizationTest extends TestCase
             'message_content' => $this->anonymizeString($data['message_content']),
             'sender_id' => $this->anonymizeNumber($data['sender_id']),
             'recipient_id' => $this->anonymizeNumber($data['recipient_id']),
-            'timestamp' => $this->anonymizeTimestamp($data['timestamp'])
+            'timestamp' => $this->anonymizeTimestamp($data['timestamp']),
         ];
     }
 
@@ -410,7 +410,7 @@ class DataAnonymizationTest extends TestCase
             'url' => $this->anonymizeURL($data['url']),
             'user_agent' => $this->anonymizeString($data['user_agent']),
             'referrer' => $this->anonymizeURL($data['referrer']),
-            'cookies' => $this->anonymizeString($data['cookies'])
+            'cookies' => $this->anonymizeString($data['cookies']),
         ];
     }
 
@@ -420,7 +420,7 @@ class DataAnonymizationTest extends TestCase
             'order_id' => $this->anonymizeString($data['order_id']),
             'product_name' => $this->anonymizeString($data['product_name']),
             'price' => $this->anonymizePrice($data['price']),
-            'payment_method' => $this->anonymizeString($data['payment_method'])
+            'payment_method' => $this->anonymizeString($data['payment_method']),
         ];
     }
 
@@ -430,7 +430,7 @@ class DataAnonymizationTest extends TestCase
             'social_security_number' => $this->anonymizeSSN($data['social_security_number']),
             'drivers_license' => $this->anonymizeString($data['drivers_license']),
             'passport_number' => $this->anonymizeString($data['passport_number']),
-            'date_of_birth' => $this->anonymizeDate($data['date_of_birth'])
+            'date_of_birth' => $this->anonymizeDate($data['date_of_birth']),
         ];
     }
 
@@ -440,7 +440,7 @@ class DataAnonymizationTest extends TestCase
             'employee_id' => $this->anonymizeString($data['employee_id']),
             'salary' => $this->anonymizeSalary($data['salary']),
             'department' => $this->anonymizeString($data['department']),
-            'manager_name' => $this->anonymizeString($data['manager_name'])
+            'manager_name' => $this->anonymizeString($data['manager_name']),
         ];
     }
 
@@ -450,7 +450,7 @@ class DataAnonymizationTest extends TestCase
             'student_id' => $this->anonymizeString($data['student_id']),
             'gpa' => $this->anonymizeGPA($data['gpa']),
             'major' => $this->anonymizeString($data['major']),
-            'university' => $this->anonymizeString($data['university'])
+            'university' => $this->anonymizeString($data['university']),
         ];
     }
 
@@ -460,7 +460,7 @@ class DataAnonymizationTest extends TestCase
             'case_number' => $this->anonymizeString($data['case_number']),
             'client_name' => $this->anonymizeString($data['client_name']),
             'attorney_name' => $this->anonymizeString($data['attorney_name']),
-            'case_details' => $this->anonymizeString($data['case_details'])
+            'case_details' => $this->anonymizeString($data['case_details']),
         ];
     }
 
@@ -470,7 +470,7 @@ class DataAnonymizationTest extends TestCase
             'tax_id' => $this->anonymizeString($data['tax_id']),
             'voter_id' => $this->anonymizeString($data['voter_id']),
             'license_plate' => $this->anonymizeString($data['license_plate']),
-            'government_id' => $this->anonymizeString($data['government_id'])
+            'government_id' => $this->anonymizeString($data['government_id']),
         ];
     }
 
@@ -480,7 +480,7 @@ class DataAnonymizationTest extends TestCase
             'child_name' => $this->anonymizeString($data['child_name']),
             'age' => $this->anonymizeAge($data['age']),
             'school' => $this->anonymizeString($data['school']),
-            'parent_contact' => $this->anonymizeEmail($data['parent_contact'])
+            'parent_contact' => $this->anonymizeEmail($data['parent_contact']),
         ];
     }
 
@@ -490,7 +490,7 @@ class DataAnonymizationTest extends TestCase
             'race' => $this->anonymizeString($data['race']),
             'religion' => $this->anonymizeString($data['religion']),
             'political_affiliation' => $this->anonymizeString($data['political_affiliation']),
-            'sexual_orientation' => $this->anonymizeString($data['sexual_orientation'])
+            'sexual_orientation' => $this->anonymizeString($data['sexual_orientation']),
         ];
     }
 
@@ -508,6 +508,7 @@ class DataAnonymizationTest extends TestCase
                 $anonymized[$key] = $value;
             }
         }
+
         return $anonymized;
     }
 
@@ -517,6 +518,7 @@ class DataAnonymizationTest extends TestCase
         foreach ($data as $key => $value) {
             $anonymized[$key] = base64_encode($value); // Simple reversible encryption
         }
+
         return $anonymized;
     }
 
@@ -526,24 +528,26 @@ class DataAnonymizationTest extends TestCase
         foreach ($data as $key => $value) {
             $deidentified[$key] = base64_decode($value); // Simple reversible decryption
         }
+
         return $deidentified;
     }
 
     // Helper methods for different anonymization techniques
     private function anonymizeString(string $value): string
     {
-        return 'ANONYMIZED_' . substr(md5($value), 0, 8);
+        return 'ANONYMIZED_'.substr(md5($value), 0, 8);
     }
 
     private function anonymizeEmail(string $email): string
     {
         $parts = explode('@', $email);
-        return 'user_' . substr(md5($parts[0]), 0, 6) . '@' . $parts[1];
+
+        return 'user_'.substr(md5($parts[0]), 0, 6).'@'.$parts[1];
     }
 
     private function anonymizePhone(string $phone): string
     {
-        return 'XXX-XXX-' . substr($phone, -4);
+        return 'XXX-XXX-'.substr($phone, -4);
     }
 
     private function anonymizeNumber($number): int
@@ -554,35 +558,44 @@ class DataAnonymizationTest extends TestCase
     private function anonymizeIP(string $ip): string
     {
         $parts = explode('.', $ip);
-        return $parts[0] . '.' . $parts[1] . '.XXX.XXX';
+
+        return $parts[0].'.'.$parts[1].'.XXX.XXX';
     }
 
     private function anonymizeCreditCard(string $card): string
     {
-        return 'XXXX-XXXX-XXXX-' . substr($card, -4);
+        return 'XXXX-XXXX-XXXX-'.substr($card, -4);
     }
 
     private function anonymizeSSN(string $ssn): string
     {
-        return 'XXX-XX-' . substr($ssn, -4);
+        return 'XXX-XX-'.substr($ssn, -4);
     }
 
     private function anonymizeCoordinate(float $coord): float
     {
-        return $coord + (rand(-100, 100) / 1000);
+        $offset = (rand(-100, 100) / 1000);
+        // Ensure the offset is never zero
+        while ($offset == 0) {
+            $offset = (rand(-100, 100) / 1000);
+        }
+
+        return $coord + $offset;
     }
 
     private function anonymizeTimestamp(string $timestamp): string
     {
         $date = new \DateTime($timestamp);
-        $date->modify('+' . rand(-30, 30) . ' days');
+        $date->modify('+'.rand(-30, 30).' days');
+
         return $date->format('Y-m-d H:i:s');
     }
 
     private function anonymizeURL(string $url): string
     {
         $parsed = parse_url($url);
-        return $parsed['scheme'] . '://' . $parsed['host'] . '/anonymized-path';
+
+        return $parsed['scheme'].'://'.$parsed['host'].'/anonymized-path';
     }
 
     private function anonymizePrice(float $price): float
@@ -593,13 +606,22 @@ class DataAnonymizationTest extends TestCase
     private function anonymizeDate(string $date): string
     {
         $dateObj = new \DateTime($date);
-        $dateObj->modify('+' . rand(-365, 365) . ' days');
+        $dateObj->modify('+'.rand(-365, 365).' days');
+
         return $dateObj->format('Y-m-d');
     }
 
     private function anonymizeSalary(float $salary): float
     {
-        return round($salary * (0.9 + (rand(0, 20) / 100)), 2);
+        $multiplier = 0.9 + (rand(0, 20) / 100);
+        $anonymized = round($salary * $multiplier, 2);
+        // Ensure the salary is always different
+        while ($anonymized == $salary) {
+            $multiplier = 0.9 + (rand(0, 20) / 100);
+            $anonymized = round($salary * $multiplier, 2);
+        }
+
+        return $anonymized;
     }
 
     private function anonymizeGPA(float $gpa): float
@@ -609,6 +631,12 @@ class DataAnonymizationTest extends TestCase
 
     private function anonymizeAge(int $age): int
     {
-        return $age + rand(-5, 5);
+        $offset = rand(-5, 5);
+        // Ensure the age is always different
+        while ($offset == 0) {
+            $offset = rand(-5, 5);
+        }
+
+        return $age + $offset;
     }
 }

@@ -22,9 +22,7 @@ class ProcessResult
          * The error output of the process.
          */
         private readonly string $errorOutput
-    )
-    {
-    }
+    ) {}
 
     /**
      * Get the exit code of the process.

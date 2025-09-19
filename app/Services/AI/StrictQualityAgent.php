@@ -246,7 +246,7 @@ class StrictQualityAgent
     /**
      * Get all PHP files in the project.
      *
-     * @return array<string, mixed>
+     * @return list<string>
      */
     private function getPhpFiles(): array
     {
@@ -321,8 +321,8 @@ class StrictQualityAgent
             'timestamp' => now()->toISOString(),
             'overall_success' => $overallSuccess,
             'total_stages' => count($this->stages),
-            'successful_stages' => count(array_filter($this->results, fn($r): bool => is_array($r) && ($r['success'] ?? false) === true)),
-            'failed_stages' => count(array_filter($this->results, fn($r): bool => is_array($r) && ($r['success'] ?? false) !== true)),
+            'successful_stages' => count(array_filter($this->results, fn ($r): bool => is_array($r) && ($r['success'] ?? false) === true)),
+            'failed_stages' => count(array_filter($this->results, fn ($r): bool => is_array($r) && ($r['success'] ?? false) !== true)),
             'stages_details' => $this->results,
             'errors' => $this->errors,
             'fixes' => $this->fixes,

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Specialized;
 
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class BatchProcessingTest extends TestCase
 {

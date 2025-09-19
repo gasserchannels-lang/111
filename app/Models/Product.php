@@ -89,7 +89,7 @@ class Product extends Model
 
     // --- العلاقات ---
     /**
-     * @return BelongsTo<Brand<\Database\Factories\BrandFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return BelongsTo<Brand, Product>
      */
     public function brand(): BelongsTo
     {
@@ -97,7 +97,7 @@ class Product extends Model
     }
 
     /**
-     * @return BelongsTo<Category<\Database\Factories\CategoryFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return BelongsTo<Category, Product>
      */
     public function category(): BelongsTo
     {
@@ -105,7 +105,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<PriceAlert<\Database\Factories\PriceAlertFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return HasMany<PriceAlert, Product>
      */
     public function priceAlerts(): HasMany
     {
@@ -113,7 +113,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Review<\Database\Factories\ReviewFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return HasMany<Review, Product>
      */
     public function reviews(): HasMany
     {
@@ -121,7 +121,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Wishlist<\Database\Factories\WishlistFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return HasMany<Wishlist, Product>
      */
     public function wishlists(): HasMany
     {
@@ -129,7 +129,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<PriceOffer<\Database\Factories\PriceOfferFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return HasMany<PriceOffer, Product>
      */
     public function priceOffers(): HasMany
     {
@@ -137,7 +137,7 @@ class Product extends Model
     }
 
     /**
-     * @return BelongsTo<Store<\Database\Factories\StoreFactory>, Product<\Database\Factories\ProductFactory>>
+     * @return BelongsTo<Store, Product>
      */
     public function store(): BelongsTo
     {

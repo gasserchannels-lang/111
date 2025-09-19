@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Exception;
-use Illuminate\Support\Facades\Log;
-
 class PasswordValidator
 {
     /**
@@ -29,6 +26,8 @@ class PasswordValidator
 
     /**
      * التحقق من صحة كلمة المرور
+     *
+     * @return array<string, mixed>
      */
     public function validatePassword(string $password): array
     {
@@ -40,22 +39,22 @@ class PasswordValidator
         }
 
         // التحقق من الأحرف الكبيرة
-        if ($this->config['require_uppercase'] && !preg_match('/[A-Z]/', $password)) {
+        if ($this->config['require_uppercase'] && ! preg_match('/[A-Z]/', $password)) {
             $errors[] = 'كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل';
         }
 
         // التحقق من الأحرف الصغيرة
-        if ($this->config['require_lowercase'] && !preg_match('/[a-z]/', $password)) {
+        if ($this->config['require_lowercase'] && ! preg_match('/[a-z]/', $password)) {
             $errors[] = 'كلمة المرور يجب أن تحتوي على حرف صغير واحد على الأقل';
         }
 
         // التحقق من الأرقام
-        if ($this->config['require_numbers'] && !preg_match('/d/', $password)) {
+        if ($this->config['require_numbers'] && ! preg_match('/d/', $password)) {
             $errors[] = 'كلمة المرور يجب أن تحتوي على رقم واحد على الأقل';
         }
 
         // التحقق من الرموز الخاصة
-        if ($this->config['require_symbols'] && !preg_match('/[^A-Za-z0-9]/', $password)) {
+        if ($this->config['require_symbols'] && ! preg_match('/[^A-Za-z0-9]/', $password)) {
             $errors[] = 'كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل';
         }
 

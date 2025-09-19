@@ -10,10 +10,10 @@ use App\Models\PriceAlert;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use Tests\TestCase;
 
 /**
@@ -24,7 +24,6 @@ use Tests\TestCase;
  *
  * ⚠️ تحذير: يجب التأكد من صحة البيانات والأمان في تنبيهات الأسعار
  */
-
 class PriceAlertControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -49,6 +48,7 @@ class PriceAlertControllerTest extends TestCase
     {
         $brand = Brand::factory()->create();
         $category = Category::factory()->create();
+
         return Product::factory()->create([
             'brand_id' => $brand->id,
             'category_id' => $category->id,
@@ -74,7 +74,7 @@ class PriceAlertControllerTest extends TestCase
             ->get(route('price-alerts.index'))
             ->assertOk()
             ->assertViewIs('price-alerts.index')
-            ->assertViewHas('priceAlerts', fn($priceAlerts): bool => $priceAlerts->count() === 3);
+            ->assertViewHas('priceAlerts', fn ($priceAlerts): bool => $priceAlerts->count() === 3);
     }
 
     #[Test]

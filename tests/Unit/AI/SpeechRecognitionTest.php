@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class SpeechRecognitionTest extends TestCase
 {
@@ -210,7 +210,7 @@ class SpeechRecognitionTest extends TestCase
         $audioSources = [
             $this->generateTestAudioData(),
             $this->generateTestAudioData(),
-            $this->generateTestAudioData()
+            $this->generateTestAudioData(),
         ];
 
         $combinedResult = $this->processMultipleAudioSources($audioSources);
@@ -263,7 +263,7 @@ class SpeechRecognitionTest extends TestCase
             'sample_rate' => 44100,
             'channels' => 1,
             'duration' => 5.0,
-            'data' => array_fill(0, 220500, rand(-32768, 32767)) // 5 seconds at 44.1kHz
+            'data' => array_fill(0, 220500, rand(-32768, 32767)), // 5 seconds at 44.1kHz
         ];
     }
 
@@ -273,7 +273,7 @@ class SpeechRecognitionTest extends TestCase
             'sample_rate' => 44100,
             'channels' => 2,
             'duration' => 10.0,
-            'data' => array_fill(0, 441000, rand(-32768, 32767)) // 10 seconds stereo
+            'data' => array_fill(0, 441000, rand(-32768, 32767)), // 10 seconds stereo
         ];
     }
 
@@ -297,7 +297,7 @@ class SpeechRecognitionTest extends TestCase
             'channels' => $audioData['channels'],
             'duration' => $audioData['duration'],
             'normalized' => true,
-            'filtered' => true
+            'filtered' => true,
         ];
     }
 
@@ -308,7 +308,7 @@ class SpeechRecognitionTest extends TestCase
             'en-US' => 'Hello world, this is a test.',
             'es-ES' => 'Hola mundo, esto es una prueba.',
             'fr-FR' => 'Bonjour le monde, ceci est un test.',
-            'de-DE' => 'Hallo Welt, das ist ein Test.'
+            'de-DE' => 'Hallo Welt, das ist ein Test.',
         ];
 
         return $sampleTexts[$language] ?? 'Hello world, this is a test.';
@@ -321,13 +321,13 @@ class SpeechRecognitionTest extends TestCase
             [
                 'start' => 0.5,
                 'end' => 3.2,
-                'confidence' => 0.85
+                'confidence' => 0.85,
             ],
             [
                 'start' => 4.1,
                 'end' => 4.8,
-                'confidence' => 0.72
-            ]
+                'confidence' => 0.72,
+            ],
         ];
     }
 
@@ -338,13 +338,13 @@ class SpeechRecognitionTest extends TestCase
             [
                 'speaker_id' => 'speaker_1',
                 'confidence' => 0.9,
-                'time_range' => [0.0, 2.5]
+                'time_range' => [0.0, 2.5],
             ],
             [
                 'speaker_id' => 'speaker_2',
                 'confidence' => 0.8,
-                'time_range' => [2.5, 5.0]
-            ]
+                'time_range' => [2.5, 5.0],
+            ],
         ];
     }
 
@@ -388,7 +388,7 @@ class SpeechRecognitionTest extends TestCase
         return [
             'speech_frames' => $speechFrames,
             'silence_frames' => $silenceFrames,
-            'total_frames' => $totalFrames
+            'total_frames' => $totalFrames,
         ];
     }
 
@@ -398,7 +398,7 @@ class SpeechRecognitionTest extends TestCase
             'stream_id' => 'stream_123',
             'sample_rate' => 16000,
             'channels' => 1,
-            'is_streaming' => true
+            'is_streaming' => true,
         ];
     }
 
@@ -408,7 +408,7 @@ class SpeechRecognitionTest extends TestCase
             'partial_transcription' => 'Hello world, this is',
             'final_transcription' => 'Hello world, this is a test.',
             'confidence' => 0.85,
-            'is_final' => false
+            'is_final' => false,
         ];
     }
 
@@ -426,6 +426,7 @@ class SpeechRecognitionTest extends TestCase
     {
         // Simulate accent detection
         $accents = ['american', 'british', 'australian', 'canadian', 'irish'];
+
         return $accents[array_rand($accents)];
     }
 
@@ -440,7 +441,7 @@ class SpeechRecognitionTest extends TestCase
             'confidence' => rand(70, 95) / 100,
             'all_emotions' => array_combine($emotions, array_map(function () {
                 return rand(0, 100) / 100;
-            }, $emotions))
+            }, $emotions)),
         ];
     }
 
@@ -451,7 +452,7 @@ class SpeechRecognitionTest extends TestCase
             'sample_rate' => $targetSampleRate,
             'channels' => $audioData['channels'],
             'duration' => $audioData['duration'],
-            'converted' => true
+            'converted' => true,
         ];
     }
 
@@ -510,7 +511,7 @@ class SpeechRecognitionTest extends TestCase
 
         return [
             'transcriptions' => $transcriptions,
-            'speakers' => $speakers
+            'speakers' => $speakers,
         ];
     }
 
@@ -523,7 +524,7 @@ class SpeechRecognitionTest extends TestCase
             $detectedKeywords[] = [
                 'word' => $keyword,
                 'confidence' => rand(70, 95) / 100,
-                'timestamp' => rand(0, intval($audioData['duration'] * 1000)) / 1000
+                'timestamp' => rand(0, intval($audioData['duration'] * 1000)) / 1000,
             ];
         }
 
@@ -540,7 +541,7 @@ class SpeechRecognitionTest extends TestCase
             $segments[] = [
                 'start_time' => $i * $segmentDuration,
                 'end_time' => ($i + 1) * $segmentDuration,
-                'audio_data' => array_slice($audioData['data'], $i * 44100, 44100)
+                'audio_data' => array_slice($audioData['data'], $i * 44100, 44100),
             ];
         }
 

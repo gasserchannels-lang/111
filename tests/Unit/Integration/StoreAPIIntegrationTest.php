@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Integration;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class StoreAPIIntegrationTest extends TestCase
 {
@@ -55,7 +55,7 @@ class StoreAPIIntegrationTest extends TestCase
         $storeApi = $this->createStoreApiMock();
         $products = [
             ['id' => 1, 'price' => 100.00],
-            ['id' => 2, 'price' => 200.00]
+            ['id' => 2, 'price' => 200.00],
         ];
 
         $result = $storeApi->syncPrices($products);
@@ -127,16 +127,21 @@ class StoreAPIIntegrationTest extends TestCase
 
     private function createStoreApiMock(): object
     {
-        return new class {
+        return new class
+        {
             private bool $errorMode = false;
+
             private int $rateLimit = 100;
+
             private int $timeout = 30;
+
             private bool $cacheEnabled = false;
+
             private array $cache = [];
 
             public function authenticate(string $key): bool
             {
-                return !empty($key);
+                return ! empty($key);
             }
 
             public function getProducts(int $page = 1, int $limit = 20): array
@@ -154,7 +159,7 @@ class StoreAPIIntegrationTest extends TestCase
                     $products[] = [
                         'id' => ($page - 1) * $limit + $i,
                         'name' => "Product {$i}",
-                        'price' => rand(10, 1000)
+                        'price' => rand(10, 1000),
                     ];
                 }
 
@@ -165,9 +170,9 @@ class StoreAPIIntegrationTest extends TestCase
                         'pagination' => [
                             'page' => $page,
                             'limit' => $limit,
-                            'total' => 1000
-                        ]
-                    ]
+                            'total' => 1000,
+                        ],
+                    ],
                 ];
 
                 if ($this->cacheEnabled) {
@@ -187,13 +192,13 @@ class StoreAPIIntegrationTest extends TestCase
                     'id' => $id,
                     'name' => "Product {$id}",
                     'price' => rand(10, 1000),
-                    'description' => "Description for product {$id}"
+                    'description' => "Description for product {$id}",
                 ];
             }
 
             public function syncPrices(array $products): bool
             {
-                return !empty($products);
+                return ! empty($products);
             }
 
             public function setErrorMode(bool $enabled): void

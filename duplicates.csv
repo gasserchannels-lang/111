@@ -1,3 +1,0 @@
-basename,path,namespace,classname,fqcn,file_size_bytes,last_modified_iso,collision_type,recommendation,priority,estimated_effort_minutes
-AIModelPerformanceTest.php,tests\AI\AIModelPerformanceTest.php,Tests\AI,AIModelPerformanceTest,Tests\AI\AIModelPerformanceTest,4096,2025-09-17T11:00:00Z,No Collision,RENAME_FILE,High,5
-AIModelPerformanceTest.php,tests\Unit\AI\AIModelPerformanceTest.php,Tests\Unit\AI,AIModelPerformanceTest,Tests\Unit\AI\AIModelPerformanceTest,32768,2025-09-17T11:00:00Z,No Collision,RENAME_FILE,High,5

@@ -10,9 +10,17 @@ use Tests\TestCase;
 class ApiRateLimitingTest extends TestCase
 {
     use RefreshDatabase;
+
     #[Test]
     public function api_requests_are_rate_limited()
     {
+        // Mock console output to prevent interactive prompts
+        $this->mock(\Symfony\Component\Console\Style\SymfonyStyle::class, function ($mock) {
+            $mock->shouldReceive('askQuestion')->andReturn(true);
+            $mock->shouldReceive('confirm')->andReturn(true);
+            $mock->shouldIgnoreMissing();
+        });
+
         // Test rate limiting for unauthenticated requests
         for ($i = 0; $i < 61; $i++) {
             $response = $this->getJson('/api/products');

@@ -143,7 +143,7 @@ class EmailVerificationService
      */
     private function storeVerificationToken(string $email, string $token): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
 
         $data = [
             'token' => $token,
@@ -160,7 +160,7 @@ class EmailVerificationService
      */
     private function validateVerificationToken(string $email, string $token): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $data = Cache::get($key);
 
         if (! $data || ! is_array($data)) {
@@ -201,7 +201,7 @@ class EmailVerificationService
      */
     private function clearVerificationToken(string $email): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         Cache::forget($key);
     }
 
@@ -210,7 +210,7 @@ class EmailVerificationService
      */
     private function hasExceededResendLimit(string $email): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $data = Cache::get($key);
 
         if (! $data || ! is_array($data)) {
@@ -227,7 +227,7 @@ class EmailVerificationService
      */
     private function incrementResendCount(string $email): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $data = Cache::get($key);
 
         if ($data && is_array($data)) {
@@ -242,7 +242,7 @@ class EmailVerificationService
      */
     public function hasVerificationToken(string $email): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
 
         return Cache::has($key);
     }
@@ -254,7 +254,7 @@ class EmailVerificationService
      */
     public function getVerificationTokenInfo(string $email): ?array
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $data = Cache::get($key);
 
         if (! $data || ! is_array($data)) {

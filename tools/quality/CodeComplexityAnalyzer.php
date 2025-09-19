@@ -5,11 +5,12 @@ namespace Tools\Quality;
 class CodeComplexityAnalyzer
 {
     private array $complexityMetrics = [];
+
     private array $thresholds = [
         'cyclomatic' => 10,
         'cognitive' => 15,
         'maintainability' => 70,
-        'technical_debt' => 30
+        'technical_debt' => 30,
     ];
 
     public function analyzeFile(string $filePath): array
@@ -26,7 +27,7 @@ class CodeComplexityAnalyzer
             'lines_of_code' => $this->countLinesOfCode($content),
             'comment_density' => $this->calculateCommentDensity($content),
             'duplication_percentage' => $this->calculateDuplicationPercentage($content),
-            'analysis_date' => date('Y-m-d H:i:s')
+            'analysis_date' => date('Y-m-d H:i:s'),
         ];
 
         $this->complexityMetrics[$filePath] = $metrics;
@@ -50,29 +51,29 @@ class CodeComplexityAnalyzer
             'complexity_distribution' => $this->getComplexityDistribution($results),
             'files_above_threshold' => $this->getFilesAboveThreshold($results),
             'recommendations' => $this->generateRecommendations($results),
-            'analysis_date' => date('Y-m-d H:i:s')
+            'analysis_date' => date('Y-m-d H:i:s'),
         ];
     }
 
     public function generateReport(array $results): string
     {
         $report = "# Code Complexity Analysis Report\n\n";
-        $report .= "Generated on: " . date('Y-m-d H:i:s') . "\n\n";
+        $report .= 'Generated on: '.date('Y-m-d H:i:s')."\n\n";
 
         $report .= "## Summary\n";
-        $report .= "- Total files analyzed: " . count($results) . "\n";
-        $report .= "- Average cyclomatic complexity: " . $this->calculateAverageComplexity($results) . "\n";
-        $report .= "- Files above threshold: " . count($this->getFilesAboveThreshold($results)) . "\n\n";
+        $report .= '- Total files analyzed: '.count($results)."\n";
+        $report .= '- Average cyclomatic complexity: '.$this->calculateAverageComplexity($results)."\n";
+        $report .= '- Files above threshold: '.count($this->getFilesAboveThreshold($results))."\n\n";
 
         $report .= "## Detailed Results\n";
         foreach ($results as $file => $metrics) {
-            $report .= "### " . $file . "\n";
-            $report .= "- Cyclomatic Complexity: " . $metrics['cyclomatic_complexity'] . "\n";
-            $report .= "- Cognitive Complexity: " . $metrics['cognitive_complexity'] . "\n";
-            $report .= "- Maintainability Index: " . $metrics['maintainability_index'] . "\n";
-            $report .= "- Technical Debt: " . $metrics['technical_debt'] . " minutes\n";
-            $report .= "- Lines of Code: " . $metrics['lines_of_code'] . "\n";
-            $report .= "- Comment Density: " . $metrics['comment_density'] . "%\n\n";
+            $report .= '### '.$file."\n";
+            $report .= '- Cyclomatic Complexity: '.$metrics['cyclomatic_complexity']."\n";
+            $report .= '- Cognitive Complexity: '.$metrics['cognitive_complexity']."\n";
+            $report .= '- Maintainability Index: '.$metrics['maintainability_index']."\n";
+            $report .= '- Technical Debt: '.$metrics['technical_debt']." minutes\n";
+            $report .= '- Lines of Code: '.$metrics['lines_of_code']."\n";
+            $report .= '- Comment Density: '.$metrics['comment_density']."%\n\n";
         }
 
         return $report;
@@ -195,7 +196,7 @@ class CodeComplexityAnalyzer
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!empty($line) && !preg_match('/^\s*\/\//', $line) && !preg_match('/^\s*\/\*/', $line) && !preg_match('/^\s*\*/', $line)) {
+            if (! empty($line) && ! preg_match('/^\s*\/\//', $line) && ! preg_match('/^\s*\/\*/', $line) && ! preg_match('/^\s*\*/', $line)) {
                 $codeLines++;
             }
         }
@@ -269,7 +270,7 @@ class CodeComplexityAnalyzer
             'low' => 0,      // 1-5
             'medium' => 0,   // 6-10
             'high' => 0,     // 11-20
-            'very_high' => 0 // 21+
+            'very_high' => 0, // 21+
         ];
 
         foreach ($results as $metrics) {
@@ -332,7 +333,7 @@ class CodeComplexityAnalyzer
                 $fileRecommendations[] = 'Refactor duplicated code into reusable functions';
             }
 
-            if (!empty($fileRecommendations)) {
+            if (! empty($fileRecommendations)) {
                 $recommendations[$file] = $fileRecommendations;
             }
         }

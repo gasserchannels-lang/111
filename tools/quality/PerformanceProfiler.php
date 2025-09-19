@@ -5,8 +5,11 @@ namespace Tools\Quality;
 class PerformanceProfiler
 {
     private array $profiles = [];
+
     private array $benchmarks = [];
+
     private float $startTime;
+
     private int $startMemory;
 
     public function __construct()
@@ -20,13 +23,13 @@ class PerformanceProfiler
         $this->profiles[$name] = [
             'start_time' => microtime(true),
             'start_memory' => memory_get_usage(),
-            'peak_memory' => memory_get_peak_usage()
+            'peak_memory' => memory_get_peak_usage(),
         ];
     }
 
     public function endProfile(string $name): array
     {
-        if (!isset($this->profiles[$name])) {
+        if (! isset($this->profiles[$name])) {
             throw new \InvalidArgumentException("Profile '{$name}' not found");
         }
 
@@ -42,7 +45,7 @@ class PerformanceProfiler
             'start_time' => $this->profiles[$name]['start_time'],
             'end_time' => $endTime,
             'start_memory' => $this->profiles[$name]['start_memory'],
-            'end_memory' => $endMemory
+            'end_memory' => $endMemory,
         ];
 
         $this->benchmarks[$name] = $profile;
@@ -175,35 +178,35 @@ class PerformanceProfiler
     public function getPerformanceReport(): string
     {
         $report = "# Performance Profiling Report\n\n";
-        $report .= "Generated on: " . date('Y-m-d H:i:s') . "\n\n";
+        $report .= 'Generated on: '.date('Y-m-d H:i:s')."\n\n";
 
         $report .= "## Summary\n";
-        $report .= "- Total execution time: " . number_format($this->getTotalExecutionTime(), 4) . " seconds\n";
-        $report .= "- Total memory usage: " . $this->formatBytes($this->getTotalMemoryUsage()) . "\n";
-        $report .= "- Peak memory usage: " . $this->formatBytes($this->getPeakMemoryUsage()) . "\n";
-        $report .= "- Average execution time: " . number_format($this->getAverageExecutionTime(), 4) . " seconds\n";
-        $report .= "- Average memory usage: " . $this->formatBytes($this->getAverageMemoryUsage()) . "\n\n";
+        $report .= '- Total execution time: '.number_format($this->getTotalExecutionTime(), 4)." seconds\n";
+        $report .= '- Total memory usage: '.$this->formatBytes($this->getTotalMemoryUsage())."\n";
+        $report .= '- Peak memory usage: '.$this->formatBytes($this->getPeakMemoryUsage())."\n";
+        $report .= '- Average execution time: '.number_format($this->getAverageExecutionTime(), 4)." seconds\n";
+        $report .= '- Average memory usage: '.$this->formatBytes($this->getAverageMemoryUsage())."\n\n";
 
         $report .= "## Slowest Operations\n";
         $slowest = $this->getSlowestOperations(5);
         foreach ($slowest as $operation) {
-            $report .= "- **{$operation['name']}**: " . number_format($operation['execution_time'], 4) . " seconds\n";
+            $report .= "- **{$operation['name']}**: ".number_format($operation['execution_time'], 4)." seconds\n";
         }
 
         $report .= "\n## Memory Intensive Operations\n";
         $memoryIntensive = $this->getMemoryIntensiveOperations(5);
         foreach ($memoryIntensive as $operation) {
-            $report .= "- **{$operation['name']}**: " . $this->formatBytes($operation['memory_usage']) . "\n";
+            $report .= "- **{$operation['name']}**: ".$this->formatBytes($operation['memory_usage'])."\n";
         }
 
         $report .= "\n## Detailed Benchmarks\n";
         foreach ($this->benchmarks as $name => $benchmark) {
             $report .= "### {$name}\n";
-            $report .= "- Execution time: " . number_format($benchmark['execution_time'], 4) . " seconds\n";
-            $report .= "- Memory usage: " . $this->formatBytes($benchmark['memory_usage']) . "\n";
-            $report .= "- Peak memory: " . $this->formatBytes($benchmark['peak_memory']) . "\n";
-            $report .= "- Start time: " . date('Y-m-d H:i:s', $benchmark['start_time']) . "\n";
-            $report .= "- End time: " . date('Y-m-d H:i:s', $benchmark['end_time']) . "\n\n";
+            $report .= '- Execution time: '.number_format($benchmark['execution_time'], 4)." seconds\n";
+            $report .= '- Memory usage: '.$this->formatBytes($benchmark['memory_usage'])."\n";
+            $report .= '- Peak memory: '.$this->formatBytes($benchmark['peak_memory'])."\n";
+            $report .= '- Start time: '.date('Y-m-d H:i:s', $benchmark['start_time'])."\n";
+            $report .= '- End time: '.date('Y-m-d H:i:s', $benchmark['end_time'])."\n\n";
         }
 
         return $report;
@@ -218,12 +221,12 @@ class PerformanceProfiler
                 'peak_memory_usage' => $this->getPeakMemoryUsage(),
                 'average_execution_time' => $this->getAverageExecutionTime(),
                 'average_memory_usage' => $this->getAverageMemoryUsage(),
-                'total_operations' => count($this->benchmarks)
+                'total_operations' => count($this->benchmarks),
             ],
             'benchmarks' => $this->benchmarks,
             'slowest_operations' => $this->getSlowestOperations(),
             'memory_intensive_operations' => $this->getMemoryIntensiveOperations(),
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ], JSON_PRETTY_PRINT);
     }
 
@@ -254,7 +257,7 @@ class PerformanceProfiler
             'recommendations' => $this->generateRecommendations(),
             'optimization_opportunities' => $this->findOptimizationOpportunities(),
             'memory_leaks' => $this->detectMemoryLeaks(),
-            'execution_efficiency' => $this->calculateExecutionEfficiency()
+            'execution_efficiency' => $this->calculateExecutionEfficiency(),
         ];
 
         return $analysis;
@@ -294,7 +297,7 @@ class PerformanceProfiler
                     'operation' => $name,
                     'type' => 'execution_time',
                     'value' => $benchmark['execution_time'],
-                    'severity' => 'high'
+                    'severity' => 'high',
                 ];
             }
 
@@ -303,7 +306,7 @@ class PerformanceProfiler
                     'operation' => $name,
                     'type' => 'memory_usage',
                     'value' => $benchmark['memory_usage'],
-                    'severity' => 'high'
+                    'severity' => 'high',
                 ];
             }
         }
@@ -317,20 +320,20 @@ class PerformanceProfiler
 
         $slowest = $this->getSlowestOperations(3);
         foreach ($slowest as $operation) {
-            $recommendations[] = "Optimize '{$operation['name']}' - currently taking " . number_format($operation['execution_time'], 4) . " seconds";
+            $recommendations[] = "Optimize '{$operation['name']}' - currently taking ".number_format($operation['execution_time'], 4).' seconds';
         }
 
         $memoryIntensive = $this->getMemoryIntensiveOperations(3);
         foreach ($memoryIntensive as $operation) {
-            $recommendations[] = "Reduce memory usage in '{$operation['name']}' - currently using " . $this->formatBytes($operation['memory_usage']);
+            $recommendations[] = "Reduce memory usage in '{$operation['name']}' - currently using ".$this->formatBytes($operation['memory_usage']);
         }
 
         if ($this->getTotalMemoryUsage() > 100 * 1024 * 1024) {
-            $recommendations[] = "Consider implementing memory optimization strategies";
+            $recommendations[] = 'Consider implementing memory optimization strategies';
         }
 
         if ($this->getTotalExecutionTime() > 10) {
-            $recommendations[] = "Consider implementing caching mechanisms";
+            $recommendations[] = 'Consider implementing caching mechanisms';
         }
 
         return $recommendations;
@@ -346,7 +349,7 @@ class PerformanceProfiler
                     'operation' => $name,
                     'type' => 'execution_time',
                     'current_value' => $benchmark['execution_time'],
-                    'potential_improvement' => 'Consider caching or algorithm optimization'
+                    'potential_improvement' => 'Consider caching or algorithm optimization',
                 ];
             }
 
@@ -355,7 +358,7 @@ class PerformanceProfiler
                     'operation' => $name,
                     'type' => 'memory_usage',
                     'current_value' => $benchmark['memory_usage'],
-                    'potential_improvement' => 'Consider memory-efficient data structures'
+                    'potential_improvement' => 'Consider memory-efficient data structures',
                 ];
             }
         }
@@ -374,7 +377,7 @@ class PerformanceProfiler
                 $leaks[] = [
                     'operation' => $name,
                     'memory_growth' => $benchmark['memory_usage'] - $previousMemory,
-                    'severity' => 'medium'
+                    'severity' => 'medium',
                 ];
             }
             $previousMemory = $benchmark['memory_usage'];
@@ -405,6 +408,6 @@ class PerformanceProfiler
 
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }

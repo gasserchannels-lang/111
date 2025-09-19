@@ -4,10 +4,10 @@
  * Code Coverage Analyzer Tool
  * Analyzes test coverage for PHP code
  */
-
 class CodeCoverageAnalyzer
 {
     private array $coverageData = [];
+
     private array $files = [];
 
     public function startCoverage(): void
@@ -35,7 +35,7 @@ class CodeCoverageAnalyzer
             'total_lines' => 0,
             'covered_lines' => 0,
             'coverage_percentage' => 0,
-            'files' => []
+            'files' => [],
         ];
 
         foreach ($this->coverageData as $file => $lines) {
@@ -51,7 +51,7 @@ class CodeCoverageAnalyzer
                 'coverage_percentage' => $totalLines > 0 ? ($coveredLines / $totalLines) * 100 : 0,
                 'uncovered_lines' => array_keys(array_filter($lines, function ($line) {
                     return $line === -1;
-                }))
+                })),
             ];
 
             $analysis['files'][] = $fileAnalysis;
@@ -76,7 +76,7 @@ class CodeCoverageAnalyzer
         return [
             'timestamp' => date('Y-m-d H:i:s'),
             'coverage_data' => $this->coverageData,
-            'analysis' => $this->analyzeCoverage()
+            'analysis' => $this->analyzeCoverage(),
         ];
     }
 
@@ -87,7 +87,7 @@ class CodeCoverageAnalyzer
                 return [
                     'file' => $file,
                     'lines' => $lines,
-                    'coverage' => $this->calculateFileCoverage($lines)
+                    'coverage' => $this->calculateFileCoverage($lines),
                 ];
             }
         }
@@ -132,21 +132,21 @@ class CodeCoverageAnalyzer
     <h1>Code Coverage Report</h1>
     <div class="summary">
         <h2>Summary</h2>
-        <p>Total Files: ' . $analysis['total_files'] . '</p>
-        <p>Covered Files: ' . $analysis['covered_files'] . '</p>
-        <p>Total Lines: ' . $analysis['total_lines'] . '</p>
-        <p>Covered Lines: ' . $analysis['covered_lines'] . '</p>
-        <p>Coverage: ' . number_format($analysis['coverage_percentage'], 2) . '%</p>
+        <p>Total Files: '.$analysis['total_files'].'</p>
+        <p>Covered Files: '.$analysis['covered_files'].'</p>
+        <p>Total Lines: '.$analysis['total_lines'].'</p>
+        <p>Covered Lines: '.$analysis['covered_lines'].'</p>
+        <p>Coverage: '.number_format($analysis['coverage_percentage'], 2).'%</p>
     </div>
     <h2>File Details</h2>';
 
         foreach ($analysis['files'] as $file) {
             $coverageClass = $file['coverage_percentage'] >= 80 ? 'high-coverage' : ($file['coverage_percentage'] >= 60 ? 'medium-coverage' : 'low-coverage');
 
-            $html .= '<div class="file ' . $coverageClass . '">
-                <h3>' . basename($file['file']) . '</h3>
-                <p>Coverage: ' . number_format($file['coverage_percentage'], 2) . '%</p>
-                <p>Lines: ' . $file['covered_lines'] . '/' . $file['total_lines'] . '</p>
+            $html .= '<div class="file '.$coverageClass.'">
+                <h3>'.basename($file['file']).'</h3>
+                <p>Coverage: '.number_format($file['coverage_percentage'], 2).'%</p>
+                <p>Lines: '.$file['covered_lines'].'/'.$file['total_lines'].'</p>
             </div>';
         }
 

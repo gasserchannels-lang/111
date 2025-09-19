@@ -3,18 +3,17 @@
 namespace Tests\Unit\Validation;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ComprehensiveValidationTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();
+        // Ensure we're using the testing database connection
         $this->app['config']->set('database.default', 'sqlite_testing');
+        $this->app['config']->set('database.connections.sqlite_testing.database', ':memory:');
     }
 
     #[Test]

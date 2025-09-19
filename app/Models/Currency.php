@@ -37,7 +37,7 @@ class Currency extends Model
     protected $guarded = [];
 
     /**
-     * @return HasMany<Store, Currency>
+     * @return HasMany<Store<Database\Factories\StoreFactory>, Currency<Database\Factories\CurrencyFactory>>
      */
     public function stores(): HasMany
     {
@@ -45,7 +45,7 @@ class Currency extends Model
     }
 
     /**
-     * @return BelongsToMany<Language, Currency>
+     * @return BelongsToMany<Language<Database\Factories\LanguageFactory>, Currency<Database\Factories\CurrencyFactory>>
      */
     public function languages(): BelongsToMany
     {

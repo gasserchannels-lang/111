@@ -4,21 +4,21 @@
  * Security Scanner Tool
  * Scans code for security vulnerabilities and issues
  */
-
 class SecurityScanner
 {
     private array $vulnerabilities = [];
+
     private array $securityRules = [
         'sql_injection' => '/\$_[GET|POST|REQUEST].*sql|mysql_query|mysqli_query/i',
         'xss' => '/echo\s+\$_[GET|POST|REQUEST]|print\s+\$_[GET|POST|REQUEST]/i',
         'file_inclusion' => '/include\s+\$_[GET|POST|REQUEST]|require\s+\$_[GET|POST|REQUEST]/i',
         'command_injection' => '/exec\s+\$_[GET|POST|REQUEST]|system\s+\$_[GET|POST|REQUEST]/i',
-        'weak_crypto' => '/md5\s*\(|sha1\s*\(/i'
+        'weak_crypto' => '/md5\s*\(|sha1\s*\(/i',
     ];
 
     public function scanFile(string $filePath): array
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return ['error' => 'File not found'];
         }
 
@@ -33,7 +33,7 @@ class SecurityScanner
                         'type' => $vulnerability,
                         'line' => $lineNumber + 1,
                         'code' => trim($line),
-                        'severity' => $this->getSeverity($vulnerability)
+                        'severity' => $this->getSeverity($vulnerability),
                     ];
                 }
             }
@@ -42,7 +42,7 @@ class SecurityScanner
         return [
             'file' => $filePath,
             'vulnerabilities' => $vulnerabilities,
-            'total_vulnerabilities' => count($vulnerabilities)
+            'total_vulnerabilities' => count($vulnerabilities),
         ];
     }
 
@@ -69,7 +69,7 @@ class SecurityScanner
             'xss' => 'high',
             'file_inclusion' => 'critical',
             'command_injection' => 'critical',
-            'weak_crypto' => 'medium'
+            'weak_crypto' => 'medium',
         ];
 
         return $severityMap[$vulnerability] ?? 'low';
@@ -92,7 +92,7 @@ class SecurityScanner
             'total_files_scanned' => count($scanResults),
             'total_vulnerabilities' => $totalVulnerabilities,
             'severity_breakdown' => $severityCounts,
-            'scan_results' => $scanResults
+            'scan_results' => $scanResults,
         ];
     }
 }

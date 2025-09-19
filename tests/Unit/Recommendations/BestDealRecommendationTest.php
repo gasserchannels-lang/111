@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Recommendations;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class BestDealRecommendationTest extends TestCase
 {
@@ -16,7 +16,7 @@ class BestDealRecommendationTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'original_price' => 1199.00, 'discount' => 200.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'original_price' => 999.00, 'discount' => 100.00],
             ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'original_price' => 799.00, 'discount' => 100.00],
-            ['id' => 4, 'name' => 'OnePlus 12', 'price' => 599.00, 'original_price' => 699.00, 'discount' => 100.00]
+            ['id' => 4, 'name' => 'OnePlus 12', 'price' => 599.00, 'original_price' => 699.00, 'discount' => 100.00],
         ];
 
         $bestDeals = $this->getBestDeals($products, 2);
@@ -35,7 +35,7 @@ class BestDealRecommendationTest extends TestCase
             'original_price' => 1199.00,
             'discount' => 200.00,
             'rating' => 4.5,
-            'reviews_count' => 1000
+            'reviews_count' => 1000,
         ];
 
         $dealScore = $this->calculateDealScore($product);
@@ -50,7 +50,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 800.00, 'original_price' => 1000.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 700.00, 'original_price' => 1000.00],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 600.00, 'original_price' => 800.00]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 600.00, 'original_price' => 800.00],
         ];
 
         $percentageDiscounts = $this->getPercentageDiscounts($products);
@@ -65,7 +65,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 800.00, 'original_price' => 1000.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 700.00, 'original_price' => 1000.00],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 600.00, 'original_price' => 800.00]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 600.00, 'original_price' => 800.00],
         ];
 
         $absoluteDiscounts = $this->getAbsoluteDiscounts($products);
@@ -80,7 +80,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'rating' => 4.5, 'features' => 10],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'rating' => 4.3, 'features' => 8],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'rating' => 4.4, 'features' => 9]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'rating' => 4.4, 'features' => 9],
         ];
 
         $valueDeals = $this->getValueForMoneyDeals($products);
@@ -95,7 +95,7 @@ class BestDealRecommendationTest extends TestCase
         $deals = [
             ['id' => 1, 'name' => 'Flash Sale', 'discount' => 30.0, 'end_date' => '2024-12-31', 'is_limited' => true],
             ['id' => 2, 'name' => 'Regular Sale', 'discount' => 20.0, 'end_date' => '2025-12-31', 'is_limited' => false],
-            ['id' => 3, 'name' => 'Weekend Special', 'discount' => 25.0, 'end_date' => '2024-12-25', 'is_limited' => true]
+            ['id' => 3, 'name' => 'Weekend Special', 'discount' => 25.0, 'end_date' => '2024-12-25', 'is_limited' => true],
         ];
 
         $limitedDeals = $this->getLimitedTimeDeals($deals, '2024-12-20');
@@ -110,7 +110,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'bulk_discount' => 0.0],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'bulk_discount' => 10.0],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'bulk_discount' => 15.0]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'bulk_discount' => 15.0],
         ];
 
         $bulkDeals = $this->getBulkDeals($products);
@@ -125,7 +125,7 @@ class BestDealRecommendationTest extends TestCase
         $bundles = [
             ['id' => 1, 'name' => 'Phone + Case', 'price' => 1099.00, 'individual_price' => 1199.00, 'savings' => 100.00],
             ['id' => 2, 'name' => 'Phone + Headphones', 'price' => 1299.00, 'individual_price' => 1399.00, 'savings' => 100.00],
-            ['id' => 3, 'name' => 'Phone + Case + Headphones', 'price' => 1399.00, 'individual_price' => 1599.00, 'savings' => 200.00]
+            ['id' => 3, 'name' => 'Phone + Case + Headphones', 'price' => 1399.00, 'individual_price' => 1599.00, 'savings' => 200.00],
         ];
 
         $bundleDeals = $this->getBundleDeals($bundles);
@@ -140,7 +140,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'cashback' => 50.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'cashback' => 100.00],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'cashback' => 75.00]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'cashback' => 75.00],
         ];
 
         $cashbackDeals = $this->getCashbackDeals($products);
@@ -155,7 +155,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'shipping_cost' => 0.00, 'free_shipping' => true],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'shipping_cost' => 15.00, 'free_shipping' => false],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'shipping_cost' => 0.00, 'free_shipping' => true]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'shipping_cost' => 0.00, 'free_shipping' => true],
         ];
 
         $freeShippingDeals = $this->getFreeShippingDeals($products);
@@ -170,7 +170,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'Old Model Phone', 'price' => 499.00, 'original_price' => 999.00, 'is_clearance' => true],
             ['id' => 2, 'name' => 'New Model Phone', 'price' => 999.00, 'original_price' => 999.00, 'is_clearance' => false],
-            ['id' => 3, 'name' => 'Discontinued Item', 'price' => 299.00, 'original_price' => 599.00, 'is_clearance' => true]
+            ['id' => 3, 'name' => 'Discontinued Item', 'price' => 299.00, 'original_price' => 599.00, 'is_clearance' => true],
         ];
 
         $clearanceDeals = $this->getClearanceDeals($products);
@@ -185,7 +185,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'Winter Jacket', 'price' => 199.00, 'original_price' => 299.00, 'season' => 'winter'],
             ['id' => 2, 'name' => 'Summer Dress', 'price' => 99.00, 'original_price' => 149.00, 'season' => 'summer'],
-            ['id' => 3, 'name' => 'Sunglasses', 'price' => 79.00, 'original_price' => 129.00, 'season' => 'summer']
+            ['id' => 3, 'name' => 'Sunglasses', 'price' => 79.00, 'original_price' => 129.00, 'season' => 'summer'],
         ];
 
         $seasonalDeals = $this->getSeasonalDeals($products, 'winter');
@@ -200,7 +200,7 @@ class BestDealRecommendationTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00, 'original_price' => 1199.00, 'rating' => 4.5, 'reviews_count' => 1000],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00, 'original_price' => 999.00, 'rating' => 4.3, 'reviews_count' => 800],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'original_price' => 799.00, 'rating' => 4.4, 'reviews_count' => 600]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00, 'original_price' => 799.00, 'rating' => 4.4, 'reviews_count' => 600],
         ];
 
         $bestOverallDeals = $this->getBestOverallDeals($products, 2);
@@ -253,7 +253,7 @@ class BestDealRecommendationTest extends TestCase
                 $discounts[] = [
                     'product_id' => $product['id'],
                     'name' => $product['name'],
-                    'discount_percentage' => round($discountPercentage, 2)
+                    'discount_percentage' => round($discountPercentage, 2),
                 ];
             }
         }
@@ -278,7 +278,7 @@ class BestDealRecommendationTest extends TestCase
             $discounts[] = [
                 'product_id' => $product['id'],
                 'name' => $product['name'],
-                'discount_amount' => $discountAmount
+                'discount_amount' => $discountAmount,
             ];
         }
 
@@ -306,7 +306,7 @@ class BestDealRecommendationTest extends TestCase
                 'id' => $product['id'],
                 'product_id' => $product['id'],
                 'name' => $product['name'],
-                'value_score' => $valueScore
+                'value_score' => $valueScore,
             ];
         }
 
@@ -394,6 +394,7 @@ class BestDealRecommendationTest extends TestCase
         usort($clearanceDeals, function ($a, $b) {
             $discountA = (($a['original_price'] - $a['price']) / $a['original_price']) * 100;
             $discountB = (($b['original_price'] - $b['price']) / $b['original_price']) * 100;
+
             return $discountB <=> $discountA;
         });
 
@@ -410,6 +411,7 @@ class BestDealRecommendationTest extends TestCase
         usort($seasonalDeals, function ($a, $b) {
             $discountA = (($a['original_price'] - $a['price']) / $a['original_price']) * 100;
             $discountB = (($b['original_price'] - $b['price']) / $b['original_price']) * 100;
+
             return $discountB <=> $discountA;
         });
 

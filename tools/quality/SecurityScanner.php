@@ -5,7 +5,9 @@ namespace Tools\Quality;
 class SecurityScanner
 {
     private array $vulnerabilities = [];
+
     private array $securityRules = [];
+
     private array $scanResults = [];
 
     public function __construct()
@@ -75,7 +77,7 @@ class SecurityScanner
             'vulnerabilities' => $vulnerabilities,
             'vulnerability_count' => count($vulnerabilities),
             'severity_distribution' => $this->getSeverityDistribution($vulnerabilities),
-            'scan_date' => date('Y-m-d H:i:s')
+            'scan_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -92,23 +94,23 @@ class SecurityScanner
             'directory' => $directory,
             'total_files' => count($files),
             'total_vulnerabilities' => array_sum(array_column($results, 'vulnerability_count')),
-            'files_with_vulnerabilities' => count(array_filter($results, fn($r) => $r['vulnerability_count'] > 0)),
+            'files_with_vulnerabilities' => count(array_filter($results, fn ($r) => $r['vulnerability_count'] > 0)),
             'severity_summary' => $this->getSeveritySummary($results),
             'vulnerability_types' => $this->getVulnerabilityTypes($results),
             'recommendations' => $this->generateSecurityRecommendations($results),
-            'scan_date' => date('Y-m-d H:i:s')
+            'scan_date' => date('Y-m-d H:i:s'),
         ];
     }
 
     public function generateSecurityReport(array $results): string
     {
         $report = "# Security Scan Report\n\n";
-        $report .= "Generated on: " . date('Y-m-d H:i:s') . "\n\n";
+        $report .= 'Generated on: '.date('Y-m-d H:i:s')."\n\n";
 
         $report .= "## Summary\n";
-        $report .= "- Total files scanned: " . count($results) . "\n";
-        $report .= "- Total vulnerabilities found: " . array_sum(array_column($results, 'vulnerability_count')) . "\n";
-        $report .= "- Files with vulnerabilities: " . count(array_filter($results, fn($r) => $r['vulnerability_count'] > 0)) . "\n\n";
+        $report .= '- Total files scanned: '.count($results)."\n";
+        $report .= '- Total vulnerabilities found: '.array_sum(array_column($results, 'vulnerability_count'))."\n";
+        $report .= '- Files with vulnerabilities: '.count(array_filter($results, fn ($r) => $r['vulnerability_count'] > 0))."\n\n";
 
         $report .= "## Vulnerability Types\n";
         $types = $this->getVulnerabilityTypes($results);
@@ -152,7 +154,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Potential SQL injection vulnerability detected',
                         'recommendation' => 'Use prepared statements or parameterized queries',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
 
@@ -164,7 +166,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'User input used in SQL query without proper sanitization',
                         'recommendation' => 'Sanitize and validate user input before using in SQL queries',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -191,7 +193,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Output without proper escaping detected',
                         'recommendation' => 'Use htmlspecialchars() or similar escaping functions',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
 
@@ -203,7 +205,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'User input output without escaping',
                         'recommendation' => 'Always escape user input before output',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -230,7 +232,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Form without CSRF protection detected',
                         'recommendation' => 'Implement CSRF tokens in all forms',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -257,7 +259,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Weak password hashing algorithm detected',
                         'recommendation' => 'Use password_hash() with strong algorithms',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
 
@@ -269,7 +271,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Hardcoded password detected',
                         'recommendation' => 'Use environment variables for sensitive data',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -296,7 +298,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Potential authorization bypass',
                         'recommendation' => 'Implement proper authorization checks',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -323,7 +325,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'File upload without proper validation',
                         'recommendation' => 'Validate file types, size, and content',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -350,7 +352,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Potential path traversal vulnerability',
                         'recommendation' => 'Validate and sanitize file paths',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -377,7 +379,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Dangerous command execution function detected',
                         'recommendation' => 'Avoid using dangerous functions or sanitize input',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -404,7 +406,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Insecure deserialization detected',
                         'recommendation' => 'Use safe deserialization methods or validate data',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -431,7 +433,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Weak encryption algorithm detected',
                         'recommendation' => 'Use strong encryption algorithms like AES-256',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -458,7 +460,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Potential error information disclosure',
                         'recommendation' => 'Disable error display in production',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -485,7 +487,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Redirect without validation detected',
                         'recommendation' => 'Validate redirect URLs before redirecting',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -512,7 +514,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Session management without security measures',
                         'recommendation' => 'Implement secure session management',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -539,7 +541,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'User input without validation',
                         'recommendation' => 'Implement proper input validation',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -566,7 +568,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Error handling without proper logging',
                         'recommendation' => 'Implement proper error logging and handling',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -593,7 +595,7 @@ class SecurityScanner
                         'line' => $line,
                         'description' => 'Sensitive operation without logging',
                         'recommendation' => 'Implement comprehensive logging and monitoring',
-                        'file' => $filePath
+                        'file' => $filePath,
                     ];
                 }
             }
@@ -607,68 +609,68 @@ class SecurityScanner
         $this->securityRules = [
             'sql_injection' => [
                 'patterns' => ['SELECT.*\$', 'INSERT.*\$', 'UPDATE.*\$', 'DELETE.*\$'],
-                'severity' => 'high'
+                'severity' => 'high',
             ],
             'xss' => [
                 'patterns' => ['echo.*\$', 'print.*\$'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'csrf' => [
                 'patterns' => ['<form', 'POST.*\$'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'authentication' => [
                 'patterns' => ['md5', 'sha1', 'password.*='],
-                'severity' => 'high'
+                'severity' => 'high',
             ],
             'authorization' => [
                 'patterns' => ['admin', 'user', 'role'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'file_upload' => [
                 'patterns' => ['\$_FILES'],
-                'severity' => 'high'
+                'severity' => 'high',
             ],
             'path_traversal' => [
                 'patterns' => ['\.\.\/'],
-                'severity' => 'high'
+                'severity' => 'high',
             ],
             'command_injection' => [
                 'patterns' => ['exec', 'system', 'shell_exec', 'passthru', 'eval'],
-                'severity' => 'critical'
+                'severity' => 'critical',
             ],
             'insecure_deserialization' => [
                 'patterns' => ['unserialize'],
-                'severity' => 'high'
+                'severity' => 'high',
             ],
             'weak_cryptography' => [
                 'patterns' => ['mcrypt', 'DES', 'RC4'],
-                'severity' => 'high'
+                'severity' => 'high',
             ],
             'information_disclosure' => [
                 'patterns' => ['error_reporting', 'display_errors', 'ini_set'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'insecure_redirect' => [
                 'patterns' => ['header.*Location'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'session_management' => [
                 'patterns' => ['session_start', 'session_regenerate_id'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'input_validation' => [
                 'patterns' => ['\$_GET', '\$_POST', '\$_REQUEST', '\$_COOKIE', '\$_SESSION'],
-                'severity' => 'medium'
+                'severity' => 'medium',
             ],
             'error_handling' => [
                 'patterns' => ['try', 'catch', 'throw'],
-                'severity' => 'low'
+                'severity' => 'low',
             ],
             'logging_monitoring' => [
                 'patterns' => ['login', 'logout', 'admin', 'sensitive'],
-                'severity' => 'low'
-            ]
+                'severity' => 'low',
+            ],
         ];
     }
 
@@ -692,7 +694,7 @@ class SecurityScanner
             'critical' => 0,
             'high' => 0,
             'medium' => 0,
-            'low' => 0
+            'low' => 0,
         ];
 
         foreach ($vulnerabilities as $vulnerability) {
@@ -711,7 +713,7 @@ class SecurityScanner
             'critical' => 0,
             'high' => 0,
             'medium' => 0,
-            'low' => 0
+            'low' => 0,
         ];
 
         foreach ($results as $result) {
@@ -749,46 +751,46 @@ class SecurityScanner
         foreach ($vulnerabilityTypes as $type => $count) {
             switch ($type) {
                 case 'SQL Injection':
-                    $recommendations[] = "Implement prepared statements for all database queries";
+                    $recommendations[] = 'Implement prepared statements for all database queries';
                     break;
                 case 'XSS':
-                    $recommendations[] = "Use htmlspecialchars() or similar escaping functions for all output";
+                    $recommendations[] = 'Use htmlspecialchars() or similar escaping functions for all output';
                     break;
                 case 'CSRF':
-                    $recommendations[] = "Implement CSRF tokens in all forms";
+                    $recommendations[] = 'Implement CSRF tokens in all forms';
                     break;
                 case 'Weak Authentication':
-                    $recommendations[] = "Use password_hash() with strong algorithms for password hashing";
+                    $recommendations[] = 'Use password_hash() with strong algorithms for password hashing';
                     break;
                 case 'File Upload':
-                    $recommendations[] = "Implement proper file validation and storage outside web root";
+                    $recommendations[] = 'Implement proper file validation and storage outside web root';
                     break;
                 case 'Command Injection':
-                    $recommendations[] = "Avoid using dangerous functions or sanitize input properly";
+                    $recommendations[] = 'Avoid using dangerous functions or sanitize input properly';
                     break;
                 case 'Insecure Deserialization':
-                    $recommendations[] = "Use safe deserialization methods or validate data";
+                    $recommendations[] = 'Use safe deserialization methods or validate data';
                     break;
                 case 'Weak Cryptography':
-                    $recommendations[] = "Use strong encryption algorithms like AES-256";
+                    $recommendations[] = 'Use strong encryption algorithms like AES-256';
                     break;
                 case 'Information Disclosure':
-                    $recommendations[] = "Disable error display in production environment";
+                    $recommendations[] = 'Disable error display in production environment';
                     break;
                 case 'Insecure Redirect':
-                    $recommendations[] = "Validate redirect URLs before redirecting";
+                    $recommendations[] = 'Validate redirect URLs before redirecting';
                     break;
                 case 'Session Management':
-                    $recommendations[] = "Implement secure session management with proper configuration";
+                    $recommendations[] = 'Implement secure session management with proper configuration';
                     break;
                 case 'Input Validation':
-                    $recommendations[] = "Implement comprehensive input validation and sanitization";
+                    $recommendations[] = 'Implement comprehensive input validation and sanitization';
                     break;
                 case 'Error Handling':
-                    $recommendations[] = "Implement proper error logging and handling";
+                    $recommendations[] = 'Implement proper error logging and handling';
                     break;
                 case 'Logging & Monitoring':
-                    $recommendations[] = "Implement comprehensive logging and monitoring for security events";
+                    $recommendations[] = 'Implement comprehensive logging and monitoring for security events';
                     break;
             }
         }

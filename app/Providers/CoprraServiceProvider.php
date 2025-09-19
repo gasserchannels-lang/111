@@ -47,12 +47,12 @@ class CoprraServiceProvider extends ServiceProvider
     private function registerBladeDirectives(): void
     {
         // Currency formatting directive
-        Blade::directive('currency', fn($expression): string => "<?php echo number_format($expression, 2); ?>");
+        Blade::directive('currency', fn ($expression): string => "<?php echo number_format($expression, 2); ?>");
 
         // Price comparison directive
-        Blade::directive('pricecompare', fn($expression): string => "<?php echo App\\Helpers\\PriceHelper::formatPrice($expression); ?>");
+        Blade::directive('pricecompare', fn ($expression): string => "<?php echo App\\Helpers\\PriceHelper::formatPrice($expression); ?>");
 
         // Language direction directive
-        Blade::directive('rtl', fn(): string => "<?php echo in_array(app()->getLocale(), ['ar', 'ur', 'fa']) ? 'rtl' : 'ltr'; ?>");
+        Blade::directive('rtl', fn (): string => "<?php echo in_array(app()->getLocale(), ['ar', 'ur', 'fa']) ? 'rtl' : 'ltr'; ?>");
     }
 }

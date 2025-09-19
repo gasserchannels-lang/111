@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ImageRecognitionTest extends TestCase
 {
@@ -106,7 +106,7 @@ class ImageRecognitionTest extends TestCase
         $uniqueLabels = [];
         foreach ($segments as $row) {
             foreach ($row as $label) {
-                if (!in_array($label, $uniqueLabels)) {
+                if (! in_array($label, $uniqueLabels)) {
                     $uniqueLabels[] = $label;
                 }
             }
@@ -278,6 +278,7 @@ class ImageRecognitionTest extends TestCase
                 $image[$i][$j] = rand(0, 255);
             }
         }
+
         return $image;
     }
 
@@ -290,6 +291,7 @@ class ImageRecognitionTest extends TestCase
                 $image[$i][$j] = rand(0, 255);
             }
         }
+
         return $image;
     }
 
@@ -307,6 +309,7 @@ class ImageRecognitionTest extends TestCase
                 $image[$i][$j] = [rand(0, 255), rand(0, 255), rand(0, 255)];
             }
         }
+
         return $image;
     }
 
@@ -319,6 +322,7 @@ class ImageRecognitionTest extends TestCase
                 $image[$i][$j] = rand(200, 255); // Different range
             }
         }
+
         return $image;
     }
 
@@ -336,6 +340,7 @@ class ImageRecognitionTest extends TestCase
                 $image[$i][$j] = 255; // White pixels
             }
         }
+
         return $image;
     }
 
@@ -353,6 +358,7 @@ class ImageRecognitionTest extends TestCase
                 $image[$i][$j] = rand(0, 255);
             }
         }
+
         return $image;
     }
 
@@ -367,7 +373,7 @@ class ImageRecognitionTest extends TestCase
         return [
             ['class' => 'cat', 'confidence' => 0.85],
             ['class' => 'dog', 'confidence' => 0.12],
-            ['class' => 'bird', 'confidence' => 0.03]
+            ['class' => 'bird', 'confidence' => 0.03],
         ];
     }
 
@@ -380,15 +386,15 @@ class ImageRecognitionTest extends TestCase
                 'y' => 40,
                 'width' => 60,
                 'height' => 80,
-                'confidence' => 0.9
-            ]
+                'confidence' => 0.9,
+            ],
         ];
     }
 
     private function performOCR(array $image): string
     {
         // Simulate OCR
-        return "Hello World";
+        return 'Hello World';
     }
 
     private function detectEdges(array $image): array
@@ -427,8 +433,8 @@ class ImageRecognitionTest extends TestCase
             [
                 'points' => [[0, 0], [10, 0], [10, 10], [0, 10]],
                 'area' => 100,
-                'perimeter' => 40
-            ]
+                'perimeter' => 40,
+            ],
         ];
     }
 
@@ -460,13 +466,13 @@ class ImageRecognitionTest extends TestCase
             [
                 'text' => 'Hello',
                 'bbox' => ['x' => 10, 'y' => 20, 'width' => 50, 'height' => 30],
-                'confidence' => 0.9
+                'confidence' => 0.9,
             ],
             [
                 'text' => 'World',
                 'bbox' => ['x' => 70, 'y' => 20, 'width' => 50, 'height' => 30],
-                'confidence' => 0.85
-            ]
+                'confidence' => 0.85,
+            ],
         ];
     }
 
@@ -476,7 +482,7 @@ class ImageRecognitionTest extends TestCase
         return [
             'red' => 0.3,
             'green' => 0.4,
-            'blue' => 0.3
+            'blue' => 0.3,
         ];
     }
 
@@ -487,9 +493,10 @@ class ImageRecognitionTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $colors[] = [
                 'rgb' => [rand(0, 255), rand(0, 255), rand(0, 255)],
-                'percentage' => rand(10, 30) / 100
+                'percentage' => rand(10, 30) / 100,
             ];
         }
+
         return $colors;
     }
 
@@ -515,6 +522,7 @@ class ImageRecognitionTest extends TestCase
         }
 
         $similarity = 1 - ($sum / $count / 255);
+
         // Boost similarity to ensure it's above 0.8 for similar images
         return min(1.0, $similarity + 0.2);
     }
@@ -522,9 +530,10 @@ class ImageRecognitionTest extends TestCase
     private function loadImageByFormat(string $imagePath): array
     {
         $format = pathinfo($imagePath, PATHINFO_EXTENSION);
+
         return [
             'format' => $format,
-            'data' => $this->createTestImage()
+            'data' => $this->createTestImage(),
         ];
     }
 
@@ -538,6 +547,7 @@ class ImageRecognitionTest extends TestCase
                 $enhanced[$i][$j] = min(255, $image[$i][$j] * 1.3 + 10); // Brightness + contrast
             }
         }
+
         return $enhanced;
     }
 
@@ -558,6 +568,7 @@ class ImageRecognitionTest extends TestCase
 
         // Higher brightness generally indicates better quality
         $avgBrightness = $sum / $count;
+
         return $avgBrightness / 255;
     }
 
@@ -578,6 +589,7 @@ class ImageRecognitionTest extends TestCase
 
         // Add base anomaly score to ensure different results
         $baseScore = 0.02;
+
         return $baseScore + ($anomalies / ($height * $width));
     }
 
@@ -590,7 +602,7 @@ class ImageRecognitionTest extends TestCase
     private function generateImageCaption(array $image): string
     {
         // Simulate image caption generation
-        return "A beautiful landscape with mountains and trees";
+        return 'A beautiful landscape with mountains and trees';
     }
 
     private function upscaleImage(array $image, int $scaleFactor): array
@@ -617,7 +629,7 @@ class ImageRecognitionTest extends TestCase
             'sharpness' => rand(70, 95) / 100,
             'brightness' => rand(40, 80) / 100,
             'contrast' => rand(60, 90) / 100,
-            'noise_level' => rand(5, 25) / 100
+            'noise_level' => rand(5, 25) / 100,
         ];
     }
 }

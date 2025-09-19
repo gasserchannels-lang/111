@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataDuplicationTest extends TestCase
 {
@@ -14,7 +14,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
             ['id' => 3, 'name' => 'Product A', 'price' => 100.00], // Exact duplicate
-            ['id' => 4, 'name' => 'Product C', 'price' => 300.00]
+            ['id' => 4, 'name' => 'Product C', 'price' => 300.00],
         ];
 
         $duplicates = $this->detectExactDuplicates($data);
@@ -29,7 +29,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00],
             ['id' => 2, 'name' => 'Product A ', 'price' => 100.00], // Near duplicate (extra space)
             ['id' => 3, 'name' => 'Product B', 'price' => 200.00],
-            ['id' => 4, 'name' => 'product a', 'price' => 100.00] // Near duplicate (case difference)
+            ['id' => 4, 'name' => 'product a', 'price' => 100.00], // Near duplicate (case difference)
         ];
 
         $duplicates = $this->detectNearDuplicates($data, ['name', 'price']);
@@ -43,7 +43,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
             ['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com'],
             ['id' => 3, 'name' => 'John D.', 'email' => 'john@example.com'], // Duplicate email
-            ['id' => 4, 'name' => 'Bob Johnson', 'email' => 'bob@example.com']
+            ['id' => 4, 'name' => 'Bob Johnson', 'email' => 'bob@example.com'],
         ];
 
         $duplicates = $this->detectDuplicateEmails($data);
@@ -58,7 +58,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'phone' => '+1-555-123-4567'],
             ['id' => 2, 'name' => 'Jane Smith', 'phone' => '+1-555-987-6543'],
             ['id' => 3, 'name' => 'John D.', 'phone' => '+1-555-123-4567'], // Duplicate phone (same number)
-            ['id' => 4, 'name' => 'Bob Johnson', 'phone' => '+1-555-111-2222']
+            ['id' => 4, 'name' => 'Bob Johnson', 'phone' => '+1-555-111-2222'],
         ];
 
         $duplicates = $this->detectDuplicatePhoneNumbers($data);
@@ -73,7 +73,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'address' => '123 Main St, City, State 12345'],
             ['id' => 2, 'name' => 'Jane Smith', 'address' => '456 Oak Ave, City, State 12345'],
             ['id' => 3, 'name' => 'John D.', 'address' => '123 Main St, City, State 12345'], // Duplicate address
-            ['id' => 4, 'name' => 'Bob Johnson', 'address' => '789 Pine Rd, City, State 12345']
+            ['id' => 4, 'name' => 'Bob Johnson', 'address' => '789 Pine Rd, City, State 12345'],
         ];
 
         $duplicates = $this->detectDuplicateAddresses($data);
@@ -88,7 +88,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'Laptop Computer', 'sku' => 'LAP-001', 'price' => 999.99],
             ['id' => 2, 'name' => 'Wireless Mouse', 'sku' => 'MOU-001', 'price' => 29.99],
             ['id' => 3, 'name' => 'Laptop Computer', 'sku' => 'LAP-002', 'price' => 999.99], // Duplicate product
-            ['id' => 4, 'name' => 'USB Cable', 'sku' => 'USB-001', 'price' => 9.99]
+            ['id' => 4, 'name' => 'USB Cable', 'sku' => 'USB-001', 'price' => 9.99],
         ];
 
         $duplicates = $this->detectDuplicateProducts($data);
@@ -103,7 +103,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'customer_id' => 1, 'order_date' => '2024-01-15', 'total' => 150.00],
             ['id' => 2, 'customer_id' => 2, 'order_date' => '2024-01-16', 'total' => 200.00],
             ['id' => 3, 'customer_id' => 1, 'order_date' => '2024-01-15', 'total' => 150.00], // Duplicate order
-            ['id' => 4, 'customer_id' => 3, 'order_date' => '2024-01-17', 'total' => 100.00]
+            ['id' => 4, 'customer_id' => 3, 'order_date' => '2024-01-17', 'total' => 100.00],
         ];
 
         $duplicates = $this->detectDuplicateOrders($data);
@@ -118,7 +118,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'username' => 'johndoe', 'email' => 'john@example.com'],
             ['id' => 2, 'username' => 'janesmith', 'email' => 'jane@example.com'],
             ['id' => 3, 'username' => 'johndoe', 'email' => 'john.doe@example.com'], // Duplicate username
-            ['id' => 4, 'username' => 'bobjohnson', 'email' => 'bob@example.com']
+            ['id' => 4, 'username' => 'bobjohnson', 'email' => 'bob@example.com'],
         ];
 
         $duplicates = $this->detectDuplicateUsers($data);
@@ -133,7 +133,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'sku' => 'SKU-001'],
             ['id' => 2, 'name' => 'Product B', 'sku' => 'SKU-002'],
             ['id' => 3, 'name' => 'Product C', 'sku' => 'SKU-001'], // Duplicate SKU
-            ['id' => 4, 'name' => 'Product D', 'sku' => 'SKU-003']
+            ['id' => 4, 'name' => 'Product D', 'sku' => 'SKU-003'],
         ];
 
         $duplicates = $this->detectDuplicateSkus($data);
@@ -148,7 +148,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'card_number' => '4111111111111111'],
             ['id' => 2, 'name' => 'Jane Smith', 'card_number' => '5555555555554444'],
             ['id' => 3, 'name' => 'John D.', 'card_number' => '4111111111111111'], // Duplicate card
-            ['id' => 4, 'name' => 'Bob Johnson', 'card_number' => '6011111111111117']
+            ['id' => 4, 'name' => 'Bob Johnson', 'card_number' => '6011111111111117'],
         ];
 
         $duplicates = $this->detectDuplicateCreditCards($data);
@@ -163,7 +163,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'ssn' => '123-45-6789'],
             ['id' => 2, 'name' => 'Jane Smith', 'ssn' => '987-65-4321'],
             ['id' => 3, 'name' => 'John D.', 'ssn' => '123456789'], // Duplicate SSN (different format)
-            ['id' => 4, 'name' => 'Bob Johnson', 'ssn' => '111-22-3333']
+            ['id' => 4, 'name' => 'Bob Johnson', 'ssn' => '111-22-3333'],
         ];
 
         $duplicates = $this->detectDuplicateSSNs($data);
@@ -178,7 +178,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'user_id' => 1, 'ip_address' => '192.168.1.1', 'timestamp' => '2024-01-15 10:00:00'],
             ['id' => 2, 'user_id' => 2, 'ip_address' => '192.168.1.2', 'timestamp' => '2024-01-15 11:00:00'],
             ['id' => 3, 'user_id' => 1, 'ip_address' => '192.168.1.1', 'timestamp' => '2024-01-15 12:00:00'], // Duplicate IP
-            ['id' => 4, 'user_id' => 3, 'ip_address' => '192.168.1.3', 'timestamp' => '2024-01-15 13:00:00']
+            ['id' => 4, 'user_id' => 3, 'ip_address' => '192.168.1.3', 'timestamp' => '2024-01-15 13:00:00'],
         ];
 
         $duplicates = $this->detectDuplicateIPAddresses($data);
@@ -193,7 +193,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'transaction_id' => 'TXN-001', 'amount' => 100.00, 'timestamp' => '2024-01-15 10:00:00'],
             ['id' => 2, 'transaction_id' => 'TXN-002', 'amount' => 200.00, 'timestamp' => '2024-01-15 11:00:00'],
             ['id' => 3, 'transaction_id' => 'TXN-001', 'amount' => 100.00, 'timestamp' => '2024-01-15 12:00:00'], // Duplicate transaction
-            ['id' => 4, 'transaction_id' => 'TXN-003', 'amount' => 300.00, 'timestamp' => '2024-01-15 13:00:00']
+            ['id' => 4, 'transaction_id' => 'TXN-003', 'amount' => 300.00, 'timestamp' => '2024-01-15 13:00:00'],
         ];
 
         $duplicates = $this->detectDuplicateTransactions($data);
@@ -208,7 +208,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'filename' => 'document.pdf', 'file_hash' => 'abc123def456'],
             ['id' => 2, 'filename' => 'image.jpg', 'file_hash' => 'def456ghi789'],
             ['id' => 3, 'filename' => 'document_copy.pdf', 'file_hash' => 'abc123def456'], // Duplicate file
-            ['id' => 4, 'filename' => 'spreadsheet.xlsx', 'file_hash' => 'ghi789jkl012']
+            ['id' => 4, 'filename' => 'spreadsheet.xlsx', 'file_hash' => 'ghi789jkl012'],
         ];
 
         $duplicates = $this->detectDuplicateFiles($data);
@@ -223,7 +223,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'title' => 'Home Page', 'url' => 'https://example.com'],
             ['id' => 2, 'title' => 'About Page', 'url' => 'https://example.com/about'],
             ['id' => 3, 'title' => 'Home Page Copy', 'url' => 'https://example.com/'], // Duplicate URL
-            ['id' => 4, 'title' => 'Contact Page', 'url' => 'https://example.com/contact']
+            ['id' => 4, 'title' => 'Contact Page', 'url' => 'https://example.com/contact'],
         ];
 
         $duplicates = $this->detectDuplicateUrls($data);
@@ -238,7 +238,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'phone' => '+1-555-123-4567'],
             ['id' => 2, 'name' => 'Jane Smith', 'phone' => '+1-555-987-6543'],
             ['id' => 3, 'name' => 'John D.', 'phone' => '15551234567'], // Duplicate phone (different format)
-            ['id' => 4, 'name' => 'Bob Johnson', 'phone' => '555.111.2222']
+            ['id' => 4, 'name' => 'Bob Johnson', 'phone' => '555.111.2222'],
         ];
 
         $duplicates = $this->detectDuplicatePhoneNumbersWithNormalization($data);
@@ -253,7 +253,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
             ['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com'],
             ['id' => 3, 'name' => 'John D.', 'email' => 'JOHN@EXAMPLE.COM'], // Duplicate email (case difference)
-            ['id' => 4, 'name' => 'Bob Johnson', 'email' => 'bob@example.com']
+            ['id' => 4, 'name' => 'Bob Johnson', 'email' => 'bob@example.com'],
         ];
 
         $duplicates = $this->detectDuplicateEmailsWithNormalization($data);
@@ -269,7 +269,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
             ['id' => 3, 'name' => 'Product A', 'price' => 100.00], // Duplicate
             ['id' => 4, 'name' => 'Product C', 'price' => 300.00],
-            ['id' => 5, 'name' => 'Product B', 'price' => 200.00] // Duplicate
+            ['id' => 5, 'name' => 'Product B', 'price' => 200.00], // Duplicate
         ];
 
         $duplicationPercentage = $this->calculateDuplicationPercentage($data);
@@ -283,7 +283,7 @@ class DataDuplicationTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00],
             ['id' => 3, 'name' => 'Product A', 'price' => 100.00], // Duplicate
-            ['id' => 4, 'name' => 'Product C', 'price' => 300.00]
+            ['id' => 4, 'name' => 'Product C', 'price' => 300.00],
         ];
 
         $report = $this->generateDuplicateReport($data);
@@ -343,10 +343,10 @@ class DataDuplicationTest extends TestCase
 
                 if ($isDuplicate) {
                     // Add both records to avoid duplicates
-                    if (!in_array($record1, $duplicates)) {
+                    if (! in_array($record1, $duplicates)) {
                         $duplicates[] = $record1;
                     }
-                    if (!in_array($record2, $duplicates)) {
+                    if (! in_array($record2, $duplicates)) {
                         $duplicates[] = $record2;
                     }
                 }
@@ -420,7 +420,7 @@ class DataDuplicationTest extends TestCase
 
         foreach ($data as $record) {
             if (isset($record['name']) && isset($record['price'])) {
-                $key = strtolower($record['name']) . '|' . $record['price'];
+                $key = strtolower($record['name']).'|'.$record['price'];
                 if (isset($seen[$key])) {
                     $duplicates[] = $record;
                 } else {
@@ -439,7 +439,7 @@ class DataDuplicationTest extends TestCase
 
         foreach ($data as $record) {
             if (isset($record['customer_id']) && isset($record['order_date']) && isset($record['total'])) {
-                $key = $record['customer_id'] . '|' . $record['order_date'] . '|' . $record['total'];
+                $key = $record['customer_id'].'|'.$record['order_date'].'|'.$record['total'];
                 if (isset($seen[$key])) {
                     $duplicates[] = $record;
                 } else {
@@ -662,7 +662,7 @@ class DataDuplicationTest extends TestCase
             'duplicate_count' => $duplicateCount,
             'duplication_percentage' => $duplicationPercentage,
             'duplicates' => $duplicates,
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ];
     }
 }

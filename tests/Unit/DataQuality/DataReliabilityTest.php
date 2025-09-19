@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataReliabilityTest extends TestCase
 {
@@ -39,7 +39,7 @@ class DataReliabilityTest extends TestCase
         $dataPoints = [
             ['value' => 100, 'confidence' => 0.9],
             ['value' => 102, 'confidence' => 0.8],
-            ['value' => 98, 'confidence' => 0.95]
+            ['value' => 98, 'confidence' => 0.95],
         ];
 
         $overallConfidence = $this->calculateOverallConfidence($dataPoints);
@@ -55,7 +55,7 @@ class DataReliabilityTest extends TestCase
             'name' => 'Store API',
             'uptime' => 99.5,
             'response_time' => 200,
-            'error_rate' => 0.1
+            'error_rate' => 0.1,
         ];
 
         $isReliable = $this->isSourceReliable($source);
@@ -110,8 +110,8 @@ class DataReliabilityTest extends TestCase
             'total_amount' => 150.00,
             'items' => [
                 ['product_id' => 1, 'quantity' => 2, 'price' => 50.00],
-                ['product_id' => 2, 'quantity' => 1, 'price' => 50.00]
-            ]
+                ['product_id' => 2, 'quantity' => 1, 'price' => 50.00],
+            ],
         ];
 
         $isValid = $this->validateIntegrityConstraints($data);
@@ -128,7 +128,7 @@ class DataReliabilityTest extends TestCase
             'accuracy' => 0.90,
             'consistency' => 0.85,
             'timeliness' => 0.88,
-            'validity' => 0.92
+            'validity' => 0.92,
         ];
 
         $overallScore = $this->calculateDataQualityScore($qualityMetrics);
@@ -215,7 +215,7 @@ class DataReliabilityTest extends TestCase
 
     private function isDataFresh(\DateTime $lastUpdated, int $maxAgeHours): bool
     {
-        $now = new \DateTime();
+        $now = new \DateTime;
         $age = $now->diff($lastUpdated)->h;
 
         return $age <= $maxAgeHours;
@@ -255,7 +255,7 @@ class DataReliabilityTest extends TestCase
             'accuracy' => 0.25,
             'consistency' => 0.2,
             'timeliness' => 0.15,
-            'validity' => 0.2
+            'validity' => 0.2,
         ];
 
         $score = 0;

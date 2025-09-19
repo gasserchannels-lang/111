@@ -216,6 +216,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // App\Providers\TelescopeServiceProvider::class, // Disabled to fix API issues
         App\Providers\CoprraServiceProvider::class,
     ],
 

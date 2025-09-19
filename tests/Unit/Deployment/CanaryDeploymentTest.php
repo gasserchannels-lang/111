@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Deployment;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class CanaryDeploymentTest extends TestCase
 {

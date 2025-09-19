@@ -15,7 +15,7 @@ class CurrencyConversionTest extends TestCase
         'GBP' => 0.73,
         'JPY' => 110.0,
         'AED' => 3.67,
-        'EGP' => 15.7
+        'EGP' => 15.7,
     ];
 
     #[Test]

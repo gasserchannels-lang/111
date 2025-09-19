@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
@@ -43,11 +44,12 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
+    use HasApiTokens;
+
     /**
      * @use HasFactory<UserFactory>
      */
     use HasFactory;
-
     use Notifiable;
 
     protected $fillable = [
@@ -83,7 +85,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<Review<\Database\Factories\ReviewFactory>, User<\Database\Factories\UserFactory>>
+     * @return HasMany<Review, User>
      */
     public function reviews(): HasMany
     {
@@ -93,7 +95,7 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: ElseExpression.
      *
-     * @return HasMany<Wishlist<\Database\Factories\WishlistFactory>, User<\Database\Factories\UserFactory>>
+     * @return HasMany<Wishlist, User>
      */
     public function wishlists(): HasMany
     {
@@ -103,7 +105,7 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: CamelCaseVariableName.
      *
-     * @return HasMany<PriceAlert<\Database\Factories\PriceAlertFactory>, User<\Database\Factories\UserFactory>>
+     * @return HasMany<PriceAlert, User>
      */
     public function priceAlerts(): HasMany
     {
@@ -119,7 +121,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasOne<UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>, User<\Database\Factories\UserFactory>>
+     * @return HasOne<UserLocaleSetting, User>
      */
     public function localeSetting(): HasOne
     {

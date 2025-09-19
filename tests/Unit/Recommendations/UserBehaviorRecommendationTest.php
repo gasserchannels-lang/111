@@ -16,7 +16,7 @@ class UserBehaviorRecommendationTest extends TestCase
             ['page' => 'electronics', 'time_spent' => 300, 'timestamp' => '2024-01-15 10:00:00'],
             ['page' => 'smartphones', 'time_spent' => 600, 'timestamp' => '2024-01-15 10:05:00'],
             ['page' => 'iphone', 'time_spent' => 900, 'timestamp' => '2024-01-15 10:15:00'],
-            ['page' => 'accessories', 'time_spent' => 180, 'timestamp' => '2024-01-15 10:30:00']
+            ['page' => 'accessories', 'time_spent' => 180, 'timestamp' => '2024-01-15 10:30:00'],
         ];
 
         $patterns = $this->analyzeBrowsingPatterns($browsingHistory);
@@ -34,7 +34,7 @@ class UserBehaviorRecommendationTest extends TestCase
             ['date' => '2024-01-01', 'amount' => 100],
             ['date' => '2024-01-15', 'amount' => 200],
             ['date' => '2024-02-01', 'amount' => 150],
-            ['date' => '2024-02-15', 'amount' => 300]
+            ['date' => '2024-02-15', 'amount' => 300],
         ];
 
         $frequency = $this->calculatePurchaseFrequency($purchaseHistory);
@@ -51,7 +51,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'browsed_categories' => ['Electronics', 'Electronics', 'Clothing', 'Electronics'],
             'clicked_products' => ['iPhone', 'Samsung', 'Nike', 'iPhone'],
             'time_on_pages' => [300, 600, 120, 900],
-            'searches' => ['smartphone', 'iPhone', 'shoes', 'iPhone case']
+            'searches' => ['smartphone', 'iPhone', 'shoes', 'iPhone case'],
         ];
 
         $preferences = $this->identifyUserPreferences($userBehavior);
@@ -70,7 +70,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'searches' => ['iPhone 15', 'iPhone accessories', 'iPhone case'],
             'browsed_products' => ['iPhone 15 Pro', 'iPhone 15 Pro Max'],
             'time_spent' => 1800, // 30 minutes
-            'pages_viewed' => 8
+            'pages_viewed' => 8,
         ];
 
         $intent = $this->predictUserIntent($recentBehavior);
@@ -90,7 +90,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'average_session_duration' => 600, // 10 minutes
             'pages_per_session' => 8,
             'bounce_rate' => 0.2,
-            'return_visits' => 3
+            'return_visits' => 3,
         ];
 
         $engagementLevel = $this->calculateEngagementLevel($userMetrics);
@@ -109,10 +109,10 @@ class UserBehaviorRecommendationTest extends TestCase
                 ['price' => 100, 'purchased' => true],
                 ['price' => 200, 'purchased' => false],
                 ['price' => 150, 'purchased' => true],
-                ['price' => 300, 'purchased' => false]
+                ['price' => 300, 'purchased' => false],
             ],
             'price_alerts_set' => 2,
-            'discount_searches' => 5
+            'discount_searches' => 5,
         ];
 
         $sensitivity = $this->calculatePriceSensitivity($priceBehavior);
@@ -129,7 +129,7 @@ class UserBehaviorRecommendationTest extends TestCase
         $deviceUsage = [
             'mobile' => ['sessions' => 15, 'purchases' => 3, 'time_spent' => 1800],
             'desktop' => ['sessions' => 8, 'purchases' => 5, 'time_spent' => 2400],
-            'tablet' => ['sessions' => 3, 'purchases' => 1, 'time_spent' => 600]
+            'tablet' => ['sessions' => 3, 'purchases' => 1, 'time_spent' => 600],
         ];
 
         $preferences = $this->analyzeDevicePreferences($deviceUsage);
@@ -148,7 +148,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'Winter' => ['purchases' => 10, 'categories' => ['Winter Clothing', 'Heating']],
             'Spring' => ['purchases' => 8, 'categories' => ['Spring Clothing', 'Gardening']],
             'Summer' => ['purchases' => 12, 'categories' => ['Summer Clothing', 'Outdoor']],
-            'Fall' => ['purchases' => 6, 'categories' => ['Fall Clothing', 'Indoor']]
+            'Fall' => ['purchases' => 6, 'categories' => ['Fall Clothing', 'Indoor']],
         ];
 
         $patterns = $this->analyzeSeasonalPatterns($seasonalData);
@@ -167,7 +167,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'sessions_last_month' => 2,
             'purchases_last_month' => 0,
             'engagement_score' => 0.3,
-            'support_tickets' => 2
+            'support_tickets' => 2,
         ];
 
         $churnRisk = $this->predictChurnRisk($userMetrics);
@@ -185,13 +185,13 @@ class UserBehaviorRecommendationTest extends TestCase
             'preferences' => ['Electronics', 'Apple'],
             'price_range' => [100, 500],
             'engagement_level' => 'high',
-            'purchase_frequency' => 0.5
+            'purchase_frequency' => 0.5,
         ];
 
         $availableProducts = [
             ['name' => 'iPhone', 'category' => 'Electronics', 'brand' => 'Apple', 'price' => 400],
             ['name' => 'Samsung', 'category' => 'Electronics', 'brand' => 'Samsung', 'price' => 350],
-            ['name' => 'Nike Shoes', 'category' => 'Clothing', 'brand' => 'Nike', 'price' => 120]
+            ['name' => 'Nike Shoes', 'category' => 'Clothing', 'brand' => 'Nike', 'price' => 120],
         ];
 
         $recommendations = $this->generatePersonalizedRecommendations($userProfile, $availableProducts);
@@ -219,7 +219,7 @@ class UserBehaviorRecommendationTest extends TestCase
         return [
             'most_viewed_category' => $mostViewedCategory,
             'average_session_time' => $averageSessionTime,
-            'category_time_distribution' => $categoryTime
+            'category_time_distribution' => $categoryTime,
         ];
     }
 
@@ -248,7 +248,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'preferred_category' => $preferredCategory,
             'preferred_brand' => $preferredBrand,
             'category_confidence' => max($categoryCounts) / array_sum($categoryCounts),
-            'brand_confidence' => max($brandCounts) / array_sum($brandCounts)
+            'brand_confidence' => max($brandCounts) / array_sum($brandCounts),
         ];
     }
 
@@ -273,7 +273,7 @@ class UserBehaviorRecommendationTest extends TestCase
 
         return [
             'intent_type' => $intentType,
-            'confidence' => min($intentScore, 1.0)
+            'confidence' => min($intentScore, 1.0),
         ];
     }
 
@@ -300,7 +300,7 @@ class UserBehaviorRecommendationTest extends TestCase
 
         return [
             'level' => $level,
-            'score' => $score
+            'score' => $score,
         ];
     }
 
@@ -311,7 +311,7 @@ class UserBehaviorRecommendationTest extends TestCase
         }), 'price');
 
         $notPurchasedPrices = array_column(array_filter($priceBehavior['viewed_products'], function ($p) {
-            return !$p['purchased'];
+            return ! $p['purchased'];
         }), 'price');
 
         $maxPurchasedPrice = empty($purchasedPrices) ? 0 : max($purchasedPrices);
@@ -327,7 +327,7 @@ class UserBehaviorRecommendationTest extends TestCase
         return [
             'level' => $level,
             'threshold' => $threshold,
-            'score' => $sensitivityScore
+            'score' => $sensitivityScore,
         ];
     }
 
@@ -353,7 +353,7 @@ class UserBehaviorRecommendationTest extends TestCase
         return [
             'primary_device' => $primaryDevice,
             'purchase_device' => $purchaseDevice,
-            'device_usage' => $deviceUsage
+            'device_usage' => $deviceUsage,
         ];
     }
 
@@ -377,7 +377,7 @@ class UserBehaviorRecommendationTest extends TestCase
 
         return [
             'peak_season' => $peakSeason,
-            'preferred_categories' => array_keys(array_slice($preferredCategories, 0, 3, true))
+            'preferred_categories' => array_keys(array_slice($preferredCategories, 0, 3, true)),
         ];
     }
 
@@ -405,7 +405,7 @@ class UserBehaviorRecommendationTest extends TestCase
 
         return [
             'risk_level' => $riskLevel,
-            'probability' => $probability
+            'probability' => $probability,
         ];
     }
 

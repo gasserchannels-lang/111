@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataTimelinessTest extends TestCase
 {
@@ -93,7 +93,7 @@ class DataTimelinessTest extends TestCase
             new \DateTime('2024-01-15 10:00:00'),
             new \DateTime('2024-01-15 10:01:00'),
             new \DateTime('2024-01-15 10:02:00'),
-            new \DateTime('2024-01-15 10:03:00')
+            new \DateTime('2024-01-15 10:03:00'),
         ];
 
         $velocity = $this->calculateDataVelocity($dataPoints);
@@ -118,12 +118,12 @@ class DataTimelinessTest extends TestCase
     {
         $historicalData = [
             '2024-01-15 08:00:00' => 100,
-            '2024-01-15 09:00:00' => 105
+            '2024-01-15 09:00:00' => 105,
         ];
 
         $backfillData = [
             '2024-01-15 09:30:00' => 102,
-            '2024-01-15 10:30:00' => 107
+            '2024-01-15 10:30:00' => 107,
         ];
 
         $isValidBackfill = $this->validateBackfillData($historicalData, $backfillData);
@@ -133,7 +133,7 @@ class DataTimelinessTest extends TestCase
 
     private function isDataFresh(\DateTime $lastUpdated, int $maxAgeHours): bool
     {
-        $now = new \DateTime();
+        $now = new \DateTime;
         $age = $now->diff($lastUpdated)->h;
 
         return $age <= $maxAgeHours;
@@ -141,13 +141,14 @@ class DataTimelinessTest extends TestCase
 
     private function calculateDataAge(\DateTime $lastUpdated): int
     {
-        $now = new \DateTime();
+        $now = new \DateTime;
+
         return $now->diff($lastUpdated)->h;
     }
 
     private function isRealTimeData(\DateTime $dataTimestamp, int $maxLatencySeconds): bool
     {
-        $now = new \DateTime();
+        $now = new \DateTime;
         $latency = $now->getTimestamp() - $dataTimestamp->getTimestamp();
 
         return $latency <= $maxLatencySeconds;
@@ -185,6 +186,7 @@ class DataTimelinessTest extends TestCase
     private function isDataSynchronized(\DateTime $time1, \DateTime $time2, int $maxDelaySeconds): bool
     {
         $delay = abs($time1->getTimestamp() - $time2->getTimestamp());
+
         return $delay <= $maxDelaySeconds;
     }
 
@@ -203,7 +205,7 @@ class DataTimelinessTest extends TestCase
                 }
             }
 
-            if (!$isValidTime) {
+            if (! $isValidTime) {
                 return false;
             }
         }

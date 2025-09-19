@@ -4,10 +4,10 @@
  * Code Style Checker Tool
  * Checks PHP code against coding standards
  */
-
 class CodeStyleChecker
 {
     private array $rules = [];
+
     private array $violations = [];
 
     public function __construct()
@@ -25,14 +25,14 @@ class CodeStyleChecker
                 'class' => 'PascalCase',
                 'method' => 'camelCase',
                 'variable' => 'camelCase',
-                'constant' => 'UPPER_CASE'
-            ]
+                'constant' => 'UPPER_CASE',
+            ],
         ];
     }
 
     public function checkFile(string $filePath): array
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return ['error' => 'File not found'];
         }
 
@@ -51,7 +51,7 @@ class CodeStyleChecker
         return [
             'file' => $filePath,
             'violations' => $violations,
-            'total_violations' => count($violations)
+            'total_violations' => count($violations),
         ];
     }
 
@@ -64,8 +64,8 @@ class CodeStyleChecker
             $violations[] = [
                 'line' => $lineNumber,
                 'type' => 'line_length',
-                'message' => 'Line exceeds maximum length of ' . $this->rules['line_length']['max'] . ' characters',
-                'severity' => 'warning'
+                'message' => 'Line exceeds maximum length of '.$this->rules['line_length']['max'].' characters',
+                'severity' => 'warning',
             ];
         }
 
@@ -75,7 +75,7 @@ class CodeStyleChecker
                 'line' => $lineNumber,
                 'type' => 'indentation',
                 'message' => 'Use spaces for indentation, not tabs',
-                'severity' => 'error'
+                'severity' => 'error',
             ];
         }
 
@@ -85,7 +85,7 @@ class CodeStyleChecker
                 'line' => $lineNumber,
                 'type' => 'trailing_whitespace',
                 'message' => 'Trailing whitespace found',
-                'severity' => 'warning'
+                'severity' => 'warning',
             ];
         }
 
@@ -118,12 +118,12 @@ class CodeStyleChecker
         // Check class naming convention
         if ($tokenType === T_CLASS && isset($allTokens[$index + 2])) {
             $className = $allTokens[$index + 2][1];
-            if (!$this->isPascalCase($className)) {
+            if (! $this->isPascalCase($className)) {
                 $violations[] = [
                     'line' => $lineNumber,
                     'type' => 'naming_convention',
                     'message' => 'Class name should be in PascalCase',
-                    'severity' => 'error'
+                    'severity' => 'error',
                 ];
             }
         }
@@ -131,12 +131,12 @@ class CodeStyleChecker
         // Check method naming convention
         if ($tokenType === T_FUNCTION && isset($allTokens[$index + 2])) {
             $methodName = $allTokens[$index + 2][1];
-            if (!$this->isCamelCase($methodName) && !$this->isSnakeCase($methodName)) {
+            if (! $this->isCamelCase($methodName) && ! $this->isSnakeCase($methodName)) {
                 $violations[] = [
                     'line' => $lineNumber,
                     'type' => 'naming_convention',
                     'message' => 'Method name should be in camelCase',
-                    'severity' => 'error'
+                    'severity' => 'error',
                 ];
             }
         }
@@ -144,12 +144,12 @@ class CodeStyleChecker
         // Check variable naming convention
         if ($tokenType === T_VARIABLE) {
             $variableName = substr($tokenValue, 1); // Remove $
-            if (!$this->isCamelCase($variableName) && !$this->isSnakeCase($variableName)) {
+            if (! $this->isCamelCase($variableName) && ! $this->isSnakeCase($variableName)) {
                 $violations[] = [
                     'line' => $lineNumber,
                     'type' => 'naming_convention',
                     'message' => 'Variable name should be in camelCase or snake_case',
-                    'severity' => 'warning'
+                    'severity' => 'warning',
                 ];
             }
         }
@@ -195,13 +195,13 @@ class CodeStyleChecker
         $violationTypes = [];
 
         foreach ($results as $result) {
-            if (!isset($result['error'])) {
+            if (! isset($result['error'])) {
                 $totalViolations += $result['total_violations'];
 
                 foreach ($result['violations'] as $violation) {
                     $severityCounts[$violation['severity']]++;
 
-                    if (!isset($violationTypes[$violation['type']])) {
+                    if (! isset($violationTypes[$violation['type']])) {
                         $violationTypes[$violation['type']] = 0;
                     }
                     $violationTypes[$violation['type']]++;
@@ -214,7 +214,7 @@ class CodeStyleChecker
             'total_violations' => $totalViolations,
             'severity_breakdown' => $severityCounts,
             'violation_types' => $violationTypes,
-            'files' => $results
+            'files' => $results,
         ];
     }
 
@@ -252,7 +252,7 @@ class CodeStyleChecker
         return [
             'file' => $filePath,
             'fixes_applied' => $fixCount,
-            'success' => $success !== false
+            'success' => $success !== false,
         ];
     }
 

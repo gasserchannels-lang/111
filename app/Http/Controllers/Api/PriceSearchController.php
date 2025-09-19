@@ -19,36 +19,119 @@ class PriceSearchController extends Controller
 {
     public function __construct(private readonly PriceSearchService $priceSearchService)
     {
+        // Ensure PriceSearchService is properly injected
+        if (! $this->priceSearchService) {
+            $this->priceSearchService = app(PriceSearchService::class);
+        }
     }
 
     public function bestOffer(Request $request): JsonResponse
     {
-        $validation = $this->priceSearchService->validateSearchRequest($request);
+        try {
+            // Support both product_id and product_name parameters
+            $productId = $request->input('product_id');
+            $productName = $request->input('product_name');
 
-        if (! $validation['success']) {
+            if (empty($productId) && empty($productName)) {
+                // If no parameters, return all products as a list
+                $products = Product::with([
+                    'priceOffers' => function ($query) {
+                        $query->where('is_available', true)
+                            ->orderBy('price', 'asc')
+                            ->with('store:id,name');
+                    },
+                    'brand:id,name',
+                    'category:id,name',
+                ])->where('is_active', true)->limit(10)->get();
+
+                if ($products->isEmpty()) {
+                    return response()->json([
+                        'message' => 'No products available',
+                    ], 404);
+                }
+
+                return response()->json([
+                    'data' => $products->map(function ($product) {
+                        $bestOffer = $product->priceOffers->first();
+
+                        return [
+                            'product_id' => $product->id,
+                            'name' => $product->name,
+                            'price' => $bestOffer ? $bestOffer->price : $product->price,
+                            'store' => $bestOffer && $bestOffer->store ? $bestOffer->store->name : 'Unknown Store',
+                            'is_available' => $bestOffer ? $bestOffer->is_available : true,
+                        ];
+                    })->toArray(),
+                ]);
+            }
+
+            // Find product by ID or name
+            $product = null;
+            if ($productId) {
+                $product = Product::with([
+                    'priceOffers' => function ($query) {
+                        $query->where('is_available', true)
+                            ->orderBy('price', 'asc')
+                            ->with('store:id,name');
+                    },
+                    'brand:id,name',
+                    'category:id,name',
+                ])->find($productId);
+            } elseif ($productName) {
+                $product = Product::with([
+                    'priceOffers' => function ($query) {
+                        $query->where('is_available', true)
+                            ->orderBy('price', 'asc')
+                            ->with('store:id,name');
+                    },
+                    'brand:id,name',
+                    'category:id,name',
+                ])->where('name', 'like', '%'.$productName.'%')->first();
+            }
+
+            if (! $product) {
+                return response()->json([
+                    'message' => 'Product not found',
+                ], 404);
+            }
+
+            if ($product->priceOffers->isEmpty()) {
+                return response()->json([
+                    'message' => 'No offers available for this product',
+                ], 404);
+            }
+
+            $bestOffer = $product->priceOffers->first();
+
             return response()->json([
-                'errors' => $validation['errors'],
-            ], 422);
-        }
+                'data' => [
+                    'product_id' => $product->id,
+                    'price' => $bestOffer->price,
+                    'store_id' => $bestOffer->store_id,
+                    'store' => $bestOffer->store ? $bestOffer->store->name : 'Unknown Store',
+                    'store_url' => $bestOffer->store_url,
+                    'is_available' => $bestOffer->is_available,
+                    'total_offers' => $product->priceOffers->count(),
+                ],
+                'offers' => $product->priceOffers->map(function ($offer) {
+                    return [
+                        'id' => $offer->id,
+                        'price' => $offer->price,
+                        'store_id' => $offer->store_id,
+                        'store' => $offer->store ? $offer->store->name : 'Unknown Store',
+                        'store_url' => $offer->store_url,
+                        'is_available' => $offer->is_available,
+                    ];
+                })->toArray(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('PriceSearchController@bestOffer failed: '.$e->getMessage());
 
-        $validated = $validation['data'];
-        if (is_array($validated)) {
-            $product = is_string($validated['product'] ?? null) ? $validated['product'] : '';
-            $country = is_string($validated['country'] ?? null) ? $validated['country'] : '';
-        } else {
-            $product = '';
-            $country = '';
-        }
-
-        $result = $this->priceSearchService->findBestOffer($product, $country);
-
-        if (! $result['success']) {
             return response()->json([
-                'message' => $result['message'],
-            ], 404);
+                'message' => 'An error occurred while finding the best offer',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json($result['data']);
     }
 
     public function supportedStores(Request $request): JsonResponse
@@ -70,40 +153,64 @@ class PriceSearchController extends Controller
     public function search(Request $request): JsonResponse
     {
         try {
-            $query = $request->input('q', '');
+            // Support 'q', 'query', and 'name' parameters for backward compatibility
+            $query = $request->input('q', $request->input('query', $request->input('name', '')));
 
             if (empty($query)) {
                 return response()->json([
-                    'data' => [],
-                    'message' => 'Search query is required',
+                    'products' => [],
+                    'message' => 'Search query is required. Use parameter: q, query, or name',
                 ], 400);
             }
 
             $queryStr = is_string($query) ? $query : '';
-            $products = Product::where('name', 'like', '%'.$queryStr.'%')
-                ->orWhere('description', 'like', '%'.$queryStr.'%')
-                ->with(['priceOffers.store', 'brand', 'category'])
-                ->limit(20)
-                ->get();
 
-            $results = $products->map(fn(Product $product): array => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'description' => $product->description,
-                'slug' => $product->slug,
-                'brand' => $product->brand ? $product->brand->name : null,
-                'category' => $product->category ? $product->category->name : null,
-                'price_offers' => $product->priceOffers->map(fn(\App\Models\PriceOffer $offer): array => [
-                    'id' => $offer->id,
-                    'price' => $offer->price,
-                    'url' => $offer->store_url ?? null,
-                    'store' => $offer->store ? $offer->store->name : null,
-                    'is_available' => $offer->is_available,
-                ])->values(),
-            ]);
+            // Use caching for better performance
+            $cacheKey = 'price_search_'.md5($queryStr);
+            $results = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($queryStr) {
+                // Optimize query with proper indexing and limit
+                $products = Product::select(['id', 'name', 'description', 'slug', 'price', 'brand_id', 'category_id'])
+                    ->where('is_active', true)
+                    ->where(function ($q) use ($queryStr) {
+                        $q->where('name', 'like', '%'.$queryStr.'%')
+                            ->orWhere('description', 'like', '%'.$queryStr.'%');
+                    })
+                    ->with([
+                        'brand:id,name',
+                        'category:id,name',
+                        'priceOffers' => function ($query) {
+                            $query->select(['id', 'product_id', 'price', 'store_id', 'is_available', 'store_url'])
+                                ->with('store:id,name')
+                                ->where('is_available', true)
+                                ->orderBy('price', 'asc')
+                                ->limit(3); // Limit price offers per product
+                        },
+                    ])
+                    ->limit(5) // Further reduce limit for better performance
+                    ->get();
+
+                return $products->map(fn (Product $product): array => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'slug' => $product->slug,
+                    'price' => $product->price,
+                    'brand' => $product->brand ? $product->brand->name : null,
+                    'category' => $product->category ? $product->category->name : null,
+                    'prices' => $product->priceOffers->map(fn (\App\Models\PriceOffer $offer): array => [
+                        'id' => $offer->id,
+                        'price' => $offer->price,
+                        'url' => $offer->store_url ?? null,
+                        'store' => $offer->store ? $offer->store->name : null,
+                        'is_available' => $offer->is_available,
+                    ])->values(),
+                ]);
+            });
 
             return response()->json([
                 'data' => $results,
+                'results' => $results,
+                'products' => $results,
                 'total' => $results->count(),
                 'query' => $query,
             ]);

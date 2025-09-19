@@ -131,7 +131,7 @@ class PasswordResetService
      */
     private function storeResetToken(string $email, string $token): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
 
         $data = [
             'token' => $token,
@@ -147,7 +147,7 @@ class PasswordResetService
      */
     private function validateResetToken(string $email, string $token): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $data = Cache::get($key);
 
         if (! $data || ! is_array($data)) {
@@ -188,7 +188,7 @@ class PasswordResetService
      */
     private function clearResetToken(string $email): void
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         Cache::forget($key);
     }
 
@@ -197,7 +197,7 @@ class PasswordResetService
      */
     public function hasResetToken(string $email): bool
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
 
         return Cache::has($key);
     }
@@ -209,7 +209,7 @@ class PasswordResetService
      */
     public function getResetTokenInfo(string $email): ?array
     {
-        $key = self::CACHE_PREFIX.md5($email);
+        $key = self::CACHE_PREFIX.hash('sha256', $email);
         $data = Cache::get($key);
 
         if (! $data || ! is_array($data)) {

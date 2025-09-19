@@ -105,7 +105,7 @@ class Store extends Model
     ];
 
     /**
-     * @return HasMany<PriceOffer<\Database\Factories\PriceOfferFactory>, Store<\Database\Factories\StoreFactory>>
+     * @return HasMany<PriceOffer, Store>
      */
     public function priceOffers(): HasMany
     {
@@ -113,7 +113,7 @@ class Store extends Model
     }
 
     /**
-     * @return HasMany<Product<\Database\Factories\ProductFactory>, Store<\Database\Factories\StoreFactory>>
+     * @return HasMany<Product, Store>
      */
     public function products(): HasMany
     {
@@ -121,7 +121,7 @@ class Store extends Model
     }
 
     /**
-     * @return BelongsTo<Currency<\Database\Factories\CurrencyFactory>, Store<\Database\Factories\StoreFactory>>
+     * @return BelongsTo<Currency, Store>
      */
     public function currency(): BelongsTo
     {

@@ -35,10 +35,10 @@ final class AppComposer
      */
     private function getLanguages(): array
     {
-        return cache()->remember('languages', 3600, fn() => Language::where('is_active', true)
+        return cache()->remember('languages', 3600, fn () => Language::where('is_active', true)
             ->orderBy('sort_order')
             ->get()
-            ->map(fn($language): array => [
+            ->map(fn ($language): array => [
                 'code' => $language->code,
                 'name' => $language->name,
                 'native_name' => $language->native_name,
@@ -55,10 +55,10 @@ final class AppComposer
      */
     private function getCategories(): array
     {
-        return cache()->remember('categories_menu', 1800, fn() => Category::where('is_active', true)
+        return cache()->remember('categories_menu', 1800, fn () => Category::where('is_active', true)
             ->orderBy('name')
             ->get()
-            ->map(fn($category): array => [
+            ->map(fn ($category): array => [
                 'id' => $category->id,
                 'name' => $category->name,
                 'slug' => $category->slug,
@@ -74,10 +74,10 @@ final class AppComposer
      */
     private function getBrands(): array
     {
-        return cache()->remember('brands_menu', 1800, fn() => Brand::where('is_active', true)
+        return cache()->remember('brands_menu', 1800, fn () => Brand::where('is_active', true)
             ->orderBy('name')
             ->get()
-            ->map(fn($brand): array => [
+            ->map(fn ($brand): array => [
                 'id' => $brand->id,
                 'name' => $brand->name,
                 'slug' => $brand->slug,

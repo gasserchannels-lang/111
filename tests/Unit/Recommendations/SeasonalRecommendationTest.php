@@ -295,7 +295,7 @@ class SeasonalRecommendationTest extends TestCase
             'id' => 1,
             'name' => 'Winter Jacket',
             'category' => 'Clothing',
-            'season' => 'winter'
+            'season' => 'winter',
         ];
 
         $currentSeason = 'winter';
@@ -327,26 +327,26 @@ class SeasonalRecommendationTest extends TestCase
                 ['name' => 'Winter Jacket', 'category' => 'Clothing', 'price' => 149.99],
                 ['name' => 'Warm Scarf', 'category' => 'Accessories', 'price' => 29.99],
                 ['name' => 'Winter Boots', 'category' => 'Footwear', 'price' => 89.99],
-                ['name' => 'Hot Chocolate Mix', 'category' => 'Food', 'price' => 12.99]
+                ['name' => 'Hot Chocolate Mix', 'category' => 'Food', 'price' => 12.99],
             ],
             'summer' => [
                 ['name' => 'Sunglasses', 'category' => 'Accessories', 'price' => 39.99],
                 ['name' => 'Sunscreen', 'category' => 'Health', 'price' => 19.99],
                 ['name' => 'Summer Hat', 'category' => 'Accessories', 'price' => 24.99],
-                ['name' => 'Ice Cream Maker', 'category' => 'Appliances', 'price' => 79.99]
+                ['name' => 'Ice Cream Maker', 'category' => 'Appliances', 'price' => 79.99],
             ],
             'spring' => [
                 ['name' => 'Rain Jacket', 'category' => 'Clothing', 'price' => 79.99],
                 ['name' => 'Umbrella', 'category' => 'Accessories', 'price' => 15.99],
                 ['name' => 'Spring Flowers', 'category' => 'Garden', 'price' => 19.99],
-                ['name' => 'Light Jacket', 'category' => 'Clothing', 'price' => 59.99]
+                ['name' => 'Light Jacket', 'category' => 'Clothing', 'price' => 59.99],
             ],
             'fall' => [
                 ['name' => 'Sweater', 'category' => 'Clothing', 'price' => 69.99],
                 ['name' => 'Boots', 'category' => 'Footwear', 'price' => 99.99],
                 ['name' => 'Pumpkin Spice', 'category' => 'Food', 'price' => 8.99],
-                ['name' => 'Warm Scarf', 'category' => 'Accessories', 'price' => 29.99]
-            ]
+                ['name' => 'Warm Scarf', 'category' => 'Accessories', 'price' => 29.99],
+            ],
         ];
 
         $recommendations = [];
@@ -359,7 +359,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => $product['category'],
                 'price' => $product['price'],
                 'season' => $season,
-                'confidence_score' => rand(80, 95) / 100
+                'confidence_score' => rand(80, 95) / 100,
             ];
         }
 
@@ -372,18 +372,18 @@ class SeasonalRecommendationTest extends TestCase
             'christmas' => [
                 ['name' => 'Christmas Tree', 'category' => 'Decorations', 'price' => 199.99],
                 ['name' => 'Christmas Lights', 'category' => 'Decorations', 'price' => 49.99],
-                ['name' => 'Gift Wrapping Paper', 'category' => 'Gifts', 'price' => 12.99]
+                ['name' => 'Gift Wrapping Paper', 'category' => 'Gifts', 'price' => 12.99],
             ],
             'halloween' => [
                 ['name' => 'Halloween Costume', 'category' => 'Clothing', 'price' => 39.99],
                 ['name' => 'Pumpkin Carving Kit', 'category' => 'Tools', 'price' => 19.99],
-                ['name' => 'Halloween Decorations', 'category' => 'Decorations', 'price' => 29.99]
+                ['name' => 'Halloween Decorations', 'category' => 'Decorations', 'price' => 29.99],
             ],
             'valentines' => [
                 ['name' => 'Valentine\'s Day Card', 'category' => 'Gifts', 'price' => 5.99],
                 ['name' => 'Chocolate Box', 'category' => 'Food', 'price' => 24.99],
-                ['name' => 'Flowers', 'category' => 'Gifts', 'price' => 49.99]
-            ]
+                ['name' => 'Flowers', 'category' => 'Gifts', 'price' => 49.99],
+            ],
         ];
 
         $recommendations = [];
@@ -396,7 +396,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => $product['category'],
                 'price' => $product['price'],
                 'holiday' => $holiday,
-                'confidence_score' => rand(85, 98) / 100
+                'confidence_score' => rand(85, 98) / 100,
             ];
         }
 
@@ -409,18 +409,18 @@ class SeasonalRecommendationTest extends TestCase
             'rainy' => [
                 ['name' => 'Raincoat', 'category' => 'Clothing', 'price' => 79.99],
                 ['name' => 'Umbrella', 'category' => 'Accessories', 'price' => 15.99],
-                ['name' => 'Waterproof Boots', 'category' => 'Footwear', 'price' => 89.99]
+                ['name' => 'Waterproof Boots', 'category' => 'Footwear', 'price' => 89.99],
             ],
             'sunny' => [
                 ['name' => 'Sunglasses', 'category' => 'Accessories', 'price' => 39.99],
                 ['name' => 'Sunscreen', 'category' => 'Health', 'price' => 19.99],
-                ['name' => 'Sun Hat', 'category' => 'Accessories', 'price' => 24.99]
+                ['name' => 'Sun Hat', 'category' => 'Accessories', 'price' => 24.99],
             ],
             'snowy' => [
                 ['name' => 'Winter Jacket', 'category' => 'Clothing', 'price' => 149.99],
                 ['name' => 'Snow Boots', 'category' => 'Footwear', 'price' => 99.99],
-                ['name' => 'Warm Gloves', 'category' => 'Accessories', 'price' => 19.99]
-            ]
+                ['name' => 'Warm Gloves', 'category' => 'Accessories', 'price' => 19.99],
+            ],
         ];
 
         $recommendations = [];
@@ -433,7 +433,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => $product['category'],
                 'price' => $product['price'],
                 'weather' => $weather,
-                'confidence_score' => rand(80, 95) / 100
+                'confidence_score' => rand(80, 95) / 100,
             ];
         }
 
@@ -449,20 +449,20 @@ class SeasonalRecommendationTest extends TestCase
             $recommendations = [
                 ['name' => 'Air Conditioner', 'category' => 'Appliances', 'price' => 299.99],
                 ['name' => 'Cold Drinks', 'category' => 'Food', 'price' => 4.99],
-                ['name' => 'Light Clothing', 'category' => 'Clothing', 'price' => 29.99]
+                ['name' => 'Light Clothing', 'category' => 'Clothing', 'price' => 29.99],
             ];
         } elseif ($temperature < 10) {
             // Cold weather
             $recommendations = [
                 ['name' => 'Heater', 'category' => 'Appliances', 'price' => 199.99],
                 ['name' => 'Hot Beverages', 'category' => 'Food', 'price' => 6.99],
-                ['name' => 'Warm Clothing', 'category' => 'Clothing', 'price' => 79.99]
+                ['name' => 'Warm Clothing', 'category' => 'Clothing', 'price' => 79.99],
             ];
         } else {
             // Moderate weather
             $recommendations = [
                 ['name' => 'Light Jacket', 'category' => 'Clothing', 'price' => 59.99],
-                ['name' => 'Comfortable Shoes', 'category' => 'Footwear', 'price' => 89.99]
+                ['name' => 'Comfortable Shoes', 'category' => 'Footwear', 'price' => 89.99],
             ];
         }
 
@@ -474,7 +474,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => $product['category'],
                 'price' => $product['price'],
                 'temperature' => $temperature,
-                'confidence_score' => rand(75, 90) / 100
+                'confidence_score' => rand(75, 90) / 100,
             ];
         }
 
@@ -487,18 +487,18 @@ class SeasonalRecommendationTest extends TestCase
             'back_to_school' => [
                 ['name' => 'Backpack', 'category' => 'Accessories', 'price' => 49.99],
                 ['name' => 'Notebooks', 'category' => 'Office', 'price' => 12.99],
-                ['name' => 'Pens', 'category' => 'Office', 'price' => 8.99]
+                ['name' => 'Pens', 'category' => 'Office', 'price' => 8.99],
             ],
             'graduation' => [
                 ['name' => 'Graduation Cap', 'category' => 'Accessories', 'price' => 19.99],
                 ['name' => 'Gift Card', 'category' => 'Gifts', 'price' => 50.00],
-                ['name' => 'Congratulations Card', 'category' => 'Gifts', 'price' => 5.99]
+                ['name' => 'Congratulations Card', 'category' => 'Gifts', 'price' => 5.99],
             ],
             'wedding' => [
                 ['name' => 'Wedding Gift', 'category' => 'Gifts', 'price' => 99.99],
                 ['name' => 'Wedding Card', 'category' => 'Gifts', 'price' => 7.99],
-                ['name' => 'Formal Attire', 'category' => 'Clothing', 'price' => 199.99]
-            ]
+                ['name' => 'Formal Attire', 'category' => 'Clothing', 'price' => 199.99],
+            ],
         ];
 
         $recommendations = [];
@@ -511,7 +511,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => $product['category'],
                 'price' => $product['price'],
                 'event' => $event,
-                'confidence_score' => rand(85, 95) / 100
+                'confidence_score' => rand(85, 95) / 100,
             ];
         }
 
@@ -523,7 +523,7 @@ class SeasonalRecommendationTest extends TestCase
         $trendProducts = [
             'beach' => ['Sunglasses', 'Sunscreen', 'Beach Towel', 'Swimsuit'],
             'outdoor' => ['Hiking Boots', 'Camping Gear', 'Outdoor Jacket', 'Water Bottle'],
-            'travel' => ['Luggage', 'Travel Adapter', 'Travel Pillow', 'Passport Holder']
+            'travel' => ['Luggage', 'Travel Adapter', 'Travel Pillow', 'Passport Holder'],
         ];
 
         $recommendations = [];
@@ -537,7 +537,7 @@ class SeasonalRecommendationTest extends TestCase
                     'price' => rand(20, 150),
                     'season' => $season,
                     'trend' => $trend,
-                    'confidence_score' => rand(80, 95) / 100
+                    'confidence_score' => rand(80, 95) / 100,
                 ];
             }
         }
@@ -556,8 +556,8 @@ class SeasonalRecommendationTest extends TestCase
                 'original_price' => 149.99,
                 'discount_percentage' => 33,
                 'season' => $season,
-                'has_seasonal_discount' => true
-            ]
+                'has_seasonal_discount' => true,
+            ],
         ];
     }
 
@@ -570,8 +570,8 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => 'Seasonal',
                 'price' => 79.99,
                 'season' => $season,
-                'is_seasonally_available' => true
-            ]
+                'is_seasonally_available' => true,
+            ],
         ];
     }
 
@@ -585,8 +585,8 @@ class SeasonalRecommendationTest extends TestCase
                 'price' => 129.99,
                 'season' => $season,
                 'demand_score' => 95,
-                'has_high_seasonal_demand' => true
-            ]
+                'has_high_seasonal_demand' => true,
+            ],
         ];
     }
 
@@ -595,7 +595,7 @@ class SeasonalRecommendationTest extends TestCase
         $activityProducts = [
             'skiing' => ['Ski Jacket', 'Ski Boots', 'Ski Goggles', 'Ski Poles'],
             'snowboarding' => ['Snowboard', 'Snowboard Boots', 'Snowboard Helmet', 'Snowboard Gloves'],
-            'ice_skating' => ['Ice Skates', 'Skating Dress', 'Skating Gloves', 'Skating Tights']
+            'ice_skating' => ['Ice Skates', 'Skating Dress', 'Skating Gloves', 'Skating Tights'],
         ];
 
         $recommendations = [];
@@ -609,7 +609,7 @@ class SeasonalRecommendationTest extends TestCase
                     'price' => rand(50, 300),
                     'season' => $season,
                     'activity' => $activity,
-                    'confidence_score' => rand(85, 98) / 100
+                    'confidence_score' => rand(85, 98) / 100,
                 ];
             }
         }
@@ -623,7 +623,7 @@ class SeasonalRecommendationTest extends TestCase
             'spring' => ['Fresh Vegetables', 'Spring Herbs', 'Light Salads', 'Fresh Fruits'],
             'summer' => ['Ice Cream', 'Cold Drinks', 'Summer Fruits', 'BBQ Items'],
             'fall' => ['Pumpkin Spice', 'Apple Cider', 'Warm Soups', 'Fall Vegetables'],
-            'winter' => ['Hot Chocolate', 'Warm Soups', 'Comfort Food', 'Holiday Treats']
+            'winter' => ['Hot Chocolate', 'Warm Soups', 'Comfort Food', 'Holiday Treats'],
         ];
 
         $recommendations = [];
@@ -636,7 +636,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => 'Food',
                 'price' => rand(5, 25),
                 'season' => $season,
-                'is_seasonal_food' => true
+                'is_seasonal_food' => true,
             ];
         }
 
@@ -649,7 +649,7 @@ class SeasonalRecommendationTest extends TestCase
             'spring' => ['Light Dresses', 'Pastel Colors', 'Light Jackets', 'Spring Shoes'],
             'summer' => ['Shorts', 'Tank Tops', 'Sandals', 'Summer Dresses'],
             'fall' => ['Sweaters', 'Boots', 'Warm Colors', 'Fall Jackets'],
-            'winter' => ['Winter Coats', 'Warm Sweaters', 'Boots', 'Winter Accessories']
+            'winter' => ['Winter Coats', 'Warm Sweaters', 'Boots', 'Winter Accessories'],
         ];
 
         $recommendations = [];
@@ -662,7 +662,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => 'Fashion',
                 'price' => rand(30, 200),
                 'season' => $season,
-                'is_seasonal_fashion' => true
+                'is_seasonal_fashion' => true,
             ];
         }
 
@@ -675,7 +675,7 @@ class SeasonalRecommendationTest extends TestCase
             'spring' => ['Spring Flowers', 'Easter Decorations', 'Pastel Colors', 'Garden Decor'],
             'summer' => ['Beach Decor', 'Summer Lights', 'Outdoor Decor', 'Patio Items'],
             'fall' => ['Pumpkin Decorations', 'Fall Leaves', 'Harvest Items', 'Autumn Colors'],
-            'winter' => ['Christmas Decorations', 'Winter Lights', 'Snow Decorations', 'Holiday Items']
+            'winter' => ['Christmas Decorations', 'Winter Lights', 'Snow Decorations', 'Holiday Items'],
         ];
 
         $recommendations = [];
@@ -688,7 +688,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => 'Decorations',
                 'price' => rand(10, 100),
                 'season' => $season,
-                'is_seasonal_decoration' => true
+                'is_seasonal_decoration' => true,
             ];
         }
 
@@ -701,7 +701,7 @@ class SeasonalRecommendationTest extends TestCase
             'spring' => ['Spring Travel Guide', 'Light Luggage', 'Spring Clothing', 'Travel Accessories'],
             'summer' => ['Beach Travel Kit', 'Summer Luggage', 'Swimwear', 'Travel Sunscreen'],
             'fall' => ['Fall Travel Guide', 'Warm Travel Clothes', 'Fall Photography', 'Travel Sweaters'],
-            'winter' => ['Winter Travel Kit', 'Warm Luggage', 'Winter Clothes', 'Travel Heaters']
+            'winter' => ['Winter Travel Kit', 'Warm Luggage', 'Winter Clothes', 'Travel Heaters'],
         ];
 
         $recommendations = [];
@@ -714,7 +714,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => 'Travel',
                 'price' => rand(20, 150),
                 'season' => $season,
-                'is_seasonal_travel' => true
+                'is_seasonal_travel' => true,
             ];
         }
 
@@ -727,7 +727,7 @@ class SeasonalRecommendationTest extends TestCase
             'spring' => ['Tennis Racket', 'Golf Clubs', 'Running Shoes', 'Spring Sports Gear'],
             'summer' => ['Swimming Gear', 'Beach Volleyball', 'Summer Sports', 'Water Sports'],
             'fall' => ['Football Gear', 'Soccer Equipment', 'Fall Sports', 'Outdoor Games'],
-            'winter' => ['Skiing Equipment', 'Ice Skating', 'Winter Sports', 'Snow Sports']
+            'winter' => ['Skiing Equipment', 'Ice Skating', 'Winter Sports', 'Snow Sports'],
         ];
 
         $recommendations = [];
@@ -740,7 +740,7 @@ class SeasonalRecommendationTest extends TestCase
                 'category' => 'Sports',
                 'price' => rand(25, 300),
                 'season' => $season,
-                'is_seasonal_sports' => true
+                'is_seasonal_sports' => true,
             ];
         }
 
@@ -768,7 +768,7 @@ class SeasonalRecommendationTest extends TestCase
             'recommendations' => $recommendations,
             'total_recommendations' => count($recommendations),
             'categories' => $categories,
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -852,6 +852,7 @@ class SeasonalRecommendationTest extends TestCase
     private function isTrendRelevantProduct(array $product, array $trends): bool
     {
         $productTrend = $product['trend'] ?? '';
+
         return in_array($productTrend, $trends);
     }
 
@@ -873,6 +874,7 @@ class SeasonalRecommendationTest extends TestCase
     private function isActivityRelevantProduct(array $product, array $activities): bool
     {
         $productActivity = $product['activity'] ?? '';
+
         return in_array($productActivity, $activities);
     }
 

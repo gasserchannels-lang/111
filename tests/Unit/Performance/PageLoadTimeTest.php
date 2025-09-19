@@ -2,13 +2,14 @@
 
 namespace Tests\Unit\Performance;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class PageLoadTimeTest extends TestCase
 {
     private static array $cache = [];
+
     private int $datasetSize = 1;
 
     protected function setUp(): void
@@ -375,7 +376,7 @@ class PageLoadTimeTest extends TestCase
             'status_code' => 200,
             'content_type' => 'text/html',
             'content_length' => 1024,
-            'load_time' => $this->calculateLoadTime($path)
+            'load_time' => $this->calculateLoadTime($path),
         ];
     }
 
@@ -385,6 +386,7 @@ class PageLoadTimeTest extends TestCase
         for ($i = 0; $i < $concurrentRequests; $i++) {
             $responses[] = $this->loadPage($path);
         }
+
         return $responses;
     }
 
@@ -393,38 +395,44 @@ class PageLoadTimeTest extends TestCase
         $queryCount = $this->simulateDatabaseQueries($path);
         $response = $this->loadPage($path);
         $response['query_count'] = $queryCount;
+
         return $response;
     }
 
     private function loadPageWithExternalAPIs(string $path): array
     {
         $this->simulateExternalAPICalls($path);
+
         return $this->loadPage($path);
     }
 
     private function loadPageWithAuthentication(string $path): array
     {
         $this->simulateAuthentication($path);
+
         return $this->loadPage($path);
     }
 
     private function loadPageWithValidation(string $path): array
     {
         $this->simulateValidation($path);
+
         return $this->loadPage($path);
     }
 
     private function loadPageWithLogging(string $path): array
     {
         $this->simulateLogging($path);
+
         return $this->loadPage($path);
     }
 
     private function simulatePageLoading(string $path, bool $compression, bool $cdn): void
     {
-        $cacheKey = md5($path . (string)$compression . (string)$cdn);
+        $cacheKey = md5($path.(string) $compression.(string) $cdn);
         if (isset(self::$cache[$cacheKey])) {
             usleep(1000); // Simulate very fast cache hit (1ms)
+
             return;
         }
 
@@ -491,6 +499,7 @@ class PageLoadTimeTest extends TestCase
         if (strpos($path, '/dashboard') !== false) {
             return 8;
         }
+
         return 1;
     }
 

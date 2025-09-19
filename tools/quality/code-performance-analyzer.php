@@ -3,7 +3,6 @@
 /**
  * Code Performance Analyzer Tool
  */
-
 class CodePerformanceAnalyzer
 {
     public function analyzePerformance(string $filePath): array
@@ -14,7 +13,7 @@ class CodePerformanceAnalyzer
         return [
             'file' => $filePath,
             'performance_issues' => $this->detectPerformanceIssues($tokens),
-            'optimization_suggestions' => $this->generateOptimizationSuggestions($tokens)
+            'optimization_suggestions' => $this->generateOptimizationSuggestions($tokens),
         ];
     }
 
@@ -32,7 +31,7 @@ class CodePerformanceAnalyzer
                             'type' => 'inefficient_function',
                             'function' => $token[1],
                             'line' => $token[2],
-                            'suggestion' => $this->getFunctionSuggestion($token[1])
+                            'suggestion' => $this->getFunctionSuggestion($token[1]),
                         ];
                     }
                 }
@@ -47,7 +46,7 @@ class CodePerformanceAnalyzer
         $suggestions = [
             'array_merge' => 'Consider using array_push or the + operator for better performance',
             'in_array' => 'Consider using isset() with array_flip() for large arrays',
-            'array_search' => 'Consider using array_keys() or array_flip() for better performance'
+            'array_search' => 'Consider using array_keys() or array_flip() for better performance',
         ];
 
         return $suggestions[$function] ?? 'Consider optimizing this function call';
@@ -59,7 +58,7 @@ class CodePerformanceAnalyzer
             'Use caching for expensive operations',
             'Consider lazy loading for large datasets',
             'Optimize database queries',
-            'Use appropriate data structures'
+            'Use appropriate data structures',
         ];
     }
 }

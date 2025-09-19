@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DiscountCalculationTest extends TestCase
 {
@@ -83,6 +83,7 @@ class DiscountCalculationTest extends TestCase
     private function calculatePercentageDiscount(float $price, float $discountPercentage): float
     {
         $discount = $price * ($discountPercentage / 100);
+
         // Don't exceed the price and don't allow negative discounts
         return max(0, min($discount, $price));
     }

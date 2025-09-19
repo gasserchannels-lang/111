@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Security;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class AuthorizationTest extends TestCase
 {
@@ -75,7 +75,7 @@ class AuthorizationTest extends TestCase
         $currentTime = time();
         $accessWindow = [
             'start' => $currentTime - 3600, // 1 hour ago
-            'end' => $currentTime + 3600    // 1 hour from now
+            'end' => $currentTime + 3600,    // 1 hour from now
         ];
 
         $hasAccess = $this->checkTimeBasedAccess($userId, $resource, $accessWindow);
@@ -104,12 +104,12 @@ class AuthorizationTest extends TestCase
         $conditions = [
             'department' => 'Finance',
             'clearance_level' => 'high',
-            'training_completed' => true
+            'training_completed' => true,
         ];
         $userProfile = [
             'department' => 'Finance',
             'clearance_level' => 'high',
-            'training_completed' => true
+            'training_completed' => true,
         ];
 
         $hasAccess = $this->checkConditionalAccess($userId, $resource, $conditions, $userProfile);
@@ -218,7 +218,7 @@ class AuthorizationTest extends TestCase
         $context = [
             'time' => time(),
             'location' => 'office',
-            'device' => 'trusted'
+            'device' => 'trusted',
         ];
 
         $policyResult = $this->evaluateAuthorizationPolicy($userId, $resource, $action, $context);
@@ -237,7 +237,7 @@ class AuthorizationTest extends TestCase
             'user_behavior_score' => 0.3,
             'resource_sensitivity' => 0.8,
             'access_frequency' => 0.1,
-            'time_since_last_access' => 0.9
+            'time_since_last_access' => 0.9,
         ];
 
         $riskScore = $this->calculateAuthorizationRisk($riskFactors);
@@ -265,7 +265,7 @@ class AuthorizationTest extends TestCase
             'user_profile:read',
             'user_profile:write',
             'documents:read',
-            'reports:generate'
+            'reports:generate',
         ];
     }
 
@@ -274,7 +274,7 @@ class AuthorizationTest extends TestCase
         $roleHierarchy = [
             'admin' => ['admin', 'editor', 'viewer'],
             'editor' => ['editor', 'viewer'],
-            'viewer' => ['viewer']
+            'viewer' => ['viewer'],
         ];
 
         return in_array($requiredRole, $roleHierarchy[$userRole] ?? []);
@@ -285,7 +285,7 @@ class AuthorizationTest extends TestCase
         $roleLevels = [
             'admin' => 3,
             'editor' => 2,
-            'viewer' => 1
+            'viewer' => 1,
         ];
 
         $userLevel = $roleLevels[$userRole] ?? 0;
@@ -314,6 +314,7 @@ class AuthorizationTest extends TestCase
     private function checkTimeBasedAccess(int $userId, string $resource, array $accessWindow): bool
     {
         $currentTime = time();
+
         return $currentTime >= $accessWindow['start'] && $currentTime <= $accessWindow['end'];
     }
 
@@ -325,7 +326,7 @@ class AuthorizationTest extends TestCase
     private function checkConditionalAccess(int $userId, string $resource, array $conditions, array $userProfile): bool
     {
         foreach ($conditions as $condition => $requiredValue) {
-            if (!isset($userProfile[$condition]) || $userProfile[$condition] !== $requiredValue) {
+            if (! isset($userProfile[$condition]) || $userProfile[$condition] !== $requiredValue) {
                 return false;
             }
         }
@@ -338,12 +339,12 @@ class AuthorizationTest extends TestCase
         // Simulate authority delegation
         return [
             'success' => true,
-            'delegation_id' => 'delegation_' . bin2hex(random_bytes(16)),
+            'delegation_id' => 'delegation_'.bin2hex(random_bytes(16)),
             'delegator_id' => $delegatorId,
             'delegate_id' => $delegateId,
             'resource' => $resource,
             'permissions' => $permissions,
-            'expires_at' => $expiresAt
+            'expires_at' => $expiresAt,
         ];
     }
 
@@ -366,21 +367,21 @@ class AuthorizationTest extends TestCase
             'access_granted' => true,
             'expires_at' => time() + 3600, // 1 hour
             'approver_id' => $approverId,
-            'reason' => $emergencyReason
+            'reason' => $emergencyReason,
         ];
     }
 
     private function logAuthorizationEvent(int $userId, string $resource, string $action, string $result): array
     {
         return [
-            'event_id' => 'auth_' . bin2hex(random_bytes(16)),
+            'event_id' => 'auth_'.bin2hex(random_bytes(16)),
             'timestamp' => time(),
             'user_id' => $userId,
             'resource' => $resource,
             'action' => $action,
             'result' => $result,
             'ip_address' => '192.168.1.1',
-            'user_agent' => 'Mozilla/5.0'
+            'user_agent' => 'Mozilla/5.0',
         ];
     }
 
@@ -391,7 +392,7 @@ class AuthorizationTest extends TestCase
             'approved' => true,
             'approver_id' => 789,
             'expires_at' => time() + 7200, // 2 hours
-            'justification' => $justification
+            'justification' => $justification,
         ];
     }
 
@@ -399,9 +400,9 @@ class AuthorizationTest extends TestCase
     {
         return [
             'success' => true,
-            'access_token' => 'jit_' . bin2hex(random_bytes(32)),
+            'access_token' => 'jit_'.bin2hex(random_bytes(32)),
             'expires_at' => time() + $duration,
-            'justification' => $justification
+            'justification' => $justification,
         ];
     }
 
@@ -414,21 +415,21 @@ class AuthorizationTest extends TestCase
                     'conditions' => [
                         'time' => 'business_hours',
                         'location' => 'office',
-                        'device' => 'trusted'
-                    ]
-                ]
-            ]
+                        'device' => 'trusted',
+                    ],
+                ],
+            ],
         ];
 
         $policy = $policies[$resource][$action] ?? null;
 
-        if (!$policy) {
+        if (! $policy) {
             return ['decision' => 'deny', 'reason' => 'No policy found'];
         }
 
         // Check conditions
         foreach ($policy['conditions'] as $condition => $requirement) {
-            if (!isset($context[$condition]) || $context[$condition] !== $requirement) {
+            if (! isset($context[$condition]) || $context[$condition] !== $requirement) {
                 return ['decision' => 'deny', 'reason' => "Condition {$condition} not met"];
             }
         }
@@ -442,7 +443,7 @@ class AuthorizationTest extends TestCase
             'user_behavior_score' => 0.3,
             'resource_sensitivity' => 0.4,
             'access_frequency' => 0.2,
-            'time_since_last_access' => 0.1
+            'time_since_last_access' => 0.1,
         ];
 
         $riskScore = 0;
@@ -461,7 +462,7 @@ class AuthorizationTest extends TestCase
             'authorized' => $riskScore < $threshold,
             'risk_score' => $riskScore,
             'threshold' => $threshold,
-            'requires_additional_verification' => $riskScore > 0.5
+            'requires_additional_verification' => $riskScore > 0.5,
         ];
     }
 }

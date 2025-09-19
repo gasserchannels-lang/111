@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataAccuracyTest extends TestCase
 {
@@ -13,7 +13,7 @@ class DataAccuracyTest extends TestCase
         $priceData = [
             ['id' => 1, 'name' => 'Laptop', 'price' => 999.99, 'expected_price' => 999.99],
             ['id' => 2, 'name' => 'Mouse', 'price' => 29.99, 'expected_price' => 29.99],
-            ['id' => 3, 'name' => 'Keyboard', 'price' => 79.99, 'expected_price' => 79.99]
+            ['id' => 3, 'name' => 'Keyboard', 'price' => 79.99, 'expected_price' => 79.99],
         ];
 
         $this->assertTrue($this->validatePriceAccuracy($priceData));
@@ -25,7 +25,7 @@ class DataAccuracyTest extends TestCase
         $priceData = [
             ['id' => 1, 'name' => 'Laptop', 'price' => 999.99, 'expected_price' => 999.99],
             ['id' => 2, 'name' => 'Mouse', 'price' => 29.99, 'expected_price' => 25.99], // Different price
-            ['id' => 3, 'name' => 'Keyboard', 'price' => 79.99, 'expected_price' => 79.99]
+            ['id' => 3, 'name' => 'Keyboard', 'price' => 79.99, 'expected_price' => 79.99],
         ];
 
         $this->assertFalse($this->validatePriceAccuracy($priceData));
@@ -36,7 +36,7 @@ class DataAccuracyTest extends TestCase
     {
         $measurementData = [
             ['id' => 1, 'product' => 'Box', 'length' => 10.5, 'width' => 8.2, 'height' => 6.0],
-            ['id' => 2, 'product' => 'Package', 'length' => 15.0, 'width' => 12.0, 'height' => 9.5]
+            ['id' => 2, 'product' => 'Package', 'length' => 15.0, 'width' => 12.0, 'height' => 9.5],
         ];
 
         $this->assertTrue($this->validateMeasurementAccuracy($measurementData));
@@ -48,7 +48,7 @@ class DataAccuracyTest extends TestCase
         $calculationData = [
             ['id' => 1, 'quantity' => 5, 'unit_price' => 20.00, 'total' => 100.00],
             ['id' => 2, 'quantity' => 3, 'unit_price' => 15.50, 'total' => 46.50],
-            ['id' => 3, 'quantity' => 10, 'unit_price' => 7.99, 'total' => 79.90]
+            ['id' => 3, 'quantity' => 10, 'unit_price' => 7.99, 'total' => 79.90],
         ];
 
         $this->assertTrue($this->validateCalculationAccuracy($calculationData));
@@ -60,7 +60,7 @@ class DataAccuracyTest extends TestCase
         $calculationData = [
             ['id' => 1, 'quantity' => 5, 'unit_price' => 20.00, 'total' => 100.00],
             ['id' => 2, 'quantity' => 3, 'unit_price' => 15.50, 'total' => 50.00], // Wrong calculation
-            ['id' => 3, 'quantity' => 10, 'unit_price' => 7.99, 'total' => 79.90]
+            ['id' => 3, 'quantity' => 10, 'unit_price' => 7.99, 'total' => 79.90],
         ];
 
         $this->assertFalse($this->validateCalculationAccuracy($calculationData));
@@ -72,7 +72,7 @@ class DataAccuracyTest extends TestCase
         $percentageData = [
             ['id' => 1, 'value' => 100, 'percentage' => 25, 'result' => 25.00],
             ['id' => 2, 'value' => 200, 'percentage' => 15, 'result' => 30.00],
-            ['id' => 3, 'value' => 150, 'percentage' => 10, 'result' => 15.00]
+            ['id' => 3, 'value' => 150, 'percentage' => 10, 'result' => 15.00],
         ];
 
         $this->assertTrue($this->validatePercentageAccuracy($percentageData));
@@ -83,7 +83,7 @@ class DataAccuracyTest extends TestCase
     {
         $conversionData = [
             ['id' => 1, 'amount' => 100.00, 'from_currency' => 'USD', 'to_currency' => 'EUR', 'rate' => 0.85, 'converted_amount' => 85.00],
-            ['id' => 2, 'amount' => 200.00, 'from_currency' => 'USD', 'to_currency' => 'GBP', 'rate' => 0.75, 'converted_amount' => 150.00]
+            ['id' => 2, 'amount' => 200.00, 'from_currency' => 'USD', 'to_currency' => 'GBP', 'rate' => 0.75, 'converted_amount' => 150.00],
         ];
 
         $this->assertTrue($this->validateCurrencyConversionAccuracy($conversionData));
@@ -94,7 +94,7 @@ class DataAccuracyTest extends TestCase
     {
         $taxData = [
             ['id' => 1, 'subtotal' => 100.00, 'tax_rate' => 0.10, 'tax_amount' => 10.00, 'total' => 110.00],
-            ['id' => 2, 'subtotal' => 200.00, 'tax_rate' => 0.15, 'tax_amount' => 30.00, 'total' => 230.00]
+            ['id' => 2, 'subtotal' => 200.00, 'tax_rate' => 0.15, 'tax_amount' => 30.00, 'total' => 230.00],
         ];
 
         $this->assertTrue($this->validateTaxCalculationAccuracy($taxData));
@@ -105,7 +105,7 @@ class DataAccuracyTest extends TestCase
     {
         $discountData = [
             ['id' => 1, 'original_price' => 100.00, 'discount_percentage' => 10, 'discount_amount' => 10.00, 'final_price' => 90.00],
-            ['id' => 2, 'original_price' => 200.00, 'discount_percentage' => 15, 'discount_amount' => 30.00, 'final_price' => 170.00]
+            ['id' => 2, 'original_price' => 200.00, 'discount_percentage' => 15, 'discount_amount' => 30.00, 'final_price' => 170.00],
         ];
 
         $this->assertTrue($this->validateDiscountCalculationAccuracy($discountData));
@@ -117,7 +117,7 @@ class DataAccuracyTest extends TestCase
         $roundingData = [
             ['id' => 1, 'value' => 99.994, 'rounded_value' => 99.99, 'precision' => 2],
             ['id' => 2, 'value' => 99.996, 'rounded_value' => 100.00, 'precision' => 2],
-            ['id' => 3, 'value' => 99.995, 'rounded_value' => 100.00, 'precision' => 2]
+            ['id' => 3, 'value' => 99.995, 'rounded_value' => 100.00, 'precision' => 2],
         ];
 
         $this->assertTrue($this->validateRoundingAccuracy($roundingData));
@@ -128,7 +128,7 @@ class DataAccuracyTest extends TestCase
     {
         $statisticalData = [
             ['id' => 1, 'values' => [1, 2, 3, 4, 5], 'mean' => 3.0, 'median' => 3.0, 'mode' => 1],
-            ['id' => 2, 'values' => [10, 20, 30, 40, 50], 'mean' => 30.0, 'median' => 30.0, 'mode' => 10]
+            ['id' => 2, 'values' => [10, 20, 30, 40, 50], 'mean' => 30.0, 'median' => 30.0, 'mode' => 10],
         ];
 
         $this->assertTrue($this->validateStatisticalAccuracy($statisticalData));
@@ -139,7 +139,7 @@ class DataAccuracyTest extends TestCase
     {
         $formulaData = [
             ['id' => 1, 'a' => 10, 'b' => 5, 'c' => 2, 'result' => 25], // (a + b) * c = (10 + 5) * 2 = 30, but expected 25
-            ['id' => 2, 'a' => 20, 'b' => 10, 'c' => 3, 'result' => 90]  // (a + b) * c = (20 + 10) * 3 = 90
+            ['id' => 2, 'a' => 20, 'b' => 10, 'c' => 3, 'result' => 90],  // (a + b) * c = (20 + 10) * 3 = 90
         ];
 
         $this->assertFalse($this->validateFormulaAccuracy($formulaData, 'formula1'));
@@ -150,7 +150,7 @@ class DataAccuracyTest extends TestCase
     {
         $unitData = [
             ['id' => 1, 'value' => 100, 'unit' => 'cm', 'converted_value' => 1.0, 'converted_unit' => 'm'],
-            ['id' => 2, 'value' => 1000, 'unit' => 'g', 'converted_value' => 1.0, 'converted_unit' => 'kg']
+            ['id' => 2, 'value' => 1000, 'unit' => 'g', 'converted_value' => 1.0, 'converted_unit' => 'kg'],
         ];
 
         $this->assertTrue($this->validateMeasurementUnitAccuracy($unitData));
@@ -161,7 +161,7 @@ class DataAccuracyTest extends TestCase
     {
         $coordinateData = [
             ['id' => 1, 'latitude' => 40.7128, 'longitude' => -74.0060, 'expected_lat' => 40.7128, 'expected_lng' => -74.0060],
-            ['id' => 2, 'latitude' => 51.5074, 'longitude' => -0.1278, 'expected_lat' => 51.5074, 'expected_lng' => -0.1278]
+            ['id' => 2, 'latitude' => 51.5074, 'longitude' => -0.1278, 'expected_lat' => 51.5074, 'expected_lng' => -0.1278],
         ];
 
         $this->assertTrue($this->validateCoordinateAccuracy($coordinateData));
@@ -172,7 +172,7 @@ class DataAccuracyTest extends TestCase
     {
         $timeData = [
             ['id' => 1, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'duration_hours' => 8.0],
-            ['id' => 2, 'start_time' => '10:30:00', 'end_time' => '14:30:00', 'duration_hours' => 4.0]
+            ['id' => 2, 'start_time' => '10:30:00', 'end_time' => '14:30:00', 'duration_hours' => 4.0],
         ];
 
         $this->assertTrue($this->validateTimeAccuracy($timeData));
@@ -184,7 +184,7 @@ class DataAccuracyTest extends TestCase
         $ratioData = [
             ['id' => 1, 'numerator' => 10, 'denominator' => 20, 'ratio' => 0.5],
             ['id' => 2, 'numerator' => 15, 'denominator' => 30, 'ratio' => 0.5],
-            ['id' => 3, 'numerator' => 25, 'denominator' => 50, 'ratio' => 0.5]
+            ['id' => 3, 'numerator' => 25, 'denominator' => 50, 'ratio' => 0.5],
         ];
 
         $this->assertTrue($this->validateRatioAccuracy($ratioData));
@@ -196,7 +196,7 @@ class DataAccuracyTest extends TestCase
         $changeData = [
             ['id' => 1, 'old_value' => 100, 'new_value' => 110, 'percentage_change' => 10.0],
             ['id' => 2, 'old_value' => 200, 'new_value' => 180, 'percentage_change' => -10.0],
-            ['id' => 3, 'old_value' => 50, 'new_value' => 75, 'percentage_change' => 50.0]
+            ['id' => 3, 'old_value' => 50, 'new_value' => 75, 'percentage_change' => 50.0],
         ];
 
         $this->assertTrue($this->validatePercentageChangeAccuracy($changeData));
@@ -207,7 +207,7 @@ class DataAccuracyTest extends TestCase
     {
         $interestData = [
             ['id' => 1, 'principal' => 1000, 'rate' => 0.05, 'time' => 1, 'compound_frequency' => 1, 'amount' => 1050.00],
-            ['id' => 2, 'principal' => 1000, 'rate' => 0.10, 'time' => 2, 'compound_frequency' => 1, 'amount' => 1210.00]
+            ['id' => 2, 'principal' => 1000, 'rate' => 0.10, 'time' => 2, 'compound_frequency' => 1, 'amount' => 1210.00],
         ];
 
         $this->assertTrue($this->validateCompoundInterestAccuracy($interestData));
@@ -219,7 +219,7 @@ class DataAccuracyTest extends TestCase
         $toleranceData = [
             ['id' => 1, 'actual' => 100.0, 'expected' => 100.5, 'tolerance' => 1.0], // Within tolerance
             ['id' => 2, 'actual' => 100.0, 'expected' => 100.8, 'tolerance' => 1.0], // Within tolerance
-            ['id' => 3, 'actual' => 100.0, 'expected' => 99.5, 'tolerance' => 1.0]  // Within tolerance
+            ['id' => 3, 'actual' => 100.0, 'expected' => 99.5, 'tolerance' => 1.0],  // Within tolerance
         ];
 
         $this->assertTrue($this->validateAccuracyTolerance($toleranceData));
@@ -230,7 +230,7 @@ class DataAccuracyTest extends TestCase
     {
         $sourceData = [
             ['id' => 1, 'value' => 100.00, 'source1' => 100.00, 'source2' => 100.00, 'source3' => 100.00],
-            ['id' => 2, 'value' => 200.00, 'source1' => 200.00, 'source2' => 200.00, 'source3' => 200.00]
+            ['id' => 2, 'value' => 200.00, 'source1' => 200.00, 'source2' => 200.00, 'source3' => 200.00],
         ];
 
         $this->assertTrue($this->validateDataSourceAccuracy($sourceData));
@@ -242,7 +242,7 @@ class DataAccuracyTest extends TestCase
         $historicalData = [
             ['id' => 1, 'date' => '2024-01-01', 'value' => 100.00, 'historical_value' => 100.00],
             ['id' => 2, 'date' => '2024-01-02', 'value' => 105.00, 'historical_value' => 105.00],
-            ['id' => 3, 'date' => '2024-01-03', 'value' => 110.00, 'historical_value' => 110.00]
+            ['id' => 3, 'date' => '2024-01-03', 'value' => 110.00, 'historical_value' => 110.00],
         ];
 
         $this->assertTrue($this->validateHistoricalAccuracy($historicalData));
@@ -255,6 +255,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -271,6 +272,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -282,6 +284,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -293,6 +296,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -304,6 +308,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -321,6 +326,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -338,6 +344,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -349,6 +356,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -372,6 +380,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -391,6 +400,7 @@ class DataAccuracyTest extends TestCase
     private function calculateMode(array $values): int
     {
         $frequency = array_count_values($values);
+
         return array_keys($frequency, max($frequency))[0];
     }
 
@@ -412,6 +422,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -430,6 +441,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -444,6 +456,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -458,6 +471,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -469,6 +483,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -480,6 +495,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -491,6 +507,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -502,6 +519,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -515,6 +533,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 
@@ -525,6 +544,7 @@ class DataAccuracyTest extends TestCase
                 return false;
             }
         }
+
         return true;
     }
 }

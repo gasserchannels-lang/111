@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read User $user
- * @property-read Product $product
+ * @property-read User<Database\Factories\UserFactory> $user
+ * @property-read Product<Database\Factories\ProductFactory> $product
  *
  * @method static WishlistFactory factory(...$parameters)
  *
@@ -63,7 +63,7 @@ class Wishlist extends Model
     ];
 
     /**
-     * @return BelongsTo<User<\Database\Factories\UserFactory>, Wishlist<\Database\Factories\WishlistFactory>>
+     * @return BelongsTo<User<Database\Factories\UserFactory>, Wishlist<Database\Factories\WishlistFactory>>
      */
     public function user(): BelongsTo
     {
@@ -71,7 +71,7 @@ class Wishlist extends Model
     }
 
     /**
-     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, Wishlist<\Database\Factories\WishlistFactory>>
+     * @return BelongsTo<Product<Database\Factories\ProductFactory>, Wishlist<Database\Factories\WishlistFactory>>
      */
     public function product(): BelongsTo
     {

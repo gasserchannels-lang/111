@@ -30,4 +30,3 @@ class Page extends TestCase
         $this->assertTrue(true);
     }
 }
-

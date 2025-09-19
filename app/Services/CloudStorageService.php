@@ -260,7 +260,7 @@ class CloudStorageService
         try {
             $files = Storage::disk($this->disk)->files($path);
 
-            return array_values(array_map(fn(string $file): array => [
+            return array_values(array_map(fn (string $file): array => [
                 'path' => $file,
                 'url' => $this->getFileUrl($file),
                 'metadata' => $this->getFileMetadata($file),

@@ -289,7 +289,7 @@ class ReportService
 
         return [
             'total_items' => $wishlists->count(),
-            'products' => $wishlists->map(fn($wishlist): array => [
+            'products' => $wishlists->map(fn ($wishlist): array => [
                 'id' => $wishlist->product->id ?? 0,
                 'name' => $wishlist->product->name ?? 'Unknown Product',
                 'price' => $wishlist->product->price ?? 0,
@@ -313,7 +313,7 @@ class ReportService
         return [
             'total_alerts' => $alerts->count(),
             'active_alerts' => $alerts->where('is_active', true)->count(),
-            'alerts' => $alerts->map(fn($alert): array => [
+            'alerts' => $alerts->map(fn ($alert): array => [
                 'id' => $alert->id,
                 'product_name' => $alert->product->name ?? 'Unknown Product',
                 'target_price' => $alert->target_price,
@@ -338,7 +338,7 @@ class ReportService
         return [
             'total_reviews' => $reviews->count(),
             'average_rating' => $reviews->avg('rating'),
-            'reviews' => $reviews->map(fn($review): array => [
+            'reviews' => $reviews->map(fn ($review): array => [
                 'id' => $review->id,
                 'product_name' => $review->product->name ?? 'Unknown Product',
                 'rating' => $review->rating,
@@ -477,7 +477,7 @@ class ReportService
             ->orderBy('reviews_count', 'desc')
             ->take(10)
             ->get()
-            ->map(fn($product): array => [
+            ->map(fn ($product): array => [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
@@ -520,7 +520,7 @@ class ReportService
             ->orderBy('date')
             ->get();
 
-        return $trends->map(fn($trend): array => [
+        return $trends->map(fn ($trend): array => [
             'date' => $trend->date,
             'average_price' => round($trend->average_price, 2),
         ])->toArray();
@@ -540,7 +540,7 @@ class ReportService
             ->orderBy('reviews_count', 'desc')
             ->take(10)
             ->get()
-            ->map(fn($user): array => [
+            ->map(fn ($user): array => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -568,7 +568,7 @@ class ReportService
             ->orderBy('view_count', 'desc')
             ->take(10)
             ->get()
-            ->map(fn($item): array => [
+            ->map(fn ($item): array => [
                 'id' => $item->id,
                 'name' => $item->name,
                 'view_count' => $item->view_count,
@@ -598,6 +598,7 @@ class ReportService
         if ($percentage < -5) {
             return 'decreasing';
         }
+
         return 'stable';
     }
 

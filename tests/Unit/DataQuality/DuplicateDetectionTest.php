@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DuplicateDetectionTest extends TestCase
 {
@@ -16,7 +16,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00],
             ['id' => 3, 'name' => 'iPhone 15', 'price' => 999.00], // Duplicate
-            ['id' => 4, 'name' => 'Google Pixel 8', 'price' => 699.00]
+            ['id' => 4, 'name' => 'Google Pixel 8', 'price' => 699.00],
         ];
 
         $duplicates = $this->detectExactDuplicates($products);
@@ -32,7 +32,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15 Pro', 'price' => 999.00],
             ['id' => 2, 'name' => 'iPhone 15 Pro Max', 'price' => 1099.00],
             ['id' => 3, 'name' => 'Samsung Galaxy S24', 'price' => 899.00],
-            ['id' => 4, 'name' => 'Samsung Galaxy S24 Ultra', 'price' => 999.00]
+            ['id' => 4, 'name' => 'Samsung Galaxy S24 Ultra', 'price' => 999.00],
         ];
 
         $similarDuplicates = $this->detectSimilarDuplicates($products, 0.8);
@@ -47,7 +47,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 999.00], // Same price
             ['id' => 3, 'name' => 'Google Pixel 8', 'price' => 699.00],
-            ['id' => 4, 'name' => 'OnePlus 12', 'price' => 999.00] // Same price
+            ['id' => 4, 'name' => 'OnePlus 12', 'price' => 999.00], // Same price
         ];
 
         $priceDuplicates = $this->detectPriceDuplicates($products);
@@ -62,7 +62,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'url' => 'https://amazon.com/iphone15'],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'url' => 'https://amazon.com/galaxy-s24'],
             ['id' => 3, 'name' => 'iPhone 15 Pro', 'url' => 'https://amazon.com/iphone15'], // Duplicate URL
-            ['id' => 4, 'name' => 'Google Pixel 8', 'url' => 'https://amazon.com/pixel8']
+            ['id' => 4, 'name' => 'Google Pixel 8', 'url' => 'https://amazon.com/pixel8'],
         ];
 
         $urlDuplicates = $this->detectUrlDuplicates($products);
@@ -77,7 +77,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'image' => 'iphone15.jpg'],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'image' => 'galaxy-s24.jpg'],
             ['id' => 3, 'name' => 'iPhone 15 Pro', 'image' => 'iphone15.jpg'], // Duplicate image
-            ['id' => 4, 'name' => 'Google Pixel 8', 'image' => 'pixel8.jpg']
+            ['id' => 4, 'name' => 'Google Pixel 8', 'image' => 'pixel8.jpg'],
         ];
 
         $imageDuplicates = $this->detectImageDuplicates($products);
@@ -92,7 +92,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'description' => 'Latest iPhone with advanced features'],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'description' => 'Latest Samsung phone with great camera'],
             ['id' => 3, 'name' => 'iPhone 15 Pro', 'description' => 'Latest iPhone with advanced features'], // Duplicate description
-            ['id' => 4, 'name' => 'Google Pixel 8', 'description' => 'Google phone with AI features']
+            ['id' => 4, 'name' => 'Google Pixel 8', 'description' => 'Google phone with AI features'],
         ];
 
         $descriptionDuplicates = $this->detectDescriptionDuplicates($products);
@@ -107,7 +107,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'Smartphones', 'slug' => 'smartphones'],
             ['id' => 2, 'name' => 'Laptops', 'slug' => 'laptops'],
             ['id' => 3, 'name' => 'Smartphones', 'slug' => 'smartphones'], // Duplicate
-            ['id' => 4, 'name' => 'Tablets', 'slug' => 'tablets']
+            ['id' => 4, 'name' => 'Tablets', 'slug' => 'tablets'],
         ];
 
         $categoryDuplicates = $this->detectCategoryDuplicates($categories);
@@ -122,7 +122,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'Apple', 'slug' => 'apple'],
             ['id' => 2, 'name' => 'Samsung', 'slug' => 'samsung'],
             ['id' => 3, 'name' => 'Apple Inc.', 'slug' => 'apple-inc'], // Similar to Apple
-            ['id' => 4, 'name' => 'Google', 'slug' => 'google']
+            ['id' => 4, 'name' => 'Google', 'slug' => 'google'],
         ];
 
         $brandDuplicates = $this->detectBrandDuplicates($brands);
@@ -137,7 +137,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'Amazon', 'url' => 'https://amazon.com'],
             ['id' => 2, 'name' => 'eBay', 'url' => 'https://ebay.com'],
             ['id' => 3, 'name' => 'Amazon.com', 'url' => 'https://amazon.com'], // Duplicate
-            ['id' => 4, 'name' => 'Best Buy', 'url' => 'https://bestbuy.com']
+            ['id' => 4, 'name' => 'Best Buy', 'url' => 'https://bestbuy.com'],
         ];
 
         $storeDuplicates = $this->detectStoreDuplicates($stores);
@@ -152,7 +152,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'email' => 'user1@example.com', 'name' => 'John Doe'],
             ['id' => 2, 'email' => 'user2@example.com', 'name' => 'Jane Smith'],
             ['id' => 3, 'email' => 'user1@example.com', 'name' => 'John Doe'], // Duplicate email
-            ['id' => 4, 'email' => 'user3@example.com', 'name' => 'Bob Johnson']
+            ['id' => 4, 'email' => 'user3@example.com', 'name' => 'Bob Johnson'],
         ];
 
         $userDuplicates = $this->detectUserDuplicates($users);
@@ -167,7 +167,7 @@ class DuplicateDetectionTest extends TestCase
             ['id' => 1, 'name' => 'iPhone 15', 'price' => 999.00],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'price' => 899.00],
             ['id' => 3, 'name' => 'iPhone 15', 'price' => 999.00], // Duplicate
-            ['id' => 4, 'name' => 'Google Pixel 8', 'price' => 699.00]
+            ['id' => 4, 'name' => 'Google Pixel 8', 'price' => 699.00],
         ];
 
         $duplicatePercentage = $this->calculateDuplicatePercentage($products);
@@ -181,7 +181,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($items as $item) {
             // Create a key based on name and price for product duplicates
-            $key = ($item['name'] ?? '') . '|' . ($item['price'] ?? '');
+            $key = ($item['name'] ?? '').'|'.($item['price'] ?? '');
             if (isset($seen[$key])) {
                 $duplicates[] = $item;
             } else {
@@ -203,7 +203,7 @@ class DuplicateDetectionTest extends TestCase
                     $similarDuplicates[] = [
                         'item1' => $items[$i],
                         'item2' => $items[$j],
-                        'similarity' => $similarity
+                        'similarity' => $similarity,
                     ];
                 }
             }
@@ -218,7 +218,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($items as $item) {
             $price = $item['price'];
-            if (!isset($priceGroups[$price])) {
+            if (! isset($priceGroups[$price])) {
                 $priceGroups[$price] = [];
             }
             $priceGroups[$price][] = $item;
@@ -241,7 +241,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($items as $item) {
             $url = $item['url'] ?? '';
-            if (!isset($urlGroups[$url])) {
+            if (! isset($urlGroups[$url])) {
                 $urlGroups[$url] = [];
             }
             $urlGroups[$url][] = $item;
@@ -264,7 +264,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($items as $item) {
             $image = $item['image'] ?? '';
-            if (!isset($imageGroups[$image])) {
+            if (! isset($imageGroups[$image])) {
                 $imageGroups[$image] = [];
             }
             $imageGroups[$image][] = $item;
@@ -287,7 +287,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($items as $item) {
             $description = $item['description'] ?? '';
-            if (!isset($descriptionGroups[$description])) {
+            if (! isset($descriptionGroups[$description])) {
                 $descriptionGroups[$description] = [];
             }
             $descriptionGroups[$description][] = $item;
@@ -310,7 +310,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($categories as $category) {
             $name = strtolower($category['name']);
-            if (!isset($nameGroups[$name])) {
+            if (! isset($nameGroups[$name])) {
                 $nameGroups[$name] = [];
             }
             $nameGroups[$name][] = $category;
@@ -338,7 +338,7 @@ class DuplicateDetectionTest extends TestCase
                     $similarDuplicates[] = [
                         'brand1' => $brands[$i],
                         'brand2' => $brands[$j],
-                        'similarity' => $similarity
+                        'similarity' => $similarity,
                     ];
                 }
             }
@@ -353,7 +353,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($stores as $store) {
             $url = $store['url'] ?? '';
-            if (!isset($urlGroups[$url])) {
+            if (! isset($urlGroups[$url])) {
                 $urlGroups[$url] = [];
             }
             $urlGroups[$url][] = $store;
@@ -376,7 +376,7 @@ class DuplicateDetectionTest extends TestCase
 
         foreach ($users as $user) {
             $email = strtolower($user['email']);
-            if (!isset($emailGroups[$email])) {
+            if (! isset($emailGroups[$email])) {
                 $emailGroups[$email] = [];
             }
             $emailGroups[$email][] = $user;
@@ -396,6 +396,7 @@ class DuplicateDetectionTest extends TestCase
     private function calculateDuplicatePercentage(array $items): float
     {
         $duplicates = $this->detectExactDuplicates($items);
+
         return (count($duplicates) / count($items)) * 100;
     }
 
@@ -468,10 +469,10 @@ class DuplicateDetectionTest extends TestCase
         // Count transpositions
         $k = 0;
         for ($i = 0; $i < $len1; $i++) {
-            if (!$str1Matches[$i]) {
+            if (! $str1Matches[$i]) {
                 continue;
             }
-            while (!$str2Matches[$k]) {
+            while (! $str2Matches[$k]) {
                 $k++;
             }
             if ($str1[$i] !== $str2[$k]) {

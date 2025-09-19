@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ShippingAccuracyTest extends TestCase
 {
@@ -51,7 +51,7 @@ class ShippingAccuracyTest extends TestCase
             'city' => 'New York',
             'state' => 'NY',
             'zip' => '10001',
-            'country' => 'USA'
+            'country' => 'USA',
         ];
 
         $isValid = $this->validateShippingAddress($address);
@@ -113,7 +113,7 @@ class ShippingAccuracyTest extends TestCase
         $shippingZones = [
             'zone_1' => ['USA', 'Canada'],
             'zone_2' => ['UK', 'Germany', 'France'],
-            'zone_3' => ['Japan', 'Australia']
+            'zone_3' => ['Japan', 'Australia'],
         ];
 
         $country = 'USA';

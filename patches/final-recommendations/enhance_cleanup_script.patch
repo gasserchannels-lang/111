@@ -1,0 +1,63 @@
+--- a/cleanup-environment.php
++++ b/cleanup-environment.php
+@@ -35,6 +35,30 @@ function deleteDirectory($dir)
+     return rmdir($dir);
+ }
+
++// Function to clean old log files (older than specified days)
++function cleanOldLogFiles($directory, $daysOld = 7)
++{
++    if (! is_dir($directory)) {
++        echo "- Directory not found: {$directory}\n";
++        return 0;
++    }
++
++    $deletedCount = 0;
++    $cutoffTime = time() - ($daysOld * 24 * 60 * 60);
++
++    $files = glob($directory . '/*.log');
++    foreach ($files as $file) {
++        if (is_file($file) && filemtime($file) < $cutoffTime) {
++            if (unlink($file)) {
++                echo "✓ Deleted old log file: " . basename($file) . "\n";
++                $deletedCount++;
++            } else {
++                echo "✗ Failed to delete: " . basename($file) . "\n";
++            }
++        }
++    }
++
++    return $deletedCount;
++}
++
+ // 1. Clear Laravel caches
+ echo "1. Clearing Laravel Caches:\n";
+ echo "----------------------------------------\n";
+@@ -130,6 +154,25 @@ foreach ($storageDirs as $dir) {
+
+ echo "\n";
+
++// 4.5. Clean old log files (older than 7 days)
++echo "4.5. Cleaning Old Log Files:\n";
++echo "----------------------------------------\n";
++
++$logDirectories = [
++    'storage/logs',
++    'storage/logs/laravel.log',
++];
++
++$totalDeleted = 0;
++foreach ($logDirectories as $dir) {
++    if (is_dir($dir)) {
++        $deletedCount = cleanOldLogFiles($dir, 7);
++        $totalDeleted += $deletedCount;
++        echo "✓ Processed directory: {$dir} (deleted {$deletedCount} files)\n";
++    }
++}
++
++echo "✓ Total old log files deleted: {$totalDeleted}\n";
++echo "\n";
++
+ // 5. Clear bootstrap cache
+ echo "5. Clearing Bootstrap Cache:\n";
+ echo "----------------------------------------\n";

@@ -16,7 +16,7 @@ class PriceDropAlertTest extends TestCase
             ['date' => '2024-01-01', 'price' => 1000.00],
             ['date' => '2024-01-15', 'price' => 950.00],
             ['date' => '2024-02-01', 'price' => 900.00],
-            ['date' => '2024-02-15', 'price' => 850.00]
+            ['date' => '2024-02-15', 'price' => 850.00],
         ];
 
         $priceDrops = $this->detectPriceDrops($priceHistory, 5.0); // 5% threshold
@@ -32,7 +32,7 @@ class PriceDropAlertTest extends TestCase
             ['date' => '2024-01-01', 'price' => 1000.00],
             ['date' => '2024-01-15', 'price' => 950.00],
             ['date' => '2024-02-01', 'price' => 800.00], // 20% drop
-            ['date' => '2024-02-15', 'price' => 750.00]  // 6.25% drop
+            ['date' => '2024-02-15', 'price' => 750.00],  // 6.25% drop
         ];
 
         $significantDrops = $this->detectSignificantPriceDrops($priceHistory, 10.0);
@@ -61,12 +61,12 @@ class PriceDropAlertTest extends TestCase
     {
         $alerts = [
             ['id' => 1, 'user_id' => 1, 'product_id' => 1, 'target_price' => 800.00, 'is_active' => true],
-            ['id' => 2, 'user_id' => 2, 'product_id' => 2, 'target_price' => 600.00, 'is_active' => true]
+            ['id' => 2, 'user_id' => 2, 'product_id' => 2, 'target_price' => 600.00, 'is_active' => true],
         ];
 
         $currentPrices = [
             1 => 750.00, // Target reached
-            2 => 650.00  // Target not reached
+            2 => 650.00,  // Target not reached
         ];
 
         $triggeredAlerts = $this->triggerPriceAlerts($alerts, $currentPrices);
@@ -92,7 +92,7 @@ class PriceDropAlertTest extends TestCase
         $priceDrops = [
             ['product_id' => 1, 'old_price' => 1000.00, 'new_price' => 900.00, 'drop_percentage' => 10.0],
             ['product_id' => 2, 'old_price' => 500.00, 'new_price' => 400.00, 'drop_percentage' => 20.0],
-            ['product_id' => 3, 'old_price' => 200.00, 'new_price' => 190.00, 'drop_percentage' => 5.0]
+            ['product_id' => 3, 'old_price' => 200.00, 'new_price' => 190.00, 'drop_percentage' => 5.0],
         ];
 
         $bestDrops = $this->getBestPriceDrops($priceDrops, 2);
@@ -109,7 +109,7 @@ class PriceDropAlertTest extends TestCase
             ['date' => '2024-01-15', 'price' => 950.00],
             ['date' => '2024-02-01', 'price' => 900.00],
             ['date' => '2024-02-15', 'price' => 850.00],
-            ['date' => '2024-03-01', 'price' => 900.00]
+            ['date' => '2024-03-01', 'price' => 900.00],
         ];
 
         $historicalLows = $this->getHistoricalLowPrices($priceHistory);
@@ -124,7 +124,7 @@ class PriceDropAlertTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15', 'trend' => 'down', 'price_change' => -10.0],
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'trend' => 'up', 'price_change' => 5.0],
-            ['id' => 3, 'name' => 'Google Pixel 8', 'trend' => 'down', 'price_change' => -15.0]
+            ['id' => 3, 'name' => 'Google Pixel 8', 'trend' => 'down', 'price_change' => -15.0],
         ];
 
         $trendingDown = $this->getTrendingDownProducts($products);
@@ -139,7 +139,7 @@ class PriceDropAlertTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'Winter Jacket', 'season' => 'winter', 'price_drop' => 30.0],
             ['id' => 2, 'name' => 'Summer Dress', 'season' => 'summer', 'price_drop' => 20.0],
-            ['id' => 3, 'name' => 'Sunglasses', 'season' => 'summer', 'price_drop' => 15.0]
+            ['id' => 3, 'name' => 'Sunglasses', 'season' => 'summer', 'price_drop' => 15.0],
         ];
 
         $seasonalDrops = $this->getSeasonalPriceDrops($products, 'winter');
@@ -154,7 +154,7 @@ class PriceDropAlertTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'Old Model Phone', 'is_clearance' => true, 'price_drop' => 50.0],
             ['id' => 2, 'name' => 'New Model Phone', 'is_clearance' => false, 'price_drop' => 10.0],
-            ['id' => 3, 'name' => 'Discontinued Item', 'is_clearance' => true, 'price_drop' => 70.0]
+            ['id' => 3, 'name' => 'Discontinued Item', 'is_clearance' => true, 'price_drop' => 70.0],
         ];
 
         $clearanceDrops = $this->getClearancePriceDrops($products);
@@ -169,7 +169,7 @@ class PriceDropAlertTest extends TestCase
         $offers = [
             ['id' => 1, 'name' => 'Flash Sale', 'discount' => 30.0, 'end_date' => '2024-12-31'],
             ['id' => 2, 'name' => 'Weekend Special', 'discount' => 20.0, 'end_date' => '2024-12-25'],
-            ['id' => 3, 'name' => 'Black Friday', 'discount' => 50.0, 'end_date' => '2024-11-30']
+            ['id' => 3, 'name' => 'Black Friday', 'discount' => 50.0, 'end_date' => '2024-11-30'],
         ];
 
         $activeOffers = $this->getActiveLimitedTimeOffers($offers, '2024-12-20');
@@ -186,7 +186,7 @@ class PriceDropAlertTest extends TestCase
             ['date' => '2024-01-15', 'price' => 950.00],
             ['date' => '2024-02-01', 'price' => 900.00],
             ['date' => '2024-02-15', 'price' => 850.00],
-            ['date' => '2024-03-01', 'price' => 800.00]
+            ['date' => '2024-03-01', 'price' => 800.00],
         ];
 
         $patterns = $this->identifyPriceDropPatterns($priceHistory);
@@ -209,7 +209,7 @@ class PriceDropAlertTest extends TestCase
                     'date' => $priceHistory[$i]['date'],
                     'old_price' => $previousPrice,
                     'new_price' => $currentPrice,
-                    'drop_percentage' => $dropPercentage
+                    'drop_percentage' => $dropPercentage,
                 ];
             }
         }
@@ -234,7 +234,7 @@ class PriceDropAlertTest extends TestCase
             'target_price' => $targetPrice,
             'current_price' => $product['current_price'],
             'is_active' => true,
-            'created_at' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -243,7 +243,7 @@ class PriceDropAlertTest extends TestCase
         $triggeredAlerts = [];
 
         foreach ($alerts as $alert) {
-            if (!$alert['is_active']) {
+            if (! $alert['is_active']) {
                 continue;
             }
 
@@ -257,7 +257,7 @@ class PriceDropAlertTest extends TestCase
                     'product_id' => $productId,
                     'target_price' => $alert['target_price'],
                     'current_price' => $currentPrice,
-                    'triggered_at' => date('Y-m-d H:i:s')
+                    'triggered_at' => date('Y-m-d H:i:s'),
                 ];
             }
         }
@@ -300,7 +300,7 @@ class PriceDropAlertTest extends TestCase
         if ($minPriceDate !== null) {
             $historicalLows[] = [
                 'date' => $minPriceDate,
-                'price' => $minPrice
+                'price' => $minPrice,
             ];
         }
 
@@ -380,7 +380,7 @@ class PriceDropAlertTest extends TestCase
         if ($isContinuousDecline) {
             $patterns[] = [
                 'pattern' => 'continuous_decline',
-                'description' => 'Price continuously declining over time'
+                'description' => 'Price continuously declining over time',
             ];
         }
 

@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class NaturalLanguageProcessingTest extends TestCase
 {
@@ -12,7 +12,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_tokenizes_text(): void
     {
-        $text = "Hello world! This is a test.";
+        $text = 'Hello world! This is a test.';
         $tokens = $this->tokenize($text);
 
         $this->assertIsArray($tokens);
@@ -25,7 +25,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_removes_stop_words(): void
     {
-        $text = "The quick brown fox jumps over the lazy dog";
+        $text = 'The quick brown fox jumps over the lazy dog';
         $stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
 
         $filteredText = $this->removeStopWords($text, $stopWords);
@@ -40,8 +40,8 @@ class NaturalLanguageProcessingTest extends TestCase
     public function it_performs_sentiment_analysis(): void
     {
         $positiveText = "I love this product! It's amazing and wonderful.";
-        $negativeText = "This is terrible. I hate it completely.";
-        $neutralText = "The product arrived on time.";
+        $negativeText = 'This is terrible. I hate it completely.';
+        $neutralText = 'The product arrived on time.';
 
         $positiveSentiment = $this->analyzeSentiment($positiveText);
         $negativeSentiment = $this->analyzeSentiment($negativeText);
@@ -56,7 +56,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_extracts_named_entities(): void
     {
-        $text = "Apple Inc. was founded by Steve Jobs in Cupertino, California.";
+        $text = 'Apple Inc. was founded by Steve Jobs in Cupertino, California.';
 
         $entities = $this->extractNamedEntities($text);
 
@@ -71,7 +71,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_performs_text_classification(): void
     {
-        $text = "The stock market is showing positive trends today.";
+        $text = 'The stock market is showing positive trends today.';
         $categories = ['finance', 'sports', 'technology', 'politics'];
 
         $classification = $this->classifyText($text, $categories);
@@ -86,9 +86,9 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_calculates_text_similarity(): void
     {
-        $text1 = "The quick brown fox";
-        $text2 = "The fast brown fox";
-        $text3 = "A completely different sentence";
+        $text1 = 'The quick brown fox';
+        $text2 = 'The fast brown fox';
+        $text3 = 'A completely different sentence';
 
         $similarity1 = $this->calculateTextSimilarity($text1, $text2);
         $similarity2 = $this->calculateTextSimilarity($text1, $text3);
@@ -101,7 +101,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_generates_text_embeddings(): void
     {
-        $text = "Machine learning is fascinating";
+        $text = 'Machine learning is fascinating';
 
         $embeddings = $this->generateEmbeddings($text);
 
@@ -114,9 +114,9 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_performs_language_detection(): void
     {
-        $englishText = "Hello, how are you?";
-        $spanishText = "Hola, ¿cómo estás?";
-        $frenchText = "Bonjour, comment allez-vous?";
+        $englishText = 'Hello, how are you?';
+        $spanishText = 'Hola, ¿cómo estás?';
+        $frenchText = 'Bonjour, comment allez-vous?';
 
         $englishLang = $this->detectLanguage($englishText);
         $spanishLang = $this->detectLanguage($spanishText);
@@ -131,10 +131,10 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_performs_text_summarization(): void
     {
-        $longText = "Artificial intelligence is a branch of computer science that aims to create intelligent machines. " .
-            "These machines can perform tasks that typically require human intelligence, such as visual perception, " .
-            "speech recognition, decision-making, and language translation. AI has applications in various fields " .
-            "including healthcare, finance, transportation, and entertainment.";
+        $longText = 'Artificial intelligence is a branch of computer science that aims to create intelligent machines. '.
+            'These machines can perform tasks that typically require human intelligence, such as visual perception, '.
+            'speech recognition, decision-making, and language translation. AI has applications in various fields '.
+            'including healthcare, finance, transportation, and entertainment.';
 
         $summary = $this->summarizeText($longText, 2);
 
@@ -147,8 +147,8 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_extracts_keywords(): void
     {
-        $text = "Machine learning algorithms are used in artificial intelligence applications. " .
-            "Deep learning is a subset of machine learning that uses neural networks.";
+        $text = 'Machine learning algorithms are used in artificial intelligence applications. '.
+            'Deep learning is a subset of machine learning that uses neural networks.';
 
         $keywords = $this->extractKeywords($text, 5);
 
@@ -162,7 +162,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_performs_part_of_speech_tagging(): void
     {
-        $text = "The quick brown fox jumps over the lazy dog";
+        $text = 'The quick brown fox jumps over the lazy dog';
 
         $posTags = $this->performPOSTagging($text);
 
@@ -176,7 +176,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_performs_dependency_parsing(): void
     {
-        $text = "The cat sat on the mat";
+        $text = 'The cat sat on the mat';
 
         $dependencies = $this->performDependencyParsing($text);
 
@@ -192,7 +192,7 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_handles_multilingual_text(): void
     {
-        $multilingualText = "Hello world! Hola mundo! Bonjour le monde!";
+        $multilingualText = 'Hello world! Hola mundo! Bonjour le monde!';
 
         $languages = $this->detectMultipleLanguages($multilingualText);
 
@@ -219,8 +219,8 @@ class NaturalLanguageProcessingTest extends TestCase
     #[CoversNothing]
     public function it_calculates_readability_score(): void
     {
-        $simpleText = "The cat is on the mat.";
-        $complexText = "The multifaceted implementation of sophisticated algorithms necessitates comprehensive analysis.";
+        $simpleText = 'The cat is on the mat.';
+        $complexText = 'The multifaceted implementation of sophisticated algorithms necessitates comprehensive analysis.';
 
         $simpleScore = $this->calculateReadabilityScore($simpleText);
         $complexScore = $this->calculateReadabilityScore($complexText);
@@ -234,16 +234,18 @@ class NaturalLanguageProcessingTest extends TestCase
     {
         $text = preg_replace('/[^\w\s]/', ' ', $text);
         $tokens = preg_split('/\s+/', trim($text));
+
         return array_filter($tokens, function ($token) {
-            return !empty($token);
+            return ! empty($token);
         });
     }
 
     private function removeStopWords(string $text, array $stopWords): array
     {
         $tokens = $this->tokenize($text);
+
         return array_filter($tokens, function ($token) use ($stopWords) {
-            return !in_array(strtolower($token), $stopWords);
+            return ! in_array(strtolower($token), $stopWords);
         });
     }
 
@@ -278,7 +280,7 @@ class NaturalLanguageProcessingTest extends TestCase
         $entities = [
             'PERSON' => [],
             'ORG' => [],
-            'GPE' => []
+            'GPE' => [],
         ];
 
         // Simple pattern matching for demonstration
@@ -303,7 +305,7 @@ class NaturalLanguageProcessingTest extends TestCase
             'finance' => ['stock', 'market', 'money', 'investment', 'bank', 'financial'],
             'sports' => ['game', 'team', 'player', 'score', 'match', 'championship'],
             'technology' => ['computer', 'software', 'digital', 'tech', 'programming', 'code'],
-            'politics' => ['government', 'election', 'president', 'policy', 'vote', 'democracy']
+            'politics' => ['government', 'election', 'president', 'policy', 'vote', 'democracy'],
         ];
 
         $text = strtolower($text);
@@ -324,7 +326,7 @@ class NaturalLanguageProcessingTest extends TestCase
 
         return [
             'category' => $bestCategory,
-            'confidence' => $confidence
+            'confidence' => $confidence,
         ];
     }
 
@@ -347,7 +349,7 @@ class NaturalLanguageProcessingTest extends TestCase
         $embeddings = [];
 
         foreach ($vocabulary as $word) {
-            $embeddings[] = (float)(rand(1, 100) / 100); // Random embedding for demonstration, ensure it's float
+            $embeddings[] = (float) (rand(1, 100) / 100); // Random embedding for demonstration, ensure it's float
         }
 
         return $embeddings;
@@ -379,10 +381,10 @@ class NaturalLanguageProcessingTest extends TestCase
     {
         $sentences = preg_split('/[.!?]+/', $text);
         $sentences = array_filter($sentences, function ($s) {
-            return !empty(trim($s));
+            return ! empty(trim($s));
         });
 
-        return implode('. ', array_slice($sentences, 0, $maxSentences)) . '.';
+        return implode('. ', array_slice($sentences, 0, $maxSentences)).'.';
     }
 
     private function extractKeywords(string $text, int $maxKeywords): array
@@ -402,12 +404,12 @@ class NaturalLanguageProcessingTest extends TestCase
         $stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were'];
 
         $filteredTokens = array_filter($tokens, function ($token) use ($stopWords) {
-            return !in_array($token, $stopWords) && strlen($token) > 2;
+            return ! in_array($token, $stopWords) && strlen($token) > 2;
         });
 
         // Add single words
         foreach ($filteredTokens as $token) {
-            if (!in_array($token, $keywords)) {
+            if (! in_array($token, $keywords)) {
                 $keywords[] = $token;
             }
         }
@@ -415,8 +417,8 @@ class NaturalLanguageProcessingTest extends TestCase
         // Add bigrams for better keyword extraction
         $filteredTokensArray = array_values($filteredTokens);
         for ($i = 0; $i < count($filteredTokensArray) - 1; $i++) {
-            $bigram = $filteredTokensArray[$i] . ' ' . $filteredTokensArray[$i + 1];
-            if (!in_array($bigram, $keywords)) {
+            $bigram = $filteredTokensArray[$i].' '.$filteredTokensArray[$i + 1];
+            if (! in_array($bigram, $keywords)) {
                 $keywords[] = $bigram;
             }
         }
@@ -444,7 +446,7 @@ class NaturalLanguageProcessingTest extends TestCase
 
         return [
             'tokens' => $tokens,
-            'tags' => $tags
+            'tags' => $tags,
         ];
     }
 
@@ -457,7 +459,7 @@ class NaturalLanguageProcessingTest extends TestCase
             $dependencies[] = [
                 'head' => $i - 1,
                 'dependent' => $i,
-                'relation' => 'dep'
+                'relation' => 'dep',
             ];
         }
 
@@ -470,7 +472,7 @@ class NaturalLanguageProcessingTest extends TestCase
         $languages = [];
 
         foreach ($sentences as $sentence) {
-            if (!empty(trim($sentence))) {
+            if (! empty(trim($sentence))) {
                 $languages[] = $this->detectLanguage(trim($sentence));
             }
         }
@@ -492,7 +494,7 @@ class NaturalLanguageProcessingTest extends TestCase
     {
         $sentences = preg_split('/[.!?]+/', $text);
         $sentences = array_filter($sentences, function ($s) {
-            return !empty(trim($s));
+            return ! empty(trim($s));
         });
 
         $words = $this->tokenize($text);
@@ -524,7 +526,7 @@ class NaturalLanguageProcessingTest extends TestCase
 
         for ($i = 0; $i < strlen($word); $i++) {
             $isVowel = strpos($vowels, $word[$i]) !== false;
-            if ($isVowel && !$previousWasVowel) {
+            if ($isVowel && ! $previousWasVowel) {
                 $syllables++;
             }
             $previousWasVowel = $isVowel;

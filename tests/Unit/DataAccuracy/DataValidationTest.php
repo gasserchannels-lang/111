@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataValidationTest extends TestCase
 {
@@ -16,7 +16,7 @@ class DataValidationTest extends TestCase
             'user@example.com',
             'test.email@domain.co.uk',
             'user+tag@example.org',
-            'user123@test-domain.com'
+            'user123@test-domain.com',
         ];
 
         $invalidEmails = [
@@ -24,7 +24,7 @@ class DataValidationTest extends TestCase
             '@example.com',
             'user@',
             'user@.com',
-            'user..name@example.com'
+            'user..name@example.com',
         ];
 
         foreach ($validEmails as $email) {
@@ -45,7 +45,7 @@ class DataValidationTest extends TestCase
             '+44-20-7946-0958',
             '+971-50-123-4567',
             '555-123-4567',
-            '(555) 123-4567'
+            '(555) 123-4567',
         ];
 
         $invalidPhones = [
@@ -55,7 +55,7 @@ class DataValidationTest extends TestCase
             '555-123-456', // Only 9 digits, too short for domestic
             '123456789', // Only 9 digits, too short for domestic
             '+123', // Only 3 digits, too short for international
-            '555-123-456789012345' // Too long
+            '555-123-456789012345', // Too long
         ];
 
         foreach ($validPhones as $phone) {
@@ -79,14 +79,14 @@ class DataValidationTest extends TestCase
             'https://www.example.com',
             'http://example.com',
             'https://subdomain.example.com/path',
-            'https://example.com:8080/path?param=value'
+            'https://example.com:8080/path?param=value',
         ];
 
         $invalidUrls = [
             'not-a-url',
             'ftp://example.com',
             'https://',
-            'example.com'
+            'example.com',
         ];
 
         foreach ($validUrls as $url) {
@@ -106,7 +106,7 @@ class DataValidationTest extends TestCase
             '2024-01-15',
             '2024-12-31',
             '2023-02-28',
-            '2024-02-29' // Leap year
+            '2024-02-29', // Leap year
         ];
 
         $invalidDates = [
@@ -114,7 +114,7 @@ class DataValidationTest extends TestCase
             '2024-02-30',
             '2024-04-31',
             '2023-02-29', // Not a leap year
-            'invalid-date'
+            'invalid-date',
         ];
 
         foreach ($validDates as $date) {
@@ -150,7 +150,7 @@ class DataValidationTest extends TestCase
             'SKU-123456',
             'PROD-ABC-001',
             'ITEM-2024-001',
-            '12345-67890'
+            '12345-67890',
         ];
 
         $invalidSkus = [
@@ -158,7 +158,7 @@ class DataValidationTest extends TestCase
             '-123456',
             'SKU 123456',
             '',
-            'SKU-12345678901234567890' // Too long
+            'SKU-12345678901234567890', // Too long
         ];
 
         foreach ($validSkus as $sku) {
@@ -187,7 +187,7 @@ class DataValidationTest extends TestCase
             '123456',
             'ABC123',
             '',
-            '12345-67890'
+            '12345-67890',
         ];
 
         foreach ($validPostalCodes as $postalCode) {
@@ -207,14 +207,14 @@ class DataValidationTest extends TestCase
             '4111111111111111', // Visa
             '5555555555554444', // Mastercard
             '378282246310005',  // American Express
-            '6011111111111117'  // Discover
+            '6011111111111117',  // Discover
         ];
 
         $invalidCards = [
             '1234567890123456',
             '411111111111111',
             '41111111111111111',
-            'abcd123456789012'
+            'abcd123456789012',
         ];
 
         foreach ($validCards as $card) {
@@ -235,7 +235,7 @@ class DataValidationTest extends TestCase
             '10.0.0.1',
             '172.16.0.1',
             '8.8.8.8',
-            '255.255.255.255'
+            '255.255.255.255',
         ];
 
         $invalidIps = [
@@ -243,7 +243,7 @@ class DataValidationTest extends TestCase
             '192.168.1',
             '192.168.1.1.1',
             '192.168.1.256',
-            'not-an-ip'
+            'not-an-ip',
         ];
 
         foreach ($validIps as $ip) {
@@ -263,14 +263,14 @@ class DataValidationTest extends TestCase
             '{"name": "John", "age": 30}',
             '{"products": [{"id": 1, "name": "Product 1"}]}',
             '{}',
-            '[]'
+            '[]',
         ];
 
         $invalidJson = [
             '{"name": "John", "age": 30', // Missing closing brace
             '{name: "John", "age": 30}',  // Missing quotes around key
             'not json',
-            ''
+            '',
         ];
 
         foreach ($validJson as $json) {
@@ -289,7 +289,7 @@ class DataValidationTest extends TestCase
         $data = [
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'age' => 30
+            'age' => 30,
         ];
 
         $requiredFields = ['name', 'email', 'age'];
@@ -306,7 +306,7 @@ class DataValidationTest extends TestCase
         $data = [
             'short_text' => 'Hi',
             'long_text' => str_repeat('A', 1000),
-            'normal_text' => 'This is normal length'
+            'normal_text' => 'This is normal length',
         ];
 
         $this->assertTrue($this->isValidLength($data['short_text'], 1, 10));
@@ -331,14 +331,14 @@ class DataValidationTest extends TestCase
         $validArray = [
             'users' => [
                 ['id' => 1, 'name' => 'John'],
-                ['id' => 2, 'name' => 'Jane']
-            ]
+                ['id' => 2, 'name' => 'Jane'],
+            ],
         ];
 
         $expectedStructure = [
             'users' => [
-                ['id' => 'integer', 'name' => 'string']
-            ]
+                ['id' => 'integer', 'name' => 'string'],
+            ],
         ];
 
         $this->assertTrue($this->matchesStructure($validArray, $expectedStructure));
@@ -362,6 +362,7 @@ class DataValidationTest extends TestCase
         // International format: + followed by 7-15 digits
         if (strpos($cleaned, '+') === 0) {
             $digitsOnly = substr($cleaned, 1);
+
             return strlen($digitsOnly) >= 7 && strlen($digitsOnly) <= 15 && ctype_digit($digitsOnly);
         }
 
@@ -377,7 +378,7 @@ class DataValidationTest extends TestCase
     private function isValidUrl(string $url): bool
     {
         // Must start with http:// or https://
-        if (!preg_match('/^https?:\/\//', $url)) {
+        if (! preg_match('/^https?:\/\//', $url)) {
             return false;
         }
 
@@ -387,12 +388,14 @@ class DataValidationTest extends TestCase
     private function isValidDate(string $date): bool
     {
         $d = \DateTime::createFromFormat('Y-m-d', $date);
+
         return $d && $d->format('Y-m-d') === $date;
     }
 
     private function isValidCurrencyCode(string $currency): bool
     {
         $validCodes = ['USD', 'EUR', 'GBP', 'JPY', 'AED', 'EGP', 'CAD', 'AUD', 'CHF', 'CNY'];
+
         return in_array(strtoupper($currency), $validCodes);
     }
 
@@ -440,7 +443,7 @@ class DataValidationTest extends TestCase
         $alternate = false;
 
         for ($i = $length - 1; $i >= 0; $i--) {
-            $digit = (int)$card[$i];
+            $digit = (int) $card[$i];
 
             if ($alternate) {
                 $digit *= 2;
@@ -450,7 +453,7 @@ class DataValidationTest extends TestCase
             }
 
             $sum += $digit;
-            $alternate = !$alternate;
+            $alternate = ! $alternate;
         }
 
         return $sum % 10 === 0;
@@ -464,22 +467,25 @@ class DataValidationTest extends TestCase
     private function isValidJson(string $json): bool
     {
         json_decode($json);
+
         return json_last_error() === JSON_ERROR_NONE;
     }
 
     private function hasRequiredFields(array $data, array $requiredFields): bool
     {
         foreach ($requiredFields as $field) {
-            if (!array_key_exists($field, $data) || empty($data[$field])) {
+            if (! array_key_exists($field, $data) || empty($data[$field])) {
                 return false;
             }
         }
+
         return true;
     }
 
     private function isValidLength(string $text, int $min, int $max): bool
     {
         $length = strlen($text);
+
         return $length >= $min && $length <= $max;
     }
 
@@ -491,17 +497,17 @@ class DataValidationTest extends TestCase
     private function matchesStructure(array $data, array $structure): bool
     {
         foreach ($structure as $key => $expectedType) {
-            if (!array_key_exists($key, $data)) {
+            if (! array_key_exists($key, $data)) {
                 return false;
             }
 
             if (is_array($expectedType)) {
-                if (!is_array($data[$key])) {
+                if (! is_array($data[$key])) {
                     return false;
                 }
 
                 foreach ($data[$key] as $item) {
-                    if (!$this->matchesStructure($item, $expectedType[0])) {
+                    if (! $this->matchesStructure($item, $expectedType[0])) {
                         return false;
                     }
                 }

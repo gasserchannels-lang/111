@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class PriceHistoryAccuracyTest extends TestCase
 {
@@ -16,7 +16,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             ['date' => '2024-02-01', 'price' => 110.00],
-            ['date' => '2024-02-15', 'price' => 105.00]
+            ['date' => '2024-02-15', 'price' => 105.00],
         ];
 
         $this->assertTrue($this->isChronological($priceHistory));
@@ -29,7 +29,7 @@ class PriceHistoryAccuracyTest extends TestCase
         $priceHistory = [
             ['date' => '2024-01-01', 'price' => 100.00, 'store' => 'Amazon'],
             ['date' => '2024-01-15', 'price' => 95.00, 'store' => 'Amazon'],
-            ['date' => '2024-02-01', 'price' => 110.00, 'store' => 'Amazon']
+            ['date' => '2024-02-01', 'price' => 110.00, 'store' => 'Amazon'],
         ];
 
         $this->assertTrue($this->isComplete($priceHistory));
@@ -42,7 +42,7 @@ class PriceHistoryAccuracyTest extends TestCase
         $priceHistory = [
             ['date' => '2024-01-01', 'price' => 100.00, 'currency' => 'USD'],
             ['date' => '2024-01-15', 'price' => 95.00, 'currency' => 'USD'],
-            ['date' => '2024-02-01', 'price' => 110.00, 'currency' => 'USD']
+            ['date' => '2024-02-01', 'price' => 110.00, 'currency' => 'USD'],
         ];
 
         $this->assertTrue($this->isConsistent($priceHistory));
@@ -55,7 +55,7 @@ class PriceHistoryAccuracyTest extends TestCase
         $priceHistory = [
             ['date' => '2024-01-01', 'price' => 100.00, 'source' => 'official'],
             ['date' => '2024-01-15', 'price' => 95.00, 'source' => 'official'],
-            ['date' => '2024-02-01', 'price' => 110.00, 'source' => 'official']
+            ['date' => '2024-02-01', 'price' => 110.00, 'source' => 'official'],
         ];
 
         $this->assertTrue($this->isAccurate($priceHistory));
@@ -69,7 +69,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             ['date' => '2024-02-01', 'price' => 110.00],
-            ['date' => '2024-02-15', 'price' => 105.00]
+            ['date' => '2024-02-15', 'price' => 105.00],
         ];
 
         $trend = $this->calculateTrend($priceHistory);
@@ -84,7 +84,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             ['date' => '2024-02-01', 'price' => 110.00],
-            ['date' => '2024-02-15', 'price' => 105.00]
+            ['date' => '2024-02-15', 'price' => 105.00],
         ];
 
         $volatility = $this->calculateVolatility($priceHistory);
@@ -99,7 +99,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             ['date' => '2024-02-01', 'price' => 1000.00], // Outlier
-            ['date' => '2024-02-15', 'price' => 105.00]
+            ['date' => '2024-02-15', 'price' => 105.00],
         ];
 
         $outliers = $this->detectOutliers($priceHistory);
@@ -115,7 +115,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             // Missing data for 2024-01-20 to 2024-01-25
-            ['date' => '2024-02-01', 'price' => 110.00]
+            ['date' => '2024-02-01', 'price' => 110.00],
         ];
 
         $gaps = $this->detectGaps($priceHistory);
@@ -130,7 +130,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             ['date' => '2024-01-15', 'price' => 95.00], // Duplicate
-            ['date' => '2024-02-01', 'price' => 110.00]
+            ['date' => '2024-02-01', 'price' => 110.00],
         ];
 
         $duplicates = $this->detectDuplicates($priceHistory);
@@ -145,7 +145,7 @@ class PriceHistoryAccuracyTest extends TestCase
             ['date' => '2024-01-01', 'price' => 100.00],
             ['date' => '2024-01-15', 'price' => 95.00],
             ['date' => '2024-02-01', 'price' => 110.00],
-            ['date' => '2024-02-15', 'price' => 105.00]
+            ['date' => '2024-02-15', 'price' => 105.00],
         ];
 
         $anomalies = $this->detectAnomalies($priceHistory);
@@ -169,7 +169,7 @@ class PriceHistoryAccuracyTest extends TestCase
     private function isComplete(array $priceHistory): bool
     {
         foreach ($priceHistory as $entry) {
-            if (!isset($entry['date']) || !isset($entry['price'])) {
+            if (! isset($entry['date']) || ! isset($entry['price'])) {
                 return false;
             }
         }
@@ -193,7 +193,7 @@ class PriceHistoryAccuracyTest extends TestCase
     private function isAccurate(array $priceHistory): bool
     {
         foreach ($priceHistory as $entry) {
-            if (!isset($entry['source']) || $entry['source'] !== 'official') {
+            if (! isset($entry['source']) || $entry['source'] !== 'official') {
                 return false;
             }
         }
@@ -272,7 +272,7 @@ class PriceHistoryAccuracyTest extends TestCase
                 $gaps[] = [
                     'start' => $priceHistory[$i - 1]['date'],
                     'end' => $priceHistory[$i]['date'],
-                    'days' => $daysDiff
+                    'days' => $daysDiff,
                 ];
             }
         }
@@ -286,7 +286,7 @@ class PriceHistoryAccuracyTest extends TestCase
         $duplicates = [];
 
         foreach ($priceHistory as $entry) {
-            $key = $entry['date'] . '_' . $entry['price'];
+            $key = $entry['date'].'_'.$entry['price'];
             if (isset($seen[$key])) {
                 $duplicates[] = $entry;
             } else {
@@ -310,7 +310,7 @@ class PriceHistoryAccuracyTest extends TestCase
                 $anomalies[] = [
                     'date' => $priceHistory[$i]['date'],
                     'price' => $currentPrice,
-                    'change' => $change * 100
+                    'change' => $change * 100,
                 ];
             }
         }

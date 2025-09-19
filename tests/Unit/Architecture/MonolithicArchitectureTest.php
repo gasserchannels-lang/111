@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Architecture;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class MonolithicArchitectureTest extends TestCase
 {

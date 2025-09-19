@@ -60,7 +60,7 @@ class ProductService
             3600,
             function () use ($slug): \App\Models\Product {
                 $product = $this->repository->findBySlug($slug);
-                if (!$product instanceof \App\Models\Product) {
+                if (! $product instanceof \App\Models\Product) {
                     throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
                 }
 
@@ -90,7 +90,7 @@ class ProductService
      * Search products.
      *
      * @param  array<string, mixed>  $filters
-     * @return LengthAwarePaginator<int, Product<\Database\Factories\ProductFactory>>
+     * @return LengthAwarePaginator<int, Product>
      */
     public function searchProducts(string $query, array $filters = [], int $perPage = 15): LengthAwarePaginator
     {

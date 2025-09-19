@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -37,7 +38,8 @@ class PasswordHistoryService
 
             return false;
         } catch (Exception $e) {
-            Log::error('Password history check failed: ' . $e->getMessage());
+            Log::error('Password history check failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -62,12 +64,14 @@ class PasswordHistoryService
 
             Log::info("Password saved to history for user {$userId}");
         } catch (Exception $e) {
-            Log::error('Failed to save password to history: ' . $e->getMessage());
+            Log::error('Failed to save password to history: '.$e->getMessage());
         }
     }
 
     /**
      * الحصول على تاريخ كلمات المرور
+     *
+     * @return array<string, mixed>
      */
     private function getPasswordHistory(int $userId): array
     {

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ComputerVisionTest extends TestCase
 {
@@ -26,7 +26,7 @@ class ComputerVisionTest extends TestCase
         $image = [
             [100, 150, 200],
             [120, 180, 220],
-            [90, 140, 190]
+            [90, 140, 190],
         ];
 
         $filteredImage = $this->applyGaussianBlur($image, 1.0);
@@ -42,7 +42,7 @@ class ComputerVisionTest extends TestCase
             [0, 0, 0, 0],
             [0, 255, 255, 0],
             [0, 255, 255, 0],
-            [0, 0, 0, 0]
+            [0, 0, 0, 0],
         ];
 
         $edges = $this->detectEdges($image);
@@ -146,7 +146,7 @@ class ComputerVisionTest extends TestCase
         $uniqueLabels = [];
         foreach ($segments as $row) {
             foreach ($row as $label) {
-                if (!in_array($label, $uniqueLabels)) {
+                if (! in_array($label, $uniqueLabels)) {
                     $uniqueLabels[] = $label;
                 }
             }
@@ -163,7 +163,7 @@ class ComputerVisionTest extends TestCase
             'rotation' => 15,
             'flip_horizontal' => true,
             'brightness' => 0.2,
-            'contrast' => 0.1
+            'contrast' => 0.1,
         ]);
 
         $this->assertIsArray($augmentedImages);
@@ -259,6 +259,7 @@ class ComputerVisionTest extends TestCase
                 $image[$i][$j] = rand(0, 255);
             }
         }
+
         return $image;
     }
 
@@ -331,6 +332,7 @@ class ComputerVisionTest extends TestCase
                 $image[$i][$j] = rand(0, 255);
             }
         }
+
         return $image;
     }
 
@@ -346,13 +348,13 @@ class ComputerVisionTest extends TestCase
             [
                 'class' => 'person',
                 'confidence' => 0.85,
-                'bbox' => ['x' => 10, 'y' => 20, 'width' => 50, 'height' => 100]
+                'bbox' => ['x' => 10, 'y' => 20, 'width' => 50, 'height' => 100],
             ],
             [
                 'class' => 'car',
                 'confidence' => 0.72,
-                'bbox' => ['x' => 100, 'y' => 50, 'width' => 80, 'height' => 40]
-            ]
+                'bbox' => ['x' => 100, 'y' => 50, 'width' => 80, 'height' => 40],
+            ],
         ];
     }
 
@@ -367,7 +369,7 @@ class ComputerVisionTest extends TestCase
         return [
             ['class' => 'cat', 'confidence' => 0.8],
             ['class' => 'dog', 'confidence' => 0.15],
-            ['class' => 'bird', 'confidence' => 0.05]
+            ['class' => 'bird', 'confidence' => 0.05],
         ];
     }
 
@@ -380,8 +382,8 @@ class ComputerVisionTest extends TestCase
                 'y' => 40,
                 'width' => 60,
                 'height' => 80,
-                'confidence' => 0.9
-            ]
+                'confidence' => 0.9,
+            ],
         ];
     }
 
@@ -392,6 +394,7 @@ class ComputerVisionTest extends TestCase
         for ($i = 0; $i < 128; $i++) {
             $features[] = rand(0, 100) / 100;
         }
+
         return $features;
     }
 
@@ -437,6 +440,7 @@ class ComputerVisionTest extends TestCase
         for ($i = 0; $i < count($image); $i++) {
             $flipped[$i] = array_reverse($image[$i]);
         }
+
         return $flipped;
     }
 
@@ -454,7 +458,7 @@ class ComputerVisionTest extends TestCase
     private function performOCR(array $image): string
     {
         // Simulate OCR
-        return "Hello World";
+        return 'Hello World';
     }
 
     private function calculateImageSimilarity(array $image1, array $image2): float
@@ -525,7 +529,7 @@ class ComputerVisionTest extends TestCase
                     $image[$i][$j + 1],
                     $image[$i + 1][$j - 1],
                     $image[$i + 1][$j],
-                    $image[$i + 1][$j + 1]
+                    $image[$i + 1][$j + 1],
                 ];
 
                 $avg = array_sum($neighbors) / count($neighbors);
@@ -546,6 +550,7 @@ class ComputerVisionTest extends TestCase
                 $image[$i][$j] = rand(0, 255);
             }
         }
+
         return $image;
     }
 

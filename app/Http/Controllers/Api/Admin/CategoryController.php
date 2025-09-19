@@ -30,11 +30,17 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
+    /**
+     * @param  Category<\Database\Factories\CategoryFactory>  $category
+     */
     public function show(Category $category): JsonResponse
     {
         return response()->json($category);
     }
 
+    /**
+     * @param  Category<\Database\Factories\CategoryFactory>  $category
+     */
     public function update(Request $request, Category $category): JsonResponse
     {
         $validated = $request->validate([
@@ -47,6 +53,9 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
+    /**
+     * @param  Category<\Database\Factories\CategoryFactory>  $category
+     */
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();

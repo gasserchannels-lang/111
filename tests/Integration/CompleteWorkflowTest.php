@@ -21,7 +21,7 @@ class CompleteWorkflowTest extends TestCase
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
-            'password_confirmation' => 'password'
+            'password_confirmation' => 'password',
         ]);
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 422, 500, 405]));
     }

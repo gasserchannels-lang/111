@@ -34,6 +34,7 @@ class StrictQualityCheckCommand extends Command
             return 0;
         }
         $this->runAllStages($autoFix, $generateReport);
+
         return 0;
     }
 

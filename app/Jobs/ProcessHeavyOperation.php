@@ -32,9 +32,7 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * @param  array<string, mixed>  $data
      */
-    public function __construct(private string $operation, private array $data = [], private ?int $userId = null)
-    {
-    }
+    public function __construct(private string $operation, private array $data = [], private ?int $userId = null) {}
 
     /**
      * Execute the job.

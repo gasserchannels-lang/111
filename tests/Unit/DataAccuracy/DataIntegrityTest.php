@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataIntegrityTest extends TestCase
 {
@@ -13,13 +13,13 @@ class DataIntegrityTest extends TestCase
         $users = [
             ['id' => 1, 'name' => 'John Doe'],
             ['id' => 2, 'name' => 'Jane Smith'],
-            ['id' => 3, 'name' => 'Bob Johnson']
+            ['id' => 3, 'name' => 'Bob Johnson'],
         ];
 
         $orders = [
             ['id' => 1, 'user_id' => 1, 'total' => 100.00],
             ['id' => 2, 'user_id' => 2, 'total' => 150.00],
-            ['id' => 3, 'user_id' => 1, 'total' => 75.00]
+            ['id' => 3, 'user_id' => 1, 'total' => 75.00],
         ];
 
         $this->assertTrue($this->validateReferentialIntegrity($users, $orders, 'id', 'user_id'));
@@ -30,13 +30,13 @@ class DataIntegrityTest extends TestCase
     {
         $users = [
             ['id' => 1, 'name' => 'John Doe'],
-            ['id' => 2, 'name' => 'Jane Smith']
+            ['id' => 2, 'name' => 'Jane Smith'],
         ];
 
         $orders = [
             ['id' => 1, 'user_id' => 1, 'total' => 100.00],
             ['id' => 2, 'user_id' => 3, 'total' => 150.00], // user_id 3 doesn't exist
-            ['id' => 3, 'user_id' => 2, 'total' => 75.00]
+            ['id' => 3, 'user_id' => 2, 'total' => 75.00],
         ];
 
         $this->assertFalse($this->validateReferentialIntegrity($users, $orders, 'id', 'user_id'));
@@ -47,12 +47,12 @@ class DataIntegrityTest extends TestCase
     {
         $products = [
             ['id' => 1, 'name' => 'Laptop', 'price' => 999.99],
-            ['id' => 2, 'name' => 'Mouse', 'price' => 29.99]
+            ['id' => 2, 'name' => 'Mouse', 'price' => 29.99],
         ];
 
         $inventory = [
             ['product_id' => 1, 'quantity' => 10],
-            ['product_id' => 2, 'quantity' => 50]
+            ['product_id' => 2, 'quantity' => 50],
         ];
 
         $this->assertTrue($this->validateDataConsistency($products, $inventory));
@@ -64,13 +64,13 @@ class DataIntegrityTest extends TestCase
         $validData = [
             ['id' => 1, 'name' => 'Product 1'],
             ['id' => 2, 'name' => 'Product 2'],
-            ['id' => 3, 'name' => 'Product 3']
+            ['id' => 3, 'name' => 'Product 3'],
         ];
 
         $invalidData = [
             ['id' => 1, 'name' => 'Product 1'],
             ['id' => 2, 'name' => 'Product 2'],
-            ['id' => 1, 'name' => 'Product 3'] // Duplicate ID
+            ['id' => 1, 'name' => 'Product 3'], // Duplicate ID
         ];
 
         $this->assertTrue($this->validatePrimaryKeyUniqueness($validData, 'id'));
@@ -82,13 +82,13 @@ class DataIntegrityTest extends TestCase
     {
         $categories = [
             ['id' => 1, 'name' => 'Electronics'],
-            ['id' => 2, 'name' => 'Clothing']
+            ['id' => 2, 'name' => 'Clothing'],
         ];
 
         $products = [
             ['id' => 1, 'name' => 'Laptop', 'category_id' => 1],
             ['id' => 2, 'name' => 'Shirt', 'category_id' => 2],
-            ['id' => 3, 'name' => 'Phone', 'category_id' => 1]
+            ['id' => 3, 'name' => 'Phone', 'category_id' => 1],
         ];
 
         $this->assertTrue($this->validateForeignKeyConstraints($categories, $products, 'id', 'category_id'));
@@ -99,13 +99,13 @@ class DataIntegrityTest extends TestCase
     {
         $categories = [
             ['id' => 1, 'name' => 'Electronics'],
-            ['id' => 2, 'name' => 'Clothing']
+            ['id' => 2, 'name' => 'Clothing'],
         ];
 
         $products = [
             ['id' => 1, 'name' => 'Laptop', 'category_id' => 1],
             ['id' => 2, 'name' => 'Shirt', 'category_id' => 2],
-            ['id' => 3, 'name' => 'Phone', 'category_id' => 3] // category_id 3 doesn't exist
+            ['id' => 3, 'name' => 'Phone', 'category_id' => 3], // category_id 3 doesn't exist
         ];
 
         $orphanedRecords = $this->findOrphanedRecords($categories, $products, 'id', 'category_id');
@@ -118,12 +118,12 @@ class DataIntegrityTest extends TestCase
     {
         $completeData = [
             ['id' => 1, 'name' => 'Product 1', 'price' => 100.00, 'description' => 'A great product'],
-            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'description' => 'Another great product']
+            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'description' => 'Another great product'],
         ];
 
         $incompleteData = [
             ['id' => 1, 'name' => 'Product 1', 'price' => 100.00], // Missing description
-            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'description' => 'Another great product']
+            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'description' => 'Another great product'],
         ];
 
         $requiredFields = ['id', 'name', 'price', 'description'];
@@ -137,12 +137,12 @@ class DataIntegrityTest extends TestCase
     {
         $accurateData = [
             ['id' => 1, 'name' => 'Laptop', 'price' => 999.99, 'weight' => 2.5],
-            ['id' => 2, 'name' => 'Mouse', 'price' => 29.99, 'weight' => 0.1]
+            ['id' => 2, 'name' => 'Mouse', 'price' => 29.99, 'weight' => 0.1],
         ];
 
         $inaccurateData = [
             ['id' => 1, 'name' => 'Laptop', 'price' => -999.99, 'weight' => 2.5], // Negative price
-            ['id' => 2, 'name' => 'Mouse', 'price' => 29.99, 'weight' => -0.1] // Negative weight
+            ['id' => 2, 'name' => 'Mouse', 'price' => 29.99, 'weight' => -0.1], // Negative weight
         ];
 
         $this->assertTrue($this->validateDataAccuracy($accurateData));
@@ -154,12 +154,12 @@ class DataIntegrityTest extends TestCase
     {
         $timelyData = [
             ['id' => 1, 'name' => 'Product 1', 'updated_at' => date('Y-m-d H:i:s')],
-            ['id' => 2, 'name' => 'Product 2', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 hour'))]
+            ['id' => 2, 'name' => 'Product 2', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 hour'))],
         ];
 
         $staleData = [
             ['id' => 1, 'name' => 'Product 1', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 year'))],
-            ['id' => 2, 'name' => 'Product 2', 'updated_at' => date('Y-m-d H:i:s', strtotime('-6 months'))]
+            ['id' => 2, 'name' => 'Product 2', 'updated_at' => date('Y-m-d H:i:s', strtotime('-6 months'))],
         ];
 
         $maxAge = 30; // days
@@ -173,12 +173,12 @@ class DataIntegrityTest extends TestCase
     {
         $consistentData = [
             ['id' => 1, 'name' => 'Product 1', 'price' => 100.00, 'discount' => 10.00, 'final_price' => 90.00],
-            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'discount' => 20.00, 'final_price' => 180.00]
+            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'discount' => 20.00, 'final_price' => 180.00],
         ];
 
         $inconsistentData = [
             ['id' => 1, 'name' => 'Product 1', 'price' => 100.00, 'discount' => 10.00, 'final_price' => 95.00], // Wrong calculation
-            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'discount' => 20.00, 'final_price' => 180.00]
+            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00, 'discount' => 20.00, 'final_price' => 180.00],
         ];
 
         $this->assertTrue($this->validateDataConsistencyRules($consistentData));
@@ -190,17 +190,17 @@ class DataIntegrityTest extends TestCase
     {
         $users = [
             ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
-            ['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com']
+            ['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com'],
         ];
 
         $orders = [
             ['id' => 1, 'user_id' => 1, 'total' => 100.00, 'status' => 'completed'],
-            ['id' => 2, 'user_id' => 2, 'total' => 150.00, 'status' => 'pending']
+            ['id' => 2, 'user_id' => 2, 'total' => 150.00, 'status' => 'pending'],
         ];
 
         $orderItems = [
             ['id' => 1, 'order_id' => 1, 'product_id' => 1, 'quantity' => 2, 'price' => 50.00],
-            ['id' => 2, 'order_id' => 2, 'product_id' => 2, 'quantity' => 1, 'price' => 150.00]
+            ['id' => 2, 'order_id' => 2, 'product_id' => 2, 'quantity' => 1, 'price' => 150.00],
         ];
 
         $this->assertTrue($this->validateDataRelationships($users, $orders, $orderItems));
@@ -211,18 +211,18 @@ class DataIntegrityTest extends TestCase
     {
         $validData = [
             ['id' => 1, 'age' => 25, 'email' => 'user@example.com', 'score' => 85],
-            ['id' => 2, 'age' => 30, 'email' => 'user2@example.com', 'score' => 92]
+            ['id' => 2, 'age' => 30, 'email' => 'user2@example.com', 'score' => 92],
         ];
 
         $invalidData = [
             ['id' => 1, 'age' => 150, 'email' => 'invalid-email', 'score' => 150], // Invalid age and email
-            ['id' => 2, 'age' => 30, 'email' => 'user2@example.com', 'score' => 92]
+            ['id' => 2, 'age' => 30, 'email' => 'user2@example.com', 'score' => 92],
         ];
 
         $constraints = [
             'age' => ['min' => 0, 'max' => 120],
             'email' => 'email',
-            'score' => ['min' => 0, 'max' => 100]
+            'score' => ['min' => 0, 'max' => 100],
         ];
 
         $this->assertTrue($this->validateDataConstraints($validData, $constraints));
@@ -241,7 +241,7 @@ class DataIntegrityTest extends TestCase
                 'old_values' => null,
                 'new_values' => '{"name": "Product 1", "price": 100.00}',
                 'user_id' => 1,
-                'timestamp' => date('Y-m-d H:i:s')
+                'timestamp' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => 2,
@@ -251,8 +251,8 @@ class DataIntegrityTest extends TestCase
                 'old_values' => '{"name": "Product 1", "price": 100.00}',
                 'new_values' => '{"name": "Product 1", "price": 120.00}',
                 'user_id' => 1,
-                'timestamp' => date('Y-m-d H:i:s')
-            ]
+                'timestamp' => date('Y-m-d H:i:s'),
+            ],
         ];
 
         $this->assertTrue($this->validateDataAuditTrail($auditData));
@@ -263,12 +263,12 @@ class DataIntegrityTest extends TestCase
     {
         $originalData = [
             ['id' => 1, 'name' => 'Product 1', 'price' => 100.00],
-            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00]
+            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00],
         ];
 
         $backupData = [
             ['id' => 1, 'name' => 'Product 1', 'price' => 100.00],
-            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00]
+            ['id' => 2, 'name' => 'Product 2', 'price' => 200.00],
         ];
 
         $this->assertTrue($this->validateDataBackupIntegrity($originalData, $backupData));
@@ -279,7 +279,7 @@ class DataIntegrityTest extends TestCase
     {
         $sensitiveData = [
             ['id' => 1, 'name' => 'John Doe', 'ssn' => '123-45-6789'],
-            ['id' => 2, 'name' => 'Jane Smith', 'ssn' => '987-65-4321']
+            ['id' => 2, 'name' => 'Jane Smith', 'ssn' => '987-65-4321'],
         ];
 
         $encryptedData = $this->encryptSensitiveData($sensitiveData);
@@ -293,7 +293,7 @@ class DataIntegrityTest extends TestCase
         $parentIds = array_column($parentData, $parentKey);
 
         foreach ($childData as $child) {
-            if (!in_array($child[$foreignKey], $parentIds)) {
+            if (! in_array($child[$foreignKey], $parentIds)) {
                 return false;
             }
         }
@@ -308,7 +308,7 @@ class DataIntegrityTest extends TestCase
         $table2ForeignKeys = array_column($table2, 'product_id');
 
         foreach ($table2ForeignKeys as $foreignKey) {
-            if (!in_array($foreignKey, $table1Ids)) {
+            if (! in_array($foreignKey, $table1Ids)) {
                 return false;
             }
         }
@@ -319,6 +319,7 @@ class DataIntegrityTest extends TestCase
     private function validatePrimaryKeyUniqueness(array $data, string $keyField): bool
     {
         $values = array_column($data, $keyField);
+
         return count($values) === count(array_unique($values));
     }
 
@@ -328,7 +329,7 @@ class DataIntegrityTest extends TestCase
         $childForeignKeys = array_column($childData, $foreignKey);
 
         foreach ($childForeignKeys as $foreignKeyValue) {
-            if (!in_array($foreignKeyValue, $parentIds)) {
+            if (! in_array($foreignKeyValue, $parentIds)) {
                 return false;
             }
         }
@@ -342,7 +343,7 @@ class DataIntegrityTest extends TestCase
         $orphanedRecords = [];
 
         foreach ($childData as $child) {
-            if (!in_array($child[$foreignKey], $parentIds)) {
+            if (! in_array($child[$foreignKey], $parentIds)) {
                 $orphanedRecords[] = $child;
             }
         }
@@ -354,7 +355,7 @@ class DataIntegrityTest extends TestCase
     {
         foreach ($data as $record) {
             foreach ($requiredFields as $field) {
-                if (!array_key_exists($field, $record) || empty($record[$field])) {
+                if (! array_key_exists($field, $record) || empty($record[$field])) {
                     return false;
                 }
             }
@@ -414,7 +415,7 @@ class DataIntegrityTest extends TestCase
         $orderUserIds = array_column($orders, 'user_id');
 
         foreach ($orderUserIds as $userId) {
-            if (!in_array($userId, $userIds)) {
+            if (! in_array($userId, $userIds)) {
                 return false;
             }
         }
@@ -424,7 +425,7 @@ class DataIntegrityTest extends TestCase
         $orderItemOrderIds = array_column($orderItems, 'order_id');
 
         foreach ($orderItemOrderIds as $orderId) {
-            if (!in_array($orderId, $orderIds)) {
+            if (! in_array($orderId, $orderIds)) {
                 return false;
             }
         }
@@ -436,7 +437,7 @@ class DataIntegrityTest extends TestCase
     {
         foreach ($data as $record) {
             foreach ($constraints as $field => $constraint) {
-                if (!isset($record[$field])) {
+                if (! isset($record[$field])) {
                     continue;
                 }
 
@@ -450,7 +451,7 @@ class DataIntegrityTest extends TestCase
                         return false;
                     }
                 } elseif ($constraint === 'email') {
-                    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
                         return false;
                     }
                 }
@@ -466,7 +467,7 @@ class DataIntegrityTest extends TestCase
 
         foreach ($auditData as $record) {
             foreach ($requiredFields as $field) {
-                if (!array_key_exists($field, $record) || empty($record[$field])) {
+                if (! array_key_exists($field, $record) || empty($record[$field])) {
                     return false;
                 }
             }
@@ -482,14 +483,14 @@ class DataIntegrityTest extends TestCase
         }
 
         foreach ($originalData as $index => $originalRecord) {
-            if (!isset($backupData[$index])) {
+            if (! isset($backupData[$index])) {
                 return false;
             }
 
             $backupRecord = $backupData[$index];
 
             foreach ($originalRecord as $key => $value) {
-                if (!array_key_exists($key, $backupRecord) || $backupRecord[$key] !== $value) {
+                if (! array_key_exists($key, $backupRecord) || $backupRecord[$key] !== $value) {
                     return false;
                 }
             }
@@ -535,14 +536,14 @@ class DataIntegrityTest extends TestCase
         }
 
         foreach ($originalData as $index => $originalRecord) {
-            if (!isset($decryptedData[$index])) {
+            if (! isset($decryptedData[$index])) {
                 return false;
             }
 
             $decryptedRecord = $decryptedData[$index];
 
             foreach ($originalRecord as $key => $value) {
-                if (!array_key_exists($key, $decryptedRecord) || $decryptedRecord[$key] !== $value) {
+                if (! array_key_exists($key, $decryptedRecord) || $decryptedRecord[$key] !== $value) {
                     return false;
                 }
             }

@@ -239,7 +239,7 @@ class BackupController extends Controller
     /**
      * Get backups list.
      *
-     * @return array<string, mixed>
+     * @return list<array<string, int|string>>
      */
     private function getBackupsList(): array
     {
@@ -277,7 +277,7 @@ class BackupController extends Controller
             }
 
             // Sort by creation time (newest first)
-            usort($backups, fn(array $a, array $b): int => strtotime($b['created_at']) - strtotime($a['created_at']));
+            usort($backups, fn (array $a, array $b): int => strtotime($b['created_at']) - strtotime($a['created_at']));
 
             return $backups;
         } catch (\Exception $e) {
@@ -549,6 +549,7 @@ class BackupController extends Controller
         if (str_contains($filename, 'files')) {
             return 'files';
         }
+
         return 'full';
     }
 

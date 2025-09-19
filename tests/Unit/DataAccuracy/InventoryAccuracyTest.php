@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class InventoryAccuracyTest extends TestCase
 {
@@ -14,7 +14,7 @@ class InventoryAccuracyTest extends TestCase
             'product_1' => 100,
             'product_2' => 50,
             'product_3' => 0,
-            'product_4' => -5 // Invalid negative quantity
+            'product_4' => -5, // Invalid negative quantity
         ];
 
         $validInventory = $this->validateInventoryQuantities($inventory);
@@ -55,7 +55,7 @@ class InventoryAccuracyTest extends TestCase
         $inventory = [
             'product_1' => 5,   // Low stock
             'product_2' => 50,  // Normal stock
-            'product_3' => 0    // Out of stock
+            'product_3' => 0,    // Out of stock
         ];
 
         $lowStockProducts = $this->getLowStockProducts($inventory, 10);

@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array<string> $tags
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User<Database\Factories\UserFactory> $user
  */
 class Notification extends Model
 {
@@ -85,7 +85,7 @@ class Notification extends Model
     /**
      * Get the user that owns the notification.
      *
-     * @return BelongsTo<User, Notification>
+     * @return BelongsTo<User<Database\Factories\UserFactory>, Notification<Database\Factories\NotificationFactory>>
      */
     public function user(): BelongsTo
     {

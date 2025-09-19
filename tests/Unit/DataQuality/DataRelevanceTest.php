@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class DataRelevanceTest extends TestCase
 {
@@ -15,7 +15,7 @@ class DataRelevanceTest extends TestCase
             'description' => 'Latest iPhone with advanced camera system',
             'category' => 'Electronics',
             'brand' => 'Apple',
-            'price' => 1199.00
+            'price' => 1199.00,
         ];
 
         $searchQuery = 'iPhone 15 Pro Max';
@@ -33,7 +33,7 @@ class DataRelevanceTest extends TestCase
             'description' => 'Android smartphone with great camera',
             'category' => 'Electronics',
             'brand' => 'Samsung',
-            'price' => 999.00
+            'price' => 999.00,
         ];
 
         $searchQuery = 'iPhone accessories';
@@ -60,7 +60,7 @@ class DataRelevanceTest extends TestCase
         $product = [
             'name' => 'MacBook Pro',
             'category' => 'Laptops',
-            'subcategory' => 'Professional Laptops'
+            'subcategory' => 'Professional Laptops',
         ];
 
         $searchCategory = 'Electronics > Computers > Laptops';
@@ -76,7 +76,7 @@ class DataRelevanceTest extends TestCase
         $data = [
             'title' => 'iPhone 15 Pro',
             'release_date' => '2024-09-15',
-            'current_date' => '2024-10-15'
+            'current_date' => '2024-10-15',
         ];
 
         $temporalRelevance = $this->calculateTemporalRelevance($data);
@@ -90,7 +90,7 @@ class DataRelevanceTest extends TestCase
         $data = [
             'title' => 'iPhone 12 Pro',
             'release_date' => '2020-10-13',
-            'current_date' => '2024-10-15'
+            'current_date' => '2024-10-15',
         ];
 
         $isOutdated = $this->isInformationOutdated($data, 2); // 2 years threshold
@@ -103,13 +103,13 @@ class DataRelevanceTest extends TestCase
     {
         $userProfile = [
             'interests' => ['Electronics', 'Gaming', 'Photography'],
-            'purchase_history' => ['iPhone', 'Gaming Laptop', 'Camera']
+            'purchase_history' => ['iPhone', 'Gaming Laptop', 'Camera'],
         ];
 
         $product = [
             'category' => 'Electronics',
             'subcategory' => 'Smartphones',
-            'brand' => 'Apple'
+            'brand' => 'Apple',
         ];
 
         $relevance = $this->calculateUserInterestRelevance($userProfile, $product);
@@ -123,7 +123,7 @@ class DataRelevanceTest extends TestCase
         $product = [
             'name' => 'Product A',
             'available_regions' => ['US', 'CA', 'UK'],
-            'shipping_zones' => ['North America', 'Europe']
+            'shipping_zones' => ['North America', 'Europe'],
         ];
 
         $userLocation = 'US';
@@ -138,7 +138,7 @@ class DataRelevanceTest extends TestCase
     {
         $product = [
             'price' => 999.00,
-            'category' => 'Electronics'
+            'category' => 'Electronics',
         ];
 
         $userBudget = 1000.00;
@@ -158,14 +158,14 @@ class DataRelevanceTest extends TestCase
             'category' => 'Electronics',
             'price' => 1199.00,
             'brand' => 'Apple',
-            'release_date' => '2024-09-15'
+            'release_date' => '2024-09-15',
         ];
 
         $criteria = [
             'search_query' => 'iPhone 15',
             'user_interests' => ['Electronics', 'Apple'],
             'budget' => 1200.00,
-            'location' => 'US'
+            'location' => 'US',
         ];
 
         $overallRelevance = $this->calculateOverallRelevance($data, $criteria);
@@ -176,7 +176,7 @@ class DataRelevanceTest extends TestCase
     private function calculateRelevanceScore(array $data, string $query): float
     {
         $queryWords = explode(' ', strtolower($query));
-        $dataText = strtolower($data['title'] . ' ' . $data['description']);
+        $dataText = strtolower($data['title'].' '.$data['description']);
 
         $matches = 0;
         foreach ($queryWords as $word) {
@@ -191,6 +191,7 @@ class DataRelevanceTest extends TestCase
     private function isDataRelevant(array $data, string $query): bool
     {
         $relevanceScore = $this->calculateRelevanceScore($data, $query);
+
         return $relevanceScore > 0.3; // 30% threshold
     }
 

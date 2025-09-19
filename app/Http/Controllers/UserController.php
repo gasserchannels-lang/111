@@ -61,6 +61,8 @@ class UserController extends Controller
 
     /**
      * Display the specified user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function show(User $user): JsonResponse
     {
@@ -75,6 +77,8 @@ class UserController extends Controller
 
     /**
      * Update the specified user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function update(Request $request, User $user): JsonResponse
     {
@@ -105,6 +109,8 @@ class UserController extends Controller
 
     /**
      * Change user password.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function changePassword(Request $request, User $user): JsonResponse
     {
@@ -156,6 +162,8 @@ class UserController extends Controller
 
     /**
      * Ban a user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function ban(Request $request, User $user): JsonResponse
     {
@@ -203,6 +211,8 @@ class UserController extends Controller
 
     /**
      * Unban a user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function unban(User $user): JsonResponse
     {
@@ -223,6 +233,8 @@ class UserController extends Controller
 
     /**
      * Get user statistics.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function statistics(User $user): JsonResponse
     {
@@ -246,6 +258,8 @@ class UserController extends Controller
 
     /**
      * Get user activity log.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function activity(User $user, Request $request): JsonResponse
     {
@@ -261,6 +275,8 @@ class UserController extends Controller
 
     /**
      * Delete a user.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function destroy(User $user): JsonResponse
     {
@@ -314,6 +330,8 @@ class UserController extends Controller
 
     /**
      * Get user's wishlist.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function wishlist(User $user): JsonResponse
     {
@@ -328,6 +346,8 @@ class UserController extends Controller
 
     /**
      * Get user's price alerts.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function priceAlerts(User $user): JsonResponse
     {
@@ -342,6 +362,8 @@ class UserController extends Controller
 
     /**
      * Get user's reviews.
+     *
+     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function reviews(User $user): JsonResponse
     {

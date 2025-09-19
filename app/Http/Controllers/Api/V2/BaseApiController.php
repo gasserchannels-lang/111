@@ -168,7 +168,7 @@ abstract class BaseApiController extends V1BaseController
         $filters = $request->except(['page', 'per_page', 'sort_by', 'sort_order', 'search', 'include', 'fields']);
 
         // Remove empty values
-        $filters = array_filter($filters, fn($value): bool => $value !== null && $value !== '');
+        $filters = array_filter($filters, fn ($value): bool => $value !== null && $value !== '');
 
         // Add v2 specific filters
         if ($request->has('date_from')) {
@@ -196,7 +196,9 @@ abstract class BaseApiController extends V1BaseController
             return [];
         }
 
-        return is_string($include) ? explode(',', $include) : [];
+        $params = is_string($include) ? explode(',', $include) : [];
+
+        return array_flip($params);
     }
 
     /**
@@ -213,7 +215,9 @@ abstract class BaseApiController extends V1BaseController
             return [];
         }
 
-        return is_string($fields) ? explode(',', $fields) : [];
+        $params = is_string($fields) ? explode(',', $fields) : [];
+
+        return array_flip($params);
     }
 
     /**

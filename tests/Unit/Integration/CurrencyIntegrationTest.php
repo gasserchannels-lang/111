@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Integration;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class CurrencyIntegrationTest extends TestCase
 {
@@ -115,18 +115,23 @@ class CurrencyIntegrationTest extends TestCase
 
     private function createCurrencyApiMock(): object
     {
-        return new class {
+        return new class
+        {
             private bool $errorMode = false;
+
             private int $rateLimit = 100;
+
             private bool $cacheEnabled = false;
+
             private array $cache = [];
+
             private array $exchangeRates = [
                 'USD' => 1.0,
                 'EUR' => 0.85,
                 'GBP' => 0.73,
                 'JPY' => 110.0,
                 'AED' => 3.67,
-                'EGP' => 30.0
+                'EGP' => 30.0,
             ];
 
             public function getExchangeRates(): array
@@ -154,11 +159,12 @@ class CurrencyIntegrationTest extends TestCase
                     throw new \Exception('Currency API Error');
                 }
 
-                if (!isset($this->exchangeRates[$from]) || !isset($this->exchangeRates[$to])) {
+                if (! isset($this->exchangeRates[$from]) || ! isset($this->exchangeRates[$to])) {
                     throw new \InvalidArgumentException('Invalid currency code');
                 }
 
                 $usdAmount = $amount / $this->exchangeRates[$from];
+
                 return $usdAmount * $this->exchangeRates[$to];
             }
 
@@ -187,7 +193,7 @@ class CurrencyIntegrationTest extends TestCase
                 }
 
                 return [
-                    $baseCurrency => $this->exchangeRates[$baseCurrency] ?? 1.0
+                    $baseCurrency => $this->exchangeRates[$baseCurrency] ?? 1.0,
                 ];
             }
 
@@ -199,10 +205,11 @@ class CurrencyIntegrationTest extends TestCase
                     'GBP' => '£%s',
                     'JPY' => '¥%s',
                     'AED' => '%s AED',
-                    'EGP' => '%s EGP'
+                    'EGP' => '%s EGP',
                 ];
 
                 $format = $formatters[$currency] ?? '%s';
+
                 return sprintf($format, number_format($amount, 2));
             }
 

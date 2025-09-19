@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Security;
 
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,6 +11,7 @@ use Tests\TestCase;
 class SecurityTest extends TestCase
 {
     use RefreshDatabase;
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_prevents_sql_injection_in_search()
     {
@@ -61,7 +61,7 @@ class SecurityTest extends TestCase
         // Also accept 200 if CSRF is disabled in testing
         $this->assertTrue(
             in_array($response->status(), [200, 302, 419, 404, 500]),
-            'Expected CSRF protection to return 200, 302, 419, 404 or 500, got ' . $response->status()
+            'Expected CSRF protection to return 200, 302, 419, 404 or 500, got '.$response->status()
         );
     }
 
@@ -93,7 +93,7 @@ class SecurityTest extends TestCase
         // قد يكون المسار غير موجود، لذا نتحقق من الاستجابة
         $this->assertTrue(
             in_array($response->status(), [200, 302, 404, 422]),
-            'Expected response status to be 200, 302, 404, or 422, got ' . $response->status()
+            'Expected response status to be 200, 302, 404, or 422, got '.$response->status()
         );
 
         // اختبار إضافي للتأكد من أن Mass Assignment محمي
@@ -165,7 +165,7 @@ class SecurityTest extends TestCase
         // Logout might return 404 if route doesn't exist, or 302 if it does
         $this->assertTrue(
             in_array($response->status(), [302, 404]),
-            'Expected logout to return 302 or 404, got ' . $response->status()
+            'Expected logout to return 302 or 404, got '.$response->status()
         );
 
         // If logout route exists, verify user is logged out

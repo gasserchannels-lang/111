@@ -15,7 +15,7 @@ class CategoryRecommendationTest extends TestCase
         $userHistory = [
             ['category' => 'Electronics', 'purchases' => 5],
             ['category' => 'Clothing', 'purchases' => 3],
-            ['category' => 'Books', 'purchases' => 2]
+            ['category' => 'Books', 'purchases' => 2],
         ];
 
         $recommendations = $this->getCategoryRecommendations($userHistory);
@@ -34,7 +34,7 @@ class CategoryRecommendationTest extends TestCase
             'Clothing' => 800,
             'Books' => 600,
             'Home' => 400,
-            'Sports' => 200
+            'Sports' => 200,
         ];
 
         $recommendations = $this->getPopularCategoryRecommendations($categoryStats, 3);
@@ -53,7 +53,7 @@ class CategoryRecommendationTest extends TestCase
         $categoryRelations = [
             'Electronics' => ['Accessories', 'Gadgets', 'Computers'],
             'Clothing' => ['Shoes', 'Accessories', 'Jewelry'],
-            'Books' => ['Educational', 'Fiction', 'Non-fiction']
+            'Books' => ['Educational', 'Fiction', 'Non-fiction'],
         ];
 
         $recommendations = $this->getRelatedCategoryRecommendations($currentCategory, $categoryRelations);
@@ -72,7 +72,7 @@ class CategoryRecommendationTest extends TestCase
             'Winter' => ['Winter Clothing', 'Heating', 'Hot Beverages'],
             'Summer' => ['Summer Clothing', 'Cooling', 'Cold Beverages'],
             'Spring' => ['Spring Clothing', 'Gardening', 'Outdoor'],
-            'Fall' => ['Fall Clothing', 'Harvest', 'Indoor']
+            'Fall' => ['Fall Clothing', 'Harvest', 'Indoor'],
         ];
 
         $recommendations = $this->getSeasonalCategoryRecommendations($currentSeason, $seasonalCategories);
@@ -89,13 +89,13 @@ class CategoryRecommendationTest extends TestCase
         $userProfile = [
             'age_group' => '25-35',
             'gender' => 'Female',
-            'location' => 'Urban'
+            'location' => 'Urban',
         ];
 
         $demographicCategories = [
             '25-35' => ['Electronics', 'Fashion', 'Fitness'],
             'Female' => ['Beauty', 'Fashion', 'Home Decor'],
-            'Urban' => ['Tech', 'Fashion', 'Entertainment']
+            'Urban' => ['Tech', 'Fashion', 'Entertainment'],
         ];
 
         $recommendations = $this->getDemographicCategoryRecommendations($userProfile, $demographicCategories);
@@ -126,7 +126,7 @@ class CategoryRecommendationTest extends TestCase
             ['name' => 'Electronics', 'score' => 0.9],
             ['name' => 'Clothing', 'score' => 0.7],
             ['name' => 'Books', 'score' => 0.8],
-            ['name' => 'Sports', 'score' => 0.6]
+            ['name' => 'Sports', 'score' => 0.6],
         ];
 
         $rankedCategories = $this->rankCategoriesByScore($categories);
@@ -154,7 +154,7 @@ class CategoryRecommendationTest extends TestCase
         $userPurchases = [
             'Electronics' => 10,
             'Clothing' => 5,
-            'Books' => 2
+            'Books' => 2,
         ];
 
         $category = 'Electronics';
@@ -171,7 +171,7 @@ class CategoryRecommendationTest extends TestCase
             'Electronics' => ['trend' => 'up', 'growth' => 0.15],
             'Clothing' => ['trend' => 'stable', 'growth' => 0.02],
             'Books' => ['trend' => 'down', 'growth' => -0.05],
-            'Fitness' => ['trend' => 'up', 'growth' => 0.25]
+            'Fitness' => ['trend' => 'up', 'growth' => 0.25],
         ];
 
         $trendingCategories = $this->getTrendingCategoryRecommendations($categoryTrends);
@@ -198,6 +198,7 @@ class CategoryRecommendationTest extends TestCase
     private function getPopularCategoryRecommendations(array $categoryStats, int $limit): array
     {
         arsort($categoryStats);
+
         return array_slice(array_keys($categoryStats), 0, $limit);
     }
 

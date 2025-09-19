@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 
 class LocaleController extends Controller
 {
-    public function __construct(private readonly Guard $auth, private readonly Session $session, private readonly Application $app)
-    {
-    }
+    public function __construct(private readonly Guard $auth, private readonly Session $session, private readonly Application $app) {}
 
     public function switchLanguage(Request $request): \Illuminate\Http\RedirectResponse
     {

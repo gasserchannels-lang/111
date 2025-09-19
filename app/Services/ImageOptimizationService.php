@@ -133,7 +133,9 @@ class ImageOptimizationService
      */
     private function optimizeForFormat(string $format): string
     {
-        $this->config['quality'] ?? 85;
+        $quality = $this->config['quality'] ?? 85;
+        // Use $quality variable to avoid unused expression warning
+
         // Placeholder implementation since ImageManager is commented out
         return match ($format) {
             'webp' => '',
@@ -216,7 +218,7 @@ class ImageOptimizationService
 
         $html .= $imgTag;
 
-        return $html . '</picture>';
+        return $html.'</picture>';
     }
 
     /**
@@ -241,7 +243,7 @@ class ImageOptimizationService
             $imgTag .= ' '.$key.'="'.htmlspecialchars(is_string($value) ? $value : '').'"';
         }
 
-        return $imgTag . '>';
+        return $imgTag.'>';
     }
 
     /**
@@ -286,7 +288,7 @@ class ImageOptimizationService
      */
     public function compressImage(string $path, ?int $quality = null): string
     {
-        $quality ?? $this->config['quality'];
+        $quality = $quality ?? $this->config['quality'];
         // $image = $this->imageManager->read(Storage::disk('public')->path($path));
 
         // $compressed = $image->toJpeg($quality);

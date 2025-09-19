@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Architecture;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class SystemArchitectureTest extends TestCase
 {
@@ -13,7 +13,7 @@ class SystemArchitectureTest extends TestCase
         $mvcComponents = [
             'models' => ['User', 'Product', 'Order', 'Category'],
             'views' => ['home', 'product', 'cart', 'checkout'],
-            'controllers' => ['HomeController', 'ProductController', 'CartController', 'OrderController']
+            'controllers' => ['HomeController', 'ProductController', 'CartController', 'OrderController'],
         ];
 
         $architectureResult = $this->validateMVCArchitecture($mvcComponents);
@@ -31,7 +31,7 @@ class SystemArchitectureTest extends TestCase
             'presentation' => ['controllers', 'views', 'middleware'],
             'business' => ['services', 'repositories', 'validators'],
             'data' => ['models', 'migrations', 'seeders'],
-            'infrastructure' => ['config', 'providers', 'facades']
+            'infrastructure' => ['config', 'providers', 'facades'],
         ];
 
         $architectureResult = $this->validateLayeredArchitecture($layers);
@@ -49,7 +49,7 @@ class SystemArchitectureTest extends TestCase
             'user_management' => ['User', 'Profile', 'Authentication'],
             'product_catalog' => ['Product', 'Category', 'Inventory'],
             'order_processing' => ['Order', 'OrderItem', 'Payment'],
-            'shipping' => ['Shipment', 'Tracking', 'Delivery']
+            'shipping' => ['Shipment', 'Tracking', 'Delivery'],
         ];
 
         $architectureResult = $this->validateDDDArchitecture($domains);
@@ -67,7 +67,7 @@ class SystemArchitectureTest extends TestCase
             'user_service' => ['port' => 8001, 'dependencies' => ['database', 'redis']],
             'product_service' => ['port' => 8002, 'dependencies' => ['database', 'search']],
             'order_service' => ['port' => 8003, 'dependencies' => ['database', 'payment']],
-            'notification_service' => ['port' => 8004, 'dependencies' => ['email', 'sms']]
+            'notification_service' => ['port' => 8004, 'dependencies' => ['email', 'sms']],
         ];
 
         $architectureResult = $this->validateMicroservicesArchitecture($services);
@@ -84,7 +84,7 @@ class SystemArchitectureTest extends TestCase
         $events = [
             'user_registered' => ['publishers' => ['UserService'], 'subscribers' => ['EmailService', 'AnalyticsService']],
             'order_created' => ['publishers' => ['OrderService'], 'subscribers' => ['InventoryService', 'NotificationService']],
-            'payment_processed' => ['publishers' => ['PaymentService'], 'subscribers' => ['OrderService', 'ShippingService']]
+            'payment_processed' => ['publishers' => ['PaymentService'], 'subscribers' => ['OrderService', 'ShippingService']],
         ];
 
         $architectureResult = $this->validateEventDrivenArchitecture($events);
@@ -101,7 +101,7 @@ class SystemArchitectureTest extends TestCase
         $hexagonalComponents = [
             'domain' => ['entities', 'value_objects', 'domain_services'],
             'application' => ['use_cases', 'ports', 'interfaces'],
-            'infrastructure' => ['adapters', 'repositories', 'external_services']
+            'infrastructure' => ['adapters', 'repositories', 'external_services'],
         ];
 
         $architectureResult = $this->validateHexagonalArchitecture($hexagonalComponents);
@@ -119,7 +119,7 @@ class SystemArchitectureTest extends TestCase
             'commands' => ['CreateUser', 'UpdateProduct', 'ProcessOrder'],
             'queries' => ['GetUser', 'ListProducts', 'GetOrderHistory'],
             'handlers' => ['CommandHandler', 'QueryHandler'],
-            'stores' => ['CommandStore', 'QueryStore']
+            'stores' => ['CommandStore', 'QueryStore'],
         ];
 
         $architectureResult = $this->validateCQRSArchitecture($cqrsComponents);
@@ -137,7 +137,7 @@ class SystemArchitectureTest extends TestCase
             'entities' => ['User', 'Product', 'Order'],
             'use_cases' => ['CreateUser', 'UpdateProduct', 'ProcessOrder'],
             'interface_adapters' => ['Controllers', 'Presenters', 'Gateways'],
-            'frameworks' => ['Laravel', 'Database', 'External APIs']
+            'frameworks' => ['Laravel', 'Database', 'External APIs'],
         ];
 
         $architectureResult = $this->validateCleanArchitecture($cleanLayers);
@@ -155,7 +155,7 @@ class SystemArchitectureTest extends TestCase
             'authentication_service' => ['endpoint' => '/api/auth', 'protocol' => 'REST'],
             'product_service' => ['endpoint' => '/api/products', 'protocol' => 'REST'],
             'order_service' => ['endpoint' => '/api/orders', 'protocol' => 'REST'],
-            'notification_service' => ['endpoint' => '/api/notifications', 'protocol' => 'REST']
+            'notification_service' => ['endpoint' => '/api/notifications', 'protocol' => 'REST'],
         ];
 
         $architectureResult = $this->validateSOAArchitecture($services);
@@ -173,7 +173,7 @@ class SystemArchitectureTest extends TestCase
             'GET /api/users' => ['method' => 'GET', 'resource' => 'users', 'action' => 'list'],
             'POST /api/users' => ['method' => 'POST', 'resource' => 'users', 'action' => 'create'],
             'PUT /api/users/{id}' => ['method' => 'PUT', 'resource' => 'users', 'action' => 'update'],
-            'DELETE /api/users/{id}' => ['method' => 'DELETE', 'resource' => 'users', 'action' => 'delete']
+            'DELETE /api/users/{id}' => ['method' => 'DELETE', 'resource' => 'users', 'action' => 'delete'],
         ];
 
         $architectureResult = $this->validateRESTfulArchitecture($restfulEndpoints);
@@ -191,7 +191,7 @@ class SystemArchitectureTest extends TestCase
             'queries' => ['getUser', 'getProducts', 'getOrders'],
             'mutations' => ['createUser', 'updateProduct', 'processOrder'],
             'subscriptions' => ['userUpdated', 'productUpdated', 'orderStatusChanged'],
-            'types' => ['User', 'Product', 'Order', 'Category']
+            'types' => ['User', 'Product', 'Order', 'Category'],
         ];
 
         $architectureResult = $this->validateGraphQLArchitecture($graphqlSchema);
@@ -209,7 +209,7 @@ class SystemArchitectureTest extends TestCase
             'user_registration' => ['runtime' => 'nodejs', 'trigger' => 'http', 'timeout' => 30],
             'product_search' => ['runtime' => 'python', 'trigger' => 'http', 'timeout' => 15],
             'order_processing' => ['runtime' => 'php', 'trigger' => 'queue', 'timeout' => 60],
-            'email_notification' => ['runtime' => 'nodejs', 'trigger' => 'event', 'timeout' => 10]
+            'email_notification' => ['runtime' => 'nodejs', 'trigger' => 'event', 'timeout' => 10],
         ];
 
         $architectureResult = $this->validateServerlessArchitecture($serverlessFunctions);
@@ -227,7 +227,7 @@ class SystemArchitectureTest extends TestCase
             'web_container' => ['image' => 'nginx', 'ports' => [80, 443], 'volumes' => ['/var/www']],
             'app_container' => ['image' => 'php-fpm', 'ports' => [9000], 'volumes' => ['/var/www']],
             'db_container' => ['image' => 'mysql', 'ports' => [3306], 'volumes' => ['/var/lib/mysql']],
-            'cache_container' => ['image' => 'redis', 'ports' => [6379], 'volumes' => ['/data']]
+            'cache_container' => ['image' => 'redis', 'ports' => [6379], 'volumes' => ['/data']],
         ];
 
         $architectureResult = $this->validateContainerArchitecture($containers);
@@ -245,11 +245,11 @@ class SystemArchitectureTest extends TestCase
             'routes' => [
                 '/api/users/*' => 'user_service',
                 '/api/products/*' => 'product_service',
-                '/api/orders/*' => 'order_service'
+                '/api/orders/*' => 'order_service',
             ],
             'middleware' => ['authentication', 'rate_limiting', 'logging'],
             'load_balancing' => 'round_robin',
-            'circuit_breaker' => true
+            'circuit_breaker' => true,
         ];
 
         $architectureResult = $this->validateAPIGatewayPattern($apiGateway);
@@ -267,7 +267,7 @@ class SystemArchitectureTest extends TestCase
             'order_creation' => ['action' => 'create_order', 'compensation' => 'cancel_order'],
             'payment_processing' => ['action' => 'process_payment', 'compensation' => 'refund_payment'],
             'inventory_reservation' => ['action' => 'reserve_inventory', 'compensation' => 'release_inventory'],
-            'shipping_creation' => ['action' => 'create_shipment', 'compensation' => 'cancel_shipment']
+            'shipping_creation' => ['action' => 'create_shipment', 'compensation' => 'cancel_shipment'],
         ];
 
         $architectureResult = $this->validateSagaPattern($sagaSteps);
@@ -285,7 +285,7 @@ class SystemArchitectureTest extends TestCase
             'failure_threshold' => 5,
             'timeout_duration' => 60,
             'retry_attempts' => 3,
-            'services' => ['payment_service', 'inventory_service', 'notification_service']
+            'services' => ['payment_service', 'inventory_service', 'notification_service'],
         ];
 
         $architectureResult = $this->validateCircuitBreakerPattern($circuitBreaker);
@@ -303,7 +303,7 @@ class SystemArchitectureTest extends TestCase
             'user_operations' => ['thread_pool' => 10, 'queue_size' => 100],
             'product_operations' => ['thread_pool' => 15, 'queue_size' => 150],
             'order_operations' => ['thread_pool' => 20, 'queue_size' => 200],
-            'notification_operations' => ['thread_pool' => 5, 'queue_size' => 50]
+            'notification_operations' => ['thread_pool' => 5, 'queue_size' => 50],
         ];
 
         $architectureResult = $this->validateBulkheadPattern($bulkheads);
@@ -321,7 +321,7 @@ class SystemArchitectureTest extends TestCase
             'max_attempts' => 3,
             'backoff_strategy' => 'exponential',
             'jitter' => true,
-            'services' => ['external_api', 'database', 'cache']
+            'services' => ['external_api', 'database', 'cache'],
         ];
 
         $architectureResult = $this->validateRetryPattern($retryConfig);
@@ -339,7 +339,7 @@ class SystemArchitectureTest extends TestCase
             'connection_timeout' => 30,
             'read_timeout' => 60,
             'write_timeout' => 30,
-            'services' => ['database', 'external_api', 'cache']
+            'services' => ['database', 'external_api', 'cache'],
         ];
 
         $architectureResult = $this->validateTimeoutPattern($timeoutConfig);
@@ -357,7 +357,7 @@ class SystemArchitectureTest extends TestCase
             'cache_strategies' => ['write_through', 'write_behind', 'cache_aside'],
             'cache_layers' => ['application', 'database', 'cdn'],
             'eviction_policies' => ['lru', 'lfu', 'ttl'],
-            'cache_consistency' => 'eventual'
+            'cache_consistency' => 'eventual',
         ];
 
         $architectureResult = $this->validateCachingPattern($cachingConfig);
@@ -375,7 +375,7 @@ class SystemArchitectureTest extends TestCase
             'metrics' => ['cpu_usage', 'memory_usage', 'response_time', 'error_rate'],
             'logging' => ['application_logs', 'access_logs', 'error_logs', 'audit_logs'],
             'tracing' => ['distributed_tracing', 'request_tracing', 'performance_tracing'],
-            'alerting' => ['threshold_alerts', 'anomaly_detection', 'health_checks']
+            'alerting' => ['threshold_alerts', 'anomaly_detection', 'health_checks'],
         ];
 
         $architectureResult = $this->validateMonitoringPattern($monitoringConfig);
@@ -393,7 +393,7 @@ class SystemArchitectureTest extends TestCase
             'separation_of_concerns' => 'excellent',
             'component_count' => array_sum(array_map('count', $components)),
             'architecture_score' => 95,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -404,7 +404,7 @@ class SystemArchitectureTest extends TestCase
             'layer_separation' => 'excellent',
             'dependency_direction' => 'correct',
             'architecture_score' => 92,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -415,7 +415,7 @@ class SystemArchitectureTest extends TestCase
             'domain_separation' => 'excellent',
             'bounded_contexts' => count($domains),
             'architecture_score' => 90,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -426,7 +426,7 @@ class SystemArchitectureTest extends TestCase
             'service_independence' => 'excellent',
             'communication_patterns' => 'restful',
             'architecture_score' => 88,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -437,7 +437,7 @@ class SystemArchitectureTest extends TestCase
             'event_flow' => 'excellent',
             'decoupling_level' => 'high',
             'architecture_score' => 93,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -448,7 +448,7 @@ class SystemArchitectureTest extends TestCase
             'port_adapter_separation' => 'excellent',
             'dependency_inversion' => 'correct',
             'architecture_score' => 91,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -459,7 +459,7 @@ class SystemArchitectureTest extends TestCase
             'command_query_separation' => 'excellent',
             'handler_implementation' => 'correct',
             'architecture_score' => 89,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -470,7 +470,7 @@ class SystemArchitectureTest extends TestCase
             'dependency_rule' => 'followed',
             'layer_isolation' => 'excellent',
             'architecture_score' => 94,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -481,7 +481,7 @@ class SystemArchitectureTest extends TestCase
             'service_autonomy' => 'excellent',
             'interoperability' => 'high',
             'architecture_score' => 87,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -492,7 +492,7 @@ class SystemArchitectureTest extends TestCase
             'http_methods' => 'correct',
             'resource_naming' => 'excellent',
             'architecture_score' => 96,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -503,7 +503,7 @@ class SystemArchitectureTest extends TestCase
             'schema_definition' => 'excellent',
             'resolver_implementation' => 'correct',
             'architecture_score' => 92,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -514,7 +514,7 @@ class SystemArchitectureTest extends TestCase
             'function_independence' => 'excellent',
             'trigger_diversity' => 'high',
             'architecture_score' => 85,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -525,7 +525,7 @@ class SystemArchitectureTest extends TestCase
             'container_isolation' => 'excellent',
             'orchestration' => 'docker_compose',
             'architecture_score' => 90,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -536,7 +536,7 @@ class SystemArchitectureTest extends TestCase
             'routing_configuration' => 'excellent',
             'middleware_stack' => 'complete',
             'architecture_score' => 93,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -547,7 +547,7 @@ class SystemArchitectureTest extends TestCase
             'transaction_coordination' => 'excellent',
             'compensation_logic' => 'implemented',
             'architecture_score' => 88,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -558,7 +558,7 @@ class SystemArchitectureTest extends TestCase
             'failure_detection' => 'excellent',
             'recovery_mechanism' => 'implemented',
             'architecture_score' => 91,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -569,7 +569,7 @@ class SystemArchitectureTest extends TestCase
             'resource_isolation' => 'excellent',
             'failure_containment' => 'implemented',
             'architecture_score' => 89,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -580,7 +580,7 @@ class SystemArchitectureTest extends TestCase
             'retry_logic' => 'excellent',
             'backoff_implementation' => 'correct',
             'architecture_score' => 87,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -591,7 +591,7 @@ class SystemArchitectureTest extends TestCase
             'timeout_implementation' => 'excellent',
             'service_coverage' => 'complete',
             'architecture_score' => 90,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -602,7 +602,7 @@ class SystemArchitectureTest extends TestCase
             'strategy_implementation' => 'excellent',
             'layer_distribution' => 'optimal',
             'architecture_score' => 92,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -613,7 +613,7 @@ class SystemArchitectureTest extends TestCase
             'observability_coverage' => 'excellent',
             'alerting_effectiveness' => 'high',
             'architecture_score' => 94,
-            'validation_date' => date('Y-m-d H:i:s')
+            'validation_date' => date('Y-m-d H:i:s'),
         ];
     }
 }

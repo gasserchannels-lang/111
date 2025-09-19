@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\AI;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class ReinforcementLearningTest extends TestCase
 {
@@ -247,6 +247,7 @@ class ReinforcementLearningTest extends TestCase
         for ($i = 0; $i < $states; $i++) {
             $qTable[$i] = array_fill(0, $actions, 0.0);
         }
+
         return $qTable;
     }
 
@@ -303,6 +304,7 @@ class ReinforcementLearningTest extends TestCase
                 $gradient[$i] = -$reward * $policy[$i];
             }
         }
+
         return $gradient;
     }
 
@@ -311,7 +313,7 @@ class ReinforcementLearningTest extends TestCase
         return [
             'capacity' => $capacity,
             'experiences' => [],
-            'size' => 0
+            'size' => 0,
         ];
     }
 
@@ -369,7 +371,7 @@ class ReinforcementLearningTest extends TestCase
             'capacity' => $capacity,
             'experiences' => [],
             'priorities' => [],
-            'size' => 0
+            'size' => 0,
         ];
     }
 
@@ -440,7 +442,7 @@ class ReinforcementLearningTest extends TestCase
 
         return [
             'actor' => $newActorWeights,
-            'critic' => $newCriticWeights
+            'critic' => $newCriticWeights,
         ];
     }
 
@@ -450,6 +452,7 @@ class ReinforcementLearningTest extends TestCase
         for ($i = 0; $i < count($state); $i++) {
             $value += $state[$i] * $weights[$i];
         }
+
         return $value;
     }
 
@@ -457,6 +460,7 @@ class ReinforcementLearningTest extends TestCase
     {
         // Simplified continuous action sampling
         $random = rand(0, 100) / 100;
+
         return max(0, min(1, $mean + $std * ($random - 0.5)));
     }
 
@@ -466,6 +470,7 @@ class ReinforcementLearningTest extends TestCase
         for ($i = 0; $i < count($episodes); $i++) {
             $curriculum[$episodes[$i]] = $difficulties[$i];
         }
+
         return $curriculum;
     }
 

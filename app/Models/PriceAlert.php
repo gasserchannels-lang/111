@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read User $user
- * @property-read Product $product
+ * @property-read User<Database\Factories\UserFactory> $user
+ * @property-read Product<Database\Factories\ProductFactory> $product
  *
  * @method static PriceAlertFactory factory(...$parameters)
  *
@@ -77,7 +77,7 @@ class PriceAlert extends Model
     protected $errors;
 
     /**
-     * @return BelongsTo<User<\Database\Factories\UserFactory>, PriceAlert<\Database\Factories\PriceAlertFactory>>
+     * @return BelongsTo<User<Database\Factories\UserFactory>, PriceAlert<Database\Factories\PriceAlertFactory>>
      */
     public function user(): BelongsTo
     {
@@ -85,7 +85,7 @@ class PriceAlert extends Model
     }
 
     /**
-     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, PriceAlert<\Database\Factories\PriceAlertFactory>>
+     * @return BelongsTo<Product<Database\Factories\ProductFactory>, PriceAlert<Database\Factories\PriceAlertFactory>>
      */
     public function product(): BelongsTo
     {

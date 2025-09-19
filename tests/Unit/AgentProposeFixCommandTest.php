@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Console\Commands\AgentProposeFixCommand;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class AgentProposeFixCommandTest extends TestCase

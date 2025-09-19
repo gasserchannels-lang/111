@@ -9,9 +9,7 @@ use Symfony\Component\Process\Process;
 
 final readonly class TestAnalysisService
 {
-    public function __construct(private bool $coverageEnabled = false)
-    {
-    }
+    public function __construct(private bool $coverageEnabled = false) {}
 
     public static function withoutCoverage(): self
     {

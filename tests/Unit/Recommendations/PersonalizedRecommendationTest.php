@@ -17,7 +17,7 @@ class PersonalizedRecommendationTest extends TestCase
         $userHistory = [
             ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple'],
             ['product_id' => 2, 'category' => 'Smartphones', 'brand' => 'Apple'],
-            ['product_id' => 3, 'category' => 'Laptops', 'brand' => 'Apple']
+            ['product_id' => 3, 'category' => 'Laptops', 'brand' => 'Apple'],
         ];
 
         $recommendations = $this->generateRecommendations($userHistory);
@@ -32,11 +32,11 @@ class PersonalizedRecommendationTest extends TestCase
     {
         $userHistory = [
             ['product_id' => 1, 'brand' => 'Apple', 'category' => 'Smartphones'],
-            ['product_id' => 2, 'brand' => 'Apple', 'category' => 'Laptops']
+            ['product_id' => 2, 'brand' => 'Apple', 'category' => 'Laptops'],
         ];
 
         $recommendations = $this->generateRecommendations($userHistory);
-        $appleRecommendations = array_filter($recommendations, fn($r) => $r['brand'] === 'Apple');
+        $appleRecommendations = array_filter($recommendations, fn ($r) => $r['brand'] === 'Apple');
 
         $this->assertGreaterThan(0, count($appleRecommendations));
     }
@@ -48,7 +48,7 @@ class PersonalizedRecommendationTest extends TestCase
         $userPreferences = [
             'preferred_brands' => ['Apple', 'Samsung'],
             'preferred_categories' => ['Smartphones', 'Laptops'],
-            'price_range' => ['min' => 500, 'max' => 2000]
+            'price_range' => ['min' => 500, 'max' => 2000],
         ];
 
         $recommendations = $this->generateRecommendations([], $userPreferences);
@@ -67,7 +67,7 @@ class PersonalizedRecommendationTest extends TestCase
     {
         $userHistory = [
             ['product_id' => 1, 'name' => 'iPhone 15 Pro'],
-            ['product_id' => 2, 'name' => 'MacBook Pro']
+            ['product_id' => 2, 'name' => 'MacBook Pro'],
         ];
 
         $recommendations = $this->generateRecommendations($userHistory);
@@ -85,15 +85,15 @@ class PersonalizedRecommendationTest extends TestCase
         $userRatings = [
             ['product_id' => 1, 'rating' => 5, 'category' => 'Smartphones'],
             ['product_id' => 2, 'rating' => 4, 'category' => 'Laptops'],
-            ['product_id' => 3, 'rating' => 2, 'category' => 'Tablets']
+            ['product_id' => 3, 'rating' => 2, 'category' => 'Tablets'],
         ];
 
         $recommendations = $this->generateRecommendations([], [], $userRatings);
 
         // Should prioritize categories with higher ratings
-        $smartphoneRecommendations = array_filter($recommendations, fn($r) => $r['category'] === 'Smartphones');
-        $laptopRecommendations = array_filter($recommendations, fn($r) => $r['category'] === 'Laptops');
-        $tabletRecommendations = array_filter($recommendations, fn($r) => $r['category'] === 'Tablets');
+        $smartphoneRecommendations = array_filter($recommendations, fn ($r) => $r['category'] === 'Smartphones');
+        $laptopRecommendations = array_filter($recommendations, fn ($r) => $r['category'] === 'Laptops');
+        $tabletRecommendations = array_filter($recommendations, fn ($r) => $r['category'] === 'Tablets');
 
         $this->assertGreaterThanOrEqual(count($laptopRecommendations), count($tabletRecommendations));
     }
@@ -117,7 +117,7 @@ class PersonalizedRecommendationTest extends TestCase
         $userDemographics = [
             'age_group' => '25-35',
             'gender' => 'male',
-            'location' => 'urban'
+            'location' => 'urban',
         ];
 
         $recommendations = $this->generateRecommendations([], [], [], null, $userDemographics);
@@ -131,7 +131,7 @@ class PersonalizedRecommendationTest extends TestCase
     public function it_limits_recommendation_count(): void
     {
         $userHistory = [
-            ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple']
+            ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple'],
         ];
 
         $maxRecommendations = 5;
@@ -145,7 +145,7 @@ class PersonalizedRecommendationTest extends TestCase
     public function it_considers_product_availability(): void
     {
         $userHistory = [
-            ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple']
+            ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple'],
         ];
 
         $recommendations = $this->generateRecommendations($userHistory);
@@ -161,12 +161,12 @@ class PersonalizedRecommendationTest extends TestCase
     public function it_considers_price_sensitivity(): void
     {
         $userHistory = [
-            ['product_id' => 1, 'price' => 999.99, 'category' => 'Smartphones']
+            ['product_id' => 1, 'price' => 999.99, 'category' => 'Smartphones'],
         ];
 
         $userPreferences = [
             'price_sensitivity' => 'high', // User prefers lower prices
-            'budget' => 800.00
+            'budget' => 800.00,
         ];
 
         $recommendations = $this->generateRecommendations($userHistory, $userPreferences);
@@ -183,7 +183,7 @@ class PersonalizedRecommendationTest extends TestCase
         $similarUsers = [
             ['user_id' => 2, 'purchased_products' => [1, 2, 3]],
             ['user_id' => 3, 'purchased_products' => [1, 2, 4]],
-            ['user_id' => 4, 'purchased_products' => [2, 3, 5]]
+            ['user_id' => 4, 'purchased_products' => [2, 3, 5]],
         ];
 
         $recommendations = $this->generateRecommendations([], [], [], null, null, null, $similarUsers);
@@ -197,7 +197,7 @@ class PersonalizedRecommendationTest extends TestCase
     public function it_considers_content_based_filtering(): void
     {
         $userHistory = [
-            ['product_id' => 1, 'specifications' => ['storage' => '256GB', 'color' => 'Space Black']]
+            ['product_id' => 1, 'specifications' => ['storage' => '256GB', 'color' => 'Space Black']],
         ];
 
         $recommendations = $this->generateRecommendations($userHistory);
@@ -224,7 +224,7 @@ class PersonalizedRecommendationTest extends TestCase
     public function it_considers_recommendation_diversity(): void
     {
         $userHistory = [
-            ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple']
+            ['product_id' => 1, 'category' => 'Smartphones', 'brand' => 'Apple'],
         ];
 
         $recommendations = $this->generateRecommendations($userHistory);
@@ -250,7 +250,7 @@ class PersonalizedRecommendationTest extends TestCase
         $recommendations = [];
 
         // Simple logic for testing
-        if (!empty($userHistory)) {
+        if (! empty($userHistory)) {
             $preferredBrand = $userHistory[0]['brand'] ?? 'Apple';
             $preferredCategory = $userHistory[0]['category'] ?? 'Smartphones';
 
@@ -263,7 +263,7 @@ class PersonalizedRecommendationTest extends TestCase
                     'price' => 500 + ($i * 100),
                     'is_available' => true,
                     'stock_quantity' => 10,
-                    'specifications' => ['storage' => '256GB', 'color' => 'Space Black']
+                    'specifications' => ['storage' => '256GB', 'color' => 'Space Black'],
                 ];
             }
         } else {
@@ -277,7 +277,7 @@ class PersonalizedRecommendationTest extends TestCase
                     'price' => 600 + ($i * 50),
                     'is_available' => true,
                     'stock_quantity' => 15,
-                    'specifications' => ['storage' => '128GB', 'color' => 'Silver']
+                    'specifications' => ['storage' => '128GB', 'color' => 'Silver'],
                 ];
             }
         }

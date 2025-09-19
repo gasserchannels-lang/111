@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $price
  * @property string $url
  * @property bool $in_stock
- * @property-read Product $product
- * @property-read Store $store
+ * @property-read Product<Database\Factories\ProductFactory> $product
+ * @property-read Store<Database\Factories\StoreFactory> $store
  *
  * @method static PriceOfferFactory factory(...$parameters)
  *
@@ -65,7 +65,7 @@ class PriceOffer extends Model
     ];
 
     /**
-     * @return BelongsTo<Product<\Database\Factories\ProductFactory>, PriceOffer<\Database\Factories\PriceOfferFactory>>
+     * @return BelongsTo<Product<Database\Factories\ProductFactory>, PriceOffer<Database\Factories\PriceOfferFactory>>
      */
     public function product(): BelongsTo
     {
@@ -73,7 +73,7 @@ class PriceOffer extends Model
     }
 
     /**
-     * @return BelongsTo<Store<\Database\Factories\StoreFactory>, PriceOffer<\Database\Factories\PriceOfferFactory>>
+     * @return BelongsTo<Store<Database\Factories\StoreFactory>, PriceOffer<Database\Factories\PriceOfferFactory>>
      */
     public function store(): BelongsTo
     {

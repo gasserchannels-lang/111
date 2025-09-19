@@ -3,7 +3,6 @@
 /**
  * Code Dependency Analyzer Tool
  */
-
 class CodeDependencyAnalyzer
 {
     public function analyzeDependencies(string $directory): array

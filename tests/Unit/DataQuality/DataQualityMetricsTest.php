@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\DataQuality;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 /**
  * اختبارات مقاييس جودة البيانات
@@ -25,7 +25,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'description' => 'A great product'],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'description' => 'Another great product'],
             ['id' => 3, 'name' => 'Product C', 'price' => 300.00, 'description' => null], // Missing description
-            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product']
+            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product'],
         ];
 
         $requiredFields = ['id', 'name', 'price', 'description'];
@@ -47,7 +47,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'price' => 100.00, 'expected_price' => 100.00],
             ['id' => 2, 'price' => 200.00, 'expected_price' => 200.00],
             ['id' => 3, 'price' => 300.00, 'expected_price' => 295.00], // Inaccurate
-            ['id' => 4, 'price' => 400.00, 'expected_price' => 400.00]
+            ['id' => 4, 'price' => 400.00, 'expected_price' => 400.00],
         ];
 
         $accuracy = $this->calculateAccuracyMetrics($data, 'price', 'expected_price');
@@ -66,7 +66,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'currency' => 'USD', 'price' => 100.00],
             ['id' => 2, 'currency' => 'USD', 'price' => 200.00],
             ['id' => 3, 'currency' => 'EUR', 'price' => 300.00], // Inconsistent currency
-            ['id' => 4, 'currency' => 'USD', 'price' => 400.00]
+            ['id' => 4, 'currency' => 'USD', 'price' => 400.00],
         ];
 
         $consistency = $this->calculateConsistencyMetrics($data, 'currency');
@@ -85,7 +85,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 2, 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 hour'))],
             ['id' => 3, 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day'))],
-            ['id' => 4, 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 week'))]
+            ['id' => 4, 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 week'))],
         ];
 
         $timeliness = $this->calculateTimelinessMetrics($data, 'updated_at', 24); // 24 hours threshold
@@ -104,12 +104,12 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'email' => 'user@example.com', 'phone' => '+1-555-123-4567'],
             ['id' => 2, 'email' => 'admin@test.org', 'phone' => '+44-20-7946-0958'],
             ['id' => 3, 'email' => 'invalid-email', 'phone' => '123'], // Invalid email and phone
-            ['id' => 4, 'email' => 'user2@example.com', 'phone' => '+1-555-987-6543']
+            ['id' => 4, 'email' => 'user2@example.com', 'phone' => '+1-555-987-6543'],
         ];
 
         $validity = $this->calculateValidityMetrics($data, [
             'email' => 'email',
-            'phone' => 'phone'
+            'phone' => 'phone',
         ]);
 
         $this->assertEquals(75.0, $validity['overall_validity'], '⚠️ تحذير: صحة البيانات منخفضة! يجب إصلاح البريد الإلكتروني والهاتف غير الصحيح');
@@ -126,7 +126,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'email' => 'user1@example.com'],
             ['id' => 2, 'email' => 'user2@example.com'],
             ['id' => 3, 'email' => 'user1@example.com'], // Duplicate email
-            ['id' => 4, 'email' => 'user3@example.com']
+            ['id' => 4, 'email' => 'user3@example.com'],
         ];
 
         $uniqueness = $this->calculateUniquenessMetrics($data, 'email');
@@ -143,13 +143,13 @@ class DataQualityMetricsTest extends TestCase
         // ⚠️ تحذير: مقاييس التكامل يجب أن تكون دقيقة
         $parentData = [
             ['id' => 1, 'name' => 'Category A'],
-            ['id' => 2, 'name' => 'Category B']
+            ['id' => 2, 'name' => 'Category B'],
         ];
 
         $childData = [
             ['id' => 1, 'name' => 'Product 1', 'category_id' => 1],
             ['id' => 2, 'name' => 'Product 2', 'category_id' => 2],
-            ['id' => 3, 'name' => 'Product 3', 'category_id' => 3] // Invalid category_id
+            ['id' => 3, 'name' => 'Product 3', 'category_id' => 3], // Invalid category_id
         ];
 
         $integrity = $this->calculateIntegrityMetrics($parentData, $childData, 'id', 'category_id');
@@ -168,7 +168,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'description' => 'A great product', 'email' => 'user@example.com'],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'description' => 'Another great product', 'email' => 'admin@test.org'],
             ['id' => 3, 'name' => 'Product C', 'price' => 300.00, 'description' => null, 'email' => 'invalid-email'], // Missing description and invalid email
-            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product', 'email' => 'user2@example.com']
+            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product', 'email' => 'user2@example.com'],
         ];
 
         $qualityScore = $this->calculateOverallQualityScore($data);
@@ -191,7 +191,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'description' => 'A great product'],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'description' => 'Another great product'],
             ['id' => 3, 'name' => 'Product C', 'price' => 300.00, 'description' => null],
-            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product']
+            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product'],
         ];
 
         $report = $this->generateQualityReport($data);
@@ -216,7 +216,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'description' => 'A great product'],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'description' => 'Another great product'],
             ['id' => 3, 'name' => 'Product C', 'price' => 300.00, 'description' => null],
-            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product']
+            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product'],
         ];
 
         $fieldMetrics = $this->calculateFieldLevelMetrics($data);
@@ -241,7 +241,7 @@ class DataQualityMetricsTest extends TestCase
             ['date' => '2024-01-02', 'quality_score' => 87.0],
             ['date' => '2024-01-03', 'quality_score' => 89.0],
             ['date' => '2024-01-04', 'quality_score' => 91.0],
-            ['date' => '2024-01-05', 'quality_score' => 88.0]
+            ['date' => '2024-01-05', 'quality_score' => 88.0],
         ];
 
         $trend = $this->calculateTrendMetrics($historicalData, 'quality_score');
@@ -261,7 +261,7 @@ class DataQualityMetricsTest extends TestCase
             ['id' => 1, 'name' => 'Product A', 'price' => 100.00, 'description' => 'A great product'],
             ['id' => 2, 'name' => 'Product B', 'price' => 200.00, 'description' => 'Another great product'],
             ['id' => 3, 'name' => 'Product C', 'price' => 300.00, 'description' => null],
-            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product']
+            ['id' => 4, 'name' => 'Product D', 'price' => 400.00, 'description' => 'Yet another product'],
         ];
 
         $benchmark = $this->calculateBenchmarkMetrics($data);
@@ -298,7 +298,7 @@ class DataQualityMetricsTest extends TestCase
         return [
             'overall_completeness' => $overallCompleteness,
             'field_completeness' => $fieldCompleteness,
-            'total_records' => $totalRecords
+            'total_records' => $totalRecords,
         ];
     }
 
@@ -321,7 +321,7 @@ class DataQualityMetricsTest extends TestCase
             'overall_accuracy' => $overallAccuracy,
             'accurate_records' => $accurateRecords,
             'inaccurate_records' => $totalRecords - $accurateRecords,
-            'total_records' => $totalRecords
+            'total_records' => $totalRecords,
         ];
     }
 
@@ -345,7 +345,7 @@ class DataQualityMetricsTest extends TestCase
             'overall_consistency' => $overallConsistency,
             'consistent_records' => $consistentRecords,
             'inconsistent_records' => $totalRecords - $consistentRecords,
-            'total_records' => $totalRecords
+            'total_records' => $totalRecords,
         ];
     }
 
@@ -370,7 +370,7 @@ class DataQualityMetricsTest extends TestCase
             'overall_timeliness' => $overallTimeliness,
             'timely_records' => $timelyRecords,
             'stale_records' => $totalRecords - $timelyRecords,
-            'total_records' => $totalRecords
+            'total_records' => $totalRecords,
         ];
     }
 
@@ -385,12 +385,12 @@ class DataQualityMetricsTest extends TestCase
                 if (isset($record[$field])) {
                     switch ($validation) {
                         case 'email':
-                            if (!filter_var($record[$field], FILTER_VALIDATE_EMAIL)) {
+                            if (! filter_var($record[$field], FILTER_VALIDATE_EMAIL)) {
                                 $isValid = false;
                             }
                             break;
                         case 'phone':
-                            if (!preg_match('/^[\+]?[1-9][\d]{0,15}$/', preg_replace('/[^\d+]/', '', $record[$field]))) {
+                            if (! preg_match('/^[\+]?[1-9][\d]{0,15}$/', preg_replace('/[^\d+]/', '', $record[$field]))) {
                                 $isValid = false;
                             }
                             break;
@@ -408,7 +408,7 @@ class DataQualityMetricsTest extends TestCase
             'overall_validity' => $overallValidity,
             'valid_records' => $validRecords,
             'invalid_records' => $totalRecords - $validRecords,
-            'total_records' => $totalRecords
+            'total_records' => $totalRecords,
         ];
     }
 
@@ -426,7 +426,7 @@ class DataQualityMetricsTest extends TestCase
             'overall_uniqueness' => $overallUniqueness,
             'unique_records' => $uniqueRecords,
             'duplicate_records' => $duplicateRecords,
-            'total_records' => $totalRecords
+            'total_records' => $totalRecords,
         ];
     }
 
@@ -448,7 +448,7 @@ class DataQualityMetricsTest extends TestCase
             'overall_integrity' => $overallIntegrity,
             'valid_relationships' => $validRelationships,
             'invalid_relationships' => $totalRelationships - $validRelationships,
-            'total_relationships' => $totalRelationships
+            'total_relationships' => $totalRelationships,
         ];
     }
 
@@ -492,7 +492,7 @@ class DataQualityMetricsTest extends TestCase
             'uniqueness' => $uniqueness,
             'integrity' => ['overall_integrity' => 100.0], // Placeholder
             'recommendations' => $recommendations,
-            'generated_at' => date('Y-m-d H:i:s')
+            'generated_at' => date('Y-m-d H:i:s'),
         ];
     }
 
@@ -506,7 +506,7 @@ class DataQualityMetricsTest extends TestCase
             $fieldMetrics[$field] = [
                 'completeness' => $completeness['field_completeness'][$field],
                 'null_count' => $this->countNullValues($data, $field),
-                'unique_count' => count(array_unique(array_column($data, $field)))
+                'unique_count' => count(array_unique(array_column($data, $field))),
             ];
         }
 
@@ -517,10 +517,11 @@ class DataQualityMetricsTest extends TestCase
     {
         $nullCount = 0;
         foreach ($data as $record) {
-            if (!isset($record[$field]) || $record[$field] === null || $record[$field] === '') {
+            if (! isset($record[$field]) || $record[$field] === null || $record[$field] === '') {
                 $nullCount++;
             }
         }
+
         return $nullCount;
     }
 
@@ -534,7 +535,7 @@ class DataQualityMetricsTest extends TestCase
                 'trend_direction' => 'stable',
                 'trend_strength' => 0,
                 'average_change' => 0,
-                'volatility' => 0
+                'volatility' => 0,
             ];
         }
 
@@ -559,7 +560,7 @@ class DataQualityMetricsTest extends TestCase
             'trend_direction' => $trendDirection,
             'trend_strength' => $trendStrength,
             'average_change' => $averageChange,
-            'volatility' => $volatility
+            'volatility' => $volatility,
         ];
     }
 
@@ -592,7 +593,7 @@ class DataQualityMetricsTest extends TestCase
             'current_score' => $currentScore,
             'industry_average' => $industryAverage,
             'performance_gap' => $performanceGap,
-            'performance_level' => $performanceLevel
+            'performance_level' => $performanceLevel,
         ];
     }
 }

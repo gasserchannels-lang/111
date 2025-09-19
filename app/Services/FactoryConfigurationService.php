@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FactoryConfigurationService
 {
-    public function __construct(private readonly string $factoryClass = Factory::class)
-    {
-    }
+    public function __construct(private readonly string $factoryClass = Factory::class) {}
 
     public function configureNaming(): void
     {
         $factoryClass = $this->factoryClass;
         $factoryClass::guessFactoryNamesUsing(
-            fn(string $modelName): string => 'Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName): string => 'Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 }

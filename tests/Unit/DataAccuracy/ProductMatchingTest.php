@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\DataAccuracy;
 
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductMatchingTest extends TestCase
@@ -39,10 +39,10 @@ class ProductMatchingTest extends TestCase
         $products = [
             ['name' => 'MacBook Pro', 'brand' => 'Apple'],
             ['name' => 'iPhone 15', 'brand' => 'Apple'],
-            ['name' => 'iPad Air', 'brand' => 'Apple']
+            ['name' => 'iPad Air', 'brand' => 'Apple'],
         ];
 
-        $appleProducts = array_filter($products, fn($p) => $p['brand'] === 'Apple');
+        $appleProducts = array_filter($products, fn ($p) => $p['brand'] === 'Apple');
         $this->assertCount(3, $appleProducts);
     }
 
@@ -53,10 +53,10 @@ class ProductMatchingTest extends TestCase
         $products = [
             ['name' => 'iPhone 15', 'category' => 'Smartphones'],
             ['name' => 'Samsung Galaxy S24', 'category' => 'Smartphones'],
-            ['name' => 'MacBook Pro', 'category' => 'Laptops']
+            ['name' => 'MacBook Pro', 'category' => 'Laptops'],
         ];
 
-        $smartphones = array_filter($products, fn($p) => $p['category'] === 'Smartphones');
+        $smartphones = array_filter($products, fn ($p) => $p['category'] === 'Smartphones');
         $this->assertCount(2, $smartphones);
     }
 
@@ -67,7 +67,7 @@ class ProductMatchingTest extends TestCase
         $products = [
             ['name' => 'Product A', 'price' => 100.00],
             ['name' => 'Product B', 'price' => 150.00],
-            ['name' => 'Product C', 'price' => 200.00]
+            ['name' => 'Product C', 'price' => 200.00],
         ];
 
         $minPrice = 120.00;
@@ -86,12 +86,12 @@ class ProductMatchingTest extends TestCase
     {
         $product1 = [
             'name' => 'iPhone 15 Pro',
-            'specs' => ['storage' => '256GB', 'color' => 'Space Black', 'screen' => '6.1"']
+            'specs' => ['storage' => '256GB', 'color' => 'Space Black', 'screen' => '6.1"'],
         ];
 
         $product2 = [
             'name' => 'iPhone 15 Pro',
-            'specs' => ['storage' => '256GB', 'color' => 'Space Black', 'screen' => '6.1"']
+            'specs' => ['storage' => '256GB', 'color' => 'Space Black', 'screen' => '6.1"'],
         ];
 
         $this->assertEquals($product1['specs'], $product2['specs']);
@@ -141,7 +141,7 @@ class ProductMatchingTest extends TestCase
         $products = [
             ['name' => 'iPhone 15 Pro'],
             ['name' => 'iPhone 15'],
-            ['name' => 'Samsung Galaxy S24']
+            ['name' => 'Samsung Galaxy S24'],
         ];
 
         $matchingProducts = array_filter($products, function ($p) use ($searchTerm) {
@@ -160,7 +160,7 @@ class ProductMatchingTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'brand' => 'Apple',
             'price' => 999.99,
-            'category' => 'Smartphones'
+            'category' => 'Smartphones',
         ];
 
         $this->assertArrayHasKey('id', $product);
@@ -183,7 +183,7 @@ class ProductMatchingTest extends TestCase
         $products = [
             ['id' => 1, 'name' => 'iPhone 15 Pro'],
             ['id' => 2, 'name' => 'iPhone 15 Pro'],
-            ['id' => 3, 'name' => 'Samsung Galaxy S24']
+            ['id' => 3, 'name' => 'Samsung Galaxy S24'],
         ];
 
         $duplicates = [];
@@ -262,10 +262,10 @@ class ProductMatchingTest extends TestCase
         // Count transpositions
         $k = 0;
         for ($i = 0; $i < $len1; $i++) {
-            if (!$str1Matches[$i]) {
+            if (! $str1Matches[$i]) {
                 continue;
             }
-            while (!$str2Matches[$k]) {
+            while (! $str2Matches[$k]) {
                 $k++;
             }
             if ($str1[$i] !== $str2[$k]) {

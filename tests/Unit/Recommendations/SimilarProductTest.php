@@ -19,13 +19,13 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $products = [
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'brand' => 'Samsung', 'price' => 899.99],
             ['id' => 3, 'name' => 'MacBook Pro', 'category' => 'Laptops', 'brand' => 'Apple', 'price' => 1999.99],
-            ['id' => 4, 'name' => 'Google Pixel 8', 'category' => 'Smartphones', 'brand' => 'Google', 'price' => 699.99]
+            ['id' => 4, 'name' => 'Google Pixel 8', 'category' => 'Smartphones', 'brand' => 'Google', 'price' => 699.99],
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products);
@@ -45,13 +45,13 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $products = [
             ['id' => 2, 'name' => 'MacBook Pro', 'category' => 'Laptops', 'brand' => 'Apple', 'price' => 1999.99],
             ['id' => 3, 'name' => 'iPad Air', 'category' => 'Tablets', 'brand' => 'Apple', 'price' => 599.99],
-            ['id' => 4, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'brand' => 'Samsung', 'price' => 899.99]
+            ['id' => 4, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'brand' => 'Samsung', 'price' => 899.99],
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products);
@@ -71,14 +71,14 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $products = [
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'brand' => 'Samsung', 'price' => 899.99],
             ['id' => 3, 'name' => 'Google Pixel 8', 'category' => 'Smartphones', 'brand' => 'Google', 'price' => 699.99],
             ['id' => 4, 'name' => 'OnePlus 12', 'category' => 'Smartphones', 'brand' => 'OnePlus', 'price' => 799.99],
-            ['id' => 5, 'name' => 'Budget Phone', 'category' => 'Smartphones', 'brand' => 'Generic', 'price' => 199.99]
+            ['id' => 5, 'name' => 'Budget Phone', 'category' => 'Smartphones', 'brand' => 'Generic', 'price' => 199.99],
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products);
@@ -100,8 +100,8 @@ class SimilarProductTest extends TestCase
                 'storage' => '256GB',
                 'color' => 'Space Black',
                 'screen_size' => '6.1 inches',
-                'camera' => '48MP'
-            ]
+                'camera' => '48MP',
+            ],
         ];
 
         $products = [
@@ -112,8 +112,8 @@ class SimilarProductTest extends TestCase
                     'storage' => '256GB',
                     'color' => 'Black',
                     'screen_size' => '6.2 inches',
-                    'camera' => '50MP'
-                ]
+                    'camera' => '50MP',
+                ],
             ],
             [
                 'id' => 3,
@@ -122,9 +122,9 @@ class SimilarProductTest extends TestCase
                     'storage' => '128GB',
                     'color' => 'Obsidian',
                     'screen_size' => '6.2 inches',
-                    'camera' => '50MP'
-                ]
-            ]
+                    'camera' => '50MP',
+                ],
+            ],
         ];
 
         $similarProducts = $this->findSimilarProductsBySpecs($targetProduct, $products);
@@ -142,14 +142,14 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $product2 = [
             'name' => 'iPhone 15',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 799.99
+            'price' => 799.99,
         ];
 
         $similarityScore = $this->calculateSimilarityScore($product1, $product2);
@@ -166,7 +166,7 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, []);
@@ -183,13 +183,13 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $products = [
             ['id' => 2, 'name' => 'iPhone 15', 'category' => 'Smartphones', 'brand' => 'Apple', 'price' => 799.99],
             ['id' => 3, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'brand' => 'Samsung', 'price' => 899.99],
-            ['id' => 4, 'name' => 'MacBook Pro', 'category' => 'Laptops', 'brand' => 'Apple', 'price' => 1999.99]
+            ['id' => 4, 'name' => 'MacBook Pro', 'category' => 'Laptops', 'brand' => 'Apple', 'price' => 1999.99],
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products);
@@ -208,18 +208,18 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $userPreferences = [
             'preferred_brands' => ['Apple', 'Samsung'],
-            'price_range' => ['min' => 500, 'max' => 1500]
+            'price_range' => ['min' => 500, 'max' => 1500],
         ];
 
         $products = [
             ['id' => 2, 'name' => 'iPhone 15', 'category' => 'Smartphones', 'brand' => 'Apple', 'price' => 799.99],
             ['id' => 3, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones', 'brand' => 'Samsung', 'price' => 899.99],
-            ['id' => 4, 'name' => 'Budget Phone', 'category' => 'Smartphones', 'brand' => 'Generic', 'price' => 199.99]
+            ['id' => 4, 'name' => 'Budget Phone', 'category' => 'Smartphones', 'brand' => 'Generic', 'price' => 199.99],
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products, $userPreferences);
@@ -237,12 +237,12 @@ class SimilarProductTest extends TestCase
         $targetProduct = [
             'id' => 1,
             'name' => 'iPhone 15 Pro',
-            'category' => 'Smartphones'
+            'category' => 'Smartphones',
         ];
 
         $products = [
             ['id' => 2, 'name' => 'iphone 15', 'category' => 'smartphones'],
-            ['id' => 3, 'name' => 'IPHONE 15 PLUS', 'category' => 'SMARTPHONES']
+            ['id' => 3, 'name' => 'IPHONE 15 PLUS', 'category' => 'SMARTPHONES'],
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products);
@@ -262,7 +262,7 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $products = $this->generateTestProducts(100);
@@ -282,12 +282,12 @@ class SimilarProductTest extends TestCase
             'name' => 'iPhone 15 Pro',
             'category' => 'Smartphones',
             'brand' => 'Apple',
-            'price' => 999.99
+            'price' => 999.99,
         ];
 
         $products = [
             ['id' => 2, 'name' => 'Samsung Galaxy S24', 'category' => 'Smartphones'], // Missing brand and price
-            ['id' => 3, 'name' => 'Google Pixel 8', 'brand' => 'Google', 'price' => 699.99] // Missing category
+            ['id' => 3, 'name' => 'Google Pixel 8', 'brand' => 'Google', 'price' => 699.99], // Missing category
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, $products);
@@ -308,22 +308,23 @@ class SimilarProductTest extends TestCase
             $similarity = $this->calculateSimilarityScore($targetProduct, $product);
 
             // Apply user preferences if provided
-            if (!empty($userPreferences)) {
+            if (! empty($userPreferences)) {
                 $similarity = $this->applyUserPreferences($similarity, $product, $userPreferences);
             }
 
             $similarities[] = [
                 'product' => $product,
-                'similarity_score' => $similarity
+                'similarity_score' => $similarity,
             ];
         }
 
         // Sort by similarity score (descending)
-        usort($similarities, fn($a, $b) => $b['similarity_score'] <=> $a['similarity_score']);
+        usort($similarities, fn ($a, $b) => $b['similarity_score'] <=> $a['similarity_score']);
 
         // Return top results
         $results = array_slice($similarities, 0, $limit);
-        return array_map(fn($item) => $item['product'], $results);
+
+        return array_map(fn ($item) => $item['product'], $results);
     }
 
     private function findSimilarProductsBySpecs(array $targetProduct, array $products): array
@@ -338,13 +339,13 @@ class SimilarProductTest extends TestCase
             $similarity = $this->calculateSpecSimilarity($targetProduct, $product);
             $similarities[] = [
                 'product' => $product,
-                'similarity_score' => $similarity
+                'similarity_score' => $similarity,
             ];
         }
 
-        usort($similarities, fn($a, $b) => $b['similarity_score'] <=> $a['similarity_score']);
+        usort($similarities, fn ($a, $b) => $b['similarity_score'] <=> $a['similarity_score']);
 
-        return array_map(fn($item) => $item['product'], $similarities);
+        return array_map(fn ($item) => $item['product'], $similarities);
     }
 
     private function calculateSimilarityScore(array $product1, array $product2): float
@@ -385,7 +386,7 @@ class SimilarProductTest extends TestCase
 
     private function calculateSpecSimilarity(array $product1, array $product2): float
     {
-        if (!isset($product1['specifications']) || !isset($product2['specifications'])) {
+        if (! isset($product1['specifications']) || ! isset($product2['specifications'])) {
             return 0;
         }
 
@@ -418,6 +419,7 @@ class SimilarProductTest extends TestCase
         }
 
         $distance = levenshtein($str1, $str2);
+
         return 1 - ($distance / $maxLength);
     }
 
@@ -451,10 +453,10 @@ class SimilarProductTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $products[] = [
                 'id' => $i + 2,
-                'name' => 'Product ' . ($i + 2),
+                'name' => 'Product '.($i + 2),
                 'category' => $categories[array_rand($categories)],
                 'brand' => $brands[array_rand($brands)],
-                'price' => rand(100, 2000) + (rand(0, 99) / 100)
+                'price' => rand(100, 2000) + (rand(0, 99) / 100),
             ];
         }
 

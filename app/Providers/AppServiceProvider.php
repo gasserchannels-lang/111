@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Services\FactoryConfigurationService;
+use App\Services\PriceSearchService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(PriceSearchService::class, function ($app) {
+            return new PriceSearchService($app->make(\Illuminate\Contracts\Validation\Factory::class));
+        });
     }
 
     /**
@@ -23,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureFactoryNaming();
+
+        // Disable Telescope completely to avoid database issues
+        if (class_exists(\Laravel\Telescope\Telescope::class)) {
+            \Laravel\Telescope\Telescope::stopRecording();
+        }
     }
 
     /**

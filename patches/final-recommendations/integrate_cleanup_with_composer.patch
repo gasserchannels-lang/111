@@ -1,0 +1,15 @@
+--- a/composer.json
++++ b/composer.json
+@@ -190,7 +190,10 @@
+             "./vendor/bin/phpstan analyse --memory-limit=1G",
+             "./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode",
+             "composer audit",
+             "@test:comprehensive"
+-        ]
++        ],
++        "cleanup": [
++            "php cleanup-environment.php"
++        ]
+     },
+     "extra": {
+         "laravel": {
