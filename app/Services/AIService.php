@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Http\Client\Response;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class AIService
 {
     private string $apiKey;
+
     private string $baseUrl;
+
     private int $timeout;
 
     public function __construct()
@@ -26,12 +28,12 @@ class AIService
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     private function makeRequest(string $endpoint, array $data): array
     {
-        $fullUrl = $this->baseUrl . $endpoint;
+        $fullUrl = $this->baseUrl.$endpoint;
 
         try {
             $response = Http::withToken($this->apiKey)
@@ -44,16 +46,18 @@ class AIService
                     'status' => $response->status(),
                     'response' => $response->body(),
                 ]);
+
                 return ['error' => 'API request failed', 'details' => $response->json() ?? []];
             }
 
             return $response->json() ?? [];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('AI Service Exception', [
                 'url' => $fullUrl,
                 'message' => $e->getMessage(),
             ]);
+
             return ['error' => 'An exception occurred during the API request.'];
         }
     }
@@ -70,11 +74,12 @@ class AIService
         ];
 
         $response = $this->makeRequest('/completions', $data);
+
         return $this->parseAnalysisResponse($response);
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     private function parseAnalysisResponse(array $data): array
@@ -100,13 +105,14 @@ class AIService
     }
 
     /**
-     * @param array<string, mixed> $userPreferences
-     * @param array<int, array<string, mixed>> $products
+     * @param  array<string, mixed>  $userPreferences
+     * @param  array<int, array<string, mixed>>  $products
      * @return array<string, mixed>
      */
     public function generateRecommendations(array $userPreferences, array $products): array
     {
-        $prompt = "Based on these preferences: " . json_encode($userPreferences) . ", recommend products from this list: " . json_encode($products);
+        $prompt = 'Based on these preferences: '.json_encode($userPreferences).', recommend products from this list: '.json_encode($products);
+
         return $this->analyzeText($prompt, 'recommendation');
     }
 
@@ -130,11 +136,12 @@ class AIService
         ];
 
         $response = $this->makeRequest('/chat/completions', $data);
+
         return $this->parseImageAnalysis($response);
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     private function parseImageAnalysis(array $data): array
@@ -146,6 +153,7 @@ class AIService
         $message = $data['choices'][0]['message'] ?? null;
         if ($message && isset($message['content'])) {
             $content = (string) $message['content'];
+
             return [
                 'category' => $this->extractCategory($content),
                 'recommendations' => $this->extractRecommendations($content),
