@@ -19,10 +19,7 @@ class PriceSearchController extends Controller
 {
     public function __construct(private readonly PriceSearchService $priceSearchService)
     {
-        // Ensure PriceSearchService is properly injected
-        if (! $this->priceSearchService) {
-            $this->priceSearchService = app(PriceSearchService::class);
-        }
+        // PriceSearchService is properly injected via constructor
     }
 
     public function bestOffer(Request $request): JsonResponse
@@ -86,7 +83,7 @@ class PriceSearchController extends Controller
                     },
                     'brand:id,name',
                     'category:id,name',
-                ])->where('name', 'like', '%'.$productName.'%')->first();
+                ])->where('name', 'like', '%' . $productName . '%')->first();
             }
 
             if (! $product) {
@@ -125,7 +122,7 @@ class PriceSearchController extends Controller
                 })->toArray(),
             ]);
         } catch (\Exception $e) {
-            Log::error('PriceSearchController@bestOffer failed: '.$e->getMessage());
+            Log::error('PriceSearchController@bestOffer failed: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'An error occurred while finding the best offer',
@@ -144,7 +141,7 @@ class PriceSearchController extends Controller
 
             return response()->json($stores);
         } catch (Throwable $e) {
-            Log::error('PriceSearchController@supportedStores failed: '.$e->getMessage());
+            Log::error('PriceSearchController@supportedStores failed: ' . $e->getMessage());
 
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
@@ -166,14 +163,14 @@ class PriceSearchController extends Controller
             $queryStr = is_string($query) ? $query : '';
 
             // Use caching for better performance
-            $cacheKey = 'price_search_'.md5($queryStr);
+            $cacheKey = 'price_search_' . md5($queryStr);
             $results = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($queryStr) {
                 // Optimize query with proper indexing and limit
                 $products = Product::select(['id', 'name', 'description', 'slug', 'price', 'brand_id', 'category_id'])
                     ->where('is_active', true)
                     ->where(function ($q) use ($queryStr) {
-                        $q->where('name', 'like', '%'.$queryStr.'%')
-                            ->orWhere('description', 'like', '%'.$queryStr.'%');
+                        $q->where('name', 'like', '%' . $queryStr . '%')
+                            ->orWhere('description', 'like', '%' . $queryStr . '%');
                     })
                     ->with([
                         'brand:id,name',
@@ -189,7 +186,7 @@ class PriceSearchController extends Controller
                     ->limit(5) // Further reduce limit for better performance
                     ->get();
 
-                return $products->map(fn (Product $product): array => [
+                return $products->map(fn(Product $product): array => [
                     'id' => $product->id,
                     'name' => $product->name,
                     'description' => $product->description,
@@ -197,7 +194,7 @@ class PriceSearchController extends Controller
                     'price' => $product->price,
                     'brand' => $product->brand ? $product->brand->name : null,
                     'category' => $product->category ? $product->category->name : null,
-                    'prices' => $product->priceOffers->map(fn (\App\Models\PriceOffer $offer): array => [
+                    'prices' => $product->priceOffers->map(fn(\App\Models\PriceOffer $offer): array => [
                         'id' => $offer->id,
                         'price' => $offer->price,
                         'url' => $offer->store_url ?? null,
@@ -215,7 +212,7 @@ class PriceSearchController extends Controller
                 'query' => $query,
             ]);
         } catch (Throwable $e) {
-            Log::error('PriceSearchController@search failed: '.$e->getMessage());
+            Log::error('PriceSearchController@search failed: ' . $e->getMessage());
 
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }

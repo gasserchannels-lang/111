@@ -128,7 +128,9 @@ class LinkCheckerCommand extends Command
         $configLinks = config('app.external_links', []);
         if (is_array($configLinks)) {
             foreach ($configLinks as $name => $url) {
-                $links[] = ['name' => $name, 'url' => $url];
+                if (is_string($name) && is_string($url)) {
+                    $links[] = ['name' => $name, 'url' => $url];
+                }
             }
         }
 
@@ -167,8 +169,8 @@ class LinkCheckerCommand extends Command
         $this->info('==================');
 
         $this->info("Total links checked: {$this->totalChecked}");
-        $this->info('Working links: '.count($this->workingLinks));
-        $this->info('Broken links: '.count($this->brokenLinks));
+        $this->info('Working links: ' . count($this->workingLinks));
+        $this->info('Broken links: ' . count($this->brokenLinks));
 
         if ($this->brokenLinks !== []) {
             $this->newLine();

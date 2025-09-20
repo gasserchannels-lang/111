@@ -8,21 +8,21 @@ use PHPUnit\Framework\TestCase;
 class SimpleTest extends TestCase
 {
     #[CoversNothing]
-    public function test_simple_functionality()
+    public function test_simple_functionality(): void
     {
         // اختبار بسيط
         $this->assertTrue(true);
     }
 
     #[CoversNothing]
-    public function test_basic_assertions()
+    public function test_basic_assertions(): void
     {
         // اختبار بسيط
         $this->assertTrue(true);
     }
 
     #[CoversNothing]
-    public function test_simple_logic()
+    public function test_simple_logic(): void
     {
         // اختبار بسيط
         $this->assertTrue(true);

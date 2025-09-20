@@ -27,6 +27,7 @@
         "infection/infection": "^0.31.2",
         "itsgoingd/clockwork": "^5.3",
         "larastan/larastan": "^3.7",
+        "laravel/dusk": "^8.0",
         "laravel/pint": "^1.0",
         "laravel/telescope": "^5.11",
         "mockery/mockery": "^1.4.4",

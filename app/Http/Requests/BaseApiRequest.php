@@ -45,6 +45,7 @@ class BaseApiRequest extends FormRequest
 
     /**
      * Get common validation rules for pagination.
+     * @return array<string, string>
      */
     protected function paginationRules(): array
     {
@@ -56,6 +57,7 @@ class BaseApiRequest extends FormRequest
 
     /**
      * Get common validation rules for search.
+     * @return array<string, string>
      */
     protected function searchRules(): array
     {
@@ -68,6 +70,7 @@ class BaseApiRequest extends FormRequest
 
     /**
      * Get common validation rules for sorting.
+     * @return array<string, string>
      */
     protected function sortingRules(): array
     {
@@ -79,6 +82,7 @@ class BaseApiRequest extends FormRequest
 
     /**
      * Get common validation rules for filtering.
+     * @return array<string, string>
      */
     protected function filteringRules(): array
     {

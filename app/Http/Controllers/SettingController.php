@@ -83,7 +83,7 @@ class SettingController extends Controller
             // Clear config cache
             Artisan::call('config:clear');
 
-            Log::info('Settings updated by user: '.(auth()->id() ?? 'Guest'));
+            Log::info('Settings updated by user: ' . (auth()->id() ?? 'Guest'));
 
             return response()->json([
                 'success' => true,
@@ -91,7 +91,7 @@ class SettingController extends Controller
                 'data' => $request->all(),
             ]);
         } catch (\Exception $e) {
-            Log::error('Error updating settings: '.$e->getMessage());
+            Log::error('Error updating settings: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -215,14 +215,14 @@ class SettingController extends Controller
             // Reset storage settings
             $this->resetStorageSettings();
 
-            Log::info('Settings reset to default by user: '.(auth()->id() ?? 'Guest'));
+            Log::info('Settings reset to default by user: ' . (auth()->id() ?? 'Guest'));
 
             return response()->json([
                 'success' => true,
                 'message' => 'Settings reset to default successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error resetting settings: '.$e->getMessage());
+            Log::error('Error resetting settings: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -270,7 +270,7 @@ class SettingController extends Controller
             }
             $settings = json_decode($content, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($settings)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid JSON file',
@@ -292,7 +292,7 @@ class SettingController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Error importing settings: '.$e->getMessage());
+            Log::error('Error importing settings: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -310,7 +310,7 @@ class SettingController extends Controller
     private function processImportedSettings(array $settings): void
     {
         // Placeholder for processing imported settings
-        Log::info('Processing imported settings: '.json_encode($settings));
+        Log::info('Processing imported settings: ' . json_encode($settings));
     }
 
     /**
@@ -328,8 +328,8 @@ class SettingController extends Controller
                 'storage' => $this->getStorageSettings(),
             ];
 
-            $filename = 'settings_'.now()->format('Y-m-d_H-i-s').'.json';
-            $filePath = storage_path('app/'.$filename);
+            $filename = 'settings_' . now()->format('Y-m-d_H-i-s') . '.json';
+            $filePath = storage_path('app/' . $filename);
 
             file_put_contents($filePath, json_encode($settings, JSON_PRETTY_PRINT));
 
@@ -338,12 +338,12 @@ class SettingController extends Controller
                 'message' => 'Settings exported successfully',
                 'data' => [
                     'filename' => $filename,
-                    'download_url' => url('storage/'.$filename),
+                    'download_url' => url('storage/' . $filename),
                     'expires_at' => now()->addHours(24)->toISOString(),
                 ],
             ]);
         } catch (\Exception $e) {
-            Log::error('Error exporting settings: '.$e->getMessage());
+            Log::error('Error exporting settings: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -375,7 +375,7 @@ class SettingController extends Controller
                 'message' => 'System health retrieved successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error getting system health: '.$e->getMessage());
+            Log::error('Error getting system health: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,

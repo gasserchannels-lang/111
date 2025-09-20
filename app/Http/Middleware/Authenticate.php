@@ -22,12 +22,15 @@ class Authenticate extends Middleware
         return route('login');
     }
 
-    protected function unauthenticated($request, array $guards)
+    /**
+     * @param array<int, string> $guards
+     */
+    protected function unauthenticated($request, array $guards): never
     {
         if ($request->expectsJson() || $request->is('api/*')) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            abort(401, 'Unauthenticated');
         }
 
-        return redirect()->guest(route('login'));
+        abort(302, '', ['Location' => route('login')]);
     }
 }

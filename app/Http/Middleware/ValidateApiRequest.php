@@ -53,9 +53,10 @@ class ValidateApiRequest
 
         // If rules are provided as JSON string, decode them
         if (is_string($configRules)) {
-            return json_decode($configRules, true) ?? [];
+            $decoded = json_decode($configRules, true);
+            return is_array($decoded) ? $decoded : [];
         }
 
-        return $configRules;
+        return is_array($configRules) ? $configRules : [];
     }
 }

@@ -47,7 +47,10 @@ class LocaleMiddleware
 
         // 2. تحقق من الجلسة
         if ($this->session->has('locale_language')) {
-            return $this->session->get('locale_language');
+            $sessionLang = $this->session->get('locale_language');
+            if (is_string($sessionLang)) {
+                return $sessionLang;
+            }
         }
 
         // 3. تحقق من لغة المتصفح
@@ -56,16 +59,17 @@ class LocaleMiddleware
 
     private function getBrowserLanguage(Request $request): string
     {
-        $browserLangCode = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
+        $acceptLanguage = $request->server('HTTP_ACCEPT_LANGUAGE', '');
+        $browserLangCode = is_string($acceptLanguage) ? substr($acceptLanguage, 0, 2) : '';
         $dbLangCode = Language::where('code', $browserLangCode)->value('code');
 
-        if ($dbLangCode) {
+        if (is_string($dbLangCode)) {
             return $dbLangCode;
         }
 
         // إذا لم تكن لغة المتصفح مدعومة، استخدم اللغة الافتراضية من قاعدة البيانات
         $defaultDbLang = Language::where('is_default', true)->value('code');
 
-        return $defaultDbLang ?: config('app.fallback_locale', 'en');
+        return is_string($defaultDbLang) ? $defaultDbLang : config('app.fallback_locale', 'en');
     }
 }

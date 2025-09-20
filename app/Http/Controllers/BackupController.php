@@ -31,7 +31,7 @@ class BackupController extends Controller
                 'message' => 'Backups retrieved successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error getting backups: '.$e->getMessage());
+            Log::error('Error getting backups: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -54,7 +54,7 @@ class BackupController extends Controller
             ]);
 
             $type = $request->input('type');
-            $name = $request->input('name', 'backup_'.now()->format('Y-m-d_H-i-s'));
+            $name = $request->input('name', 'backup_' . now()->format('Y-m-d_H-i-s'));
             $description = $request->input('description', '');
 
             $backup = $this->createBackup([
@@ -69,7 +69,7 @@ class BackupController extends Controller
                 'message' => 'Backup created successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error creating backup: '.$e->getMessage());
+            Log::error('Error creating backup: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -94,7 +94,7 @@ class BackupController extends Controller
                 ], 404);
             }
 
-            $filePath = $this->backupPath.'/'.$backup['filename'];
+            $filePath = $this->backupPath . '/' . $backup['filename'];
 
             if (! file_exists($filePath)) {
                 return response()->json([
@@ -108,13 +108,13 @@ class BackupController extends Controller
                 'message' => 'Backup ready for download',
                 'data' => [
                     'filename' => $backup['filename'],
-                    'download_url' => url('storage/backups/'.$backup['filename']),
+                    'download_url' => url('storage/backups/' . $backup['filename']),
                     'size' => filesize($filePath),
                     'expires_at' => now()->addHours(24)->toISOString(),
                 ],
             ]);
         } catch (\Exception $e) {
-            Log::error('Error downloading backup: '.$e->getMessage());
+            Log::error('Error downloading backup: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -139,20 +139,20 @@ class BackupController extends Controller
                 ], 404);
             }
 
-            $filePath = $this->backupPath.'/'.$backup['filename'];
+            $filePath = $this->backupPath . '/' . $backup['filename'];
 
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
 
-            Log::info('Backup deleted: '.$id);
+            Log::info('Backup deleted: ' . $id);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Backup deleted successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error deleting backup: '.$e->getMessage());
+            Log::error('Error deleting backup: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -185,7 +185,7 @@ class BackupController extends Controller
                 'data' => $result['data'] ?? [],
             ]);
         } catch (\Exception $e) {
-            Log::error('Error restoring backup: '.$e->getMessage());
+            Log::error('Error restoring backup: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -206,7 +206,7 @@ class BackupController extends Controller
             $totalCount = count($backups);
 
             foreach ($backups as $backup) {
-                $filePath = $this->backupPath.'/'.$backup['filename'];
+                $filePath = $this->backupPath . '/' . $backup['filename'];
                 if (file_exists($filePath)) {
                     $totalSize += filesize($filePath);
                 }
@@ -226,7 +226,7 @@ class BackupController extends Controller
                 'message' => 'Backup statistics retrieved successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error getting backup statistics: '.$e->getMessage());
+            Log::error('Error getting backup statistics: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -261,7 +261,7 @@ class BackupController extends Controller
                 if ($file === '..') {
                     continue;
                 }
-                $filePath = $this->backupPath.'/'.$file;
+                $filePath = $this->backupPath . '/' . $file;
                 if (is_file($filePath)) {
                     $fileSize = filesize($filePath);
                     $fileTime = filemtime($filePath);
@@ -277,11 +277,11 @@ class BackupController extends Controller
             }
 
             // Sort by creation time (newest first)
-            usort($backups, fn (array $a, array $b): int => strtotime($b['created_at']) - strtotime($a['created_at']));
+            usort($backups, fn(array $a, array $b): int => strtotime($b['created_at']) - strtotime($a['created_at']));
 
             return $backups;
         } catch (\Exception $e) {
-            Log::error('Error getting backups list: '.$e->getMessage());
+            Log::error('Error getting backups list: ' . $e->getMessage());
 
             return [];
         }
@@ -297,11 +297,11 @@ class BackupController extends Controller
     {
         try {
             $type = $options['type'] ?? 'full';
-            $name = $options['name'] ?? 'backup_'.now()->format('Y-m-d_H-i-s');
+            $name = $options['name'] ?? 'backup_' . now()->format('Y-m-d_H-i-s');
             $description = $options['description'] ?? '';
 
-            $filename = $name.'.zip';
-            $filePath = $this->backupPath.'/'.$filename;
+            $filename = $name . '.zip';
+            $filePath = $this->backupPath . '/' . $filename;
 
             if (! is_dir($this->backupPath)) {
                 mkdir($this->backupPath, 0755, true);
@@ -322,7 +322,7 @@ class BackupController extends Controller
 
             $zip->close();
 
-            Log::info('Backup created: '.$filename);
+            Log::info('Backup created: ' . $filename);
 
             $fileSize = filesize($filePath);
 
@@ -336,7 +336,7 @@ class BackupController extends Controller
                 'description' => $description,
             ];
         } catch (\Exception $e) {
-            Log::error('Error creating backup: '.$e->getMessage());
+            Log::error('Error creating backup: ' . $e->getMessage());
 
             throw $e;
         }
@@ -366,7 +366,7 @@ class BackupController extends Controller
                 $zip->addFile($dumpFile, 'database_dump.sql');
             }
         } catch (\Exception $e) {
-            Log::error('Error backing up database: '.$e->getMessage());
+            Log::error('Error backing up database: ' . $e->getMessage());
         }
     }
 
@@ -387,10 +387,12 @@ class BackupController extends Controller
             ];
 
             foreach ($directories as $dir) {
-                $this->addDirectoryToZip($zip, base_path($dir), $dir);
+                if (is_string($dir)) {
+                    $this->addDirectoryToZip($zip, base_path($dir), $dir);
+                }
             }
         } catch (\Exception $e) {
-            Log::error('Error backing up files: '.$e->getMessage());
+            Log::error('Error backing up files: ' . $e->getMessage());
         }
     }
 
@@ -409,9 +411,12 @@ class BackupController extends Controller
         );
 
         foreach ($files as $file) {
-            if ($file->isFile()) {
-                $relativePath = $zipPath.'/'.substr((string) $file->getRealPath(), strlen($dir) + 1);
-                $zip->addFile($file->getRealPath(), $relativePath);
+            if ($file instanceof \SplFileInfo && $file->isFile()) {
+                $realPath = $file->getRealPath();
+                if ($realPath !== false) {
+                    $relativePath = $zipPath . '/' . substr($realPath, strlen($dir) + 1);
+                    $zip->addFile($realPath, $relativePath);
+                }
             }
         }
     }
@@ -443,7 +448,7 @@ class BackupController extends Controller
     private function restoreFromBackup(array $backup): array
     {
         try {
-            $filePath = $this->backupPath.'/'.$backup['filename'];
+            $filePath = $this->backupPath . '/' . $backup['filename'];
 
             if (! file_exists($filePath)) {
                 return [
@@ -461,14 +466,14 @@ class BackupController extends Controller
             }
 
             // Extract to temporary directory
-            $tempDir = storage_path('app/temp/restore_'.uniqid());
+            $tempDir = storage_path('app/temp/restore_' . uniqid());
             mkdir($tempDir, 0755, true);
 
             $zip->extractTo($tempDir);
             $zip->close();
 
             // Restore database if present
-            $dbDumpFile = $tempDir.'/database_dump.sql';
+            $dbDumpFile = $tempDir . '/database_dump.sql';
             if (file_exists($dbDumpFile)) {
                 $this->restoreDatabase($dbDumpFile);
             }
@@ -484,11 +489,11 @@ class BackupController extends Controller
                 'message' => 'Backup restored successfully',
             ];
         } catch (\Exception $e) {
-            Log::error('Error restoring backup: '.$e->getMessage());
+            Log::error('Error restoring backup: ' . $e->getMessage());
 
             return [
                 'success' => false,
-                'message' => 'Failed to restore backup: '.$e->getMessage(),
+                'message' => 'Failed to restore backup: ' . $e->getMessage(),
             ];
         }
     }
@@ -505,7 +510,7 @@ class BackupController extends Controller
                 '--force' => true,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error restoring database: '.$e->getMessage());
+            Log::error('Error restoring database: ' . $e->getMessage());
         }
     }
 
@@ -521,20 +526,23 @@ class BackupController extends Controller
             );
 
             foreach ($files as $file) {
-                if ($file->isFile()) {
-                    $relativePath = substr((string) $file->getRealPath(), strlen($tempDir) + 1);
-                    $targetPath = base_path($relativePath);
+                if ($file instanceof \SplFileInfo && $file->isFile()) {
+                    $realPath = $file->getRealPath();
+                    if ($realPath !== false) {
+                        $relativePath = substr($realPath, strlen($tempDir) + 1);
+                        $targetPath = base_path($relativePath);
 
-                    $targetDir = dirname($targetPath);
-                    if (! is_dir($targetDir)) {
-                        mkdir($targetDir, 0755, true);
+                        $targetDir = dirname($targetPath);
+                        if (! is_dir($targetDir)) {
+                            mkdir($targetDir, 0755, true);
+                        }
+
+                        copy($realPath, $targetPath);
                     }
-
-                    copy($file->getRealPath(), $targetPath);
                 }
             }
         } catch (\Exception $e) {
-            Log::error('Error restoring files: '.$e->getMessage());
+            Log::error('Error restoring files: ' . $e->getMessage());
         }
     }
 
@@ -564,7 +572,7 @@ class BackupController extends Controller
         $pow = min($pow, count($units) - 1);
         $bytes /= 1024 ** $pow;
 
-        return round($bytes, 2).' '.$units[$pow];
+        return round($bytes, 2) . ' ' . $units[$pow];
     }
 
     /**
@@ -578,7 +586,7 @@ class BackupController extends Controller
 
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
-            $path = $dir.'/'.$file;
+            $path = $dir . '/' . $file;
             is_dir($path) ? $this->removeDirectory($path) : unlink($path);
         }
         rmdir($dir);

@@ -160,7 +160,7 @@ class ProductSearchRequest extends FormRequest
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $data['tags'] = is_array($this->tags) ? array_map(fn($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -261,7 +261,8 @@ class ProductSearchRequest extends FormRequest
      */
     public function getQuery(): string
     {
-        return $this->input('q', '');
+        $query = $this->input('q', '');
+        return is_string($query) ? $query : '';
     }
 
     /**
@@ -271,9 +272,12 @@ class ProductSearchRequest extends FormRequest
      */
     public function getPagination(): array
     {
+        $page = $this->input('page', 1);
+        $perPage = $this->input('per_page', 15);
+
         return [
-            'page' => $this->input('page', 1),
-            'per_page' => $this->input('per_page', 15),
+            'page' => is_numeric($page) ? (int) $page : 1,
+            'per_page' => is_numeric($perPage) ? (int) $perPage : 15,
         ];
     }
 
@@ -284,9 +288,12 @@ class ProductSearchRequest extends FormRequest
      */
     public function getSorting(): array
     {
+        $sort = $this->input('sort', 'popularity');
+        $order = $this->input('order', 'desc');
+
         return [
-            'sort' => $this->input('sort', 'popularity'),
-            'order' => $this->input('order', 'desc'),
+            'sort' => is_string($sort) ? $sort : 'popularity',
+            'order' => is_string($order) ? $order : 'desc',
         ];
     }
 }
