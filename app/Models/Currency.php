@@ -37,17 +37,17 @@ class Currency extends Model
     protected $guarded = [];
 
     /**
-     * @return HasMany<Store<Database\Factories\StoreFactory>, Currency<Database\Factories\CurrencyFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Store>
      */
-    public function stores(): HasMany
+    public function stores(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Store::class);
     }
 
     /**
-     * @return BelongsToMany<Language<Database\Factories\LanguageFactory>, Currency<Database\Factories\CurrencyFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Language>
      */
-    public function languages(): BelongsToMany
+    public function languages(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Language::class, 'currency_language');
     }

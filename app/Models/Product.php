@@ -89,57 +89,57 @@ class Product extends Model
 
     // --- العلاقات ---
     /**
-     * @return BelongsTo<Brand, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Brand>
      */
-    public function brand(): BelongsTo
+    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Brand::class)->select(['id', 'name']);
     }
 
     /**
-     * @return BelongsTo<Category, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category>
      */
-    public function category(): BelongsTo
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class)->select(['id', 'name']);
     }
 
     /**
-     * @return HasMany<PriceAlert, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceAlert>
      */
-    public function priceAlerts(): HasMany
+    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PriceAlert::class);
     }
 
     /**
-     * @return HasMany<Review, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Review>
      */
-    public function reviews(): HasMany
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Review::class);
     }
 
     /**
-     * @return HasMany<Wishlist, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Wishlist>
      */
-    public function wishlists(): HasMany
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Wishlist::class);
     }
 
     /**
-     * @return HasMany<PriceOffer, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceOffer>
      */
-    public function priceOffers(): HasMany
+    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PriceOffer::class);
     }
 
     /**
-     * @return BelongsTo<Store, Product>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Store>
      */
-    public function store(): BelongsTo
+    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Store::class);
     }

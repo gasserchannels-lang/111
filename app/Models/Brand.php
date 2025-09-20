@@ -101,9 +101,9 @@ class Brand extends Model
     /**
      * Get the products for the brand.
      *
-     * @return HasMany<Product, Brand>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
      */
-    public function products(): HasMany
+    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Product::class, 'brand_id');
     }

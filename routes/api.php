@@ -351,7 +351,8 @@ Route::middleware(['throttle:ai'])->prefix('ai')->group(function () {
             ]);
 
             $aiService = app(\App\Services\AIService::class);
-            $category = $aiService->classifyProduct($request->all());
+            $productDescription = $request->input('description', '');
+            $category = $aiService->classifyProduct($productDescription);
 
             return response()->json([
                 'success' => true,

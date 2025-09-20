@@ -40,9 +40,9 @@ class AuditLog extends Model
     /**
      * Get the user who performed the action.
      *
-     * @return BelongsTo<User<Database\Factories\UserFactory>, AuditLog<Database\Factories\AuditLogFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -50,9 +50,9 @@ class AuditLog extends Model
     /**
      * Get the auditable model.
      *
-     * @return MorphTo<Model, AuditLog<Database\Factories\AuditLogFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function auditable(): MorphTo
+    public function auditable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
     }

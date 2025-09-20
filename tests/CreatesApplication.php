@@ -15,7 +15,7 @@ trait CreatesApplication
     public function createApplication(): Application
     {
         // تعيين APP_KEY قبل إنشاء التطبيق
-        if (! env('APP_KEY')) {
+        if (! config('app.key')) {
             putenv('APP_KEY=base64:mAkbpuXF7OVTRIDCIMkD8+xw6xVi7pge9CFImeqZaxE=');
         }
 

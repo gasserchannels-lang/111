@@ -1,46 +1,71 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🚀 Running pre-push checks..."
+# ==============================================================================
+#  CONTROL SWITCH: Set to "true" to disable all checks and push directly.
+# ==============================================================================
+DISABLE_CHECKS="false"
 
-# Run PHPStan
-echo "📊 Running PHPStan static analysis..."
-./vendor/bin/phpstan analyse --memory-limit=2G
-if [ $? -ne 0 ]; then
-    echo "❌ PHPStan failed. Please fix the issues before pushing."
-    exit 1
+if [ "$DISABLE_CHECKS" = "true" ]; then
+    echo "✅ Pre-push checks are temporarily disabled by the control switch. Pushing directly."
+    exit 0
 fi
 
-# Run PHPUnit tests
-echo "🧪 Running PHPUnit tests..."
-./vendor/bin/phpunit --configuration=phpunit.xml
+# ==============================================================================
+#  DETAILED CHECKS WITH LOGGING
+# ==============================================================================
+echo "🚀 Running pre-push checks with detailed logging..."
+
+# Variable to track if any check fails
+ANY_CHECK_FAILED=0
+
+# 1. Run PHPStan and log output
+echo "📊 Running PHPStan static analysis... (logs to reports/phpstan.txt)"
+./vendor/bin/phpstan analyse --memory-limit=2G > reports/phpstan.txt 2>&1
 if [ $? -ne 0 ]; then
-    echo "❌ Tests failed. Please fix the failing tests before pushing."
-    exit 1
+    echo "❌ PHPStan failed. See reports/phpstan.txt for details."
+    ANY_CHECK_FAILED=1
 fi
 
-# Run Laravel Pint
-echo "🎨 Running Laravel Pint code style check..."
-./vendor/bin/pint --test
+# 2. Run PHPUnit tests and log output
+echo "🧪 Running PHPUnit tests... (logs to reports/phpunit.txt)"
+./vendor/bin/phpunit --configuration=phpunit.xml > reports/phpunit.txt 2>&1
 if [ $? -ne 0 ]; then
-    echo "❌ Code style issues found. Please run './vendor/bin/pint' to fix them."
-    exit 1
+    echo "❌ Tests failed. See reports/phpunit.txt for details."
+    ANY_CHECK_FAILED=1
 fi
 
-# Run PHPMD
-echo "🔍 Running PHPMD code quality check..."
-./vendor/bin/phpmd app,config,database,routes text phpmd.xml
+# 3. Run Laravel Pint and log output
+echo "🎨 Running Laravel Pint code style check... (logs to reports/pint.txt)"
+./vendor/bin/pint --test > reports/pint.txt 2>&1
 if [ $? -ne 0 ]; then
-    echo "❌ PHPMD found code quality issues. Please review and fix them."
-    exit 1
+    echo "❌ Code style issues found. See reports/pint.txt for details."
+    ANY_CHECK_FAILED=1
 fi
 
-# Run Composer Audit
-echo "🔒 Running Composer security audit..."
-composer audit
+# 4. Run PHPMD and log output
+echo "🔍 Running PHPMD code quality check... (logs to reports/phpmd.txt)"
+./vendor/bin/phpmd app,config,database,routes text phpmd.xml > reports/phpmd.txt 2>&1
 if [ $? -ne 0 ]; then
-    echo "❌ Security vulnerabilities found. Please update dependencies."
-    exit 1
+    echo "❌ PHPMD found issues. See reports/phpmd.txt for details."
+    ANY_CHECK_FAILED=1
 fi
 
-echo "✅ All pre-push checks passed! Ready to push."
+# 5. Run Composer Audit and log output
+echo "🔒 Running Composer security audit... (logs to reports/composer-audit.txt)"
+composer audit > reports/composer-audit.txt 2>&1
+if [ $? -ne 0 ]; then
+    echo "❌ Security vulnerabilities found. See reports/composer-audit.txt for details."
+    ANY_CHECK_FAILED=1
+fi
+
+# Final check
+if [ $ANY_CHECK_FAILED -ne 0 ]; then
+    echo "--------------------------------------------------------------------"
+    echo "🔥 One or more pre-push checks failed. Push aborted."
+    echo "📂 Detailed error reports have been saved in the 'reports' directory."
+    exit 1
+else
+    echo "✅ All pre-push checks passed! Ready to push."
+    exit 0
+fi

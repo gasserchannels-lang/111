@@ -63,17 +63,17 @@ class Review extends Model
     ];
 
     /**
-     * @return BelongsTo<User<Database\Factories\UserFactory>, Review<Database\Factories\ReviewFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * @return BelongsTo<Product<Database\Factories\ProductFactory>, Review<Database\Factories\ReviewFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
      */
-    public function product(): BelongsTo
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class);
     }

@@ -65,17 +65,17 @@ class PriceOffer extends Model
     ];
 
     /**
-     * @return BelongsTo<Product<Database\Factories\ProductFactory>, PriceOffer<Database\Factories\PriceOfferFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
      */
-    public function product(): BelongsTo
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
     /**
-     * @return BelongsTo<Store<Database\Factories\StoreFactory>, PriceOffer<Database\Factories\PriceOfferFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Store>
      */
-    public function store(): BelongsTo
+    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Store::class);
     }

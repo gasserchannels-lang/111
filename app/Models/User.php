@@ -81,9 +81,9 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<Review, User>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Review>
      */
-    public function reviews(): HasMany
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Review::class);
     }
@@ -91,9 +91,9 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: ElseExpression.
      *
-     * @return HasMany<Wishlist, User>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Wishlist>
      */
-    public function wishlists(): HasMany
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Wishlist::class);
     }
@@ -101,9 +101,9 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: CamelCaseVariableName.
      *
-     * @return HasMany<PriceAlert, User>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceAlert>
      */
-    public function priceAlerts(): HasMany
+    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         // snake_case intentionally used to trigger PHPMD rule
         $user_name = getenv('CI_TEST_USER') ?: 'ci_test_user';
@@ -117,9 +117,9 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasOne<UserLocaleSetting, User>
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<UserLocaleSetting>
      */
-    public function localeSetting(): HasOne
+    public function localeSetting(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserLocaleSetting::class);
     }

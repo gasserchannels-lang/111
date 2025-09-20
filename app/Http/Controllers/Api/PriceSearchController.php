@@ -106,7 +106,7 @@ class PriceSearchController extends Controller
                     'price' => $bestOffer->price,
                     'store_id' => $bestOffer->store_id,
                     'store' => $bestOffer->store ? $bestOffer->store->name : 'Unknown Store',
-                    'store_url' => $bestOffer->store_url,
+                    'store_url' => $bestOffer->url,
                     'is_available' => $bestOffer->is_available,
                     'total_offers' => $product->priceOffers->count(),
                 ],
@@ -116,7 +116,7 @@ class PriceSearchController extends Controller
                         'price' => $offer->price,
                         'store_id' => $offer->store_id,
                         'store' => $offer->store ? $offer->store->name : 'Unknown Store',
-                        'store_url' => $offer->store_url,
+                        'store_url' => $offer->url,
                         'is_available' => $offer->is_available,
                     ];
                 })->toArray(),
@@ -176,7 +176,7 @@ class PriceSearchController extends Controller
                         'brand:id,name',
                         'category:id,name',
                         'priceOffers' => function ($query) {
-                            $query->select(['id', 'product_id', 'price', 'store_id', 'is_available', 'store_url'])
+                            $query->select(['id', 'product_id', 'price', 'store_id', 'is_available', 'url'])
                                 ->with('store:id,name')
                                 ->where('is_available', true)
                                 ->orderBy('price', 'asc')
@@ -197,7 +197,7 @@ class PriceSearchController extends Controller
                     'prices' => $product->priceOffers->map(fn(\App\Models\PriceOffer $offer): array => [
                         'id' => $offer->id,
                         'price' => $offer->price,
-                        'url' => $offer->store_url ?? null,
+                        'url' => $offer->url ?? null,
                         'store' => $offer->store ? $offer->store->name : null,
                         'is_available' => $offer->is_available,
                     ])->values(),

@@ -20,9 +20,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_database_operations()
+    public function test_mock_database_operations(): void
     {
         // Mock database connection instead of console
+        /** @var \Mockery\MockInterface&\Illuminate\Database\Connection $mockConnection */
         $mockConnection = Mockery::mock('Illuminate\Database\Connection');
         $mockConnection->shouldReceive('table')
             ->once()
@@ -49,7 +50,7 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_cache_operations()
+    public function test_mock_cache_operations(): void
     {
         // Mock cache facade
         Cache::shouldReceive('get')
@@ -72,7 +73,7 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_queue_operations()
+    public function test_mock_queue_operations(): void
     {
         // Mock queue facade
         Queue::shouldReceive('push')
@@ -94,19 +95,23 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_http_requests()
+    public function test_mock_http_requests(): void
     {
         // Mock HTTP client
+        /** @var \Mockery\MockInterface&\GuzzleHttp\Client $mockClient */
         $mockClient = Mockery::mock('GuzzleHttp\Client');
+        /** @var \Mockery\MockInterface&\Psr\Http\Message\ResponseInterface $mockResponse */
         $mockResponse = Mockery::mock('Psr\Http\Message\ResponseInterface');
 
         $mockResponse->shouldReceive('getStatusCode')
             ->once()
             ->andReturn(200);
 
+        /** @var \Mockery\MockInterface&\Psr\Http\Message\StreamInterface $mockStream */
+        $mockStream = Mockery::mock('Psr\Http\Message\StreamInterface', ['__toString' => '{"success": true}']);
         $mockResponse->shouldReceive('getBody')
             ->once()
-            ->andReturn(Mockery::mock('Psr\Http\Message\StreamInterface', ['__toString' => '{"success": true}']));
+            ->andReturn($mockStream);
 
         $mockClient->shouldReceive('get')
             ->once()
@@ -124,9 +129,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_file_operations()
+    public function test_mock_file_operations(): void
     {
         // Mock file system
+        /** @var \Mockery\MockInterface&\Illuminate\Filesystem\Filesystem $mockFile */
         $mockFile = Mockery::mock('Illuminate\Filesystem\Filesystem');
 
         $mockFile->shouldReceive('exists')
@@ -149,9 +155,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_mail_operations()
+    public function test_mock_mail_operations(): void
     {
         // Mock mail facade
+        /** @var \Mockery\MockInterface&\Illuminate\Mail\Mailer $mockMail */
         $mockMail = Mockery::mock('Illuminate\Mail\Mailer');
 
         $mockMail->shouldReceive('to')
@@ -174,9 +181,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_validation_operations()
+    public function test_mock_validation_operations(): void
     {
         // Mock validator
+        /** @var \Mockery\MockInterface&\Illuminate\Validation\Validator $mockValidator */
         $mockValidator = Mockery::mock('Illuminate\Validation\Validator');
 
         $mockValidator->shouldReceive('fails')
@@ -197,9 +205,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_event_operations()
+    public function test_mock_event_operations(): void
     {
         // Mock event dispatcher
+        /** @var \Mockery\MockInterface&\Illuminate\Events\Dispatcher $mockEvent */
         $mockEvent = Mockery::mock('Illuminate\Events\Dispatcher');
 
         $mockEvent->shouldReceive('dispatch')
@@ -217,9 +226,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_service_container()
+    public function test_mock_service_container(): void
     {
         // Mock service container
+        /** @var \Mockery\MockInterface&\Illuminate\Container\Container $mockContainer */
         $mockContainer = Mockery::mock('Illuminate\Container\Container');
 
         $mockContainer->shouldReceive('make')
@@ -237,9 +247,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_config_operations()
+    public function test_mock_config_operations(): void
     {
         // Mock config facade
+        /** @var \Mockery\MockInterface&\Illuminate\Config\Repository $mockConfig */
         $mockConfig = Mockery::mock('Illuminate\Config\Repository');
 
         $mockConfig->shouldReceive('get')
@@ -262,9 +273,10 @@ class AlternativeMockeryTest extends TestCase
      *
      * @return void
      */
-    public function test_mock_session_operations()
+    public function test_mock_session_operations(): void
     {
         // Mock session facade
+        /** @var \Mockery\MockInterface&\Illuminate\Session\Store $mockSession */
         $mockSession = Mockery::mock('Illuminate\Session\Store');
 
         $mockSession->shouldReceive('put')

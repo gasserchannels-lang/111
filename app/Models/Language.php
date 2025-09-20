@@ -55,9 +55,9 @@ class Language extends Model
     /**
      * العملات المرتبطة بهذه اللغة.
      *
-     * @return BelongsToMany<Currency<Database\Factories\CurrencyFactory>, Language<Database\Factories\LanguageFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Currency>
      */
-    public function currencies(): BelongsToMany
+    public function currencies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Currency::class, 'language_currency')
             ->withPivot('is_default')
@@ -75,9 +75,9 @@ class Language extends Model
     /**
      * إعدادات المستخدمين لهذه اللغة.
      *
-     * @return HasMany<UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>, Language<Database\Factories\LanguageFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<UserLocaleSetting>
      */
-    public function userLocaleSettings(): HasMany
+    public function userLocaleSettings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(UserLocaleSetting::class);
     }

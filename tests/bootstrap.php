@@ -25,7 +25,7 @@ if (class_exists('Mockery')) {
     // تنظيف أي static references سابقة
     try {
         $container = Mockery::getContainer();
-        if ($container) {
+        if ($container !== null) {
             $container->mockery_teardown();
         }
     } catch (\Exception $e) {

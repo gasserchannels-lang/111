@@ -100,9 +100,9 @@ class Category extends Model
     /**
      * Parent category relationship.
      *
-     * @return BelongsTo<Category, Category>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category>
      */
-    public function parent(): BelongsTo
+    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
@@ -110,9 +110,9 @@ class Category extends Model
     /**
      * Children categories relationship.
      *
-     * @return HasMany<Category, Category>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Category>
      */
-    public function children(): HasMany
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
@@ -120,9 +120,9 @@ class Category extends Model
     /**
      * Products relationship.
      *
-     * @return HasMany<Product, Category>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
      */
-    public function products(): HasMany
+    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Product::class, 'category_id');
     }

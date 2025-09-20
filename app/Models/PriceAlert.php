@@ -77,17 +77,17 @@ class PriceAlert extends Model
     protected $errors;
 
     /**
-     * @return BelongsTo<User<Database\Factories\UserFactory>, PriceAlert<Database\Factories\PriceAlertFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * @return BelongsTo<Product<Database\Factories\ProductFactory>, PriceAlert<Database\Factories\PriceAlertFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
      */
-    public function product(): BelongsTo
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class);
     }

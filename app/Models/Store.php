@@ -105,25 +105,25 @@ class Store extends Model
     ];
 
     /**
-     * @return HasMany<PriceOffer, Store>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceOffer>
      */
-    public function priceOffers(): HasMany
+    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PriceOffer::class);
     }
 
     /**
-     * @return HasMany<Product, Store>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
      */
-    public function products(): HasMany
+    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Product::class, 'store_id');
     }
 
     /**
-     * @return BelongsTo<Currency, Store>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Currency>
      */
-    public function currency(): BelongsTo
+    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Currency::class);
     }

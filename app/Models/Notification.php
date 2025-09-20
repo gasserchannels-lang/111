@@ -85,9 +85,9 @@ class Notification extends Model
     /**
      * Get the user that owns the notification.
      *
-     * @return BelongsTo<User<Database\Factories\UserFactory>, Notification<Database\Factories\NotificationFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

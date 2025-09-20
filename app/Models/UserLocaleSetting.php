@@ -56,9 +56,9 @@ class UserLocaleSetting extends Model
     /**
      * المستخدم المرتبط بهذا الإعداد.
      *
-     * @return BelongsTo<User<Database\Factories\UserFactory>, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
      */
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -66,9 +66,9 @@ class UserLocaleSetting extends Model
     /**
      * اللغة المحددة.
      *
-     * @return BelongsTo<Language<Database\Factories\LanguageFactory>, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Language>
      */
-    public function language(): BelongsTo
+    public function language(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Language::class);
     }
@@ -76,9 +76,9 @@ class UserLocaleSetting extends Model
     /**
      * العملة المحددة.
      *
-     * @return BelongsTo<Currency<Database\Factories\CurrencyFactory>, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Currency>
      */
-    public function currency(): BelongsTo
+    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Currency::class);
     }
