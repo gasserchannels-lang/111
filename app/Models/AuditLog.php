@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class AuditLog extends Model
 {
-    /** @phpstan-ignore-next-line */
+    /** @use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory> */
     use HasFactory;
 
     protected $fillable = [
@@ -139,8 +139,9 @@ class AuditLog extends Model
         foreach ($this->new_values as $key => $newValue) {
             $oldValue = $this->old_values[$key] ?? null;
             if ($oldValue !== $newValue) {
-                /** @phpstan-ignore-next-line */
-                $changes[] = "{$key}: ".(is_string($oldValue) ? $oldValue : (string) $oldValue).' → '.(is_string($newValue) ? $newValue : (string) $newValue);
+                $oldValueStr = is_string($oldValue) ? $oldValue : (is_scalar($oldValue) ? (string) $oldValue : 'null');
+                $newValueStr = is_string($newValue) ? $newValue : (is_scalar($newValue) ? (string) $newValue : 'null');
+                $changes[] = "{$key}: {$oldValueStr} → {$newValueStr}";
             }
         }
 
