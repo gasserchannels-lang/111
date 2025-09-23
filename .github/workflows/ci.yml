@@ -25,7 +25,7 @@ jobs:
                   coverage: xdebug
 
             - name: Install Composer Dependencies
-              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+              run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist
 
             - name: Prepare Laravel Environment
               run: |
@@ -46,10 +46,14 @@ jobs:
 
             - name: Run Tests (PHPUnit)
               run: |
+                  echo "Current directory: $(pwd)"
+                  echo "PHPUnit version: $(vendor/bin/phpunit --version)"
+                  echo "PHPUnit configuration file exists: $(test -f phpunit.xml && echo 'YES' || echo 'NO')"
+                  echo "Bootstrap file exists: $(test -f tests/bootstrap-final-clean.php && echo 'YES' || echo 'NO')"
                   if php -m | grep -q xdebug; then
                     echo "Xdebug available, running tests with coverage"
-                    vendor/bin/phpunit --coverage-clover=coverage.xml
+                    vendor/bin/phpunit --configuration=phpunit.xml --coverage-clover=coverage.xml
                   else
                     echo "Xdebug not available, running tests without coverage"
-                    vendor/bin/phpunit
+                    vendor/bin/phpunit --configuration=phpunit.xml
                   fi
