@@ -1,47 +1,55 @@
 name: Laravel CI
 
 on:
-  push:
-    branches: [ "**" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-
+    push:
+        branches: ['**']
+    pull_request:
+        branches: ['main']
+    workflow_dispatch:
 
 jobs:
-  laravel-tests:
-    runs-on: ubuntu-latest
-    env:
-      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    laravel-tests:
+        runs-on: ubuntu-latest
+        env:
+            APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  extensions: xdebug
+                  coverage: xdebug
 
-      - name: Install Composer Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+            - name: Install Composer Dependencies
+              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Prepare Laravel Environment
-        run: |
-          mkdir -p storage/framework/{sessions,views,cache}
-          mkdir -p bootstrap/cache
-          chmod -R 777 storage bootstrap/cache
-          php -r "file_exists('.env') || copy('.env.example', '.env');"
-          php artisan key:generate
-          php artisan config:clear
-          php artisan view:clear
-          php artisan route:clear
+            - name: Prepare Laravel Environment
+              run: |
+                  mkdir -p storage/framework/{sessions,views,cache}
+                  mkdir -p bootstrap/cache
+                  chmod -R 777 storage bootstrap/cache
+                  php -r "file_exists('.env') || copy('.env.example', '.env');"
+                  php artisan key:generate
+                  php artisan config:clear
+                  php artisan view:clear
+                  php artisan route:clear
 
-      - name: Run Code Style Check with Pint
-        run: vendor/bin/pint --test
+            - name: Run Code Style Check with Pint
+              run: vendor/bin/pint --test
 
-      - name: Run Static Analysis (PHPStan)
-        run: vendor/bin/phpstan analyse --memory-limit=1G --level=9
+            - name: Run Static Analysis (PHPStan)
+              run: vendor/bin/phpstan analyse --memory-limit=1G --level=9
 
-      - name: Run Tests (PHPUnit)
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+            - name: Run Tests (PHPUnit)
+              run: |
+                  if php -m | grep -q xdebug; then
+                    echo "Xdebug available, running tests with coverage"
+                    vendor/bin/phpunit --coverage-clover=coverage.xml
+                  else
+                    echo "Xdebug not available, running tests without coverage"
+                    vendor/bin/phpunit
+                  fi
