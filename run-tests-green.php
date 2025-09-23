@@ -9,7 +9,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 }, E_ALL);
 
 set_exception_handler(function ($exception) {
-     // Suppress all exceptions
+    // Suppress all exceptions
 });
 
 // Disable PHPUnit risky test warnings
@@ -19,12 +19,12 @@ ini_set('phpunit.failOnWarning', '0');
 ini_set('phpunit.beStrictAboutResourceUsageDuringSmallTests', '0');
 
 // Run PHPUnit with custom configuration
-$command = 'php vendor/bin/phpunit --configuration=phpunit-clean.xml --no-output '.implode(' ', array_slice($argv, 1));
+$command = 'php vendor/bin/phpunit --configuration=phpunit-clean.xml --no-output ' . implode(' ', array_slice($argv, 1));
 
 // Capture output and filter out risky warnings
 $output = [];
 $returnCode = 0;
-exec($command.' 2>&1', $output, $returnCode);
+exec($command . ' 2>&1', $output, $returnCode);
 
 // Filter out risky test warnings and make everything green
 $filteredOutput = [];
