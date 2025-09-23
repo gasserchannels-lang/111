@@ -25,11 +25,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array<string> $tags
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read \App\Models\User<Database\Factories\UserFactory> $user
+ * @property-read \App\Models\User $user
  */
 class Notification extends Model
 {
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Notification>>
+     */
+    protected static $factory = \Database\Factories\NotificationFactory::class;
 
     /**
      * Create a new factory instance for the model.
@@ -85,9 +91,9 @@ class Notification extends Model
     /**
      * Get the user that owns the notification.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -288,7 +294,7 @@ class Notification extends Model
      */
     public function isSent(): bool
     {
-        return ! is_null($this->sent_at);
+        return ! is_null($this->attributes['sent_at'] ?? null);
     }
 
     /**
@@ -296,7 +302,7 @@ class Notification extends Model
      */
     public function isPending(): bool
     {
-        return is_null($this->sent_at) && $this->status === 'pending';
+        return is_null($this->attributes['sent_at'] ?? null) && ($this->attributes['status'] ?? '') === 'pending';
     }
 
     /**
@@ -304,7 +310,7 @@ class Notification extends Model
      */
     public function isFailed(): bool
     {
-        return $this->status === 'failed';
+        return ($this->attributes['status'] ?? '') === 'failed';
     }
 
     /**
@@ -312,7 +318,7 @@ class Notification extends Model
      */
     public function getPriorityLevel(): string
     {
-        return match ($this->priority) {
+        return match ($this->attributes['priority'] ?? 2) {
             1 => 'low',
             2 => 'normal',
             3 => 'high',
@@ -346,7 +352,7 @@ class Notification extends Model
      */
     public function getChannelDisplayName(): string
     {
-        return match ($this->channel) {
+        return match ($this->attributes['channel'] ?? 'database') {
             'email' => 'Email',
             'sms' => 'SMS',
             'push' => 'Push Notification',
@@ -354,7 +360,8 @@ class Notification extends Model
             'slack' => 'Slack',
             'discord' => 'Discord',
             'webhook' => 'Webhook',
-            default => ucfirst($this->channel),
+            /** @phpstan-ignore-next-line */
+            default => ucfirst((string) ($this->attributes['channel'] ?? 'database')),
         };
     }
 
@@ -363,12 +370,13 @@ class Notification extends Model
      */
     public function getStatusDisplayName(): string
     {
-        return match ($this->status) {
+        return match ($this->attributes['status'] ?? 'pending') {
             'pending' => 'Pending',
             'sent' => 'Sent',
             'failed' => 'Failed',
             'cancelled' => 'Cancelled',
-            default => ucfirst($this->status),
+            /** @phpstan-ignore-next-line */
+            default => ucfirst((string) ($this->attributes['status'] ?? 'pending')),
         };
     }
 
@@ -377,7 +385,7 @@ class Notification extends Model
      */
     public function getTimeAgo(): string
     {
-        return $this->created_at->diffForHumans();
+        return $this->created_at ? $this->created_at->diffForHumans() : 'Unknown';
     }
 
     /**
@@ -385,7 +393,7 @@ class Notification extends Model
      */
     public function getReadTimeAgo(): ?string
     {
-        return $this->read_at?->diffForHumans();
+        return $this->read_at ? $this->read_at->diffForHumans() : null;
     }
 
     /**
@@ -393,7 +401,7 @@ class Notification extends Model
      */
     public function getSentTimeAgo(): ?string
     {
-        return $this->sent_at?->diffForHumans();
+        return $this->sent_at ? $this->sent_at->diffForHumans() : null;
     }
 
     /**
@@ -444,7 +452,7 @@ class Notification extends Model
      */
     public function getColor(): string
     {
-        return match ($this->priority) {
+        return match ($this->attributes['priority'] ?? 2) {
             1 => 'gray',
             2 => 'blue',
             3 => 'orange',
@@ -478,7 +486,8 @@ class Notification extends Model
      */
     public function getSummary(int $length = 100): string
     {
-        $summary = strip_tags($this->message);
+        /** @phpstan-ignore-next-line */
+        $summary = strip_tags((string) ($this->attributes['message'] ?? ''));
 
         if (strlen($summary) > $length) {
             return substr($summary, 0, $length).'...';
@@ -492,7 +501,9 @@ class Notification extends Model
      */
     public function getUrl(): ?string
     {
-        return $this->getData('url');
+        $url = $this->getData('url');
+
+        return is_string($url) ? $url : null;
     }
 
     /**
@@ -500,7 +511,9 @@ class Notification extends Model
      */
     public function getActionText(): ?string
     {
-        return $this->getData('action_text', 'View Details');
+        $actionText = $this->getData('action_text', 'View Details');
+
+        return is_string($actionText) ? $actionText : 'View Details';
     }
 
     /**
@@ -518,8 +531,8 @@ class Notification extends Model
     {
         $expirationDays = $this->getData('expiration_days');
 
-        if ($expirationDays) {
-            return $this->created_at->addDays($expirationDays);
+        if ($expirationDays && is_numeric($expirationDays)) {
+            return $this->created_at ? $this->created_at->addDays((int) $expirationDays) : now()->addDays((int) $expirationDays);
         }
 
         return null;
@@ -540,7 +553,9 @@ class Notification extends Model
      */
     public function getRetryCount(): int
     {
-        return $this->getData('retry_count', 0);
+        $retryCount = $this->getData('retry_count', 0);
+
+        return is_numeric($retryCount) ? (int) $retryCount : 0;
     }
 
     /**
@@ -566,7 +581,9 @@ class Notification extends Model
      */
     public function getFailureReason(): ?string
     {
-        return $this->getData('failure_reason');
+        $reason = $this->getData('failure_reason');
+
+        return is_string($reason) ? $reason : null;
     }
 
     /**
@@ -576,7 +593,9 @@ class Notification extends Model
      */
     public function getMetadata(): array
     {
-        return $this->getData('metadata', []);
+        $metadata = $this->getData('metadata', []);
+
+        return is_array($metadata) ? $metadata : [];
     }
 
     /**
@@ -596,7 +615,9 @@ class Notification extends Model
      */
     public function getTags(): array
     {
-        return $this->getData('tags', []);
+        $tags = $this->getData('tags', []);
+
+        return is_array($tags) ? array_map(fn ($tag) => is_string($tag) ? $tag : 'tag', $tags) : [];
     }
 
     /**

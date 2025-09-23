@@ -2,73 +2,66 @@
 
 namespace Tests\AI;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RecommendationSystemTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function can_generate_user_recommendations()
+    public function can_generate_user_recommendations(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function recommendations_match_user_preferences()
+    public function recommendations_match_user_preferences(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_generate_similar_products()
+    public function can_generate_similar_products(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_generate_trending_products()
+    public function can_generate_trending_products(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_generate_collaborative_recommendations()
+    public function can_generate_collaborative_recommendations(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function recommendations_consider_price_range()
+    public function recommendations_consider_price_range(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_generate_seasonal_recommendations()
+    public function can_generate_seasonal_recommendations(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function recommendations_improve_with_feedback()
+    public function recommendations_improve_with_feedback(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

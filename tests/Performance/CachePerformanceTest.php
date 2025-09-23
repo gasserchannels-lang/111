@@ -2,29 +2,32 @@
 
 namespace Tests\Performance;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CachePerformanceTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_cache_performance()
+    public function test_cache_performance(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_cache_hit_ratio()
+    public function test_cache_hit_ratio(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_cache_memory_usage()
+    public function test_cache_memory_usage(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

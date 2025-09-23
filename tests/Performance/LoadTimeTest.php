@@ -2,29 +2,32 @@
 
 namespace Tests\Performance;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class LoadTimeTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_page_load_time()
+    public function test_page_load_time(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_asset_load_time()
+    public function test_asset_load_time(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_api_load_time()
+    public function test_api_load_time(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

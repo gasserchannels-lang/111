@@ -22,32 +22,33 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of CurrencyFactory
- *
- * @mixin TFactory
- */
 class Currency extends Model
 {
-    /**
-     * @use HasFactory<CurrencyFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
 
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Currency>>
+     */
+    protected static $factory = \Database\Factories\CurrencyFactory::class;
+
+    /**
+     * @var list<string>
+     */
     protected $guarded = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Store>
+     * @return HasMany<Store, $this>
      */
-    public function stores(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function stores(): HasMany
     {
         return $this->hasMany(Store::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Language>
+     * @return BelongsToMany<Language, $this>
      */
-    public function languages(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function languages(): BelongsToMany
     {
         return $this->belongsToMany(Language::class, 'currency_language');
     }

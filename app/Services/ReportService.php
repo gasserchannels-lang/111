@@ -340,7 +340,7 @@ class ReportService
             'average_rating' => $reviews->avg('rating'),
             'reviews' => $reviews->map(fn ($review): array => [
                 'id' => $review->id,
-                'product_name' => $review->product->name ?? 'Unknown Product',
+                'product_name' => $review->product instanceof \App\Models\Product ? $review->product->name : 'Unknown Product',
                 'rating' => $review->rating,
                 'content' => $review->content,
                 'is_approved' => $review->is_approved,

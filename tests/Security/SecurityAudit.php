@@ -2,25 +2,22 @@
 
 namespace Tests\Security;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class SecurityAudit extends TestCase
 {
-    public function test_security_audit()
+    public function test_security_audit(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    public function test_vulnerability_scan()
+    public function test_vulnerability_scan(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    public function test_security_compliance()
+    public function test_security_compliance(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 }

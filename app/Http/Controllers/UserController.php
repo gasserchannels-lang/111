@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -28,7 +30,8 @@ class UserController extends Controller
 
         // Search by name or email
         if ($request->has('search')) {
-            $search = $request->get('search');
+            $searchInput = $request->get('search');
+            $search = is_string($searchInput) ? $searchInput : '';
             $query->where(function ($q) use ($search): void {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
@@ -61,8 +64,6 @@ class UserController extends Controller
 
     /**
      * Display the specified user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function show(User $user): JsonResponse
     {
@@ -77,8 +78,6 @@ class UserController extends Controller
 
     /**
      * Update the specified user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function update(Request $request, User $user): JsonResponse
     {
@@ -109,8 +108,6 @@ class UserController extends Controller
 
     /**
      * Change user password.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function changePassword(Request $request, User $user): JsonResponse
     {
@@ -129,7 +126,8 @@ class UserController extends Controller
         }
 
         // Verify current password
-        if (! Hash::check($request->current_password, $user->password)) {
+        $currentPassword = $request->current_password;
+        if (! Hash::check(is_string($currentPassword) ? $currentPassword : '', $user->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Current password is incorrect',
@@ -137,7 +135,8 @@ class UserController extends Controller
         }
 
         // Validate new password against policy
-        $passwordValidation = $this->passwordPolicyService->validatePassword($request->new_password, $user->id);
+        $newPassword = $request->new_password;
+        $passwordValidation = $this->passwordPolicyService->validatePassword(is_string($newPassword) ? $newPassword : '', $user->id);
         if (! $passwordValidation['valid']) {
             return response()->json([
                 'success' => false,
@@ -148,11 +147,11 @@ class UserController extends Controller
 
         // Update password
         $user->update([
-            'password' => Hash::make($request->new_password),
+            'password' => Hash::make(is_string($newPassword) ? $newPassword : ''),
         ]);
 
         // Save password to history
-        $this->passwordPolicyService->savePasswordToHistory($user->id, $request->new_password);
+        $this->passwordPolicyService->savePasswordToHistory($user->id, is_string($newPassword) ? $newPassword : '');
 
         return response()->json([
             'success' => true,
@@ -162,8 +161,6 @@ class UserController extends Controller
 
     /**
      * Ban a user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function ban(Request $request, User $user): JsonResponse
     {
@@ -188,14 +185,18 @@ class UserController extends Controller
             ], 400);
         }
 
-        $duration = $request->get('duration_hours', 24);
+        $durationInput = $request->get('duration_hours', 24);
+        $duration = is_numeric($durationInput) ? (int) $durationInput : 24;
         $expiresAt = now()->addHours($duration);
+
+        $reason = $request->reason;
+        $notifyUser = $request->get('notify_user', true);
 
         $this->userBanService->banUser(
             $user,
-            $request->reason,
-            $expiresAt,
-            $request->get('notify_user', true)
+            is_string($reason) ? $reason : '',
+            null, // description
+            $expiresAt
         );
 
         return response()->json([
@@ -211,8 +212,6 @@ class UserController extends Controller
 
     /**
      * Unban a user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function unban(User $user): JsonResponse
     {
@@ -233,8 +232,6 @@ class UserController extends Controller
 
     /**
      * Get user statistics.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function statistics(User $user): JsonResponse
     {
@@ -258,8 +255,6 @@ class UserController extends Controller
 
     /**
      * Get user activity log.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function activity(User $user, Request $request): JsonResponse
     {
@@ -275,8 +270,6 @@ class UserController extends Controller
 
     /**
      * Delete a user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function destroy(User $user): JsonResponse
     {
@@ -330,8 +323,6 @@ class UserController extends Controller
 
     /**
      * Get user's wishlist.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function wishlist(User $user): JsonResponse
     {
@@ -346,8 +337,6 @@ class UserController extends Controller
 
     /**
      * Get user's price alerts.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function priceAlerts(User $user): JsonResponse
     {
@@ -362,8 +351,6 @@ class UserController extends Controller
 
     /**
      * Get user's reviews.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function reviews(User $user): JsonResponse
     {

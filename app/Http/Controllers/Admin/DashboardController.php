@@ -91,7 +91,6 @@ class DashboardController extends Controller
     {
         return [
             'total_users' => \App\Models\User::count(),
-            // @phpstan-ignore-next-line
             'active_users' => \App\Models\User::where('is_active', true)->count(),
             'blocked_users' => 0, // Placeholder - no blocked users column
             'verified_users' => \App\Models\User::whereNotNull('email_verified_at')->count(),
@@ -111,11 +110,8 @@ class DashboardController extends Controller
         return [
             'total_products' => \App\Models\Product::count(),
             'active_products' => \App\Models\Product::where('is_active', true)->count(),
-            // @phpstan-ignore-next-line
             'featured_products' => \App\Models\Product::where('is_featured', true)->count(),
-            // @phpstan-ignore-next-line
             'out_of_stock' => \App\Models\Product::where('stock_quantity', 0)->count(),
-            // @phpstan-ignore-next-line
             'low_stock' => \App\Models\Product::where('stock_quantity', '>', 0)->where('stock_quantity', '<=', 10)->count(),
             'new_products_today' => \App\Models\Product::whereDate('created_at', today())->count(),
         ];
@@ -284,6 +280,16 @@ class DashboardController extends Controller
     {
         $total = disk_total_space('/');
         $free = disk_free_space('/');
+
+        if ($total === false || $free === false) {
+            return [
+                'total' => 0,
+                'used' => 0,
+                'free' => 0,
+                'percentage' => 0.0,
+            ];
+        }
+
         $used = $total - $free;
 
         return [
@@ -317,12 +323,12 @@ class DashboardController extends Controller
 
             return [
                 'status' => $status ? 'working' : 'error',
-                'driver' => config('cache.default'),
+                'driver' => is_string(config('cache.default')) ? config('cache.default') : 'unknown',
             ];
         } catch (\Exception $e) {
             return [
                 'status' => 'error',
-                'driver' => config('cache.default'),
+                'driver' => is_string(config('cache.default')) ? config('cache.default') : 'unknown',
                 'error' => $e->getMessage(),
             ];
         }
@@ -375,7 +381,9 @@ class DashboardController extends Controller
             $result = \Storage::get($testFile);
             \Storage::delete($testFile);
 
-            return ['status' => $result === 'test' ? 'healthy' : 'error', 'message' => 'Storage test completed'];
+            $isHealthy = is_string($result) && $result === 'test';
+
+            return ['status' => $isHealthy ? 'healthy' : 'error', 'message' => 'Storage test completed'];
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
@@ -390,7 +398,8 @@ class DashboardController extends Controller
     {
         $memoryUsage = memory_get_usage(true);
         $memoryLimit = ini_get('memory_limit');
-        $memoryLimitBytes = $this->convertToBytes($memoryLimit);
+        $memoryLimitString = is_string($memoryLimit) ? $memoryLimit : '128M';
+        $memoryLimitBytes = $this->convertToBytes($memoryLimitString);
         $percentage = ($memoryUsage / $memoryLimitBytes) * 100;
 
         return [
@@ -427,7 +436,7 @@ class DashboardController extends Controller
     /**
      * Get user registration chart data.
      *
-     * @return list<array<string, int|string>>
+     * @return array<int, array<string, int|string>>
      */
     private function getUserRegistrationChart(): array
     {

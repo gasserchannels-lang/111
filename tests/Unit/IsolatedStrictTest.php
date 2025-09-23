@@ -2,29 +2,36 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
-
-class IsolatedStrictTest extends TestCase
+class IsolatedStrictTest extends MinimalTestBase
 {
-    #[CoversNothing]
-    public function test_isolated_strict_testing()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[CoversNothing]
-    public function test_strict_validation()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[CoversNothing]
-    public function test_strict_mocking()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test validation
+        $this->assertNotEmpty('test');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

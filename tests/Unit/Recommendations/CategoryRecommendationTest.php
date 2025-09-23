@@ -131,9 +131,13 @@ class CategoryRecommendationTest extends TestCase
 
         $rankedCategories = $this->rankCategoriesByScore($categories);
 
+        $this->assertIsArray($rankedCategories[0]);
         $this->assertEquals('Electronics', $rankedCategories[0]['name']);
+        $this->assertIsArray($rankedCategories[1]);
         $this->assertEquals('Books', $rankedCategories[1]['name']);
+        $this->assertIsArray($rankedCategories[2]);
         $this->assertEquals('Clothing', $rankedCategories[2]['name']);
+        $this->assertIsArray($rankedCategories[3]);
         $this->assertEquals('Sports', $rankedCategories[3]['name']);
     }
 
@@ -181,6 +185,10 @@ class CategoryRecommendationTest extends TestCase
         $this->assertNotContains('Books', $trendingCategories);
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $userHistory
+     * @return list<mixed>
+     */
     private function getCategoryRecommendations(array $userHistory): array
     {
         if (empty($userHistory)) {
@@ -195,6 +203,15 @@ class CategoryRecommendationTest extends TestCase
         return array_slice(array_column($userHistory, 'category'), 0, 2);
     }
 
+    /**
+     * @param  array<string, mixed>  $categoryStats
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, mixed>  $categoryStats
+     * @return list<string>
+     */
     private function getPopularCategoryRecommendations(array $categoryStats, int $limit): array
     {
         arsort($categoryStats);
@@ -202,34 +219,69 @@ class CategoryRecommendationTest extends TestCase
         return array_slice(array_keys($categoryStats), 0, $limit);
     }
 
+    /**
+     * @param  array<string, list<string>>  $categoryRelations
+     * @return list<string>
+     */
     private function getRelatedCategoryRecommendations(string $currentCategory, array $categoryRelations): array
     {
         return $categoryRelations[$currentCategory] ?? [];
     }
 
+    /**
+     * @param  array<string, list<string>>  $seasonalCategories
+     * @return list<string>
+     */
     private function getSeasonalCategoryRecommendations(string $season, array $seasonalCategories): array
     {
         return $seasonalCategories[$season] ?? [];
     }
 
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @param  array<string, list<string>>  $demographicCategories
+     * @return array<int, string>
+     */
     private function getDemographicCategoryRecommendations(array $userProfile, array $demographicCategories): array
     {
         $recommendations = [];
 
         foreach ($userProfile as $demographic => $value) {
-            if (isset($demographicCategories[$value])) {
-                $recommendations = array_merge($recommendations, $demographicCategories[$value]);
+            if (is_string($value) && isset($demographicCategories[$value])) {
+                $categories = $demographicCategories[$value];
+                if (is_array($categories)) {
+                    $recommendations = array_merge($recommendations, $categories);
+                }
             }
         }
 
         return array_unique($recommendations);
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $allCategories
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  list<string>  $allCategories
+     * @param  list<string>  $availableCategories
+     * @return array<int, string>
+     */
     private function filterCategoriesByAvailability(array $allCategories, array $availableCategories): array
     {
         return array_intersect($allCategories, $availableCategories);
     }
 
+    /**
+     * @param  list<array<string, mixed>>  $categories
+     * @return list<array<string, mixed>>
+     */
     private function rankCategoriesByScore(array $categories): array
     {
         usort($categories, function ($a, $b) {
@@ -239,6 +291,9 @@ class CategoryRecommendationTest extends TestCase
         return $categories;
     }
 
+    /**
+     * @param  array<string, int>  $userPurchases
+     */
     private function calculateCategoryAffinityScore(array $userPurchases, string $category): float
     {
         $totalPurchases = array_sum($userPurchases);
@@ -247,6 +302,10 @@ class CategoryRecommendationTest extends TestCase
         return $totalPurchases > 0 ? $categoryPurchases / $totalPurchases : 0;
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $categoryTrends
+     * @return list<string>
+     */
     private function getTrendingCategoryRecommendations(array $categoryTrends): array
     {
         $trending = [];

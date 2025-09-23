@@ -44,8 +44,11 @@ abstract class DuskTestCase extends BaseTestCase
             ]);
         })->all());
 
+        $driverUrl = $_ENV['DUSK_DRIVER_URL'] ?? config('dusk.driver_url') ?? 'http://localhost:9515';
+        $driverUrl = is_string($driverUrl) ? $driverUrl : 'http://localhost:9515';
+
         return RemoteWebDriver::create(
-            $_ENV['DUSK_DRIVER_URL'] ?? config('dusk.driver_url') ?? 'http://localhost:9515',
+            $driverUrl,
             DesiredCapabilities::chrome()
                 ->setCapability(ChromeOptions::CAPABILITY, $options)
                 ->setCapability('acceptInsecureCerts', true) // قبول الشهادات غير الآمنة

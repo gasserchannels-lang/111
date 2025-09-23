@@ -49,7 +49,8 @@ class CacheService
                 });
             }
 
-            return null;
+            // Fallback to callback execution if cache is not available
+            return $callback();
         } catch (Exception $e) {
             Log::error('Cache error', [
                 'key' => $key,

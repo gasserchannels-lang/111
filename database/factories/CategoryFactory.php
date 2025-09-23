@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Category<\Database\Factories\CategoryFactory>>
+ * @extends Factory<Category>
  */
 class CategoryFactory extends Factory
 {

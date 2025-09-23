@@ -3,15 +3,13 @@
 namespace Tests\AI;
 
 use App\Services\AIService;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AILearningTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function ai_can_learn_from_user_feedback()
+    public function ai_can_learn_from_user_feedback(): void
     {
         $aiService = new AIService;
 
@@ -19,53 +17,50 @@ class AILearningTest extends TestCase
         $initialResult = $aiService->analyzeText($text);
 
         // اختبار بسيط بدون استدعاء الطريقة غير الموجودة
-        $this->assertIsArray($initialResult);
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('sentiment', $initialResult);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_improves_accuracy_over_time()
+    public function ai_improves_accuracy_over_time(): void
     {
         $aiService = new AIService;
 
+        /** @var array<int, array{text: string, sentiment: string}> $testCases */
         $testCases = [
             ['text' => 'منتج رائع', 'sentiment' => 'positive'],
             ['text' => 'منتج سيء', 'sentiment' => 'negative'],
             ['text' => 'منتج عادي', 'sentiment' => 'neutral'],
         ];
 
-        // اختبار بسيط
         foreach ($testCases as $case) {
             $result = $aiService->analyzeText($case['text']);
-            $this->assertIsArray($result);
+            $this->assertArrayHasKey('sentiment', $result);
         }
 
-        $this->assertTrue(true);
+        $this->assertCount(3, $testCases);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_adapts_to_user_preferences()
+    public function ai_adapts_to_user_preferences(): void
     {
         $aiService = new AIService;
 
+        /** @var array{categories: array<int, string>, price_range: array<int, int>, brands: array<int, string>} $userPreferences */
         $userPreferences = [
             'categories' => ['إلكترونيات'],
             'price_range' => [1000, 5000],
             'brands' => ['سامسونج', 'أبل'],
         ];
 
+        /** @var array<int, array<string, mixed>> $products */
         $products = [];
         $recommendations = $aiService->generateRecommendations($userPreferences, $products);
 
-        $this->assertIsArray($recommendations);
-        $this->assertTrue(true);
+        $this->assertGreaterThanOrEqual(0, count($recommendations));
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_learns_from_product_classification_feedback()
+    public function ai_learns_from_product_classification_feedback(): void
     {
         $aiService = new AIService;
 
@@ -74,34 +69,33 @@ class AILearningTest extends TestCase
             'description' => 'هاتف ذكي متطور',
         ];
 
-        $initialClassification = $aiService->classifyProduct($productData);
+        $description = json_encode($productData);
+        $initialClassification = $aiService->classifyProduct($description ?: '');
 
         // اختبار بسيط
-        $this->assertIsString($initialClassification);
-        $this->assertTrue(true);
+        $this->assertNotEmpty($initialClassification);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_learns_from_recommendation_feedback()
+    public function ai_learns_from_recommendation_feedback(): void
     {
         $aiService = new AIService;
 
+        /** @var array{categories: array<int, string>, price_range: array<int, int>} $userPreferences */
         $userPreferences = [
             'categories' => ['إلكترونيات'],
             'price_range' => [1000, 5000],
         ];
 
+        /** @var array<int, array<string, mixed>> $products */
         $products = [];
         $recommendations = $aiService->generateRecommendations($userPreferences, $products);
 
-        $this->assertIsArray($recommendations);
-        $this->assertTrue(true);
+        $this->assertGreaterThanOrEqual(0, count($recommendations));
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_learns_from_image_analysis_feedback()
+    public function ai_learns_from_image_analysis_feedback(): void
     {
         $aiService = new AIService;
 
@@ -109,13 +103,11 @@ class AILearningTest extends TestCase
         $imagePath = 'test-image.jpg';
         $result = ['tags' => ['هاتف', 'إلكترونيات']];
 
-        $this->assertIsArray($result);
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('tags', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_learning_persists_across_sessions()
+    public function ai_learning_persists_across_sessions(): void
     {
         $aiService = new AIService;
 
@@ -123,14 +115,12 @@ class AILearningTest extends TestCase
 
         // اختبار بسيط
         $result = $aiService->analyzeText($text);
-        $this->assertIsArray($result);
 
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('sentiment', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_learning_rate_is_appropriate()
+    public function ai_learning_rate_is_appropriate(): void
     {
         $aiService = new AIService;
 
@@ -138,14 +128,12 @@ class AILearningTest extends TestCase
 
         // اختبار بسيط
         $result = $aiService->analyzeText($text);
-        $this->assertIsArray($result);
 
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('sentiment', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_contradictory_feedback()
+    public function ai_handles_contradictory_feedback(): void
     {
         $aiService = new AIService;
 
@@ -153,8 +141,17 @@ class AILearningTest extends TestCase
 
         // اختبار بسيط
         $result = $aiService->analyzeText($text);
-        $this->assertIsArray($result);
 
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('sentiment', $result);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

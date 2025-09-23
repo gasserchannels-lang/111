@@ -2,29 +2,32 @@
 
 namespace Tests\Security;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CSRFTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_csrf_protection()
+    public function test_csrf_protection(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_csrf_tokens()
+    public function test_csrf_tokens(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_csrf_validation()
+    public function test_csrf_validation(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

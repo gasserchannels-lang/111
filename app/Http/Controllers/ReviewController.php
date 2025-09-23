@@ -31,9 +31,6 @@ class ReviewController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    /**
-     * @param  Product<\Database\Factories\ProductFactory>  $product
-     */
     public function create(Product $product, Guard $auth): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         // التحقق مما إذا كان المستخدم قد قام بمراجعة هذا المنتج بالفعل
@@ -80,7 +77,7 @@ class ReviewController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'status' => 'created',
-                'review_id' => $created?->id,
+                'review_id' => $created->id ?? 0,
             ], 201);
         }
 
@@ -90,9 +87,6 @@ class ReviewController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */
-    /**
-     * @param  Review<\Database\Factories\ReviewFactory>  $review
      */
     public function edit(Review $review, Guard $auth): \Illuminate\View\View
     {
@@ -109,9 +103,6 @@ class ReviewController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
-    /**
-     * @param  Review<\Database\Factories\ReviewFactory>  $review
      */
     public function update(Request $request, Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
     {
@@ -134,9 +125,6 @@ class ReviewController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     */
-    /**
-     * @param  Review<\Database\Factories\ReviewFactory>  $review
      */
     public function destroy(Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
     {

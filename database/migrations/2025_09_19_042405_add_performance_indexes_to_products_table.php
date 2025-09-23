@@ -12,12 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            // Add indexes for better performance
-            $table->index(['is_active', 'id']);
-            $table->index(['category_id', 'is_active']);
-            $table->index(['brand_id', 'is_active']);
-            $table->index(['name']);
-            $table->index(['price']);
+            // Add indexes for better performance (only if they don't exist)
+            if (! Schema::hasIndex('products', 'products_is_active_id_index')) {
+                $table->index(['is_active', 'id']);
+            }
+            if (! Schema::hasIndex('products', 'products_category_id_is_active_index')) {
+                $table->index(['category_id', 'is_active']);
+            }
+            if (! Schema::hasIndex('products', 'products_brand_id_is_active_index')) {
+                $table->index(['brand_id', 'is_active']);
+            }
+            if (! Schema::hasIndex('products', 'products_name_index')) {
+                $table->index(['name']);
+            }
+            if (! Schema::hasIndex('products', 'products_price_index')) {
+                $table->index(['price']);
+            }
         });
     }
 

@@ -18,26 +18,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $rating
  * @property bool $is_verified_purchase
  * @property bool $is_approved
- * @property array $helpful_votes
+ * @property array<string, mixed> $helpful_votes
  * @property int $helpful_count
- * @property-read User<Database\Factories\UserFactory> $user
- * @property-read Product<Database\Factories\ProductFactory> $product
+ * @property-read User $user
+ * @property-read Product $product
  *
  * @method static ReviewFactory factory(...$parameters)
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of ReviewFactory
- *
- * @mixin TFactory
- */
 class Review extends Model
 {
-    /**
-     * @use HasFactory<ReviewFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Review>>
+     */
+    protected static $factory = \Database\Factories\ReviewFactory::class;
 
     /**
      * @var list<string>
@@ -63,17 +61,17 @@ class Review extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
+     * @return BelongsTo<Product, $this>
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }

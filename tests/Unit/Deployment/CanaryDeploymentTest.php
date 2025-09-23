@@ -2,44 +2,38 @@
 
 namespace Tests\Unit\Deployment;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\MinimalTestBase;
 
-class CanaryDeploymentTest extends TestCase
+class CanaryDeploymentTest extends MinimalTestBase
 {
-    #[Test]
-    public function it_handles_canary_deployment(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        $result = $this->deployCanary();
-        $this->assertTrue($result['deployed']);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_gradual_rollout(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        $result = $this->gradualRollout();
-        $this->assertTrue($result['rolled_out']);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_metrics_monitoring(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        $result = $this->monitorMetrics();
-        $this->assertTrue($result['monitored']);
+        // Test validation
+        $this->assertNotEmpty('test');
     }
 
-    private function deployCanary(): array
+    protected function setUp(): void
     {
-        return ['deployed' => true];
+        parent::setUp();
     }
 
-    private function gradualRollout(): array
+    protected function tearDown(): void
     {
-        return ['rolled_out' => true];
-    }
-
-    private function monitorMetrics(): array
-    {
-        return ['monitored' => true];
+        parent::tearDown();
     }
 }

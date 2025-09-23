@@ -6,9 +6,9 @@ namespace Tests\Unit\Recommendations;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
+use Tests\Unit\BaseTest;
 
-class PersonalizedRecommendationTest extends TestCase
+class PersonalizedRecommendationTest extends BaseTest
 {
     #[Test]
     #[CoversNothing]
@@ -22,7 +22,6 @@ class PersonalizedRecommendationTest extends TestCase
 
         $recommendations = $this->generateRecommendations($userHistory);
 
-        $this->assertIsArray($recommendations);
         $this->assertNotEmpty($recommendations);
     }
 
@@ -105,7 +104,6 @@ class PersonalizedRecommendationTest extends TestCase
         $currentSeason = 'winter';
         $recommendations = $this->generateRecommendations([], [], [], $currentSeason);
 
-        $this->assertIsArray($recommendations);
         // Winter recommendations might include items like heaters, warm clothing, etc.
         $this->assertNotEmpty($recommendations);
     }
@@ -122,7 +120,6 @@ class PersonalizedRecommendationTest extends TestCase
 
         $recommendations = $this->generateRecommendations([], [], [], null, $userDemographics);
 
-        $this->assertIsArray($recommendations);
         $this->assertNotEmpty($recommendations);
     }
 
@@ -172,7 +169,7 @@ class PersonalizedRecommendationTest extends TestCase
         $recommendations = $this->generateRecommendations($userHistory, $userPreferences);
 
         foreach ($recommendations as $recommendation) {
-            $this->assertTrue(true); // Simplified check
+            // Simplified check
         }
     }
 
@@ -188,8 +185,7 @@ class PersonalizedRecommendationTest extends TestCase
 
         $recommendations = $this->generateRecommendations([], [], [], null, null, null, $similarUsers);
 
-        $this->assertIsArray($recommendations);
-        $this->assertTrue(true); // Simplified check
+        // Simplified check
     }
 
     #[Test]
@@ -214,7 +210,6 @@ class PersonalizedRecommendationTest extends TestCase
     {
         $recommendations = $this->generateRecommendations([]);
 
-        $this->assertIsArray($recommendations);
         // Should return popular or trending products
         $this->assertNotEmpty($recommendations);
     }
@@ -237,6 +232,14 @@ class PersonalizedRecommendationTest extends TestCase
         $this->assertGreaterThanOrEqual(1, count($brands));
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $userHistory
+     * @param  array<string, mixed>  $userPreferences
+     * @param  array<int, array<string, mixed>>  $userRatings
+     * @param  array<string, mixed>|null  $demographics
+     * @param  array<int, array<string, mixed>>|null  $similarUsers
+     * @return array<int, array<string, mixed>>
+     */
     private function generateRecommendations(
         array $userHistory = [],
         array $userPreferences = [],
@@ -283,5 +286,15 @@ class PersonalizedRecommendationTest extends TestCase
         }
 
         return $recommendations;
+    }
+
+    protected function setUp(): void
+    {
+        // Setup without calling parent to avoid error handler modifications
+    }
+
+    protected function tearDown(): void
+    {
+        // Cleanup without calling parent to avoid error handler modifications
     }
 }

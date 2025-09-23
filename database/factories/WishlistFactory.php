@@ -10,7 +10,7 @@ use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Wishlist<\Database\Factories\WishlistFactory>>
+ * @extends Factory<Wishlist>
  */
 class WishlistFactory extends Factory
 {

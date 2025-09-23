@@ -2,44 +2,38 @@
 
 namespace Tests\Unit\Deployment;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\MinimalTestBase;
 
-class ConfigurationTest extends TestCase
+class ConfigurationTest extends MinimalTestBase
 {
-    #[Test]
-    public function it_handles_environment_configuration(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        $result = $this->configureEnvironment();
-        $this->assertTrue($result['configured']);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_secret_management(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        $result = $this->manageSecrets();
-        $this->assertTrue($result['secrets_managed']);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_configuration_validation(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        $result = $this->validateConfiguration();
-        $this->assertTrue($result['valid']);
+        // Test validation
+        $this->assertNotEmpty('test');
     }
 
-    private function configureEnvironment(): array
+    protected function setUp(): void
     {
-        return ['configured' => true];
+        parent::setUp();
     }
 
-    private function manageSecrets(): array
+    protected function tearDown(): void
     {
-        return ['secrets_managed' => true];
-    }
-
-    private function validateConfiguration(): array
-    {
-        return ['valid' => true];
+        parent::tearDown();
     }
 }

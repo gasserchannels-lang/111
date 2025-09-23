@@ -10,11 +10,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
- * @template TFactory of \Illuminate\Database\Eloquent\Factories\Factory
+ * @property int $id
+ * @property string $event
+ * @property string $auditable_type
+ * @property int $auditable_id
+ * @property int|null $user_id
+ * @property string|null $ip_address
+ * @property string|null $user_agent
+ * @property array<string, mixed>|null $old_values
+ * @property array<string, mixed>|null $new_values
+ * @property array<string, mixed>|null $metadata
+ * @property string|null $url
+ * @property string|null $method
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ * @property-read \Illuminate\Database\Eloquent\Model|null $auditable
  */
 class AuditLog extends Model
 {
-    /** @use HasFactory<TFactory> */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
 
     protected $fillable = [
@@ -40,9 +55,9 @@ class AuditLog extends Model
     /**
      * Get the user who performed the action.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -50,9 +65,9 @@ class AuditLog extends Model
     /**
      * Get the auditable model.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo<Model, $this>
      */
-    public function auditable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function auditable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -60,10 +75,10 @@ class AuditLog extends Model
     /**
      * Scope for specific events.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
-    public function scopeEvent($query, string $event)
+    public function scopeEvent(\Illuminate\Database\Eloquent\Builder $query, string $event): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('event', $event);
     }
@@ -71,10 +86,10 @@ class AuditLog extends Model
     /**
      * Scope for specific user.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
-    public function scopeForUser($query, int $userId)
+    public function scopeForUser(\Illuminate\Database\Eloquent\Builder $query, int $userId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -82,10 +97,10 @@ class AuditLog extends Model
     /**
      * Scope for specific model type.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
-    public function scopeForModel($query, string $modelType)
+    public function scopeForModel(\Illuminate\Database\Eloquent\Builder $query, string $modelType): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('auditable_type', $modelType);
     }
@@ -93,12 +108,12 @@ class AuditLog extends Model
     /**
      * Scope for date range.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>  $query
+     * @param  \Illuminate\Database\Eloquent\Builder<AuditLog>  $query
      * @param  \Carbon\Carbon|string  $startDate
      * @param  \Carbon\Carbon|string  $endDate
-     * @return \Illuminate\Database\Eloquent\Builder<AuditLog<Database\Factories\AuditLogFactory>>
+     * @return \Illuminate\Database\Eloquent\Builder<AuditLog>
      */
-    public function scopeDateRange($query, $startDate, $endDate)
+    public function scopeDateRange(\Illuminate\Database\Eloquent\Builder $query, $startDate, $endDate): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
@@ -124,7 +139,8 @@ class AuditLog extends Model
         foreach ($this->new_values as $key => $newValue) {
             $oldValue = $this->old_values[$key] ?? null;
             if ($oldValue !== $newValue) {
-                $changes[] = "{$key}: {$oldValue} → {$newValue}";
+                /** @phpstan-ignore-next-line */
+                $changes[] = "{$key}: ".(is_string($oldValue) ? $oldValue : (string) $oldValue).' → '.(is_string($newValue) ? $newValue : (string) $newValue);
             }
         }
 

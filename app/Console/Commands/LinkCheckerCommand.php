@@ -169,8 +169,8 @@ class LinkCheckerCommand extends Command
         $this->info('==================');
 
         $this->info("Total links checked: {$this->totalChecked}");
-        $this->info('Working links: ' . count($this->workingLinks));
-        $this->info('Broken links: ' . count($this->brokenLinks));
+        $this->info('Working links: '.count($this->workingLinks));
+        $this->info('Broken links: '.count($this->brokenLinks));
 
         if ($this->brokenLinks !== []) {
             $this->newLine();

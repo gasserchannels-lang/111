@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\PriceOffer;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,7 +104,8 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = min((int) $request->get('per_page', 15), 50); // Limit max per page
+        $perPageInput = $request->get('per_page', 15);
+        $perPage = min(is_numeric($perPageInput) ? (int) $perPageInput : 15, 50); // Limit max per page
 
         $query = Product::query()
             ->select(['id', 'name', 'slug', 'price', 'category_id', 'brand_id', 'description'])
@@ -143,7 +145,7 @@ class ProductController extends Controller
         $products = $query->paginate($perPage);
 
         // Transform data efficiently
-        $data = $products->getCollection()->map(function (Product $product) {
+        $data = $products->getCollection()->map(function (Product $product): array {
             return [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -152,10 +154,10 @@ class ProductController extends Controller
                 'price' => $product->price,
                 'category' => $product->category ? ['id' => $product->category->id, 'name' => $product->category->name] : null,
                 'brand' => $product->brand ? ['id' => $product->brand->id, 'name' => $product->brand->name] : null,
-                'stores' => $product->priceOffers->map(function ($offer) {
+                'stores' => $product->priceOffers->map(function (PriceOffer $offer): array {
                     return [
-                        'id' => $offer->store?->id ?? $offer->id,
-                        'name' => $offer->store?->name ?? 'Store'.$offer->id,
+                        'id' => $offer->store ? $offer->store->id : $offer->id,
+                        'name' => $offer->store ? $offer->store->name : 'Store'.$offer->id,
                         'price' => $offer->price,
                         'is_available' => $offer->is_available ?? true,
                     ];
@@ -248,14 +250,13 @@ class ProductController extends Controller
                 'price' => $product->price,
                 'image' => $product->image,
                 'is_active' => $product->is_active,
-                'is_featured' => $product->is_featured,
                 'stock_quantity' => $product->stock_quantity,
                 'category' => $product->category,
                 'brand' => $product->brand,
-                'stores' => $product->priceOffers->map(function ($offer) {
+                'stores' => $product->priceOffers->map(function (PriceOffer $offer): array {
                     return [
-                        'id' => $offer->store?->id ?? $offer->id,
-                        'name' => $offer->store?->name ?? 'Unknown Store',
+                        'id' => $offer->store ? $offer->store->id : $offer->id,
+                        'name' => $offer->store ? $offer->store->name : 'Unknown Store',
                         'price' => $offer->price,
                         'is_available' => $offer->is_available ?? true,
                     ];
@@ -404,10 +405,10 @@ class ProductController extends Controller
                     'category_id' => $product->category_id,
                     'brand_id' => $product->brand_id,
                     'slug' => $product->slug,
-                    'stores' => $product->priceOffers->map(function ($offer) {
+                    'stores' => $product->priceOffers->map(function (PriceOffer $offer): array {
                         return [
-                            'id' => $offer->store?->id ?? $offer->id,
-                            'name' => $offer->store?->name ?? 'Unknown Store',
+                            'id' => $offer->store ? $offer->store->id : $offer->id,
+                            'name' => $offer->store ? $offer->store->name : 'Unknown Store',
                             'price' => $offer->price,
                             'is_available' => $offer->is_available ?? true,
                         ];

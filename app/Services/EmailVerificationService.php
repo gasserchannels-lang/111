@@ -21,8 +21,6 @@ class EmailVerificationService
 
     /**
      * Send verification email.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function sendVerificationEmail(User $user): bool
     {
@@ -86,7 +84,7 @@ class EmailVerificationService
         }
 
         // Mark email as verified
-        $user->email_verified_at = now()->toDateTimeString();
+        $user->email_verified_at = now();
         $user->save();
 
         // Clear verification token

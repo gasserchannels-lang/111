@@ -208,6 +208,14 @@ class BestDealRecommendationTest extends TestCase
         $this->assertEquals(1, $bestOverallDeals[0]['id']); // Best overall deal
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getBestDeals(array $products, int $limit): array
     {
         // Calculate deal score for each product
@@ -223,6 +231,9 @@ class BestDealRecommendationTest extends TestCase
         return array_slice($products, 0, $limit);
     }
 
+    /**
+     * @param  array<string, mixed>  $product
+     */
     private function calculateDealScore(array $product): float
     {
         $price = $product['price'] ?? 0;
@@ -232,14 +243,22 @@ class BestDealRecommendationTest extends TestCase
         $reviewsCount = $product['reviews_count'] ?? 0;
 
         // Calculate discount percentage
-        $discountPercentage = $originalPrice > 0 ? (($originalPrice - $price) / $originalPrice) * 100 : 0;
+        $originalPriceFloat = is_numeric($originalPrice) ? (float) $originalPrice : 0.0;
+        $priceFloat = is_numeric($price) ? (float) $price : 0.0;
+        $discountPercentage = $originalPriceFloat > 0 ? (($originalPriceFloat - $priceFloat) / $originalPriceFloat) * 100 : 0;
 
         // Calculate deal score (0-100)
-        $score = ($discountPercentage * 0.4) + ($rating * 10 * 0.3) + (min($reviewsCount / 100, 10) * 0.3);
+        $ratingFloat = is_numeric($rating) ? (float) $rating : 0.0;
+        $reviewsCountFloat = is_numeric($reviewsCount) ? (float) $reviewsCount : 0.0;
+        $score = ($discountPercentage * 0.4) + ($ratingFloat * 10 * 0.3) + (min($reviewsCountFloat / 100, 10) * 0.3);
 
         return min(100, max(0, $score));
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getPercentageDiscounts(array $products): array
     {
         $discounts = [];
@@ -248,8 +267,11 @@ class BestDealRecommendationTest extends TestCase
             $price = $product['price'] ?? 0;
             $originalPrice = $product['original_price'] ?? $price;
 
-            if ($originalPrice > 0) {
-                $discountPercentage = (($originalPrice - $price) / $originalPrice) * 100;
+            $priceFloat = is_numeric($price) ? (float) $price : 0.0;
+            $originalPriceFloat = is_numeric($originalPrice) ? (float) $originalPrice : 0.0;
+
+            if ($originalPriceFloat > 0) {
+                $discountPercentage = (($originalPriceFloat - $priceFloat) / $originalPriceFloat) * 100;
                 $discounts[] = [
                     'product_id' => $product['id'],
                     'name' => $product['name'],
@@ -266,6 +288,10 @@ class BestDealRecommendationTest extends TestCase
         return $discounts;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getAbsoluteDiscounts(array $products): array
     {
         $discounts = [];
@@ -273,7 +299,10 @@ class BestDealRecommendationTest extends TestCase
         foreach ($products as $product) {
             $price = $product['price'] ?? 0;
             $originalPrice = $product['original_price'] ?? $price;
-            $discountAmount = $originalPrice - $price;
+
+            $priceFloat = is_numeric($price) ? (float) $price : 0.0;
+            $originalPriceFloat = is_numeric($originalPrice) ? (float) $originalPrice : 0.0;
+            $discountAmount = $originalPriceFloat - $priceFloat;
 
             $discounts[] = [
                 'product_id' => $product['id'],
@@ -290,6 +319,10 @@ class BestDealRecommendationTest extends TestCase
         return $discounts;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getValueForMoneyDeals(array $products): array
     {
         $valueDeals = [];
@@ -299,8 +332,12 @@ class BestDealRecommendationTest extends TestCase
             $rating = $product['rating'] ?? 0;
             $features = $product['features'] ?? 0;
 
+            $priceFloat = is_numeric($price) ? (float) $price : 0.0;
+            $ratingFloat = is_numeric($rating) ? (float) $rating : 0.0;
+            $featuresFloat = is_numeric($features) ? (float) $features : 0.0;
+
             // Calculate value score (rating and features per dollar)
-            $valueScore = $price > 0 ? (($rating * $features) / $price) * 100 : 0;
+            $valueScore = $priceFloat > 0 ? (($ratingFloat * $featuresFloat) / $priceFloat) * 100 : 0;
 
             $valueDeals[] = [
                 'id' => $product['id'],
@@ -318,10 +355,16 @@ class BestDealRecommendationTest extends TestCase
         return $valueDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $deals
+     * @return array<int, array<string, mixed>>
+     */
     private function getLimitedTimeDeals(array $deals, string $currentDate): array
     {
         $limitedDeals = array_filter($deals, function ($deal) use ($currentDate) {
-            return $deal['is_limited'] === true && strtotime($deal['end_date']) >= strtotime($currentDate);
+            $endDate = $deal['end_date'] ?? '';
+
+            return $deal['is_limited'] === true && is_string($endDate) && strtotime($endDate) >= strtotime($currentDate);
         });
 
         // Sort by discount descending
@@ -332,6 +375,10 @@ class BestDealRecommendationTest extends TestCase
         return $limitedDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getBulkDeals(array $products): array
     {
         $bulkDeals = array_filter($products, function ($product) {
@@ -346,6 +393,10 @@ class BestDealRecommendationTest extends TestCase
         return $bulkDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $bundles
+     * @return array<int, array<string, mixed>>
+     */
     private function getBundleDeals(array $bundles): array
     {
         // Sort by savings descending
@@ -356,6 +407,10 @@ class BestDealRecommendationTest extends TestCase
         return $bundles;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getCashbackDeals(array $products): array
     {
         $cashbackDeals = array_filter($products, function ($product) {
@@ -370,6 +425,10 @@ class BestDealRecommendationTest extends TestCase
         return $cashbackDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getFreeShippingDeals(array $products): array
     {
         $freeShippingDeals = array_filter($products, function ($product) {
@@ -384,6 +443,10 @@ class BestDealRecommendationTest extends TestCase
         return $freeShippingDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getClearanceDeals(array $products): array
     {
         $clearanceDeals = array_filter($products, function ($product) {
@@ -392,8 +455,13 @@ class BestDealRecommendationTest extends TestCase
 
         // Sort by discount percentage descending
         usort($clearanceDeals, function ($a, $b) {
-            $discountA = (($a['original_price'] - $a['price']) / $a['original_price']) * 100;
-            $discountB = (($b['original_price'] - $b['price']) / $b['original_price']) * 100;
+            $originalPriceA = is_numeric($a['original_price']) ? (float) $a['original_price'] : 0.0;
+            $priceA = is_numeric($a['price']) ? (float) $a['price'] : 0.0;
+            $originalPriceB = is_numeric($b['original_price']) ? (float) $b['original_price'] : 0.0;
+            $priceB = is_numeric($b['price']) ? (float) $b['price'] : 0.0;
+
+            $discountA = $originalPriceA > 0 ? (($originalPriceA - $priceA) / $originalPriceA) * 100 : 0;
+            $discountB = $originalPriceB > 0 ? (($originalPriceB - $priceB) / $originalPriceB) * 100 : 0;
 
             return $discountB <=> $discountA;
         });
@@ -401,6 +469,15 @@ class BestDealRecommendationTest extends TestCase
         return $clearanceDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalDeals(array $products, string $season): array
     {
         $seasonalDeals = array_filter($products, function ($product) use ($season) {
@@ -409,8 +486,13 @@ class BestDealRecommendationTest extends TestCase
 
         // Sort by discount percentage descending
         usort($seasonalDeals, function ($a, $b) {
-            $discountA = (($a['original_price'] - $a['price']) / $a['original_price']) * 100;
-            $discountB = (($b['original_price'] - $b['price']) / $b['original_price']) * 100;
+            $originalPriceA = is_numeric($a['original_price']) ? (float) $a['original_price'] : 0.0;
+            $priceA = is_numeric($a['price']) ? (float) $a['price'] : 0.0;
+            $originalPriceB = is_numeric($b['original_price']) ? (float) $b['original_price'] : 0.0;
+            $priceB = is_numeric($b['price']) ? (float) $b['price'] : 0.0;
+
+            $discountA = $originalPriceA > 0 ? (($originalPriceA - $priceA) / $originalPriceA) * 100 : 0;
+            $discountB = $originalPriceB > 0 ? (($originalPriceB - $priceB) / $originalPriceB) * 100 : 0;
 
             return $discountB <=> $discountA;
         });
@@ -418,6 +500,15 @@ class BestDealRecommendationTest extends TestCase
         return $seasonalDeals;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getBestOverallDeals(array $products, int $limit): array
     {
         // Calculate overall deal score for each product

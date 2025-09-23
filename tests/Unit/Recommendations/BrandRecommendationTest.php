@@ -198,10 +198,16 @@ class BrandRecommendationTest extends TestCase
 
         $rankedBrands = $this->rankBrandsByWeightedScore($brands, $weights);
 
+        $this->assertIsArray($rankedBrands[0]);
         $this->assertEquals('Apple', $rankedBrands[0]['brand']);
+        $this->assertIsArray($rankedBrands[1]);
         $this->assertGreaterThan($rankedBrands[1]['score'], $rankedBrands[0]['score']);
     }
 
+    /**
+     * @param  array<string, mixed>  $userPreferences
+     * @return list<string>
+     */
     private function getBrandRecommendations(array $userPreferences, int $limit): array
     {
         arsort($userPreferences);
@@ -209,6 +215,10 @@ class BrandRecommendationTest extends TestCase
         return array_slice(array_keys($userPreferences), 0, $limit);
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $brandPopularity
+     * @return list<string>
+     */
     private function getPopularBrandsInCategory(string $category, array $brandPopularity, int $limit): array
     {
         if (! isset($brandPopularity[$category])) {
@@ -221,11 +231,19 @@ class BrandRecommendationTest extends TestCase
         return array_slice(array_keys($categoryBrands), 0, $limit);
     }
 
+    /**
+     * @param  array<string, list<string>>  $brandSimilarity
+     * @return list<string>
+     */
     private function getSimilarBrandRecommendations(string $currentBrand, array $brandSimilarity): array
     {
         return $brandSimilarity[$currentBrand] ?? [];
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $brandPriceRanges
+     * @return list<string>
+     */
     private function getBrandsInPriceRange(float $budget, array $brandPriceRanges): array
     {
         $suitableBrands = [];
@@ -239,6 +257,10 @@ class BrandRecommendationTest extends TestCase
         return $suitableBrands;
     }
 
+    /**
+     * @param  array<string, mixed>  $brandRatings
+     * @return list<string>
+     */
     private function getHighRatedBrands(array $brandRatings, float $minRating): array
     {
         return array_keys(array_filter($brandRatings, function ($rating) use ($minRating) {
@@ -246,6 +268,10 @@ class BrandRecommendationTest extends TestCase
         }));
     }
 
+    /**
+     * @param  array<string, list<string>>  $brandAvailability
+     * @return list<string>
+     */
     private function getAvailableBrandsInRegion(string $region, array $brandAvailability): array
     {
         $availableBrands = [];
@@ -259,13 +285,19 @@ class BrandRecommendationTest extends TestCase
         return $availableBrands;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $purchaseHistory
+     * @return list<string>
+     */
     private function getBrandsFromPurchaseHistory(array $purchaseHistory, int $limit): array
     {
         $brandCounts = [];
 
         foreach ($purchaseHistory as $purchase) {
-            $brand = $purchase['brand'];
-            $brandCounts[$brand] = ($brandCounts[$brand] ?? 0) + 1;
+            $brand = $purchase['brand'] ?? '';
+            if (is_string($brand) && $brand !== '') {
+                $brandCounts[$brand] = ($brandCounts[$brand] ?? 0) + 1;
+            }
         }
 
         arsort($brandCounts);
@@ -273,6 +305,9 @@ class BrandRecommendationTest extends TestCase
         return array_slice(array_keys($brandCounts), 0, $limit);
     }
 
+    /**
+     * @param  array<string, int>  $userPurchases
+     */
     private function calculateBrandLoyaltyScore(array $userPurchases, string $brand): float
     {
         $totalPurchases = array_sum($userPurchases);
@@ -281,6 +316,10 @@ class BrandRecommendationTest extends TestCase
         return $totalPurchases > 0 ? $brandPurchases / $totalPurchases : 0;
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $brandTrends
+     * @return list<string>
+     */
     private function getTrendingBrands(array $brandTrends): array
     {
         $trending = [];
@@ -294,14 +333,27 @@ class BrandRecommendationTest extends TestCase
         return $trending;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $brands
+     * @return list<string>
+     */
+
+    /**
+     * @param  array<string, array<string, float>>  $brands
+     * @param  array<string, float>  $weights
+     * @return list<array{brand: string, score: float}>
+     */
     private function rankBrandsByWeightedScore(array $brands, array $weights): array
     {
         $rankedBrands = [];
 
         foreach ($brands as $brand => $scores) {
-            $weightedScore = 0;
+            $weightedScore = 0.0;
             foreach ($weights as $metric => $weight) {
-                $weightedScore += $scores[$metric] * $weight;
+                $score = $scores[$metric] ?? 0.0;
+                if (is_numeric($score)) {
+                    $weightedScore += (float) $score * $weight;
+                }
             }
 
             $rankedBrands[] = [

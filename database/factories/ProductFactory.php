@@ -11,7 +11,7 @@ use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Product<\Database\Factories\ProductFactory>>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {

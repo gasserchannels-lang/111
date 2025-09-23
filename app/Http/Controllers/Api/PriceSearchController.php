@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\PriceOffer;
 use App\Models\Product;
 use App\Models\Store;
-use App\Services\PriceSearchService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,9 +17,9 @@ use Throwable;
 
 class PriceSearchController extends Controller
 {
-    public function __construct(private readonly PriceSearchService $priceSearchService)
+    public function __construct()
     {
-        // PriceSearchService is properly injected via constructor
+        // Constructor for future dependency injection
     }
 
     public function bestOffer(Request $request): JsonResponse
@@ -48,7 +48,7 @@ class PriceSearchController extends Controller
                 }
 
                 return response()->json([
-                    'data' => $products->map(function ($product) {
+                    'data' => $products->map(function (Product $product): array {
                         $bestOffer = $product->priceOffers->first();
 
                         return [
@@ -75,6 +75,7 @@ class PriceSearchController extends Controller
                     'category:id,name',
                 ])->find($productId);
             } elseif ($productName) {
+                $productNameStr = is_string($productName) ? $productName : '';
                 $product = Product::with([
                     'priceOffers' => function ($query) {
                         $query->where('is_available', true)
@@ -83,7 +84,7 @@ class PriceSearchController extends Controller
                     },
                     'brand:id,name',
                     'category:id,name',
-                ])->where('name', 'like', '%' . $productName . '%')->first();
+                ])->where('name', 'like', '%'.$productNameStr.'%')->first();
             }
 
             if (! $product) {
@@ -92,6 +93,7 @@ class PriceSearchController extends Controller
                 ], 404);
             }
 
+            /** @var \App\Models\Product $product */
             if ($product->priceOffers->isEmpty()) {
                 return response()->json([
                     'message' => 'No offers available for this product',
@@ -106,23 +108,23 @@ class PriceSearchController extends Controller
                     'price' => $bestOffer->price,
                     'store_id' => $bestOffer->store_id,
                     'store' => $bestOffer->store ? $bestOffer->store->name : 'Unknown Store',
-                    'store_url' => $bestOffer->url,
+                    'store_url' => $bestOffer->product_url,
                     'is_available' => $bestOffer->is_available,
                     'total_offers' => $product->priceOffers->count(),
                 ],
-                'offers' => $product->priceOffers->map(function ($offer) {
+                'offers' => $product->priceOffers->map(function (PriceOffer $offer): array {
                     return [
                         'id' => $offer->id,
                         'price' => $offer->price,
                         'store_id' => $offer->store_id,
                         'store' => $offer->store ? $offer->store->name : 'Unknown Store',
-                        'store_url' => $offer->url,
+                        'store_url' => $offer->product_url,
                         'is_available' => $offer->is_available,
                     ];
                 })->toArray(),
             ]);
         } catch (\Exception $e) {
-            Log::error('PriceSearchController@bestOffer failed: ' . $e->getMessage());
+            Log::error('PriceSearchController@bestOffer failed: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'An error occurred while finding the best offer',
@@ -141,7 +143,7 @@ class PriceSearchController extends Controller
 
             return response()->json($stores);
         } catch (Throwable $e) {
-            Log::error('PriceSearchController@supportedStores failed: ' . $e->getMessage());
+            Log::error('PriceSearchController@supportedStores failed: '.$e->getMessage());
 
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
@@ -163,14 +165,14 @@ class PriceSearchController extends Controller
             $queryStr = is_string($query) ? $query : '';
 
             // Use caching for better performance
-            $cacheKey = 'price_search_' . md5($queryStr);
+            $cacheKey = 'price_search_'.md5($queryStr);
             $results = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60, function () use ($queryStr) {
                 // Optimize query with proper indexing and limit
                 $products = Product::select(['id', 'name', 'description', 'slug', 'price', 'brand_id', 'category_id'])
                     ->where('is_active', true)
                     ->where(function ($q) use ($queryStr) {
-                        $q->where('name', 'like', '%' . $queryStr . '%')
-                            ->orWhere('description', 'like', '%' . $queryStr . '%');
+                        $q->where('name', 'like', '%'.$queryStr.'%')
+                            ->orWhere('description', 'like', '%'.$queryStr.'%');
                     })
                     ->with([
                         'brand:id,name',
@@ -186,33 +188,37 @@ class PriceSearchController extends Controller
                     ->limit(5) // Further reduce limit for better performance
                     ->get();
 
-                return $products->map(fn(Product $product): array => [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'description' => $product->description,
-                    'slug' => $product->slug,
-                    'price' => $product->price,
-                    'brand' => $product->brand ? $product->brand->name : null,
-                    'category' => $product->category ? $product->category->name : null,
-                    'prices' => $product->priceOffers->map(fn(\App\Models\PriceOffer $offer): array => [
-                        'id' => $offer->id,
-                        'price' => $offer->price,
-                        'url' => $offer->url ?? null,
-                        'store' => $offer->store ? $offer->store->name : null,
-                        'is_available' => $offer->is_available,
-                    ])->values(),
-                ]);
+                return $products->map(function (Product $product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'description' => $product->description,
+                        'slug' => $product->slug,
+                        'price' => $product->price,
+                        'brand' => $product->brand ? $product->brand->name : null,
+                        'category' => $product->category ? $product->category->name : null,
+                        'prices' => $product->priceOffers->map(function (PriceOffer $offer): array {
+                            return [
+                                'id' => $offer->id,
+                                'price' => $offer->price,
+                                'url' => $offer->product_url ?? null,
+                                'store' => $offer->store ? $offer->store->name : null,
+                                'is_available' => $offer->is_available,
+                            ];
+                        })->values(),
+                    ];
+                });
             });
 
             return response()->json([
                 'data' => $results,
                 'results' => $results,
                 'products' => $results,
-                'total' => $results->count(),
+                'total' => is_countable($results) ? count($results) : 0,
                 'query' => $query,
             ]);
         } catch (Throwable $e) {
-            Log::error('PriceSearchController@search failed: ' . $e->getMessage());
+            Log::error('PriceSearchController@search failed: '.$e->getMessage());
 
             return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }

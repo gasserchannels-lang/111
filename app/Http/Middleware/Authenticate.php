@@ -23,7 +23,7 @@ class Authenticate extends Middleware
     }
 
     /**
-     * @param array<int, string> $guards
+     * @param  array<int, string>  $guards
      */
     protected function unauthenticated($request, array $guards): never
     {

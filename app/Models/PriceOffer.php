@@ -14,26 +14,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $product_id
  * @property int $store_id
  * @property float $price
- * @property string $url
  * @property bool $in_stock
- * @property-read Product<Database\Factories\ProductFactory> $product
- * @property-read Store<Database\Factories\StoreFactory> $store
+ * @property-read Product $product
+ * @property-read Store $store
  *
  * @method static PriceOfferFactory factory(...$parameters)
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of PriceOfferFactory
- *
- * @mixin TFactory
- */
 class PriceOffer extends Model
 {
-    /**
-     * @use HasFactory<PriceOfferFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<PriceOffer>>
+     */
+    protected static $factory = \Database\Factories\PriceOfferFactory::class;
 
     protected $fillable = [
         'product_id',
@@ -50,7 +47,6 @@ class PriceOffer extends Model
         'reviews_count',
         'image_url',
         'specifications',
-        'url',
         'is_available',
         'original_price',
     ];
@@ -65,17 +61,17 @@ class PriceOffer extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
+     * @return BelongsTo<Product, $this>
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Store>
+     * @return BelongsTo<Store, $this>
      */
-    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
@@ -83,8 +79,8 @@ class PriceOffer extends Model
     /**
      * Scope a query to only include available offers.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>
+     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer>
      */
     public function scopeAvailable(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
@@ -94,8 +90,8 @@ class PriceOffer extends Model
     /**
      * Scope a query to only include offers for a specific product.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>
+     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer>
      */
     public function scopeForProduct(\Illuminate\Database\Eloquent\Builder $query, int $productId): \Illuminate\Database\Eloquent\Builder
     {
@@ -105,8 +101,8 @@ class PriceOffer extends Model
     /**
      * Scope a query to only include offers for a specific store.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer<\Database\Factories\PriceOfferFactory>>
+     * @param  \Illuminate\Database\Eloquent\Builder<PriceOffer>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<PriceOffer>
      */
     public function scopeForStore(\Illuminate\Database\Eloquent\Builder $query, int $storeId): \Illuminate\Database\Eloquent\Builder
     {
@@ -118,15 +114,15 @@ class PriceOffer extends Model
      */
     public static function lowestPriceForProduct(int $productId): ?float
     {
-        return static::where('product_id', $productId)
+        $minPrice = static::where('product_id', $productId)
             ->where('is_available', true)
             ->min('price');
+
+        return is_numeric($minPrice) ? (float) $minPrice : null;
     }
 
     /**
      * Get the best offer for a product.
-     *
-     * @return PriceOffer<\Database\Factories\PriceOfferFactory>|null
      */
     public static function bestOfferForProduct(int $productId): ?self
     {

@@ -17,9 +17,10 @@ class PasswordHistoryService
 
     public function __construct()
     {
-        $this->config = config('password_policy', [
+        $config = config('password_policy', [
             'history_count' => 5,
         ]);
+        $this->config = is_array($config) ? $config : ['history_count' => 5];
     }
 
     /**
@@ -31,7 +32,7 @@ class PasswordHistoryService
             $history = $this->getPasswordHistory($userId);
 
             foreach ($history as $oldPassword) {
-                if (Hash::check($password, $oldPassword)) {
+                if (is_string($oldPassword) && Hash::check($password, $oldPassword)) {
                     return true;
                 }
             }
@@ -57,7 +58,8 @@ class PasswordHistoryService
             array_unshift($history, $hashedPassword);
 
             // الحفاظ على العدد المحدد من كلمات المرور
-            $history = array_slice($history, 0, $this->config['history_count']);
+            $historyCount = is_numeric($this->config['history_count']) ? (int) $this->config['history_count'] : 5;
+            $history = array_slice($history, 0, $historyCount);
 
             // حفظ التاريخ
             cache()->put("password_history_{$userId}", $history, 86400 * 30); // 30 يوم
@@ -75,7 +77,9 @@ class PasswordHistoryService
      */
     private function getPasswordHistory(int $userId): array
     {
-        return cache()->get("password_history_{$userId}", []);
+        $history = cache()->get("password_history_{$userId}", []);
+
+        return is_array($history) ? $history : [];
     }
 
     /**

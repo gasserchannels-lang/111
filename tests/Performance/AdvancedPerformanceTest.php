@@ -2,29 +2,32 @@
 
 namespace Tests\Performance;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class AdvancedPerformanceTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_advanced_performance_metrics()
+    public function test_advanced_performance_metrics(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_advanced_memory_usage()
+    public function test_advanced_memory_usage(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_advanced_response_times()
+    public function test_advanced_response_times(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

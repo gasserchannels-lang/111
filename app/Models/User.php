@@ -39,14 +39,17 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of UserFactory
- *
- * @mixin TFactory
- */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
+
+    /** @phpstan-ignore-next-line */
+    use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<User>>
+     */
+    protected static $factory = \Database\Factories\UserFactory::class;
 
     protected $fillable = [
         'name',
@@ -81,9 +84,11 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Review>
+     * Get the reviews for the user.
+     *
+     * @return HasMany<Review, $this>
      */
-    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
@@ -91,9 +96,9 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: ElseExpression.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Wishlist>
+     * @return HasMany<Wishlist, $this>
      */
-    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);
     }
@@ -101,9 +106,9 @@ class User extends Authenticatable
     /**
      * Intentional PHPMD violation: CamelCaseVariableName.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceAlert>
+     * @return HasMany<PriceAlert, $this>
      */
-    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceAlerts(): HasMany
     {
         // snake_case intentionally used to trigger PHPMD rule
         $user_name = getenv('CI_TEST_USER') ?: 'ci_test_user';
@@ -117,9 +122,11 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<UserLocaleSetting>
+     * Get the locale setting for the user.
+     *
+     * @return HasOne<UserLocaleSetting, $this>
      */
-    public function localeSetting(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function localeSetting(): HasOne
     {
         return $this->hasOne(UserLocaleSetting::class);
     }

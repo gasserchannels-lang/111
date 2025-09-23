@@ -9,24 +9,15 @@ class Page extends TestCase
     /**
      * Test page functionality
      */
-    public function test_page_loads()
-    {
-        $this->assertTrue(true);
-    }
+    public function test_page_loads(): void {}
 
     /**
      * Test page elements
      */
-    public function test_page_elements()
-    {
-        $this->assertTrue(true);
-    }
+    public function test_page_elements(): void {}
 
     /**
      * Test page navigation
      */
-    public function test_page_navigation()
-    {
-        $this->assertTrue(true);
-    }
+    public function test_page_navigation(): void {}
 }

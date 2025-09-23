@@ -14,10 +14,10 @@ class StrictQualityAgent
     /** @var array<string, mixed> */
     private array $results = [];
 
-    /** @var array<string, mixed> */
+    /** @var array<string, string> */
     private array $errors = [];
 
-    /** @var array<string, mixed> */
+    /** @var array<string, string> */
     private array $fixes = [];
 
     public function __construct()
@@ -353,7 +353,13 @@ class StrictQualityAgent
      */
     public function getStageStatus(string $stageId): ?array
     {
-        return $this->results[$stageId] ?? null;
+        $result = $this->results[$stageId] ?? null;
+        if (is_array($result)) {
+            /** @var array<string, mixed> $result */
+            return $result;
+        }
+
+        return null;
     }
 
     /**
@@ -376,7 +382,7 @@ class StrictQualityAgent
         return [
             'total_errors' => count($this->errors),
             'errors_by_stage' => $this->errors,
-            'critical_errors' => array_filter($this->errors, fn ($error): bool => is_string($error) && str_contains($error, 'Fatal')),
+            'critical_errors' => array_filter($this->errors, fn (string $error): bool => str_contains($error, 'Fatal')),
         ];
     }
 }

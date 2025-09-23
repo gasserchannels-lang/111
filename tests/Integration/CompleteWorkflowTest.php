@@ -10,8 +10,7 @@ use Tests\TestCase;
 class CompleteWorkflowTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function user_registration_workflow()
+    public function user_registration_workflow(): void
     {
         // Test user registration workflow
         $response = $this->get('/register');
@@ -27,8 +26,7 @@ class CompleteWorkflowTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function product_purchase_workflow()
+    public function product_purchase_workflow(): void
     {
         // Test product purchase workflow
         $response = $this->get('/products');
@@ -39,8 +37,7 @@ class CompleteWorkflowTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function admin_management_workflow()
+    public function admin_management_workflow(): void
     {
         // Test admin management workflow
         $response = $this->get('/admin');
@@ -48,5 +45,15 @@ class CompleteWorkflowTest extends TestCase
 
         $response = $this->get('/admin/products');
         $this->assertTrue(in_array($response->status(), [200, 302, 401, 403, 404, 500]));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

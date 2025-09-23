@@ -18,6 +18,15 @@ class ProductController extends Controller
 
     public function index(): View
     {
+        // Check if search parameters are present
+        $query = request()->get('search', '');
+        $filters = request()->only(['category', 'brand', 'sort', 'order']);
+
+        if (! empty($query) || ! empty(array_filter($filters))) {
+            // Use search method if parameters are present
+            return $this->search();
+        }
+
         $products = $this->productService->getPaginatedProducts();
 
         return view('products.index', [
@@ -35,9 +44,40 @@ class ProductController extends Controller
 
         $relatedProducts = $this->productService->getRelatedProducts($product);
 
-        return view('product-show', [
+        return view('products.show', [
             'product' => $product,
             'relatedProducts' => $relatedProducts,
+        ]);
+    }
+
+    public function search(): View
+    {
+        $query = request()->get('search', '');
+        $filters = request()->only(['category', 'brand', 'sort', 'order']);
+
+        $queryString = is_string($query) ? $query : '';
+
+        // Convert sort and order parameters to sort_by format expected by repository
+        if (isset($filters['sort']) && isset($filters['order'])) {
+            $sortBy = $filters['sort'].'_'.$filters['order'];
+            $filters['sort_by'] = $sortBy;
+            unset($filters['sort'], $filters['order']);
+        }
+
+        // Convert category and brand to category_id and brand_id
+        if (isset($filters['category'])) {
+            $filters['category_id'] = $filters['category'];
+            unset($filters['category']);
+        }
+        if (isset($filters['brand'])) {
+            $filters['brand_id'] = $filters['brand'];
+            unset($filters['brand']);
+        }
+
+        $products = $this->productService->searchProducts($queryString, $filters);
+
+        return view('products.index', [
+            'products' => $products,
         ]);
     }
 }

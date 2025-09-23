@@ -21,8 +21,6 @@ class NotificationService
 
     /**
      * Send price drop notification.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      */
     public function sendPriceDropNotification(Product $product, float $oldPrice, float $newPrice): void
     {
@@ -37,7 +35,7 @@ class NotificationService
             foreach ($priceAlerts as $alert) {
                 $user = $alert->user;
 
-                if ($user && $user->email) {
+                if ($user instanceof \App\Models\User && $user->email) {
                     // Send email notification
                     // $user->notify(new PriceDropNotification($product, $oldPrice, $newPrice, $alert->target_price));
 
@@ -68,8 +66,6 @@ class NotificationService
 
     /**
      * Send product added notification to admins.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      */
     public function sendProductAddedNotification(Product $product): void
     {
@@ -94,9 +90,6 @@ class NotificationService
 
     /**
      * Send review notification to product owner.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
-     * @param  User<\Database\Factories\UserFactory>  $reviewer
      */
     public function sendReviewNotification(Product $product, User $reviewer, int $rating): void
     {
@@ -156,8 +149,6 @@ class NotificationService
 
     /**
      * Send welcome notification to new user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function sendWelcomeNotification(User $user): void
     {
@@ -180,15 +171,13 @@ class NotificationService
 
     /**
      * Send price alert confirmation.
-     *
-     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $alert
      */
     public function sendPriceAlertConfirmation(PriceAlert $alert): void
     {
         try {
             $user = $alert->user;
 
-            if ($user && $user->email) {
+            if ($user instanceof \App\Models\User && $user->email) {
                 // $user->notify(new SystemNotification(
                 //     'Price Alert Created',
                 //     "We'll notify you when the price of {$alert->product?->name} drops to {$alert->target_price} or below."
@@ -197,7 +186,7 @@ class NotificationService
 
             Log::info('Price alert confirmation sent', [
                 'alert_id' => $alert->id,
-                'user_id' => $user?->id,
+                'user_id' => $user instanceof \App\Models\User ? $user->id : null,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to send price alert confirmation', [
@@ -209,8 +198,6 @@ class NotificationService
 
     /**
      * Send daily price summary.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function sendDailyPriceSummary(User $user): void
     {
@@ -229,7 +216,7 @@ class NotificationService
             $priceChanges = [];
             foreach ($alerts as $alert) {
                 $product = $alert->product;
-                $todayOffers = $product ? $product->priceOffers()
+                $todayOffers = $product instanceof \App\Models\Product ? $product->priceOffers()
                     ->whereDate('created_at', today())
                     ->orderBy('price')
                     ->first() : null;
@@ -260,8 +247,6 @@ class NotificationService
 
     /**
      * Mark notification as read.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function markAsRead(string $notificationId, User $user): bool
     {
@@ -293,8 +278,6 @@ class NotificationService
 
     /**
      * Mark all notifications as read for user.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function markAllAsRead(User $user): int
     {

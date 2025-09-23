@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @extends Factory<User<\Database\Factories\UserFactory>>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -22,7 +22,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => 'User '.$this->faker->unique()->numberBetween(1, 1000000),
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => $this->faker->unique()->email(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'is_admin' => false,

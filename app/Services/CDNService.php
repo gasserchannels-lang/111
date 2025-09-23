@@ -444,7 +444,9 @@ class CDNService
             throw new Exception('Failed to get Cloudflare statistics');
         }
 
-        return $response->json();
+        $result = $response->json();
+
+        return is_array($result) ? $result : [];
     }
 
     /**

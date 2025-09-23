@@ -19,24 +19,37 @@ class PriceOfferSeeder extends Seeder
 
         foreach ($stores as $store) {
             foreach ($products as $product) {
-                $productUrl = $store->website_url.'/product/'.strtolower($product->slug);
+                $storeWebsiteUrl = is_string($store->website_url) ? $store->website_url : '';
+                $productSlug = is_string($product->slug) ? $product->slug : '';
+                $productUrl = $storeWebsiteUrl.'/product/'.strtolower($productSlug);
+
+                $productId = is_numeric($product->id) ? (int) $product->id : 0;
+                $storeId = is_numeric($store->id) ? (int) $store->id : 0;
+
+                $currency = is_string(config('coprra.default_currency')) ? config('coprra.default_currency') : 'USD';
+                $condition = is_string(config('coprra.default_condition')) ? config('coprra.default_condition') : 'new';
+                $appUrl = is_string(config('app.url')) ? config('app.url') : 'http://localhost';
+
+                $productName = is_string($product->name) ? $product->name : 'Product';
+                $affiliateUrl = method_exists($store, 'generateAffiliateUrl') ? $store->generateAffiliateUrl($productUrl) : $productUrl;
+
                 PriceOffer::create([
-                    'product_id' => $product->id,
-                    'product_sku' => 'SKU-'.$product->id.'-'.random_int(1000, 9999),
-                    'store_id' => $store->id,
+                    'product_id' => $productId,
+                    'product_sku' => 'SKU-'.$productId.'-'.random_int(1000, 9999),
+                    'store_id' => $storeId,
                     'price' => random_int(500, 1500) + (random_int(0, 99) / 100),
-                    'currency' => config('coprra.default_currency', 'USD'),
+                    'currency' => $currency,
                     'product_url' => $productUrl,
-                    'affiliate_url' => $store->generateAffiliateUrl($productUrl),
+                    'affiliate_url' => is_string($affiliateUrl) ? $affiliateUrl : $productUrl,
                     'in_stock' => random_int(0, 1) == 1,
                     'stock_quantity' => random_int(0, 100),
-                    'condition' => config('coprra.default_condition', 'new'),
+                    'condition' => $condition,
                     'rating' => random_int(35, 50) / 10,
                     'reviews_count' => random_int(10, 1000),
-                    'image_url' => (config('app.url') ?: 'http://localhost').'/images/placeholder/300x300?text='.urlencode((string) ($product->name ?: 'Product')),
+                    'image_url' => $appUrl.'/images/placeholder/300x300?text='.urlencode($productName),
                     'specifications' => [
-                        'brand' => explode(' ', $product->name)[0],
-                        'model' => $product->name,
+                        'brand' => explode(' ', $productName)[0] ?? '',
+                        'model' => $productName,
                     ],
                 ]);
             }

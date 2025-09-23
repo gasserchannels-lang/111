@@ -51,8 +51,6 @@ class BrandController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Brand<\Database\Factories\BrandFactory>  $brand
      */
     public function show(Brand $brand): View
     {
@@ -64,9 +62,6 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    /**
-     * @param  \App\Models\Brand<\Database\Factories\BrandFactory>  $brand
-     */
     public function edit(Brand $brand): View
     {
         return view('brands.edit', ['brand' => $brand]);
@@ -74,9 +69,6 @@ class BrandController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
-    /**
-     * @param  \App\Models\Brand<\Database\Factories\BrandFactory>  $brand
      */
     public function update(Request $request, Brand $brand): RedirectResponse
     {
@@ -97,9 +89,6 @@ class BrandController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     */
-    /**
-     * @param  \App\Models\Brand<\Database\Factories\BrandFactory>  $brand
      */
     public function destroy(Brand $brand): RedirectResponse
     {

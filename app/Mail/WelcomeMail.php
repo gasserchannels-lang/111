@@ -14,14 +14,12 @@ class WelcomeMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @var User<\Database\Factories\UserFactory>
+     * @var User
      */
     public $user;
 
     /**
      * Create a new message instance.
-     *
-     * @param  User<\Database\Factories\UserFactory>  $user
      */
     public function __construct(User $user)
     {

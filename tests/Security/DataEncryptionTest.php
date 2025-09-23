@@ -2,29 +2,32 @@
 
 namespace Tests\Security;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DataEncryptionTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_data_encryption()
+    public function test_data_encryption(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_encryption_keys()
+    public function test_encryption_keys(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_decryption_works()
+    public function test_decryption_works(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

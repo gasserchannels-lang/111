@@ -14,12 +14,10 @@ parameters:
         - storage
         - vendor
 
-    level: 5
+    level: 9
 
-    ignoreErrors:
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::.*#'
-        - '#Call to an undefined method Illuminate\\Database\\Query\\Builder::.*#'
-
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
 
     tmpDir: storage/framework/phpstan
+
+    treatPhpDocTypesAsCertain: false

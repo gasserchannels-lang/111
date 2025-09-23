@@ -3,15 +3,13 @@
 namespace Tests\AI;
 
 use App\Services\AIService;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIModelTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function ai_model_initializes_correctly()
+    public function ai_model_initializes_correctly(): void
     {
         $aiService = new AIService;
 
@@ -19,38 +17,31 @@ class AIModelTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_can_analyze_text()
+    public function ai_can_analyze_text(): void
     {
         $aiService = new AIService;
 
         $text = 'منتج ممتاز ورائع';
         $result = $aiService->analyzeText($text);
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
         // اختبار بسيط للتأكد من أن النتيجة صحيحة
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_can_classify_products()
+    public function ai_can_classify_products(): void
     {
         $aiService = new AIService;
 
-        $productData = [
-            'name' => 'هاتف آيفون',
-            'description' => 'هاتف ذكي متطور',
-        ];
+        $productDescription = 'هاتف ذكي متطور';
 
-        $result = $aiService->classifyProduct($productData);
+        $result = $aiService->classifyProduct($productDescription);
 
-        $this->assertIsString($result);
+        $this->assertNotEmpty($result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_can_generate_recommendations()
+    public function ai_can_generate_recommendations(): void
     {
         $aiService = new AIService;
 
@@ -63,53 +54,59 @@ class AIModelTest extends TestCase
         $products = [];
         $recommendations = $aiService->generateRecommendations($userPreferences, $products);
 
-        $this->assertIsArray($recommendations);
+        $this->assertArrayHasKey('result', $recommendations);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_empty_input()
+    public function ai_handles_empty_input(): void
     {
         $aiService = new AIService;
 
         $result = $aiService->analyzeText('');
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_special_characters()
+    public function ai_handles_special_characters(): void
     {
         $aiService = new AIService;
 
         $text = 'منتج ممتاز! @#$%^&*()';
         $result = $aiService->analyzeText($text);
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_unicode_text()
+    public function ai_handles_unicode_text(): void
     {
         $aiService = new AIService;
 
         $text = 'منتج ممتاز 🚀 💯';
         $result = $aiService->analyzeText($text);
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_long_text()
+    public function ai_handles_long_text(): void
     {
         $aiService = new AIService;
 
         $longText = str_repeat('منتج ممتاز ورائع ', 100);
         $result = $aiService->analyzeText($longText);
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

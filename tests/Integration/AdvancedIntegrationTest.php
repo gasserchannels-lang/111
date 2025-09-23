@@ -10,8 +10,7 @@ use Tests\TestCase;
 class AdvancedIntegrationTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function full_workflow_integration()
+    public function full_workflow_integration(): void
     {
         // Test full workflow integration
         $response = $this->get('/');
@@ -22,8 +21,7 @@ class AdvancedIntegrationTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function api_database_integration()
+    public function api_database_integration(): void
     {
         // Test API database integration
         $response = $this->getJson('/api/products');
@@ -34,8 +32,7 @@ class AdvancedIntegrationTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function frontend_backend_integration()
+    public function frontend_backend_integration(): void
     {
         // Test frontend-backend integration
         $response = $this->get('/');
@@ -43,5 +40,15 @@ class AdvancedIntegrationTest extends TestCase
 
         $response = $this->post('/api/test', ['test' => 'data']);
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 422, 500]));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

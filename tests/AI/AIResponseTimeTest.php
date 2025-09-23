@@ -3,15 +3,13 @@
 namespace Tests\AI;
 
 use App\Services\AIService;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIResponseTimeTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function text_analysis_response_time_is_acceptable()
+    public function text_analysis_response_time_is_acceptable(): void
     {
         $aiService = new AIService;
 
@@ -21,34 +19,29 @@ class AIResponseTimeTest extends TestCase
 
         $responseTime = ($endTime - $startTime) * 1000; // Convert to milliseconds
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
         $this->assertLessThan(5000, $responseTime); // Less than 5 seconds
     }
 
     #[Test]
-    #[CoversNothing]
-    public function product_classification_response_time_is_acceptable()
+    public function product_classification_response_time_is_acceptable(): void
     {
         $aiService = new AIService;
 
-        $productData = [
-            'name' => 'هاتف آيفون',
-            'description' => 'هاتف ذكي متطور',
-        ];
+        $productDescription = 'هاتف ذكي متطور';
 
         $startTime = microtime(true);
-        $result = $aiService->classifyProduct($productData);
+        $result = $aiService->classifyProduct($productDescription);
         $endTime = microtime(true);
 
         $responseTime = ($endTime - $startTime) * 1000;
 
-        $this->assertIsString($result);
+        $this->assertNotEmpty($result);
         $this->assertLessThan(5000, $responseTime);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function recommendation_generation_response_time_is_acceptable()
+    public function recommendation_generation_response_time_is_acceptable(): void
     {
         $aiService = new AIService;
 
@@ -66,13 +59,12 @@ class AIResponseTimeTest extends TestCase
 
         $responseTime = ($endTime - $startTime) * 1000;
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
         $this->assertLessThan(5000, $responseTime);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function image_processing_response_time_is_acceptable()
+    public function image_processing_response_time_is_acceptable(): void
     {
         $aiService = new AIService;
 
@@ -85,16 +77,16 @@ class AIResponseTimeTest extends TestCase
 
         $responseTime = ($endTime - $startTime) * 1000;
 
-        $this->assertIsArray($result);
+        $this->assertArrayHasKey('tags', $result);
         $this->assertLessThan(5000, $responseTime);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function batch_processing_response_time_is_acceptable()
+    public function batch_processing_response_time_is_acceptable(): void
     {
         $aiService = new AIService;
 
+        /** @var array<int, string> $texts */
         $texts = [
             'منتج ممتاز',
             'منتج سيء',
@@ -118,8 +110,7 @@ class AIResponseTimeTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function concurrent_requests_handle_gracefully()
+    public function concurrent_requests_handle_gracefully(): void
     {
         $aiService = new AIService;
 
@@ -139,8 +130,7 @@ class AIResponseTimeTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function response_time_improves_with_caching()
+    public function response_time_improves_with_caching(): void
     {
         $aiService = new AIService;
 
@@ -156,15 +146,13 @@ class AIResponseTimeTest extends TestCase
         $result2 = $aiService->analyzeText($text);
         $secondRequestTime = (microtime(true) - $startTime) * 1000;
 
-        $this->assertIsArray($result1);
-        $this->assertIsArray($result2);
+        $this->assertArrayHasKey('result', $result1);
+        $this->assertArrayHasKey('result', $result2);
         // اختبار بسيط - لا نتحقق من أن الطلب الثاني أسرع
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function response_time_scales_linearly_with_input_size()
+    public function response_time_scales_linearly_with_input_size(): void
     {
         $aiService = new AIService;
 
@@ -181,8 +169,18 @@ class AIResponseTimeTest extends TestCase
         $largeResult = $aiService->analyzeText($largeText);
         $largeTime = (microtime(true) - $startTime) * 1000;
 
-        $this->assertIsArray($smallResult);
-        $this->assertIsArray($largeResult);
+        $this->assertArrayHasKey('result', $smallResult);
+        $this->assertArrayHasKey('result', $largeResult);
         $this->assertLessThan(10000, $largeTime); // Large text should still be reasonable
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

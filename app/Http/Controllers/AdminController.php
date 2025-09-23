@@ -91,8 +91,6 @@ class AdminController extends Controller
 
     /**
      * Toggle user admin status.
-     *
-     * @param  \App\Models\User<\Database\Factories\UserFactory>  $user
      */
     public function toggleUserAdmin(\App\Models\User $user): \Illuminate\Http\RedirectResponse
     {

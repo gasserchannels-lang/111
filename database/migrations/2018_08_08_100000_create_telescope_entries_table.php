@@ -12,6 +12,7 @@ return new class extends Migration
     public function getConnection(): ?string
     {
         $connection = config('telescope.storage.database.connection');
+
         return is_string($connection) ? $connection : null;
     }
 
@@ -20,6 +21,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Skip telescope migration in testing environment
+        if (app()->environment('testing')) {
+            return;
+        }
+
         $schema = Schema::connection($this->getConnection());
 
         $schema->create('telescope_entries', function (Blueprint $table) {
@@ -62,6 +68,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Skip telescope migration in testing environment
+        if (app()->environment('testing')) {
+            return;
+        }
+
         $schema = Schema::connection($this->getConnection());
 
         $schema->dropIfExists('telescope_entries_tags');

@@ -17,6 +17,9 @@ class PriceSearchService
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function findBestOffer(string $productName, string $countryCode): array
     {
         $product = Product::where('name', 'like', '%'.$productName.'%')->first();
@@ -175,14 +178,14 @@ class PriceSearchService
         }
 
         $comparison = $offers->map(fn ($offer): array => [
-            'store_name' => $offer->store->name ?? 'Unknown Store',
+            'store_name' => $offer->store instanceof \App\Models\Store ? $offer->store->name : 'Unknown Store',
             'price' => $offer->price,
-            'currency' => $offer->currency,
-            'in_stock' => $offer->in_stock,
-            'product_url' => $offer->product_url,
-            'affiliate_url' => $offer->affiliate_url,
-            'rating' => $offer->rating,
-            'reviews_count' => $offer->reviews_count,
+            'currency' => $offer->currency ?? 'USD',
+            'in_stock' => $offer->in_stock ?? true,
+            'product_url' => $offer->product_url ?? null,
+            'affiliate_url' => $offer->affiliate_url ?? null,
+            'rating' => $offer->rating ?? 0,
+            'reviews_count' => $offer->reviews_count ?? 0,
         ]);
 
         return [

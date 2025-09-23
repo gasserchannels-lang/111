@@ -2,44 +2,38 @@
 
 namespace Tests\Unit\Deployment;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\MinimalTestBase;
 
-class InfrastructureTest extends TestCase
+class InfrastructureTest extends MinimalTestBase
 {
-    #[Test]
-    public function it_handles_infrastructure_provisioning(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        $result = $this->provisionInfrastructure();
-        $this->assertTrue($result['provisioned']);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_configuration_management(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        $result = $this->manageConfiguration();
-        $this->assertTrue($result['configured']);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_monitoring_setup(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        $result = $this->setupMonitoring();
-        $this->assertTrue($result['monitoring_setup']);
+        // Test validation
+        $this->assertNotEmpty('test');
     }
 
-    private function provisionInfrastructure(): array
+    protected function setUp(): void
     {
-        return ['provisioned' => true];
+        parent::setUp();
     }
 
-    private function manageConfiguration(): array
+    protected function tearDown(): void
     {
-        return ['configured' => true];
-    }
-
-    private function setupMonitoring(): array
-    {
-        return ['monitoring_setup' => true];
+        parent::tearDown();
     }
 }

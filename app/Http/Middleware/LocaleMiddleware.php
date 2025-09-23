@@ -41,7 +41,9 @@ class LocaleMiddleware
         if ($this->auth->check()) {
             $user = $this->auth->user();
             if ($user && $user->localeSetting && $user->localeSetting->language) {
-                return $user->localeSetting->language->code;
+                $language = $user->localeSetting->language;
+
+                return is_string($language->code) ? $language->code : 'en';
             }
         }
 
@@ -70,6 +72,6 @@ class LocaleMiddleware
         // إذا لم تكن لغة المتصفح مدعومة، استخدم اللغة الافتراضية من قاعدة البيانات
         $defaultDbLang = Language::where('is_default', true)->value('code');
 
-        return is_string($defaultDbLang) ? $defaultDbLang : config('app.fallback_locale', 'en');
+        return is_string($defaultDbLang) ? $defaultDbLang : (is_string(config('app.fallback_locale')) ? config('app.fallback_locale') : 'en');
     }
 }

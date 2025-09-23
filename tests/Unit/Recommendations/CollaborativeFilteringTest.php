@@ -181,6 +181,15 @@ class CollaborativeFilteringTest extends TestCase
         $this->assertArrayHasKey('item_factors', $factors);
     }
 
+    /**
+     * @param  array<string, mixed>  $userRatings
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, array<string, mixed>>  $userRatings
+     * @return list<string>
+     */
     private function findSimilarUsers(array $userRatings, string $targetUser, int $limit): array
     {
         $targetRatings = $userRatings[$targetUser] ?? [];
@@ -200,6 +209,10 @@ class CollaborativeFilteringTest extends TestCase
         return array_slice(array_keys($similarities), 0, $limit);
     }
 
+    /**
+     * @param  array<string, mixed>  $user1
+     * @param  array<string, mixed>  $user2
+     */
     private function calculateCosineSimilarity(array $user1, array $user2): float
     {
         $commonItems = array_intersect_key($user1, $user2);
@@ -214,9 +227,11 @@ class CollaborativeFilteringTest extends TestCase
 
         foreach ($commonItems as $item => $rating1) {
             $rating2 = $user2[$item];
-            $dotProduct += $rating1 * $rating2;
-            $norm1 += $rating1 * $rating1;
-            $norm2 += $rating2 * $rating2;
+            $rating1Float = is_numeric($rating1) ? (float) $rating1 : 0.0;
+            $rating2Float = is_numeric($rating2) ? (float) $rating2 : 0.0;
+            $dotProduct += $rating1Float * $rating2Float;
+            $norm1 += $rating1Float * $rating1Float;
+            $norm2 += $rating2Float * $rating2Float;
         }
 
         if ($norm1 == 0 || $norm2 == 0) {
@@ -226,6 +241,10 @@ class CollaborativeFilteringTest extends TestCase
         return $dotProduct / (sqrt($norm1) * sqrt($norm2));
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $userRatings
+     * @param  list<string>  $similarUsers
+     */
     private function predictRating(array $userRatings, string $targetUser, string $item, array $similarUsers): float
     {
         $targetRatings = $userRatings[$targetUser] ?? [];
@@ -240,10 +259,12 @@ class CollaborativeFilteringTest extends TestCase
             }
 
             $similarity = $this->calculateCosineSimilarity($targetRatings, $userRatings[$similarUser]);
-            $rating = $userRatings[$similarUser][$item];
+            $rating = $userRatings[$similarUser][$item] ?? 0;
+            $ratingFloat = is_numeric($rating) ? (float) $rating : 0.0;
             $similarAverage = array_sum($userRatings[$similarUser]) / count($userRatings[$similarUser]);
+            $similarAverageFloat = (float) $similarAverage;
 
-            $weightedSum += $similarity * ($rating - $similarAverage);
+            $weightedSum += $similarity * ($ratingFloat - $similarAverageFloat);
             $totalWeight += abs($similarity);
         }
 
@@ -254,6 +275,16 @@ class CollaborativeFilteringTest extends TestCase
         return $targetAverage + ($weightedSum / $totalWeight);
     }
 
+    /**
+     * @param  array<string, mixed>  $newUser
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, mixed>  $newUser
+     * @param  array<string, int>  $popularItems
+     * @return list<(int|string)>
+     */
     private function handleColdStart(array $newUser, array $popularItems, int $limit): array
     {
         arsort($popularItems);
@@ -261,6 +292,10 @@ class CollaborativeFilteringTest extends TestCase
         return array_slice(array_keys($popularItems), 0, $limit);
     }
 
+    /**
+     * @param  array<string, mixed>  $user1
+     * @param  array<string, mixed>  $user2
+     */
     private function calculatePearsonCorrelation(array $user1, array $user2): float
     {
         $commonItems = array_intersect_key($user1, $user2);
@@ -276,13 +311,20 @@ class CollaborativeFilteringTest extends TestCase
         $sum1 = array_sum($ratings1);
         $sum2 = array_sum($ratings2);
         $sum1Sq = array_sum(array_map(function ($x) {
-            return $x * $x;
+            $xFloat = is_numeric($x) ? (float) $x : 0.0;
+
+            return $xFloat * $xFloat;
         }, $ratings1));
         $sum2Sq = array_sum(array_map(function ($x) {
-            return $x * $x;
+            $xFloat = is_numeric($x) ? (float) $x : 0.0;
+
+            return $xFloat * $xFloat;
         }, $ratings2));
         $pSum = array_sum(array_map(function ($x, $y) {
-            return $x * $y;
+            $xFloat = is_numeric($x) ? (float) $x : 0.0;
+            $yFloat = is_numeric($y) ? (float) $y : 0.0;
+
+            return $xFloat * $yFloat;
         }, $ratings1, $ratings2));
 
         $num = $pSum - ($sum1 * $sum2 / $n);
@@ -295,11 +337,25 @@ class CollaborativeFilteringTest extends TestCase
         return $num / $den;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $allItems
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  list<string>  $allItems
+     * @param  list<string>  $userPreferences
+     * @param  array<string, mixed>  $userRatings
+     * @return array<int, string>
+     */
     private function filterItemsByPreferences(array $allItems, array $userPreferences, array $userRatings): array
     {
         return array_diff($allItems, $userPreferences);
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $itemRatings
+     */
     private function calculateItemBasedSimilarity(array $itemRatings, string $item1, string $item2): float
     {
         if (! isset($itemRatings[$item1]) || ! isset($itemRatings[$item2])) {
@@ -309,9 +365,22 @@ class CollaborativeFilteringTest extends TestCase
         $ratings1 = $itemRatings[$item1];
         $ratings2 = $itemRatings[$item2];
 
-        return $this->calculateCosineSimilarity($ratings1, $ratings2);
+        if (is_array($ratings1) && is_array($ratings2)) {
+            return $this->calculateCosineSimilarity($ratings1, $ratings2);
+        }
+
+        return 0.0;
     }
 
+    /**
+     * @param  array<string, mixed>  $userRatings
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, array<string, mixed>>  $userRatings
+     * @return list<string>
+     */
     private function findSimilarUsersWithMinCommonItems(array $userRatings, string $targetUser, int $minCommonItems): array
     {
         $targetRatings = $userRatings[$targetUser] ?? [];
@@ -335,6 +404,10 @@ class CollaborativeFilteringTest extends TestCase
         return array_keys($similarUsers);
     }
 
+    /**
+     * @param  array<string, array<string, mixed>>  $userRatings
+     * @param  list<string>  $similarUsers
+     */
     private function calculatePredictionConfidence(array $userRatings, string $targetUser, string $item, array $similarUsers): float
     {
         $targetRatings = $userRatings[$targetUser] ?? [];
@@ -356,10 +429,20 @@ class CollaborativeFilteringTest extends TestCase
         return min(1.0, $commonItems / 5.0) * min(1.0, $totalSimilarity / $commonItems);
     }
 
+    /**
+     * @param  array<int, array<int, mixed>>  $ratingsMatrix
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<int, list<int>>  $ratingsMatrix
+     * @return array<string, array<int, array<int, float|int>>>
+     */
     private function performMatrixFactorization(array $ratingsMatrix, int $numFactors): array
     {
         $numUsers = count($ratingsMatrix);
-        $numItems = count($ratingsMatrix[0]);
+        $firstRow = reset($ratingsMatrix);
+        $numItems = is_array($firstRow) ? count($firstRow) : 0;
 
         // Initialize random factors
         $userFactors = [];

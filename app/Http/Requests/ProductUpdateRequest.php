@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class ProductUpdateRequest extends FormRequest
@@ -22,12 +23,12 @@ class ProductUpdateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, list<string|\Illuminate\Validation\Rules\Unique>>
+     * @return array<string, array<int, string|\Illuminate\Validation\Rules\Unique>>
      */
     public function rules(): array
     {
         $product = $this->route('product');
-        $productId = $product instanceof \App\Models\Product ? $product->id : $product;
+        $productId = $product instanceof \App\Models\Product ? $product->id : (is_numeric($product) ? (int) $product : null);
 
         return [
             'name' => [
@@ -189,19 +190,23 @@ class ProductUpdateRequest extends FormRequest
         $data = [];
 
         if ($this->has('name')) {
-            $data['name'] = is_string($this->name) ? trim($this->name) : '';
+            $name = $this->input('name');
+            $data['name'] = is_string($name) ? trim($name) : '';
         }
 
         if ($this->has('description')) {
-            $data['description'] = is_string($this->description) ? trim($this->description) : '';
+            $description = $this->input('description');
+            $data['description'] = is_string($description) ? trim($description) : '';
         }
 
         if ($this->has('sku')) {
-            $data['sku'] = is_string($this->sku) ? strtoupper(trim($this->sku)) : '';
+            $sku = $this->input('sku');
+            $data['sku'] = is_string($sku) ? strtoupper(trim($sku)) : '';
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $tags = $this->input('tags');
+            $data['tags'] = is_array($tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $tags) : [];
         }
 
         if (! empty($data)) {
@@ -211,10 +216,8 @@ class ProductUpdateRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      */
-    public function withValidator($validator): void
+    public function withValidator(\Illuminate\Contracts\Validation\Validator $validator): void
     {
         $validator->after(function ($validator): void {
             // Additional custom validation logic
@@ -234,9 +237,9 @@ class ProductUpdateRequest extends FormRequest
                 $oldPrice = $product instanceof \App\Models\Product ? $product->price : null;
                 $newPrice = $this->input('price');
 
-                if ($oldPrice && $newPrice && $oldPrice > 0) {
+                if ($oldPrice && $newPrice && is_numeric($oldPrice) && $oldPrice > 0) {
                     $oldPriceFloat = (float) $oldPrice;
-                    $newPriceFloat = (float) $newPrice;
+                    $newPriceFloat = is_numeric($newPrice) ? (float) $newPrice : 0.0;
                     if ($oldPriceFloat > 0) {
                         $changePercentage = abs($newPriceFloat - $oldPriceFloat) / $oldPriceFloat * 100;
 
@@ -251,6 +254,10 @@ class ProductUpdateRequest extends FormRequest
 
     /**
      * Get the validated data from the request.
+     *
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @return array<string, mixed>|mixed
      */
     public function validated($key = null, $default = null)
     {
@@ -259,7 +266,7 @@ class ProductUpdateRequest extends FormRequest
         // Add computed fields
         if (is_array($validated) && isset($validated['name'])) {
             $name = $validated['name'];
-            $validated['slug'] = \Str::slug(is_string($name) ? $name : '');
+            $validated['slug'] = Str::slug(is_string($name) ? $name : '');
         }
 
         if (is_array($validated)) {

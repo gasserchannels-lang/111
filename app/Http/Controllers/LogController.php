@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
@@ -36,11 +38,14 @@ class LogController extends Controller
             // Filter by level if specified
             if ($request->has('level')) {
                 $level = $request->get('level');
-                $reversedLines = array_filter($reversedLines, fn ($line): bool => str_contains($line, (string) $level));
+                if (is_string($level)) {
+                    $reversedLines = array_filter($reversedLines, fn ($line): bool => str_contains($line, $level));
+                }
             }
 
             // Limit results
-            $limit = $request->get('limit', 100);
+            $limitInput = $request->get('limit', 100);
+            $limit = is_numeric($limitInput) ? (int) $limitInput : 100;
             $reversedLines = array_slice($reversedLines, 0, $limit);
 
             return response()->json([
@@ -279,7 +284,8 @@ class LogController extends Controller
                 ], 500);
             }
 
-            $errors = array_slice($parsedLogs['data'], 0, $limit);
+            $data = $parsedLogs['data'] ?? [];
+            $errors = is_array($data) ? array_slice($data, 0, is_numeric($limit) ? (int) $limit : 50) : [];
 
             return response()->json([
                 'success' => true,
@@ -353,7 +359,7 @@ class LogController extends Controller
             fputcsv($file, ['Timestamp', 'Level', 'Message']);
 
             // Write log data
-            fputcsv($file, $logs);
+            fputcsv($file, array_values(array_map(fn ($log) => is_string($log) ? $log : 'log', $logs)));
 
             fclose($file);
 

@@ -10,8 +10,7 @@ use Tests\TestCase;
 class IntegrationTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function basic_integration_works()
+    public function basic_integration_works(): void
     {
         // Test basic integration
         $response = $this->get('/');
@@ -22,8 +21,7 @@ class IntegrationTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function service_integration_works()
+    public function service_integration_works(): void
     {
         // Test service integration
         $response = $this->getJson('/api/products');
@@ -34,8 +32,7 @@ class IntegrationTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function component_integration_works()
+    public function component_integration_works(): void
     {
         // Test component integration
         $response = $this->get('/login');
@@ -46,5 +43,15 @@ class IntegrationTest extends TestCase
             'password' => 'password',
         ]);
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 422, 500, 405]));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

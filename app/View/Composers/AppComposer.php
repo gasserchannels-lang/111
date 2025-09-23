@@ -18,8 +18,8 @@ final class AppComposer
     {
         // Share common data with all views
         $view->with([
-            'app_name' => config('app.name', 'COPRRA'),
-            'app_version' => config('app.version', '1.0.0'),
+            'app_name' => is_string(config('app.name')) ? config('app.name') : 'COPRRA',
+            'app_version' => is_string(config('app.version')) ? config('app.version') : '1.0.0',
             'current_year' => now()->year,
             'languages' => $this->getLanguages(),
             'categories' => $this->getCategories(),
@@ -31,60 +31,87 @@ final class AppComposer
     /**
      * Get active languages.
      *
-     * @return array<int, array<string, string|int|bool>>
+     * @return list<array<string, string|int|bool>>
      */
     private function getLanguages(): array
     {
-        return cache()->remember('languages', 3600, fn () => Language::where('is_active', true)
+        $result = cache()->remember('languages', 3600, fn (): array => Language::where('is_active', true)
             ->orderBy('sort_order')
             ->get()
             ->map(fn ($language): array => [
-                'code' => $language->code,
-                'name' => $language->name,
-                'native_name' => $language->native_name,
-                'direction' => $language->direction,
+                'code' => is_string($language->code) ? $language->code : '',
+                'name' => is_string($language->name) ? $language->name : '',
+                'native_name' => is_string($language->native_name) ? $language->native_name : '',
+                'direction' => is_string($language->direction) ? $language->direction : 'ltr',
                 'is_current' => app()->getLocale() === $language->code,
             ])
             ->toArray());
+
+        if (is_array($result)) {
+            /** @var list<array<string, string|int|bool>> $mappedResult */
+            $mappedResult = array_values(array_map(fn ($item): array => is_array($item) ? $item : [], $result));
+
+            return $mappedResult;
+        }
+
+        return [];
     }
 
     /**
      * Get active categories.
      *
-     * @return array<int, array<string, string|int|bool>>
+     * @return list<array<string, string|int|bool>>
      */
     private function getCategories(): array
     {
-        return cache()->remember('categories_menu', 1800, fn () => Category::where('is_active', true)
+        $result = cache()->remember('categories_menu', 1800, fn (): array => Category::where('is_active', true)
             ->orderBy('name')
             ->get()
             ->map(fn ($category): array => [
-                'id' => $category->id,
-                'name' => $category->name,
-                'slug' => $category->slug,
-                'url' => route('categories.show', $category->slug),
+                'id' => is_numeric($category->id) ? (int) $category->id : 0,
+                'name' => is_string($category->name) ? $category->name : '',
+                'slug' => is_string($category->slug) ? $category->slug : '',
+                'url' => is_string($category->slug) ? route('categories.show', $category->slug) : '',
             ])
             ->toArray());
+
+        if (is_array($result)) {
+            /** @var list<array<string, string|int|bool>> $mappedResult */
+            $mappedResult = array_values(array_map(fn ($item): array => is_array($item) ? $item : [], $result));
+
+            return $mappedResult;
+        }
+
+        return [];
     }
 
     /**
      * Get active brands.
      *
-     * @return array<int, array<string, string|int|bool|null>>
+     * @return list<array<string, string|int|bool|null>>
      */
     private function getBrands(): array
     {
-        return cache()->remember('brands_menu', 1800, fn () => Brand::where('is_active', true)
+        $result = cache()->remember('brands_menu', 1800, fn (): array => Brand::where('is_active', true)
             ->orderBy('name')
             ->get()
             ->map(fn ($brand): array => [
-                'id' => $brand->id,
-                'name' => $brand->name,
-                'slug' => $brand->slug,
-                'logo' => $brand->logo_url ?? null,
-                'url' => route('brands.show', $brand->slug),
+                'id' => is_numeric($brand->id) ? (int) $brand->id : 0,
+                'name' => is_string($brand->name) ? $brand->name : '',
+                'slug' => is_string($brand->slug) ? $brand->slug : '',
+                'logo' => is_string($brand->logo_url) ? $brand->logo_url : null,
+                'url' => is_string($brand->slug) ? route('brands.show', $brand->slug) : '',
             ])
             ->toArray());
+
+        if (is_array($result)) {
+            /** @var list<array<string, string|int|bool|null>> $mappedResult */
+            $mappedResult = array_values(array_map(fn ($item): array => is_array($item) ? $item : [], $result));
+
+            return $mappedResult;
+        }
+
+        return [];
     }
 
     /**
@@ -93,7 +120,8 @@ final class AppComposer
     private function isRTL(): bool
     {
         $rtlLocales = ['ar', 'ur', 'fa', 'he'];
+        $currentLocale = app()->getLocale();
 
-        return in_array(app()->getLocale(), $rtlLocales);
+        return is_string($currentLocale) && in_array($currentLocale, $rtlLocales);
     }
 }

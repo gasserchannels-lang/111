@@ -18,24 +18,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $direction
  * @property bool $is_active
  * @property int $sort_order
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency<Database\Factories\CurrencyFactory>> $currencies
- * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting<Database\Factories\UserLocaleSettingFactory>> $userLocaleSettings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Currency> $currencies
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, UserLocaleSetting> $userLocaleSettings
  *
  * @method static LanguageFactory factory(...$parameters)
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of LanguageFactory
- *
- * @mixin TFactory
- */
 class Language extends Model
 {
-    /**
-     * @use HasFactory<LanguageFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Language>>
+     */
+    protected static $factory = \Database\Factories\LanguageFactory::class;
 
     /** @var list<string> */
     protected $fillable = [
@@ -55,9 +53,9 @@ class Language extends Model
     /**
      * العملات المرتبطة بهذه اللغة.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Currency>
+     * @return BelongsToMany<Currency, $this>
      */
-    public function currencies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function currencies(): BelongsToMany
     {
         return $this->belongsToMany(Currency::class, 'language_currency')
             ->withPivot('is_default')
@@ -67,17 +65,20 @@ class Language extends Model
     /**
      * العملة الافتراضية لهذه اللغة.
      */
-    public function defaultCurrency(): ?Currency
+    public function defaultCurrency(): ?\App\Models\Currency
     {
-        return $this->currencies()->wherePivot('is_default', true)->first();
+        /** @var \App\Models\Currency|null $currency */
+        $currency = $this->currencies()->wherePivot('is_default', true)->first();
+
+        return $currency;
     }
 
     /**
      * إعدادات المستخدمين لهذه اللغة.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<UserLocaleSetting>
+     * @return HasMany<UserLocaleSetting, $this>
      */
-    public function userLocaleSettings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function userLocaleSettings(): HasMany
     {
         return $this->hasMany(UserLocaleSetting::class);
     }
@@ -85,21 +86,23 @@ class Language extends Model
     /**
      * نطاق للغات النشطة فقط.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
+     * @param  \Illuminate\Database\Eloquent\Builder<Language>  $queryBuilder
+     * @return \Illuminate\Database\Eloquent\Builder<Language>
      */
-    public function scopeActive(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
+    public function scopeActive(\Illuminate\Database\Eloquent\Builder $queryBuilder): \Illuminate\Database\Eloquent\Builder
     {
-        $queryBuilder->where('is_active', true);
+        return $queryBuilder->where('is_active', true);
     }
 
     /**
      * نطاق للغات مرتبة حسب الترتيب.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Language>  $queryBuilder
+     * @param  \Illuminate\Database\Eloquent\Builder<Language>  $queryBuilder
+     * @return \Illuminate\Database\Eloquent\Builder<Language>
      */
-    public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $queryBuilder): void
+    public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $queryBuilder): \Illuminate\Database\Eloquent\Builder
     {
-        $queryBuilder->orderBy('sort_order')->orderBy('name');
+        return $queryBuilder->orderBy('sort_order')->orderBy('name');
     }
 
     /**

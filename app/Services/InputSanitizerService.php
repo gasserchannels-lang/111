@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use DOMDocument;
+use DOMXPath;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -130,7 +131,7 @@ class InputSanitizerService
      */
     private function removeDisallowedTags(DOMDocument $dom): void
     {
-        $xpath = new \DOMXPath($dom);
+        $xpath = new DOMXPath($dom);
         $nodes = $xpath->query('//*');
 
         if ($nodes) {
@@ -147,7 +148,7 @@ class InputSanitizerService
      */
     private function removeDisallowedAttributes(DOMDocument $dom): void
     {
-        $xpath = new \DOMXPath($dom);
+        $xpath = new DOMXPath($dom);
         $nodes = $xpath->query('//*[@*]');
 
         if ($nodes) {

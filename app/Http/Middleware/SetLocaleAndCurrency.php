@@ -39,7 +39,8 @@ class SetLocaleAndCurrency
 
         // 1. Check if user is authenticated and has language preference
         if ($request->user() && $request->user()->localeSetting && $request->user()->localeSetting->language) {
-            $locale = $request->user()->localeSetting->language->code;
+            $language = $request->user()->localeSetting->language;
+            $locale = is_string($language->code) ? $language->code : null;
         }
 
         // 2. Check session
@@ -89,7 +90,8 @@ class SetLocaleAndCurrency
 
         // 1. Check if user is authenticated and has currency preference
         if ($request->user() && $request->user()->localeSetting && $request->user()->localeSetting->currency) {
-            $currency = $request->user()->localeSetting->currency->code;
+            $currencyModel = $request->user()->localeSetting->currency;
+            $currency = is_string($currencyModel->code) ? $currencyModel->code : null;
         }
 
         // 2. Check session

@@ -2,29 +2,32 @@
 
 namespace Tests\Performance;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class MemoryUsageTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_memory_usage_is_reasonable()
+    public function test_memory_usage_is_reasonable(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_memory_leaks_are_prevented()
+    public function test_memory_leaks_are_prevented(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_memory_cleanup_works()
+    public function test_memory_cleanup_works(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

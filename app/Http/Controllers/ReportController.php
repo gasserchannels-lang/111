@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Services\ReportService;
@@ -19,10 +21,15 @@ class ReportController extends Controller
     public function generateProductPerformanceReport(Request $request): JsonResponse
     {
         try {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDateInput = $request->input('start_date');
+            $endDateInput = $request->input('end_date');
 
+            $startDate = $startDateInput ? \Carbon\Carbon::parse(is_string($startDateInput) ? $startDateInput : '') : null;
+            $endDate = $endDateInput ? \Carbon\Carbon::parse(is_string($endDateInput) ? $endDateInput : '') : null;
+
+            $productId = $request->input('product_id');
             $report = $this->reportService->generateProductPerformanceReport(
+                is_numeric($productId) ? (int) $productId : 0,
                 $startDate,
                 $endDate
             );
@@ -49,10 +56,15 @@ class ReportController extends Controller
     public function generateUserActivityReport(Request $request): JsonResponse
     {
         try {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDateInput = $request->input('start_date');
+            $endDateInput = $request->input('end_date');
 
+            $startDate = $startDateInput ? \Carbon\Carbon::parse(is_string($startDateInput) ? $startDateInput : '') : null;
+            $endDate = $endDateInput ? \Carbon\Carbon::parse(is_string($endDateInput) ? $endDateInput : '') : null;
+
+            $userId = $request->input('user_id');
             $report = $this->reportService->generateUserActivityReport(
+                is_numeric($userId) ? (int) $userId : 0,
                 $startDate,
                 $endDate
             );
@@ -79,8 +91,11 @@ class ReportController extends Controller
     public function generateSalesReport(Request $request): JsonResponse
     {
         try {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+            $startDateInput = $request->input('start_date');
+            $endDateInput = $request->input('end_date');
+
+            $startDate = $startDateInput ? \Carbon\Carbon::parse(is_string($startDateInput) ? $startDateInput : '') : null;
+            $endDate = $endDateInput ? \Carbon\Carbon::parse(is_string($endDateInput) ? $endDateInput : '') : null;
 
             $report = $this->reportService->generateSalesReport(
                 $startDate,

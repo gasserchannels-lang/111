@@ -2,37 +2,42 @@
 
 namespace Tests\Architecture;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ArchTest extends TestCase
 {
-    public function test_controllers_architecture()
+    public function test_controllers_architecture(): void
     {
         // اختبار بسيط للبنية
-        $this->assertTrue(true);
     }
 
-    public function test_models_architecture()
+    public function test_models_architecture(): void
     {
         // اختبار بسيط للبنية
-        $this->assertTrue(true);
     }
 
-    public function test_services_architecture()
+    public function test_services_architecture(): void
     {
         // اختبار بسيط للبنية
-        $this->assertTrue(true);
     }
 
-    public function test_middleware_architecture()
+    public function test_middleware_architecture(): void
     {
         // اختبار بسيط للبنية
-        $this->assertTrue(true);
     }
 
-    public function test_providers_architecture()
+    public function test_providers_architecture(): void
     {
         // اختبار بسيط للبنية
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

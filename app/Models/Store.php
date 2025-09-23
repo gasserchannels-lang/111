@@ -20,12 +20,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $logo_url
  * @property string|null $website_url
  * @property string|null $country_code
- * @property array|null $supported_countries
+ * @property array<string>|null $supported_countries
  * @property bool $is_active
  * @property int $priority
  * @property string|null $affiliate_base_url
  * @property string|null $affiliate_code
- * @property array|null $api_config
+ * @property array<string, mixed>|null $api_config
  * @property int|null $currency_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
@@ -38,17 +38,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of StoreFactory
- *
- * @mixin TFactory
- */
 class Store extends Model
 {
-    /**
-     * @use HasFactory<StoreFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Store>>
+     */
+    protected static $factory = \Database\Factories\StoreFactory::class;
 
     use SoftDeletes;
 
@@ -81,7 +79,7 @@ class Store extends Model
     /**
      * @var array<string, mixed>|null
      */
-    protected $errors;
+    protected $errors = null;
 
     /**
      * The attributes that should be validated.
@@ -105,25 +103,25 @@ class Store extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceOffer>
+     * @return HasMany<PriceOffer, $this>
      */
-    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceOffers(): HasMany
     {
         return $this->hasMany(PriceOffer::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     * @return HasMany<Product, $this>
      */
-    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'store_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Currency>
+     * @return BelongsTo<Currency, $this>
      */
-    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
     }
@@ -131,8 +129,8 @@ class Store extends Model
     /**
      * Scope a query to only include active stores.
      *
-     * @param  Builder<Store<\Database\Factories\StoreFactory>>  $query
-     * @return Builder<Store<\Database\Factories\StoreFactory>>
+     * @param  Builder<Store>  $query
+     * @return Builder<Store>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -142,8 +140,8 @@ class Store extends Model
     /**
      * Scope a query to search stores by name.
      *
-     * @param  Builder<Store<\Database\Factories\StoreFactory>>  $query
-     * @return Builder<Store<\Database\Factories\StoreFactory>>
+     * @param  Builder<Store>  $query
+     * @return Builder<Store>
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {

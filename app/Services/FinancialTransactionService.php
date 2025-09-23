@@ -16,8 +16,6 @@ class FinancialTransactionService
 
     /**
      * Update product price with transaction safety.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      */
     public function updateProductPrice(Product $product, float $newPrice, ?string $reason = null): bool
     {
@@ -77,7 +75,6 @@ class FinancialTransactionService
      */
     /**
      * @param  array<string, mixed>  $offerData
-     * @return PriceOffer<\Database\Factories\PriceOfferFactory>
      */
     public function createPriceOffer(array $offerData): PriceOffer
     {
@@ -122,7 +119,6 @@ class FinancialTransactionService
     /**
      * Update price offer with transaction safety.
      *
-     * @param  PriceOffer<\Database\Factories\PriceOfferFactory>  $offer
      * @param  array<string, mixed>  $updateData
      */
     public function updatePriceOffer(PriceOffer $offer, array $updateData): bool
@@ -169,8 +165,6 @@ class FinancialTransactionService
 
     /**
      * Delete price offer with transaction safety.
-     *
-     * @param  PriceOffer<\Database\Factories\PriceOfferFactory>  $offer
      */
     public function deletePriceOffer(PriceOffer $offer): bool
     {
@@ -184,7 +178,7 @@ class FinancialTransactionService
 
                 // Log the transaction
                 $this->auditService->logDeleted($offer, [
-                    'product_id' => $product?->id,
+                    'product_id' => $product->id,
                     'was_lowest_price' => $wasLowestPrice,
                 ]);
 
@@ -195,7 +189,7 @@ class FinancialTransactionService
 
                 Log::info('Price offer deleted successfully', [
                     'offer_id' => $offer->id,
-                    'product_id' => $product?->id,
+                    'product_id' => $product->id,
                 ]);
 
                 return true;
@@ -247,8 +241,6 @@ class FinancialTransactionService
 
     /**
      * Check if offer is the lowest price.
-     *
-     * @param  PriceOffer<\Database\Factories\PriceOfferFactory>  $offer
      */
     private function isLowestPriceOffer(PriceOffer $offer): bool
     {
@@ -262,8 +254,6 @@ class FinancialTransactionService
 
     /**
      * Update product price if this offer is the lowest.
-     *
-     * @param  PriceOffer<\Database\Factories\PriceOfferFactory>  $offer
      */
     private function updateProductPriceIfNeeded(PriceOffer $offer): void
     {
@@ -272,15 +262,13 @@ class FinancialTransactionService
             ->orderBy('price')
             ->first();
 
-        if ($lowestOffer && $offer->product && $lowestOffer->price !== $offer->product->price) {
+        if ($lowestOffer && $offer->product instanceof \App\Models\Product && $lowestOffer->price !== $offer->product->price) {
             $this->updateProductPrice($offer->product, (float) $lowestOffer->price, 'Updated from lowest price offer');
         }
     }
 
     /**
      * Update product price from all offers.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      */
     private function updateProductPriceFromOffers(Product $product): void
     {

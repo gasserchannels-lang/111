@@ -18,9 +18,13 @@ class AIService
 
     public function __construct()
     {
-        $this->apiKey = (string) config('services.openai.api_key');
-        $this->baseUrl = (string) config('services.openai.base_url', 'https://api.openai.com/v1');
-        $this->timeout = (int) config('services.openai.timeout', 30);
+        $apiKey = config('services.openai.api_key');
+        $baseUrl = config('services.openai.base_url');
+        $timeout = config('services.openai.timeout');
+
+        $this->apiKey = is_string($apiKey) ? $apiKey : '';
+        $this->baseUrl = is_string($baseUrl) ? $baseUrl : 'https://api.openai.com/v1';
+        $this->timeout = is_numeric($timeout) ? (int) $timeout : 30;
 
         if ($this->apiKey === '') {
             Log::error('OpenAI API key is not configured.');
@@ -47,11 +51,14 @@ class AIService
                     'response' => $response->body(),
                 ]);
 
-                return ['error' => 'API request failed', 'details' => $response->json() ?? []];
+                $jsonResponse = $response->json();
+
+                return ['error' => 'API request failed', 'details' => is_array($jsonResponse) ? $jsonResponse : []];
             }
 
-            return $response->json() ?? [];
+            $jsonResponse = $response->json();
 
+            return is_array($jsonResponse) ? $jsonResponse : [];
         } catch (Exception $e) {
             Log::error('AI Service Exception', [
                 'url' => $fullUrl,
@@ -88,8 +95,9 @@ class AIService
             return $data;
         }
 
-        $choice = $data['choices'][0] ?? null;
-        if ($choice && isset($choice['text'])) {
+        $choices = $data['choices'] ?? [];
+        $choice = is_array($choices) && isset($choices[0]) ? $choices[0] : null;
+        if ($choice && is_array($choice) && isset($choice['text']) && is_string($choice['text'])) {
             return ['result' => trim($choice['text'])];
         }
 
@@ -101,7 +109,9 @@ class AIService
         $prompt = "Classify the following product description into a single category: \"{$productDescription}\"";
         $response = $this->analyzeText($prompt, 'classification');
 
-        return $response['result'] ?? 'Uncategorized';
+        $result = $response['result'] ?? 'Uncategorized';
+
+        return is_string($result) ? $result : 'Uncategorized';
     }
 
     /**
@@ -150,9 +160,10 @@ class AIService
             return $data;
         }
 
-        $message = $data['choices'][0]['message'] ?? null;
-        if ($message && isset($message['content'])) {
-            $content = (string) $message['content'];
+        $choices = $data['choices'] ?? [];
+        $message = is_array($choices) && isset($choices[0]) && is_array($choices[0]) ? $choices[0]['message'] ?? null : null;
+        if ($message && is_array($message) && isset($message['content']) && is_string($message['content'])) {
+            $content = $message['content'];
 
             return [
                 'category' => $this->extractCategory($content),

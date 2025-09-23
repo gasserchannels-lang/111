@@ -174,7 +174,6 @@ class HybridRecommendationTest extends TestCase
 
         $temporalScore = $this->createTemporalHybrid($recentRecommendations, $historicalRecommendations, 0.7);
 
-        $this->assertIsFloat($temporalScore);
         $this->assertGreaterThan(0, $temporalScore);
     }
 
@@ -196,18 +195,37 @@ class HybridRecommendationTest extends TestCase
         $this->assertGreaterThan(0, $qualityMetrics['precision']);
     }
 
+    /**
+     * @param  array<string, float>  $weights
+     */
     private function calculateHybridScore(float $collaborativeScore, float $contentScore, array $weights): float
     {
         return ($collaborativeScore * $weights['collaborative']) +
             ($contentScore * $weights['content_based']);
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $recommendations
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<int, array<string, mixed>>  $recommendations
+     * @param  array<string, float>  $weights
+     * @return array<int, array<string, mixed>>
+     */
     private function createWeightedEnsemble(array $recommendations, array $weights): array
     {
         foreach ($recommendations as &$recommendation) {
+            $collaborativeScore = $recommendation['collaborative_score'] ?? 0;
+            $contentScore = $recommendation['content_score'] ?? 0;
+
+            $collaborativeFloat = is_numeric($collaborativeScore) ? (float) $collaborativeScore : 0.0;
+            $contentFloat = is_numeric($contentScore) ? (float) $contentScore : 0.0;
+
             $recommendation['hybrid_score'] =
-                ($recommendation['collaborative_score'] * $weights['collaborative']) +
-                ($recommendation['content_score'] * $weights['content_based']);
+                ($collaborativeFloat * $weights['collaborative']) +
+                ($contentFloat * $weights['content_based']);
         }
 
         usort($recommendations, function ($a, $b) {
@@ -217,6 +235,9 @@ class HybridRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param  array<string, mixed>  $userProfile
+     */
     private function selectRecommendationMethod(array $userProfile): string
     {
         if ($userProfile['cold_start'] || $userProfile['interaction_count'] < 10) {
@@ -230,6 +251,16 @@ class HybridRecommendationTest extends TestCase
         return 'collaborative';
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $collaborativeRecs
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<int, array<string, mixed>>  $collaborativeRecs
+     * @param  array<int, array<string, mixed>>  $contentRecs
+     * @return array<int, array<string, mixed>>
+     */
     private function createMixedHybrid(array $collaborativeRecs, array $contentRecs, int $limit): array
     {
         $allRecommendations = [];
@@ -247,12 +278,14 @@ class HybridRecommendationTest extends TestCase
         // Remove duplicates and sort by score
         $uniqueRecommendations = [];
         foreach ($allRecommendations as $rec) {
-            $itemId = $rec['item_id'];
-            if (
-                ! isset($uniqueRecommendations[$itemId]) ||
-                $rec['score'] > $uniqueRecommendations[$itemId]['score']
-            ) {
-                $uniqueRecommendations[$itemId] = $rec;
+            $itemId = $rec['item_id'] ?? '';
+            if (is_string($itemId) && $itemId !== '') {
+                if (
+                    ! isset($uniqueRecommendations[$itemId]) ||
+                    ($rec['score'] ?? 0) > ($uniqueRecommendations[$itemId]['score'] ?? 0)
+                ) {
+                    $uniqueRecommendations[$itemId] = $rec;
+                }
             }
         }
 
@@ -264,6 +297,16 @@ class HybridRecommendationTest extends TestCase
         return array_slice($recommendations, 0, $limit);
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $primaryRecs
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<int, array<string, mixed>>  $primaryRecs
+     * @param  array<int, array<string, mixed>>  $secondaryRecs
+     * @return array<int, array<string, mixed>>
+     */
     private function createCascadeHybrid(array $primaryRecs, array $secondaryRecs, int $limit): array
     {
         $recommendations = [];
@@ -292,6 +335,11 @@ class HybridRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param  array<string, mixed>  $collaborativeFeatures
+     * @param  array<string, mixed>  $contentFeatures
+     * @param  array<string, mixed>  $demographicFeatures
+     */
     private function combineFeatureVectors(array $collaborativeFeatures, array $contentFeatures, array $demographicFeatures): float
     {
         $weights = [
@@ -309,18 +357,28 @@ class HybridRecommendationTest extends TestCase
             ($demographicScore * $weights['demographic']);
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $userHistory
+     */
     private function selectBestMethodByMetaLearning(array $userHistory): string
     {
         $methodScores = [];
 
         foreach ($userHistory as $record) {
-            $method = $record['method'];
-            $score = ($record['accuracy'] * 0.7) + ($record['coverage'] * 0.3);
+            $method = $record['method'] ?? '';
+            $accuracy = $record['accuracy'] ?? 0;
+            $coverage = $record['coverage'] ?? 0;
 
-            if (! isset($methodScores[$method])) {
-                $methodScores[$method] = [];
+            $accuracyFloat = is_numeric($accuracy) ? (float) $accuracy : 0.0;
+            $coverageFloat = is_numeric($coverage) ? (float) $coverage : 0.0;
+            $score = ($accuracyFloat * 0.7) + ($coverageFloat * 0.3);
+
+            if (is_string($method) && $method !== '') {
+                if (! isset($methodScores[$method])) {
+                    $methodScores[$method] = [];
+                }
+                $methodScores[$method][] = $score;
             }
-            $methodScores[$method][] = $score;
         }
 
         $averageScores = [];
@@ -328,9 +386,20 @@ class HybridRecommendationTest extends TestCase
             $averageScores[$method] = array_sum($scores) / count($scores);
         }
 
-        return array_keys($averageScores, max($averageScores))[0];
+        if (empty($averageScores)) {
+            return 'content_based';
+        }
+
+        $maxScore = max($averageScores);
+        $bestMethods = array_keys($averageScores, $maxScore);
+
+        return $bestMethods[0] ?? 'content_based';
     }
 
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @return array<string, float>
+     */
     private function adjustWeightsDynamically(array $userProfile): array
     {
         $baseWeights = ['collaborative' => 0.5, 'content_based' => 0.5];
@@ -356,19 +425,38 @@ class HybridRecommendationTest extends TestCase
         return $baseWeights;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $recommendations
+     * @return array<int, array<string, mixed>>
+     */
     private function createConfidenceWeightedHybrid(array $recommendations): array
     {
         foreach ($recommendations as &$rec) {
             $collaborativeWeight = $rec['collaborative_confidence'] ?? 0;
             $contentWeight = $rec['content_confidence'] ?? 0;
-            $totalWeight = $collaborativeWeight + $contentWeight;
+
+            $collaborativeWeightFloat = is_numeric($collaborativeWeight) ? (float) $collaborativeWeight : 0.0;
+            $contentWeightFloat = is_numeric($contentWeight) ? (float) $contentWeight : 0.0;
+            $totalWeight = $collaborativeWeightFloat + $contentWeightFloat;
 
             if ($totalWeight > 0) {
+                $collaborativeScore = $rec['collaborative_score'] ?? 0;
+                $contentScore = $rec['content_score'] ?? 0;
+
+                $collaborativeScoreFloat = is_numeric($collaborativeScore) ? (float) $collaborativeScore : 0.0;
+                $contentScoreFloat = is_numeric($contentScore) ? (float) $contentScore : 0.0;
+
                 $rec['final_score'] =
-                    (($rec['collaborative_score'] ?? 0) * $collaborativeWeight +
-                        ($rec['content_score'] ?? 0) * $contentWeight) / $totalWeight;
+                    (($collaborativeScoreFloat * $collaborativeWeightFloat +
+                        $contentScoreFloat * $contentWeightFloat) / $totalWeight);
             } else {
-                $rec['final_score'] = ($rec['collaborative_score'] ?? 0) + ($rec['content_score'] ?? 0);
+                $collaborativeScore = $rec['collaborative_score'] ?? 0;
+                $contentScore = $rec['content_score'] ?? 0;
+
+                $collaborativeScoreFloat = is_numeric($collaborativeScore) ? (float) $collaborativeScore : 0.0;
+                $contentScoreFloat = is_numeric($contentScore) ? (float) $contentScore : 0.0;
+
+                $rec['final_score'] = $collaborativeScoreFloat + $contentScoreFloat;
             }
         }
 
@@ -379,6 +467,10 @@ class HybridRecommendationTest extends TestCase
         return $recommendations;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $recentRecs
+     * @param  array<int, array<string, mixed>>  $historicalRecs
+     */
     private function createTemporalHybrid(array $recentRecs, array $historicalRecs, float $recentWeight): float
     {
         $recentScore = array_sum(array_column($recentRecs, 'score')) / count($recentRecs);
@@ -387,6 +479,10 @@ class HybridRecommendationTest extends TestCase
         return ($recentScore * $recentWeight) + ($historicalScore * (1 - $recentWeight));
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $recommendations
+     * @return array<string, float>
+     */
     private function evaluateHybridQuality(array $recommendations): array
     {
         $totalRecommendations = count($recommendations);

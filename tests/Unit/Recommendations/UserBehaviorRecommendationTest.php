@@ -200,20 +200,25 @@ class UserBehaviorRecommendationTest extends TestCase
         $this->assertNotContains('Nike Shoes', array_column($recommendations, 'name'));
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $browsingHistory
+     * @return array<string, mixed>
+     */
     private function analyzeBrowsingPatterns(array $browsingHistory): array
     {
         $categoryTime = [];
         $totalTime = 0;
 
         foreach ($browsingHistory as $session) {
-            $category = $session['page'];
-            $time = $session['time_spent'];
+            $category = is_string($session['page']) ? $session['page'] : '';
+            $time = is_numeric($session['time_spent']) ? (int) $session['time_spent'] : 0;
 
             $categoryTime[$category] = ($categoryTime[$category] ?? 0) + $time;
             $totalTime += $time;
         }
 
-        $mostViewedCategory = array_keys($categoryTime, max($categoryTime))[0];
+        $maxTime = ! empty($categoryTime) ? max($categoryTime) : 0;
+        $mostViewedCategory = $maxTime > 0 ? array_keys($categoryTime, $maxTime)[0] : '';
         $averageSessionTime = $totalTime / count($browsingHistory);
 
         return [
@@ -223,51 +228,73 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $purchaseHistory
+     */
     private function calculatePurchaseFrequency(array $purchaseHistory): float
     {
         if (empty($purchaseHistory)) {
             return 0;
         }
 
-        $firstPurchase = new \DateTime($purchaseHistory[0]['date']);
-        $lastPurchase = new \DateTime(end($purchaseHistory)['date']);
+        $firstDate = is_string($purchaseHistory[0]['date']) ? $purchaseHistory[0]['date'] : '2024-01-01';
+        $lastDate = is_string(end($purchaseHistory)['date']) ? end($purchaseHistory)['date'] : '2024-01-01';
+
+        $firstPurchase = new \DateTime($firstDate);
+        $lastPurchase = new \DateTime($lastDate);
         $daysDiff = $lastPurchase->diff($firstPurchase)->days;
 
         return $daysDiff > 0 ? count($purchaseHistory) / $daysDiff : 0;
     }
 
+    /**
+     * @param  array<string, mixed>  $userBehavior
+     * @return array<string, mixed>
+     */
     private function identifyUserPreferences(array $userBehavior): array
     {
-        $categoryCounts = array_count_values($userBehavior['browsed_categories']);
-        $brandCounts = array_count_values($userBehavior['clicked_products']);
+        $browsedCategories = is_array($userBehavior['browsed_categories']) ? $userBehavior['browsed_categories'] : [];
+        $clickedProducts = is_array($userBehavior['clicked_products']) ? $userBehavior['clicked_products'] : [];
 
-        $preferredCategory = array_keys($categoryCounts, max($categoryCounts))[0];
-        $preferredBrand = array_keys($brandCounts, max($brandCounts))[0];
+        $categoryCounts = array_count_values($browsedCategories);
+        $brandCounts = array_count_values($clickedProducts);
+
+        $maxCategoryCount = ! empty($categoryCounts) ? max($categoryCounts) : 0;
+        $maxBrandCount = ! empty($brandCounts) ? max($brandCounts) : 0;
+
+        $preferredCategory = $maxCategoryCount > 0 ? array_keys($categoryCounts, $maxCategoryCount)[0] : '';
+        $preferredBrand = $maxBrandCount > 0 ? array_keys($brandCounts, $maxBrandCount)[0] : '';
 
         return [
             'preferred_category' => $preferredCategory,
             'preferred_brand' => $preferredBrand,
-            'category_confidence' => max($categoryCounts) / array_sum($categoryCounts),
-            'brand_confidence' => max($brandCounts) / array_sum($brandCounts),
+            'category_confidence' => $maxCategoryCount > 0 ? $maxCategoryCount / array_sum($categoryCounts) : 0,
+            'brand_confidence' => $maxBrandCount > 0 ? $maxBrandCount / array_sum($brandCounts) : 0,
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $recentBehavior
+     * @return array<string, mixed>
+     */
     private function predictUserIntent(array $recentBehavior): array
     {
         $intentScore = 0;
 
         // Analyze search patterns
-        $searches = $recentBehavior['searches'];
+        $searches = is_array($recentBehavior['searches']) ? $recentBehavior['searches'] : [];
         $productSearches = array_filter($searches, function ($search) {
-            return strpos(strtolower($search), 'iphone') !== false;
+            return is_string($search) && strpos(strtolower($search), 'iphone') !== false;
         });
         $intentScore += count($productSearches) * 0.2;
 
         // Analyze browsing depth
-        $intentScore += min($recentBehavior['pages_viewed'] * 0.1, 0.3);
+        $pagesViewed = is_numeric($recentBehavior['pages_viewed']) ? (int) $recentBehavior['pages_viewed'] : 0;
+        $intentScore += min($pagesViewed * 0.1, 0.3);
 
         // Analyze time spent
-        $intentScore += min($recentBehavior['time_spent'] / 3600, 0.3); // Max 0.3 for 1 hour
+        $timeSpent = is_numeric($recentBehavior['time_spent']) ? (float) $recentBehavior['time_spent'] : 0;
+        $intentScore += min($timeSpent / 3600, 0.3); // Max 0.3 for 1 hour
 
         $intentType = $intentScore > 0.5 ? 'purchasing' : 'browsing';
 
@@ -277,24 +304,33 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $userMetrics
+     * @return array<string, mixed>
+     */
     private function calculateEngagementLevel(array $userMetrics): array
     {
         $score = 0;
 
         // Sessions per week (0-0.2)
-        $score += min($userMetrics['sessions_per_week'] * 0.04, 0.2);
+        $sessionsPerWeek = is_numeric($userMetrics['sessions_per_week']) ? (float) $userMetrics['sessions_per_week'] : 0;
+        $score += min($sessionsPerWeek * 0.04, 0.2);
 
         // Average session duration (0-0.3)
-        $score += min($userMetrics['average_session_duration'] / 3600 * 0.3, 0.3);
+        $averageSessionDuration = is_numeric($userMetrics['average_session_duration']) ? (float) $userMetrics['average_session_duration'] : 0;
+        $score += min($averageSessionDuration / 3600 * 0.3, 0.3);
 
         // Pages per session (0-0.2)
-        $score += min($userMetrics['pages_per_session'] * 0.025, 0.2);
+        $pagesPerSession = is_numeric($userMetrics['pages_per_session']) ? (float) $userMetrics['pages_per_session'] : 0;
+        $score += min($pagesPerSession * 0.025, 0.2);
 
         // Bounce rate (0-0.2)
-        $score += (1 - $userMetrics['bounce_rate']) * 0.2;
+        $bounceRate = is_numeric($userMetrics['bounce_rate']) ? (float) $userMetrics['bounce_rate'] : 0;
+        $score += (1 - $bounceRate) * 0.2;
 
         // Return visits (0-0.1)
-        $score += min($userMetrics['return_visits'] * 0.033, 0.1);
+        $returnVisits = is_numeric($userMetrics['return_visits']) ? (float) $userMetrics['return_visits'] : 0;
+        $score += min($returnVisits * 0.033, 0.1);
 
         $level = $score > 0.7 ? 'high' : ($score > 0.4 ? 'medium' : 'low');
 
@@ -304,14 +340,20 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $priceBehavior
+     * @return array<string, mixed>
+     */
     private function calculatePriceSensitivity(array $priceBehavior): array
     {
-        $purchasedPrices = array_column(array_filter($priceBehavior['viewed_products'], function ($p) {
-            return $p['purchased'];
+        $viewedProducts = is_array($priceBehavior['viewed_products']) ? $priceBehavior['viewed_products'] : [];
+
+        $purchasedPrices = array_column(array_filter($viewedProducts, function ($p) {
+            return is_array($p) && ($p['purchased'] ?? false);
         }), 'price');
 
-        $notPurchasedPrices = array_column(array_filter($priceBehavior['viewed_products'], function ($p) {
-            return ! $p['purchased'];
+        $notPurchasedPrices = array_column(array_filter($viewedProducts, function ($p) {
+            return is_array($p) && ! ($p['purchased'] ?? false);
         }), 'price');
 
         $maxPurchasedPrice = empty($purchasedPrices) ? 0 : max($purchasedPrices);
@@ -319,8 +361,10 @@ class UserBehaviorRecommendationTest extends TestCase
 
         $threshold = $maxPurchasedPrice > 0 ? $maxPurchasedPrice : $minNotPurchasedPrice;
 
-        $sensitivityScore = $priceBehavior['price_alerts_set'] * 0.1 +
-            $priceBehavior['discount_searches'] * 0.05;
+        $priceAlertsSet = is_numeric($priceBehavior['price_alerts_set']) ? (float) $priceBehavior['price_alerts_set'] : 0;
+        $discountSearches = is_numeric($priceBehavior['discount_searches']) ? (float) $priceBehavior['discount_searches'] : 0;
+
+        $sensitivityScore = $priceAlertsSet * 0.1 + $discountSearches * 0.05;
 
         $level = $sensitivityScore > 0.5 ? 'high' : ($sensitivityScore > 0.2 ? 'medium' : 'low');
 
@@ -331,6 +375,10 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $deviceUsage
+     * @return array<string, mixed>
+     */
     private function analyzeDevicePreferences(array $deviceUsage): array
     {
         $primaryDevice = '';
@@ -339,14 +387,19 @@ class UserBehaviorRecommendationTest extends TestCase
         $maxPurchases = 0;
 
         foreach ($deviceUsage as $device => $metrics) {
-            if ($metrics['sessions'] > $maxSessions) {
-                $maxSessions = $metrics['sessions'];
-                $primaryDevice = $device;
-            }
+            if (is_array($metrics)) {
+                $sessions = is_numeric($metrics['sessions']) ? (int) $metrics['sessions'] : 0;
+                $purchases = is_numeric($metrics['purchases']) ? (int) $metrics['purchases'] : 0;
 
-            if ($metrics['purchases'] > $maxPurchases) {
-                $maxPurchases = $metrics['purchases'];
-                $purchaseDevice = $device;
+                if ($sessions > $maxSessions) {
+                    $maxSessions = $sessions;
+                    $primaryDevice = is_string($device) ? $device : '';
+                }
+
+                if ($purchases > $maxPurchases) {
+                    $maxPurchases = $purchases;
+                    $purchaseDevice = is_string($device) ? $device : '';
+                }
             }
         }
 
@@ -357,6 +410,10 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $seasonalData
+     * @return array<string, mixed>
+     */
     private function analyzeSeasonalPatterns(array $seasonalData): array
     {
         $peakSeason = '';
@@ -364,12 +421,16 @@ class UserBehaviorRecommendationTest extends TestCase
         $allCategories = [];
 
         foreach ($seasonalData as $season => $data) {
-            if ($data['purchases'] > $maxPurchases) {
-                $maxPurchases = $data['purchases'];
-                $peakSeason = $season;
-            }
+            if (is_array($data)) {
+                $purchases = is_numeric($data['purchases']) ? (int) $data['purchases'] : 0;
+                if ($purchases > $maxPurchases) {
+                    $maxPurchases = $purchases;
+                    $peakSeason = is_string($season) ? $season : '';
+                }
 
-            $allCategories = array_merge($allCategories, $data['categories']);
+                $categories = is_array($data['categories']) ? $data['categories'] : [];
+                $allCategories = array_merge($allCategories, $categories);
+            }
         }
 
         $preferredCategories = array_count_values($allCategories);
@@ -381,24 +442,33 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $userMetrics
+     * @return array<string, mixed>
+     */
     private function predictChurnRisk(array $userMetrics): array
     {
         $riskScore = 0;
 
         // Days since last visit (0-0.3)
-        $riskScore += min($userMetrics['days_since_last_visit'] / 30 * 0.3, 0.3);
+        $daysSinceLastVisit = is_numeric($userMetrics['days_since_last_visit']) ? (float) $userMetrics['days_since_last_visit'] : 0;
+        $riskScore += min($daysSinceLastVisit / 30 * 0.3, 0.3);
 
         // Sessions last month (0-0.2)
-        $riskScore += max(0, (5 - $userMetrics['sessions_last_month']) * 0.04);
+        $sessionsLastMonth = is_numeric($userMetrics['sessions_last_month']) ? (int) $userMetrics['sessions_last_month'] : 0;
+        $riskScore += max(0, (5 - $sessionsLastMonth) * 0.04);
 
         // Purchases last month (0-0.2)
-        $riskScore += max(0, (2 - $userMetrics['purchases_last_month']) * 0.1);
+        $purchasesLastMonth = is_numeric($userMetrics['purchases_last_month']) ? (int) $userMetrics['purchases_last_month'] : 0;
+        $riskScore += max(0, (2 - $purchasesLastMonth) * 0.1);
 
         // Engagement score (0-0.2)
-        $riskScore += (1 - $userMetrics['engagement_score']) * 0.2;
+        $engagementScore = is_numeric($userMetrics['engagement_score']) ? (float) $userMetrics['engagement_score'] : 0;
+        $riskScore += (1 - $engagementScore) * 0.2;
 
         // Support tickets (0-0.1)
-        $riskScore += min($userMetrics['support_tickets'] * 0.05, 0.1);
+        $supportTickets = is_numeric($userMetrics['support_tickets']) ? (int) $userMetrics['support_tickets'] : 0;
+        $riskScore += min($supportTickets * 0.05, 0.1);
 
         $probability = min($riskScore, 1.0);
         $riskLevel = $probability > 0.7 ? 'high' : ($probability > 0.4 ? 'medium' : 'low');
@@ -409,6 +479,16 @@ class UserBehaviorRecommendationTest extends TestCase
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @param  array<int, array<string, mixed>>  $availableProducts
+     * @return array<int, array<string, mixed>>
+     */
     private function generatePersonalizedRecommendations(array $userProfile, array $availableProducts): array
     {
         $recommendations = [];
@@ -417,19 +497,21 @@ class UserBehaviorRecommendationTest extends TestCase
             $score = 0;
 
             // Category preference
-            if (in_array($product['category'], $userProfile['preferences'])) {
+            $preferences = is_array($userProfile['preferences']) ? $userProfile['preferences'] : [];
+            if (in_array($product['category'], $preferences)) {
                 $score += 0.4;
             }
 
             // Brand preference
-            if (in_array($product['brand'], $userProfile['preferences'])) {
+            if (in_array($product['brand'], $preferences)) {
                 $score += 0.3;
             }
 
             // Price range
+            $priceRange = is_array($userProfile['price_range']) ? $userProfile['price_range'] : [0, 1000];
             if (
-                $product['price'] >= $userProfile['price_range'][0] &&
-                $product['price'] <= $userProfile['price_range'][1]
+                $product['price'] >= $priceRange[0] &&
+                $product['price'] <= $priceRange[1]
             ) {
                 $score += 0.3;
             }

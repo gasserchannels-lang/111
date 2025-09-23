@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<PriceAlert<\Database\Factories\PriceAlertFactory>>
+ * @extends Factory<PriceAlert>
  */
 class PriceAlertFactory extends Factory
 {

@@ -2,73 +2,66 @@
 
 namespace Tests\AI;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ImageProcessingTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function can_analyze_product_images()
+    public function can_analyze_product_images(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_detect_objects_in_images()
+    public function can_detect_objects_in_images(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_extract_colors_from_images()
+    public function can_extract_colors_from_images(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_generate_image_tags()
+    public function can_generate_image_tags(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_resize_images()
+    public function can_resize_images(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_compress_images()
+    public function can_compress_images(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_detect_image_quality()
+    public function can_detect_image_quality(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_handle_multiple_image_formats()
+    public function can_handle_multiple_image_formats(): void
     {
         // اختبار بسيط بدون إنشاء صور
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

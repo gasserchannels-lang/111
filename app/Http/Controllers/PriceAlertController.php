@@ -48,7 +48,7 @@ class PriceAlertController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'status' => 'created',
-                'price_alert_id' => $created?->id,
+                'price_alert_id' => $created->id ?? 0,
             ], 201);
         }
 
@@ -58,9 +58,6 @@ class PriceAlertController extends Controller
 
     /**
      * Display the specified resource.
-     */
-    /**
-     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
      */
     public function show(PriceAlert $priceAlert, Guard $auth): \Illuminate\View\View
     {
@@ -79,9 +76,6 @@ class PriceAlertController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    /**
-     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
-     */
     public function edit(PriceAlert $priceAlert, Guard $auth): \Illuminate\View\View
     {
         if ($priceAlert->user_id !== $auth->id()) {
@@ -93,9 +87,6 @@ class PriceAlertController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
-    /**
-     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
      */
     public function update(Request $request, PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
@@ -120,9 +111,6 @@ class PriceAlertController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    /**
-     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
-     */
     public function destroy(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         if ($priceAlert->user_id !== $auth->id()) {
@@ -137,9 +125,6 @@ class PriceAlertController extends Controller
 
     /**
      * Toggle alert status.
-     */
-    /**
-     * @param  PriceAlert<\Database\Factories\PriceAlertFactory>  $priceAlert
      */
     public function toggle(PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {

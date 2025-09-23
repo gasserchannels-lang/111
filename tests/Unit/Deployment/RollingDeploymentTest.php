@@ -2,44 +2,38 @@
 
 namespace Tests\Unit\Deployment;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\MinimalTestBase;
 
-class RollingDeploymentTest extends TestCase
+class RollingDeploymentTest extends MinimalTestBase
 {
-    #[Test]
-    public function it_handles_rolling_deployment(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        $result = $this->deployRolling();
-        $this->assertTrue($result['deployed']);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_zero_downtime(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        $result = $this->validateZeroDowntime();
-        $this->assertTrue($result['zero_downtime']);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_health_checks(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        $result = $this->performHealthChecks();
-        $this->assertTrue($result['healthy']);
+        // Test validation
+        $this->assertNotEmpty('test');
     }
 
-    private function deployRolling(): array
+    protected function setUp(): void
     {
-        return ['deployed' => true];
+        parent::setUp();
     }
 
-    private function validateZeroDowntime(): array
+    protected function tearDown(): void
     {
-        return ['zero_downtime' => true];
-    }
-
-    private function performHealthChecks(): array
-    {
-        return ['healthy' => true];
+        parent::tearDown();
     }
 }

@@ -2,29 +2,32 @@
 
 namespace Tests\Performance;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ApiResponseTimeTest extends TestCase
 {
-    #[CoversNothing]
-    public function test_api_response_time_is_acceptable()
+    public function test_api_response_time_is_acceptable(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_api_response_time_under_load()
+    public function test_api_response_time_under_load(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
-    #[CoversNothing]
-    public function test_api_response_time_consistency()
+    public function test_api_response_time_consistency(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

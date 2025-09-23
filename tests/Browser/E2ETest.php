@@ -2,16 +2,13 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class E2ETest extends TestCase
 {
-    use RefreshDatabase;
-
     #[Test]
-    public function can_load_homepage()
+    public function can_load_homepage(): void
     {
         $response = $this->get('/');
         $response->assertStatus(200);
@@ -19,7 +16,7 @@ class E2ETest extends TestCase
     }
 
     #[Test]
-    public function can_navigate_to_products()
+    public function can_navigate_to_products(): void
     {
         // Test that products route exists (even if it returns 404, we test the route)
         $response = $this->get('/products');
@@ -27,7 +24,7 @@ class E2ETest extends TestCase
     }
 
     #[Test]
-    public function can_search_products()
+    public function can_search_products(): void
     {
         // Test that search route exists (even if it returns 404, we test the route)
         $response = $this->get('/search?q=test');
@@ -35,7 +32,7 @@ class E2ETest extends TestCase
     }
 
     #[Test]
-    public function can_add_to_cart()
+    public function can_add_to_cart(): void
     {
         // Test that cart route exists (even if it returns 404, we test the route)
         $response = $this->post('/cart/add', ['product_id' => 1, 'quantity' => 1]);
@@ -43,10 +40,20 @@ class E2ETest extends TestCase
     }
 
     #[Test]
-    public function can_checkout()
+    public function can_checkout(): void
     {
         // Test that checkout route exists (even if it returns 404, we test the route)
         $response = $this->get('/checkout');
         $this->assertTrue(in_array($response->status(), [200, 404]));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

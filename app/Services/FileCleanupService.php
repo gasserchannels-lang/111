@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class FileCleanupService
 {
@@ -316,9 +318,9 @@ class FileCleanupService
             return ['files_deleted' => 0, 'size_deleted' => 0];
         }
 
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($iterator as $file) {
@@ -348,8 +350,8 @@ class FileCleanupService
             return $size;
         }
 
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS)
         );
 
         foreach ($iterator as $file) {
@@ -398,7 +400,7 @@ class FileCleanupService
     /**
      * Get next cleanup time.
      */
-    private function getNextCleanupTime(): string
+    private function getNextCleanupTime(): ?string
     {
         $lastCleanup = $this->getLastCleanupTime();
 

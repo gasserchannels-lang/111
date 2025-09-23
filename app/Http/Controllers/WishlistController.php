@@ -60,15 +60,9 @@ class WishlistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $request->validate([
-            'product_id' => self::VALIDATION_RULE_PRODUCT_ID, // تم استخدام الثابت هنا
-        ]);
-
-        $wishlist = $this->auth->user()?->wishlists()
-            ->where('product_id', $request->product_id)
-            ->first();
+        $wishlist = $this->auth->user()?->wishlists()->find($id);
 
         if ($wishlist) {
             $wishlist->delete();

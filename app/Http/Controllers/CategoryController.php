@@ -11,7 +11,13 @@ class CategoryController extends Controller
 {
     public function index(): View
     {
-        return view('categories.index');
+        $categories = Category::where('is_active', true)
+            ->orderBy('name')
+            ->paginate(12);
+
+        return view('categories.index', [
+            'categories' => $categories,
+        ]);
     }
 
     public function show(string $slug): View
@@ -27,7 +33,7 @@ class CategoryController extends Controller
             ->latest()
             ->paginate(12);
 
-        return view('category-show', [
+        return view('categories.show', [
             'category' => $category,
             'products' => $products,
         ]);

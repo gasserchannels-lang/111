@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 class SystemController extends Controller
@@ -133,7 +136,7 @@ class SystemController extends Controller
             $process->run();
 
             if (! $process->isSuccessful()) {
-                throw new \RuntimeException($process->getErrorOutput());
+                throw new RuntimeException($process->getErrorOutput());
             }
 
             Log::info('Composer update ran successfully.');
@@ -164,7 +167,7 @@ class SystemController extends Controller
                 'memory_usage' => memory_get_usage(true),
                 'memory_peak' => memory_get_peak_usage(true),
                 'memory_limit' => ini_get('memory_limit'),
-                'execution_time' => microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'],
+                'execution_time' => microtime(true) - (is_numeric($_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0) ? (float) ($_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0) : 0.0),
                 'database_connections' => $this->getDatabaseConnections(),
                 'cache_hits' => $this->getCacheHits(),
                 'response_time' => $this->getResponseTime(),
@@ -460,7 +463,9 @@ class SystemController extends Controller
     private function getResponseTime(): float
     {
         try {
-            return microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+            $requestTime = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
+
+            return microtime(true) - (is_numeric($requestTime) ? (float) $requestTime : 0.0);
         } catch (\Exception) {
             return 0.0;
         }

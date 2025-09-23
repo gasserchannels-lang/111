@@ -21,24 +21,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read User<Database\Factories\UserFactory> $user
- * @property-read Product<Database\Factories\ProductFactory> $product
+ * @property-read User $user
+ * @property-read Product $product
  *
  * @method static PriceAlertFactory factory(...$parameters)
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of PriceAlertFactory
- *
- * @mixin TFactory
- */
 class PriceAlert extends Model
 {
-    /**
-     * @use HasFactory<PriceAlertFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<PriceAlert>>
+     */
+    protected static $factory = \Database\Factories\PriceAlertFactory::class;
 
     use SoftDeletes;
 
@@ -74,20 +72,20 @@ class PriceAlert extends Model
      *
      * @var array<string, mixed>|null
      */
-    protected $errors;
+    protected $errors = null;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
+     * @return BelongsTo<Product, $this>
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
@@ -95,8 +93,8 @@ class PriceAlert extends Model
     /**
      * Scope a query to only include active alerts.
      *
-     * @param  Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>  $query
-     * @return Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>
+     * @param  Builder<PriceAlert>  $query
+     * @return Builder<PriceAlert>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -106,8 +104,8 @@ class PriceAlert extends Model
     /**
      * Scope a query to only include alerts for a specific user.
      *
-     * @param  Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>  $query
-     * @return Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>
+     * @param  Builder<PriceAlert>  $query
+     * @return Builder<PriceAlert>
      */
     public function scopeForUser(Builder $query, int $userId): Builder
     {
@@ -117,8 +115,8 @@ class PriceAlert extends Model
     /**
      * Scope a query to only include alerts for a specific product.
      *
-     * @param  Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>  $query
-     * @return Builder<PriceAlert<\Database\Factories\PriceAlertFactory>>
+     * @param  Builder<PriceAlert>  $query
+     * @return Builder<PriceAlert>
      */
     public function scopeForProduct(Builder $query, int $productId): Builder
     {

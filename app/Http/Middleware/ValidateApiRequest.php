@@ -54,9 +54,38 @@ class ValidateApiRequest
         // If rules are provided as JSON string, decode them
         if (is_string($configRules)) {
             $decoded = json_decode($configRules, true);
-            return is_array($decoded) ? $decoded : [];
+            if (is_array($decoded)) {
+                // Ensure the decoded array has the correct structure
+                /** @var array<string, array<int, string>> $result */
+                $result = [];
+                foreach ($decoded as $key => $value) {
+                    if (is_string($key) && is_array($value)) {
+                        /** @var array<int, string> $mappedValue */
+                        $mappedValue = array_map(fn ($item): string => is_string($item) ? $item : (is_scalar($item) ? (string) $item : ''), $value);
+                        $result[$key] = $mappedValue;
+                    }
+                }
+
+                return $result;
+            }
+
+            return [];
         }
 
-        return is_array($configRules) ? $configRules : [];
+        if (is_array($configRules)) {
+            /** @var array<string, array<int, string>> $result */
+            $result = [];
+            foreach ($configRules as $key => $value) {
+                if (is_string($key) && is_array($value)) {
+                    /** @var array<int, string> $mappedValue */
+                    $mappedValue = array_map(fn ($item): string => is_string($item) ? $item : (is_scalar($item) ? (string) $item : ''), $value);
+                    $result[$key] = $mappedValue;
+                }
+            }
+
+            return $result;
+        }
+
+        return [];
     }
 }

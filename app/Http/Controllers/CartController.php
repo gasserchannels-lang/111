@@ -29,9 +29,6 @@ class CartController extends Controller
         ]);
     }
 
-    /**
-     * @param  \App\Models\Product<\Database\Factories\ProductFactory>  $product
-     */
     public function add(CartRequest $request, Product $product): RedirectResponse
     {
         $validated = $request->validated();

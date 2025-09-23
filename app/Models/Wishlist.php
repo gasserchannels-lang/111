@@ -19,24 +19,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read User<Database\Factories\UserFactory> $user
- * @property-read Product<Database\Factories\ProductFactory> $product
+ * @property-read User $user
+ * @property-read Product $product
  *
  * @method static WishlistFactory factory(...$parameters)
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of WishlistFactory
- *
- * @mixin TFactory
- */
 class Wishlist extends Model
 {
-    /**
-     * @use HasFactory<WishlistFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Wishlist>>
+     */
+    protected static $factory = \Database\Factories\WishlistFactory::class;
 
     use SoftDeletes;
 
@@ -49,7 +47,7 @@ class Wishlist extends Model
     /**
      * @var array<string, mixed>|null
      */
-    protected $errors;
+    protected $errors = null;
 
     /**
      * The attributes that should be validated.
@@ -63,17 +61,17 @@ class Wishlist extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product>
+     * @return BelongsTo<Product, $this>
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
@@ -81,8 +79,8 @@ class Wishlist extends Model
     /**
      * Scope a query to only include wishlist items for a specific user.
      *
-     * @param  Builder<Wishlist<\Database\Factories\WishlistFactory>>  $query
-     * @return Builder<Wishlist<\Database\Factories\WishlistFactory>>
+     * @param  Builder<Wishlist>  $query
+     * @return Builder<Wishlist>
      */
     public function scopeForUser(Builder $query, int $userId): Builder
     {
@@ -92,8 +90,8 @@ class Wishlist extends Model
     /**
      * Scope a query to only include wishlist items for a specific product.
      *
-     * @param  Builder<Wishlist<\Database\Factories\WishlistFactory>>  $query
-     * @return Builder<Wishlist<\Database\Factories\WishlistFactory>>
+     * @param  Builder<Wishlist>  $query
+     * @return Builder<Wishlist>
      */
     public function scopeForProduct(Builder $query, int $productId): Builder
     {
@@ -148,8 +146,6 @@ class Wishlist extends Model
 
     /**
      * Add a product to user's wishlist.
-     *
-     * @return Wishlist<\Database\Factories\WishlistFactory>
      */
     public static function addToWishlist(int $userId, int $productId, ?string $notes = null): self
     {

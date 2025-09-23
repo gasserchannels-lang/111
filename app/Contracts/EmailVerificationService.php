@@ -8,8 +8,6 @@ interface EmailVerificationService
 {
     /**
      * Send verification email.
-     *
-     * @param  \App\Models\User<\Database\Factories\UserFactory>  $user
      */
     public function sendVerificationEmail(\App\Models\User $user): bool;
 

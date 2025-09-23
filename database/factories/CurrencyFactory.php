@@ -8,7 +8,7 @@ use App\Models\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Currency<\Database\Factories\CurrencyFactory>>
+ * @extends Factory<Currency>
  */
 class CurrencyFactory extends Factory
 {

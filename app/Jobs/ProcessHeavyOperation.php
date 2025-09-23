@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -27,9 +28,13 @@ class ProcessHeavyOperation implements ShouldQueue
     public int $maxExceptions = 3;
 
     /**
-     * Create a new job instance.
+     * The job instance.
      */
+    public mixed $job;
+
     /**
+     * Create a new job instance.
+     *
      * @param  array<string, mixed>  $data
      */
     public function __construct(private string $operation, private array $data = [], private ?int $userId = null) {}
@@ -57,7 +62,7 @@ class ProcessHeavyOperation implements ShouldQueue
             // Update job status
             $this->updateJobStatus('completed', $result);
 
-            $executionTime = microtime(true) - $startTime;
+            $executionTime = (float) (microtime(true) - $startTime);
 
             Log::info('Heavy operation completed', [
                 'operation' => $this->operation,
@@ -81,8 +86,10 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Execute the specific operation.
+     *
+     * @return array<string, mixed>
      */
-    private function executeOperation(): mixed
+    private function executeOperation(): array
     {
         return match ($this->operation) {
             'generate_report' => $this->generateReport(),
@@ -99,15 +106,14 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Generate report.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function generateReport(): array
     {
-        $reportType = $this->data['type'] ?? 'general';
-        $startDate = $this->data['start_date'] ?? now()->subMonth();
-        $endDate = $this->data['end_date'] ?? now();
+        $reportType = is_string($this->data['type'] ?? null) ? $this->data['type'] : 'general';
+        $startDate = $this->data['start_date'] ?? Carbon::now()->subMonth();
+        $endDate = $this->data['end_date'] ?? Carbon::now();
 
         // Simulate heavy report generation
         sleep(2);
@@ -116,15 +122,14 @@ class ProcessHeavyOperation implements ShouldQueue
             'type' => $reportType,
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'generated_at' => now(),
+            'generated_at' => Carbon::now(),
             'status' => 'completed',
         ];
     }
 
     /**
      * Process images.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function processImages(): array
@@ -149,13 +154,12 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Sync data.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function syncData(): array
     {
-        $source = $this->data['source'] ?? 'external_api';
+        $source = is_string($this->data['source'] ?? null) ? $this->data['source'] : 'external_api';
         $synced = 0;
 
         // Simulate data synchronization
@@ -170,8 +174,7 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Send bulk notifications.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function sendBulkNotifications(): array
@@ -198,8 +201,7 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Update statistics.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function updateStatistics(): array
@@ -224,13 +226,12 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Cleanup old data.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function cleanupOldData(): array
     {
-        $daysOld = $this->data['days_old'] ?? 30;
+        $daysOld = is_numeric($this->data['days_old'] ?? null) ? (int) $this->data['days_old'] : 30;
         $cleaned = 0;
 
         // Simulate data cleanup
@@ -245,8 +246,7 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Export data.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function exportData(): array
@@ -267,13 +267,12 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Import data.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     private function importData(): array
     {
-        $filePath = $this->data['file_path'] ?? '';
+        $filePath = is_string($this->data['file_path'] ?? null) ? $this->data['file_path'] : '';
         $imported = 0;
 
         // Simulate data import
@@ -288,10 +287,12 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Update job status.
+     *
+     * @param  array<string, mixed>|null  $result
      */
-    private function updateJobStatus(string $status, mixed $result = null): void
+    private function updateJobStatus(string $status, ?array $result = null): void
     {
-        $jobId = $this->job?->getJobId() ?? 'unknown';
+        $jobId = (is_object($this->job) && method_exists($this->job, 'getJobId')) ? $this->job->getJobId() : 'unknown';
         $cacheKey = "job_status:{$jobId}";
 
         $statusData = [
@@ -299,7 +300,7 @@ class ProcessHeavyOperation implements ShouldQueue
             'operation' => $this->operation,
             'status' => $status,
             'user_id' => $this->userId,
-            'updated_at' => now(),
+            'updated_at' => Carbon::now(),
             'result' => $result,
         ];
 
@@ -323,21 +324,30 @@ class ProcessHeavyOperation implements ShouldQueue
 
     /**
      * Get job status.
-     */
-    /**
+     *
      * @return array<string, mixed>|null
      */
     public static function getJobStatus(string $jobId): ?array
     {
         $cacheKey = "job_status:{$jobId}";
 
-        return Cache::get($cacheKey);
+        $result = Cache::get($cacheKey);
+        if (is_array($result)) {
+            // Ensure all keys are strings
+            $stringKeyedArray = [];
+            foreach ($result as $key => $value) {
+                $stringKeyedArray[(string) $key] = $value;
+            }
+
+            return $stringKeyedArray;
+        }
+
+        return null;
     }
 
     /**
      * Get user's job statuses.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public static function getUserJobStatuses(int $userId): array
@@ -353,7 +363,7 @@ class ProcessHeavyOperation implements ShouldQueue
     public function cancel(): bool
     {
         try {
-            $this->delete();
+            $this->fail(new Exception('Job cancelled by user'));
             $this->updateJobStatus('cancelled');
 
             Log::info('Heavy operation cancelled', [

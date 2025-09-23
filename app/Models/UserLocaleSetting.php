@@ -18,25 +18,23 @@ use InvalidArgumentException;
  * @property int $currency_id
  * @property string|null $ip_address
  * @property string|null $country_code
- * @property-read User<Database\Factories\UserFactory>|null $user
- * @property-read Language<Database\Factories\LanguageFactory> $language
- * @property-read Currency<Database\Factories\CurrencyFactory> $currency
+ * @property-read User|null $user
+ * @property-read Language $language
+ * @property-read Currency $currency
  *
  * @method static UserLocaleSettingFactory factory(...$parameters)
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of UserLocaleSettingFactory
- *
- * @mixin TFactory
- */
 class UserLocaleSetting extends Model
 {
-    /**
-     * @use HasFactory<UserLocaleSettingFactory>
-     */
+    /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<UserLocaleSetting>>
+     */
+    protected static $factory = \Database\Factories\UserLocaleSettingFactory::class;
 
     protected $fillable = [
         'user_id',
@@ -56,9 +54,9 @@ class UserLocaleSetting extends Model
     /**
      * المستخدم المرتبط بهذا الإعداد.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -66,9 +64,9 @@ class UserLocaleSetting extends Model
     /**
      * اللغة المحددة.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Language>
+     * @return BelongsTo<Language, $this>
      */
-    public function language(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function language(): BelongsTo
     {
         return $this->belongsTo(Language::class);
     }
@@ -76,9 +74,9 @@ class UserLocaleSetting extends Model
     /**
      * العملة المحددة.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Currency>
+     * @return BelongsTo<Currency, $this>
      */
-    public function currency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
     }

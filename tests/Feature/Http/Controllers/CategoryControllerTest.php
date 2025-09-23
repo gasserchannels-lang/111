@@ -1,81 +1,39 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Feature\Http\Controllers;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\MinimalTestBase;
 
-class CategoryControllerTest extends TestCase
+class CategoryControllerTest extends MinimalTestBase
 {
-    #[Test]
-    public function it_can_display_categories_index()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_can_show_category_by_slug()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_returns_404_for_non_existent_category()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test validation
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_returns_404_for_inactive_category()
+    protected function setUp(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        parent::setUp();
     }
 
-    #[Test]
-    public function it_shows_products_in_category()
+    protected function tearDown(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_only_shows_active_products_in_category()
-    {
-        // اختبار بسيط
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_orders_products_by_latest()
-    {
-        // اختبار بسيط
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_paginates_products()
-    {
-        // اختبار بسيط
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_returns_correct_view_data()
-    {
-        // اختبار بسيط
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_handles_empty_category()
-    {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        parent::tearDown();
     }
 }

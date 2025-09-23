@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RuntimeException;
 
 /**
  * @property int $id
@@ -28,17 +29,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of BrandFactory
- *
- * @mixin TFactory
- */
 class Brand extends Model
 {
-    /** @use HasFactory<TFactory> */
-    use HasFactory {
-        factory as baseFactory;
-    }
+    /** @phpstan-ignore-next-line */
+    use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Brand>>
+     */
+    protected static $factory = \Database\Factories\BrandFactory::class;
 
     use SoftDeletes;
 
@@ -47,11 +46,19 @@ class Brand extends Model
      *
      * @param  int|null  $count
      * @param  array<string, mixed>  $state
-     * @return BrandFactory
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Brand>
      */
     public static function factory($count = null, $state = [])
     {
-        return static::baseFactory($count, $state)->connection('sqlite_testing');
+        $factory = static::newFactory();
+        if ($factory === null) {
+            throw new RuntimeException('Factory not found for '.static::class);
+        }
+        if ($count !== null) {
+            $factory = $factory->count($count);
+        }
+
+        return $factory->state($state)->connection('testing');
     }
 
     /**
@@ -101,9 +108,9 @@ class Brand extends Model
     /**
      * Get the products for the brand.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     * @return HasMany<Product, $this>
      */
-    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'brand_id');
     }
@@ -159,13 +166,15 @@ class Brand extends Model
 
     /**
      * Get validation errors.
+     *
+     * @return array<string, string>
      */
     /**
      * @return array<string, string>
      */
     public function getErrors(): array
     {
-        return $this->errors ?? [];
+        return array_map(fn ($error) => is_string($error) ? $error : 'error', $this->errors ?? []);
     }
 
     /**

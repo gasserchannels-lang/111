@@ -35,7 +35,7 @@
         "phpmd/phpmd": "^2.15",
         "phpmetrics/phpmetrics": "^2.9",
         "phpunit/phpunit": "^11.5",
-        "qossmic/deptrac": "^2.0",
+        "deptrac/deptrac": "^2.0",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-backup": "^9.3",

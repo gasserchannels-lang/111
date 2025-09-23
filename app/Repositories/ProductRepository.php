@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use InvalidArgumentException;
 
 class ProductRepository
 {
@@ -52,7 +53,6 @@ class ProductRepository
      *
      *
      *
-     * @return Product<\Database\Factories\ProductFactory>|null
      *
      * @throws \InvalidArgumentException If slug is invalid
      */
@@ -60,24 +60,25 @@ class ProductRepository
     {
         // Validate slug format
         if (! preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
-            throw new \InvalidArgumentException('Invalid slug format');
+            throw new InvalidArgumentException('Invalid slug format');
         }
 
         // Cache key includes version to allow mass cache invalidation
         $cacheKey = "product:slug:{$slug}:v1";
 
-        return Cache::remember($cacheKey, now()->addHours(1), fn () => Product::query()
+        $result = Cache::remember($cacheKey, now()->addHours(1), fn () => Product::query()
             ->with(['category', 'brand', 'reviews'])
             ->where('slug', $slug)
             ->where('is_active', true)
             ->first());
+
+        return $result instanceof Product ? $result : null;
     }
 
     /**
      * Get related products with caching.
      *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
-     * @return Collection<int, Product<\Database\Factories\ProductFactory>>
+     * @return Collection<int, Product>
      *
      * @throws \InvalidArgumentException If limit is invalid
      */
@@ -85,14 +86,14 @@ class ProductRepository
     {
         // Validate limit
         if ($limit < 1 || $limit > 20) {
-            throw new \InvalidArgumentException('Limit must be between 1 and 20');
+            throw new InvalidArgumentException('Limit must be between 1 and 20');
         }
 
         // Cache key includes product ID and limit
         $cacheKey = "product:{$product->id}:related:limit:{$limit}:v1";
         $cacheDuration = now()->addHours(1);
 
-        return Cache::remember($cacheKey, $cacheDuration, fn () => Product::query()
+        $result = Cache::remember($cacheKey, $cacheDuration, fn () => Product::query()
             ->select(['id', 'name', 'slug', 'price', 'image', 'category_id'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
@@ -100,6 +101,8 @@ class ProductRepository
             ->inRandomOrder()
             ->limit($limit)
             ->get());
+
+        return $result instanceof Collection ? $result : new Collection;
     }
 
     /**
@@ -142,7 +145,7 @@ class ProductRepository
             is_numeric(request()->get('page', 1)) ? (int) request()->get('page', 1) : 1
         );
 
-        return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($query, $filters, $perPage) {
+        $result = Cache::remember($cacheKey, now()->addMinutes(15), function () use ($query, $filters, $perPage) {
             $productsQuery = Product::query()
                 ->select(['id', 'name', 'slug', 'price', 'image', 'category_id', 'brand_id', 'description'])
                 ->with([
@@ -184,12 +187,13 @@ class ProductRepository
 
             return $productsQuery->paginate($perPage);
         });
+
+        return $result instanceof LengthAwarePaginator ? $result : Product::query()->paginate($perPage);
     }
 
     /**
      * Update product price with validation, locking, and logging.
      *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      *
      * @throws ValidationException If price is invalid
      * @throws ProductUpdateException If update fails

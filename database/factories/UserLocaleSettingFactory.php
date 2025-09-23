@@ -11,7 +11,7 @@ use App\Models\UserLocaleSetting;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<UserLocaleSetting<\Database\Factories\UserLocaleSettingFactory>>
+ * @extends Factory<UserLocaleSetting>
  */
 class UserLocaleSettingFactory extends Factory
 {

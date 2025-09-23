@@ -160,7 +160,7 @@ class ProductSearchRequest extends FormRequest
         }
 
         if ($this->has('tags')) {
-            $data['tags'] = is_array($this->tags) ? array_map(fn($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
+            $data['tags'] = is_array($this->tags) ? array_map(fn ($tag): string => is_string($tag) ? trim($tag) : '', $this->tags) : [];
         }
 
         if (! empty($data)) {
@@ -262,6 +262,7 @@ class ProductSearchRequest extends FormRequest
     public function getQuery(): string
     {
         $query = $this->input('q', '');
+
         return is_string($query) ? $query : '';
     }
 

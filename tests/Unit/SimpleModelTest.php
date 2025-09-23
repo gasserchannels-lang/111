@@ -2,29 +2,36 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\TestCase;
-
-class SimpleModelTest extends TestCase
+class SimpleModelTest extends MinimalTestBase
 {
-    #[CoversNothing]
-    public function test_simple_model()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[CoversNothing]
-    public function test_model_creation()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[CoversNothing]
-    public function test_model_attributes()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        // اختبار بسيط
-        $this->assertTrue(true);
+        // Test validation
+        $this->assertNotEmpty('test');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

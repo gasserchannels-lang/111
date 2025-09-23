@@ -30,17 +30,11 @@ class BrandController extends Controller
         return response()->json($brand, 201);
     }
 
-    /**
-     * @param  Brand<\Database\Factories\BrandFactory>  $brand
-     */
     public function show(Brand $brand): JsonResponse
     {
         return response()->json($brand);
     }
 
-    /**
-     * @param  Brand<\Database\Factories\BrandFactory>  $brand
-     */
     public function update(Request $request, Brand $brand): JsonResponse
     {
         $validated = $request->validate([
@@ -53,9 +47,6 @@ class BrandController extends Controller
         return response()->json($brand);
     }
 
-    /**
-     * @param  Brand<\Database\Factories\BrandFactory>  $brand
-     */
     public function destroy(Brand $brand): JsonResponse
     {
         $brand->delete();

@@ -10,7 +10,7 @@ use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<PriceOffer<\Database\Factories\PriceOfferFactory>>
+ * @extends Factory<PriceOffer>
  */
 class PriceOfferFactory extends Factory
 {

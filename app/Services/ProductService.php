@@ -20,7 +20,7 @@ class ProductService
     /**
      * Get paginated active products.
      *
-     * @return LengthAwarePaginator<int, Product<\Database\Factories\ProductFactory>>
+     * @return LengthAwarePaginator<int, Product>
      */
     public function getPaginatedProducts(int $perPage = 15): LengthAwarePaginator
     {
@@ -45,45 +45,41 @@ class ProductService
             );
         }
 
-        return $result;
+        return $result; // @phpstan-ignore-line
     }
 
     /**
      * Get product by slug.
-     *
-     * @return Product<\Database\Factories\ProductFactory>
      */
     public function getBySlug(string $slug): ?Product
     {
-        return $this->cache->remember(
+        $result = $this->cache->remember(
             'product.slug.'.$slug,
             3600,
-            function () use ($slug): \App\Models\Product {
-                $product = $this->repository->findBySlug($slug);
-                if (! $product instanceof \App\Models\Product) {
-                    throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
-                }
-
-                return $product;
+            function () use ($slug): ?\App\Models\Product {
+                return $this->repository->findBySlug($slug);
             },
             ['products']
         );
+
+        return $result instanceof \App\Models\Product ? $result : null;
     }
 
     /**
      * Get related products.
      *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
-     * @return Collection<int, Product<\Database\Factories\ProductFactory>>
+     * @return Collection<int, Product>
      */
     public function getRelatedProducts(Product $product, int $limit = 4): Collection
     {
-        return $this->cache->remember(
+        $result = $this->cache->remember(
             'product.related.'.$product->id,
             3600,
             fn (): \Illuminate\Database\Eloquent\Collection => $this->repository->getRelated($product, $limit),
             ['products']
         );
+
+        return $result instanceof \Illuminate\Database\Eloquent\Collection ? $result : new Collection;
     }
 
     /**
@@ -100,8 +96,6 @@ class ProductService
 
     /**
      * Update product price.
-     *
-     * @param  Product<\Database\Factories\ProductFactory>  $product
      */
     public function updatePrice(Product $product, float $newPrice): bool
     {

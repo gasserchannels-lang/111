@@ -33,7 +33,7 @@ class UpdatePricesCommand extends Command
 
         $storeId = $this->option('store');
         $productId = $this->option('product');
-        $dryRun = $this->option('dry-run');
+        $dryRun = (bool) $this->option('dry-run');
 
         if ($dryRun) {
             $this->warn('🧪 Running in dry-run mode - no changes will be made');
@@ -42,12 +42,12 @@ class UpdatePricesCommand extends Command
         $query = PriceOffer::with(['store', 'product']);
 
         if ($storeId) {
-            $query->where('store_id', $storeId);
+            $query->where('store_id', (int) $storeId);
             $this->info("📍 Filtering by store ID: {$storeId}");
         }
 
         if ($productId) {
-            $query->where('product_id', $productId);
+            $query->where('product_id', (int) $productId);
             $this->info("📦 Filtering by product ID: {$productId}");
         }
 
@@ -64,7 +64,8 @@ class UpdatePricesCommand extends Command
             try {
                 $newPrice = $this->fetchPriceFromAPI($priceOffer);
 
-                if ($newPrice && $newPrice !== (float) $priceOffer->price) {
+                $currentPrice = is_numeric($priceOffer->price) ? (float) $priceOffer->price : 0.0;
+                if ($newPrice && $newPrice !== $currentPrice) {
                     if (! $dryRun) {
                         $priceOffer->update([
                             'price' => $newPrice,
@@ -73,14 +74,16 @@ class UpdatePricesCommand extends Command
                     }
 
                     $updatedCount++;
-                    $productName = $priceOffer->product->name ?? 'Unknown Product';
-                    $storeName = $priceOffer->store->name ?? 'Unknown Store';
-                    $this->line("\n💰 Updated {$productName} at {$storeName}: {$priceOffer->price} → {$newPrice}");
+                    $productName = is_string($priceOffer->product->name) ? $priceOffer->product->name : 'Unknown Product';
+                    $storeName = is_string($priceOffer->store->name) ? $priceOffer->store->name : 'Unknown Store';
+                    $this->line("\n💰 Updated {$productName} at {$storeName}: {$currentPrice} → {$newPrice}");
                 }
             } catch (\Exception $e) {
                 $errorCount++;
-                $productName = $priceOffer->product->name ?? 'Unknown Product';
-                $storeName = $priceOffer->store->name ?? 'Unknown Store';
+                $product = $priceOffer->product;
+                $store = $priceOffer->store;
+                $productName = ($product && is_string($product->name)) ? $product->name : 'Unknown Product';
+                $storeName = ($store && is_string($store->name)) ? $store->name : 'Unknown Store';
                 $this->error("\n❌ Error updating {$productName} at {$storeName}: ".$e->getMessage());
             }
 
@@ -103,20 +106,19 @@ class UpdatePricesCommand extends Command
 
     /**
      * Fetch price from external API (placeholder implementation).
-     *
-     * @param  \App\Models\PriceOffer<\Database\Factories\PriceOfferFactory>  $priceOffer
      */
-    private function fetchPriceFromAPI(\App\Models\PriceOffer $priceOffer): ?float
+    private function fetchPriceFromAPI(PriceOffer $priceOffer): ?float
     {
         // This is a placeholder implementation
         // In a real application, you would call the store's API here
 
         // Simulate API call with random price fluctuation
         $fluctuation = random_int(-10, 10) / 100; // ±10%
-        $newPrice = $priceOffer->price * (1 + $fluctuation);
+        $currentPrice = is_numeric($priceOffer->price) ? (float) $priceOffer->price : 0.0;
+        $newPrice = $currentPrice * (1 + $fluctuation);
 
         // Only return if price changed significantly (more than 1%)
-        if (abs($priceOffer->price - $newPrice) / $priceOffer->price > 0.01) {
+        if ($currentPrice > 0 && abs($currentPrice - $newPrice) / $currentPrice > 0.01) {
             return round($newPrice, 2);
         }
 

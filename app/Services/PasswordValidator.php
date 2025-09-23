@@ -13,7 +13,7 @@ class PasswordValidator
 
     public function __construct()
     {
-        $this->config = config('password_policy', [
+        $config = config('password_policy', [
             'min_length' => 8,
             'require_uppercase' => true,
             'require_lowercase' => true,
@@ -22,6 +22,15 @@ class PasswordValidator
             'forbidden_patterns' => [],
             'history_count' => 5,
         ]);
+        $this->config = is_array($config) ? $config : [
+            'min_length' => 8,
+            'require_uppercase' => true,
+            'require_lowercase' => true,
+            'require_numbers' => true,
+            'require_symbols' => true,
+            'forbidden_patterns' => [],
+            'history_count' => 5,
+        ];
     }
 
     /**
@@ -34,8 +43,9 @@ class PasswordValidator
         $errors = [];
 
         // التحقق من الطول الأدنى
-        if (strlen($password) < $this->config['min_length']) {
-            $errors[] = "كلمة المرور يجب أن تكون على الأقل {$this->config['min_length']} أحرف";
+        $minLength = is_numeric($this->config['min_length']) ? (int) $this->config['min_length'] : 8;
+        if (strlen($password) < $minLength) {
+            $errors[] = "كلمة المرور يجب أن تكون على الأقل {$minLength} أحرف";
         }
 
         // التحقق من الأحرف الكبيرة
@@ -59,10 +69,13 @@ class PasswordValidator
         }
 
         // التحقق من الأنماط المحظورة
-        foreach ($this->config['forbidden_patterns'] as $pattern) {
-            if (preg_match($pattern, $password)) {
-                $errors[] = 'كلمة المرور تحتوي على نمط محظور';
-                break;
+        $forbiddenPatterns = $this->config['forbidden_patterns'] ?? [];
+        if (is_array($forbiddenPatterns)) {
+            foreach ($forbiddenPatterns as $pattern) {
+                if (is_string($pattern) && preg_match($pattern, $password)) {
+                    $errors[] = 'كلمة المرور تحتوي على نمط محظور';
+                    break;
+                }
             }
         }
 

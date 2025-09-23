@@ -30,17 +30,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static CategoryFactory factory(...$parameters)
  *
  * @mixin \Eloquent
- *
- * @template TFactory of CategoryFactory
- *
- * @mixin TFactory
  */
 class Category extends Model
 {
-    /** @use HasFactory<TFactory> */
-    use HasFactory {
-        factory as baseFactory;
-    }
+    /** @phpstan-ignore-next-line */
+    use HasFactory;
+
+    /**
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Category>>
+     */
+    protected static $factory = \Database\Factories\CategoryFactory::class;
 
     use SoftDeletes;
 
@@ -48,10 +47,16 @@ class Category extends Model
      * Create a new factory instance for the model.
      *
      * @param  array<string, mixed>  $state
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Category>
      */
-    public static function factory(?int $count = null, array $state = []): CategoryFactory
+    public static function factory(?int $count = null, array $state = []): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return static::baseFactory($count, $state)->connection('testing');
+        $factory = static::newFactory();
+        if ($factory && $count !== null) {
+            $factory = $factory->count($count);
+        }
+
+        return $factory ? $factory->state($state)->connection('testing') : \Database\Factories\CategoryFactory::new();
     }
 
     /**
@@ -100,9 +105,9 @@ class Category extends Model
     /**
      * Parent category relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category>
+     * @return BelongsTo<Category, $this>
      */
-    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
@@ -110,9 +115,9 @@ class Category extends Model
     /**
      * Children categories relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Category>
+     * @return HasMany<Category, $this>
      */
-    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
@@ -120,9 +125,9 @@ class Category extends Model
     /**
      * Products relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     * @return HasMany<Product, $this>
      */
-    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id');
     }
@@ -178,13 +183,12 @@ class Category extends Model
 
     /**
      * Get validation errors.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function getErrors(): array
     {
-        return $this->errors ?? [];
+        return array_map(fn ($error) => is_string($error) ? $error : 'error', $this->errors ?? []);
     }
 
     /**

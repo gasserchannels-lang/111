@@ -33,12 +33,12 @@ class StrictQualityCheckCommand extends Command
 
             return 0;
         }
-        $this->runAllStages($autoFix, $generateReport);
+        $exitCode = $this->runAllStages($autoFix, $generateReport);
 
-        return 0;
+        return $exitCode;
     }
 
-    private function runAllStages(bool $autoFix, bool $generateReport): void
+    private function runAllStages(bool $autoFix, bool $generateReport): int
     {
         $this->info('🚀 تشغيل جميع المراحل...');
 
@@ -62,9 +62,12 @@ class StrictQualityCheckCommand extends Command
         if (! $results['overall_success']) {
             $this->error('❌ فشل في تحقيق معايير الجودة المطلوبة');
             $this->error('🛑 العملية متوقفة - يلزم إصلاح المشاكل أولاً');
-            exit(1);
+
+            return 1;
         }
         $this->info('🎉 تم تحقيق جميع معايير الجودة بنجاح!');
+
+        return 0;
     }
 
     private function runSingleStage(string $stageId): void

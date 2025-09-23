@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property float $price
  * @property string|null $image
  * @property bool $is_active
- * @property bool $is_featured
  * @property int $stock_quantity
  * @property int $category_id
  * @property int $brand_id
@@ -35,30 +34,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @mixin \Eloquent
  */
-/**
- * @template TFactory of ProductFactory
- *
- * @mixin TFactory
- */
 class Product extends Model
 {
+    /** @phpstan-ignore-next-line */
+    use HasFactory;
+
     /**
-     * @use HasFactory<ProductFactory>
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Product>>
      */
-    use HasFactory {
-        factory as baseFactory;
-    }
+    protected static $factory = \Database\Factories\ProductFactory::class;
 
     use SoftDeletes;
 
     /**
      * Create a new factory instance for the model.
      *
+     * @param  int|null  $count
      * @param  array<string, mixed>  $state
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Product>
      */
-    public static function factory(?int $count = null, array $state = []): ProductFactory
+    public static function factory($count = null, $state = []): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return static::baseFactory($count, $state)->connection('testing');
+        $factory = static::newFactory();
+        if ($factory && $count !== null) {
+            $factory = $factory->count($count);
+        }
+
+        return $factory ? $factory->state($state)->connection('testing') : \Database\Factories\ProductFactory::new();
     }
 
     protected $fillable = [
@@ -68,7 +70,6 @@ class Product extends Model
         'price',
         'image',
         'is_active',
-        'is_featured',
         'stock_quantity',
         'category_id',
         'brand_id',
@@ -78,68 +79,67 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'is_featured' => 'boolean',
         'stock_quantity' => 'integer',
     ];
 
     /**
      * @var array<string, string>|null
      */
-    protected $errors;
+    protected $errors = null;
 
     // --- العلاقات ---
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Brand>
+     * @return BelongsTo<Brand, $this>
      */
-    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class)->select(['id', 'name']);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category>
+     * @return BelongsTo<Category, $this>
      */
-    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class)->select(['id', 'name']);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceAlert>
+     * @return HasMany<PriceAlert, $this>
      */
-    public function priceAlerts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceAlerts(): HasMany
     {
         return $this->hasMany(PriceAlert::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Review>
+     * @return HasMany<Review, $this>
      */
-    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Wishlist>
+     * @return HasMany<Wishlist, $this>
      */
-    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PriceOffer>
+     * @return HasMany<PriceOffer, $this>
      */
-    public function priceOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function priceOffers(): HasMany
     {
         return $this->hasMany(PriceOffer::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Store>
+     * @return BelongsTo<Store, $this>
      */
-    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
@@ -188,8 +188,8 @@ class Product extends Model
 
     // --- Scopes ---
     /**
-     * @param  Builder<Product<\Database\Factories\ProductFactory>>  $query
-     * @return Builder<Product<\Database\Factories\ProductFactory>>
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
      */
     public function scopeActive(Builder $query): Builder
     {
@@ -197,8 +197,8 @@ class Product extends Model
     }
 
     /**
-     * @param  Builder<Product<\Database\Factories\ProductFactory>>  $query
-     * @return Builder<Product<\Database\Factories\ProductFactory>>
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {
@@ -206,8 +206,8 @@ class Product extends Model
     }
 
     /**
-     * @param  Builder<Product<\Database\Factories\ProductFactory>>  $query
-     * @return Builder<Product<\Database\Factories\ProductFactory>>
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
      */
     public function scopeWithReviewsCount(Builder $query): Builder
     {

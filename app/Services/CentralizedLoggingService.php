@@ -389,31 +389,40 @@ class CentralizedLoggingService
 
     /**
      * Get recent logs from cache.
-     */
-    /**
+     *
      * @return list<array<string, mixed>>
      */
     public function getRecentLogs(?string $channel = null, int $limit = 50): array
     {
         if ($channel) {
             $key = "logs:{$channel}:recent";
+            $result = Cache::get($key, []);
+            if (is_array($result)) {
+                /** @var list<array<string, mixed>> $result */
+                return $result;
+            }
 
-            return Cache::get($key, []);
+            return [];
         }
 
+        /** @var list<array<string, mixed>> $allLogs */
         $allLogs = [];
         foreach (array_keys(self::LOG_CHANNELS) as $channelName) {
             $key = "logs:{$channelName}:recent";
             $channelLogs = Cache::get($key, []);
             if (is_array($channelLogs)) {
-                $allLogs = array_merge($allLogs, $channelLogs);
+                foreach ($channelLogs as $log) {
+                    if (is_array($log)) {
+                        $allLogs[] = $log;
+                    }
+                }
             }
         }
 
         // Sort by timestamp
         usort($allLogs, function ($a, $b): int {
-            $timestampA = is_array($a) && isset($a['timestamp']) && is_string($a['timestamp']) ? $a['timestamp'] : '';
-            $timestampB = is_array($b) && isset($b['timestamp']) && is_string($b['timestamp']) ? $b['timestamp'] : '';
+            $timestampA = isset($a['timestamp']) && is_string($a['timestamp']) ? $a['timestamp'] : '';
+            $timestampB = isset($b['timestamp']) && is_string($b['timestamp']) ? $b['timestamp'] : '';
 
             return strtotime($timestampB) - strtotime($timestampA);
         });

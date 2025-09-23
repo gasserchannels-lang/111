@@ -24,7 +24,7 @@ final class StatisticsService
      */
     public function getRealTimeStats(): array
     {
-        return Cache::remember('real_time_stats', 60, fn (): array => [
+        $result = Cache::remember('real_time_stats', 60, fn (): array => [
             'total_users' => User::count(),
             'total_products' => Product::count(),
             'total_offers' => PriceOffer::count(),
@@ -36,6 +36,8 @@ final class StatisticsService
             'price_changes_today' => $this->getPriceChangesToday(),
             'new_reviews_today' => $this->getNewReviewsToday(),
         ]);
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -47,7 +49,7 @@ final class StatisticsService
     {
         $cacheKey = "daily_stats_{$date->format('Y-m-d')}";
 
-        return Cache::remember($cacheKey, 3600, fn (): array => [
+        $result = Cache::remember($cacheKey, 3600, fn (): array => [
             'date' => $date->format('Y-m-d'),
             'new_users' => User::whereDate('created_at', $date)->count(),
             'new_products' => Product::whereDate('created_at', $date)->count(),
@@ -59,6 +61,8 @@ final class StatisticsService
             'most_viewed_products' => $this->getMostViewedProductsForDate($date),
             'most_active_users' => $this->getMostActiveUsersForDate($date),
         ]);
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -71,7 +75,7 @@ final class StatisticsService
         $endDate = $startDate->copy()->addWeek();
         $cacheKey = "weekly_stats_{$startDate->format('Y-m-d')}";
 
-        return Cache::remember($cacheKey, 3600, fn (): array => [
+        $result = Cache::remember($cacheKey, 3600, fn (): array => [
             'week_start' => $startDate->format('Y-m-d'),
             'week_end' => $endDate->format('Y-m-d'),
             'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -85,6 +89,8 @@ final class StatisticsService
             'top_brands' => $this->getTopBrands($startDate, $endDate),
             'price_trends' => $this->getPriceTrends($startDate, $endDate),
         ]);
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -98,7 +104,7 @@ final class StatisticsService
         $endDate = $date->copy()->endOfMonth();
         $cacheKey = "monthly_stats_{$date->format('Y-m')}";
 
-        return Cache::remember($cacheKey, 3600, fn (): array => [
+        $result = Cache::remember($cacheKey, 3600, fn (): array => [
             'month' => $date->format('Y-m'),
             'new_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
             'new_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -113,6 +119,8 @@ final class StatisticsService
             'category_performance' => $this->getCategoryPerformance($startDate, $endDate),
             'brand_performance' => $this->getBrandPerformance($startDate, $endDate),
         ]);
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -126,7 +134,7 @@ final class StatisticsService
         $endDate = Carbon::createFromDate($year, 12, 31);
         $cacheKey = "yearly_stats_{$year}";
 
-        return Cache::remember($cacheKey, 3600, fn (): array => [
+        $result = Cache::remember($cacheKey, 3600, fn (): array => [
             'year' => $year,
             'total_users' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
             'total_products' => Product::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -141,6 +149,8 @@ final class StatisticsService
             'top_brands_yearly' => $this->getTopBrands($startDate, $endDate),
             'price_analysis_yearly' => $this->getPriceAnalysis($startDate, $endDate),
         ]);
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -152,7 +162,7 @@ final class StatisticsService
     {
         $cacheKey = "product_stats_{$productId}";
 
-        return Cache::remember($cacheKey, 1800, function () use ($productId): array {
+        $result = Cache::remember($cacheKey, 1800, function () use ($productId): array {
             $product = Product::with(['category:id,name', 'brand:id,name'])
                 ->findOrFail($productId);
 
@@ -190,6 +200,8 @@ final class StatisticsService
                 'engagement_score' => $this->calculateProductEngagementScore($productId),
             ];
         });
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -201,7 +213,7 @@ final class StatisticsService
     {
         $cacheKey = "user_stats_{$userId}";
 
-        return Cache::remember($cacheKey, 1800, function () use ($userId): array {
+        $result = Cache::remember($cacheKey, 1800, function () use ($userId): array {
             $user = User::findOrFail($userId);
 
             // Use single query with counts to avoid N+1
@@ -235,6 +247,8 @@ final class StatisticsService
                 'last_activity' => $this->getUserLastActivity($userId),
             ];
         });
+
+        return is_array($result) ? $result : [];
     }
 
     /**
@@ -244,7 +258,7 @@ final class StatisticsService
      */
     public function getSystemHealthStats(): array
     {
-        return Cache::remember('system_health_stats', 300, fn (): array => [
+        $result = Cache::remember('system_health_stats', 300, fn (): array => [
             'database_health' => $this->getDatabaseHealth(),
             'cache_health' => $this->getCacheHealth(),
             'queue_health' => $this->getQueueHealth(),
@@ -254,6 +268,8 @@ final class StatisticsService
             'response_time' => $this->getAverageResponseTime(),
             'uptime' => $this->getUptime(),
         ]);
+
+        return is_array($result) ? $result : [];
     }
 
     /**

@@ -8,7 +8,7 @@ use App\Models\Brand;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Brand<\Database\Factories\BrandFactory>>
+ * @extends Factory<Brand>
  */
 class BrandFactory extends Factory
 {

@@ -182,6 +182,10 @@ class TrendingProductTest extends TestCase
         $this->assertEquals('18-25', $demographicTrends[0]['age_group']);
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getTrendingProducts(array $products, int $limit = 2): array
     {
         // Calculate trending score for each product
@@ -197,6 +201,9 @@ class TrendingProductTest extends TestCase
         return array_slice($products, 0, $limit);
     }
 
+    /**
+     * @param  array<string, mixed>  $product
+     */
     private function calculateTrendingScore(array $product): float
     {
         $views = $product['views'] ?? 0;
@@ -205,12 +212,19 @@ class TrendingProductTest extends TestCase
         $recentPurchases = $product['recent_purchases'] ?? 0;
 
         // Weight recent activity more heavily
-        $score = ($views * 0.3) + ($purchases * 0.4) + ($recentViews * 0.2) + ($recentPurchases * 0.1);
+        $score = (is_numeric($views) ? (float) $views : 0.0) * 0.3 +
+                 (is_numeric($purchases) ? (float) $purchases : 0.0) * 0.4 +
+                 (is_numeric($recentViews) ? (float) $recentViews : 0.0) * 0.2 +
+                 (is_numeric($recentPurchases) ? (float) $recentPurchases : 0.0) * 0.1;
 
         // Normalize to 0-100 scale
         return min(100, max(0, $score / 10));
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getRisingTrends(array $products): array
     {
         $risingTrends = [];
@@ -220,7 +234,9 @@ class TrendingProductTest extends TestCase
             $previousViews = $product['previous_week_views'] ?? 0;
 
             if ($previousViews > 0) {
-                $growthRate = (($currentViews - $previousViews) / $previousViews) * 100;
+                $currentViewsFloat = is_numeric($currentViews) ? (float) $currentViews : 0.0;
+                $previousViewsFloat = is_numeric($previousViews) ? (float) $previousViews : 0.0;
+                $growthRate = (($currentViewsFloat - $previousViewsFloat) / $previousViewsFloat) * 100;
                 if ($growthRate > 0) {
                     $product['growth_rate'] = $growthRate;
                     $risingTrends[] = $product;
@@ -236,6 +252,10 @@ class TrendingProductTest extends TestCase
         return $risingTrends;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getFallingTrends(array $products): array
     {
         $fallingTrends = [];
@@ -245,7 +265,9 @@ class TrendingProductTest extends TestCase
             $previousViews = $product['previous_week_views'] ?? 0;
 
             if ($previousViews > 0) {
-                $declineRate = (($previousViews - $currentViews) / $previousViews) * 100;
+                $currentViewsFloat = is_numeric($currentViews) ? (float) $currentViews : 0.0;
+                $previousViewsFloat = is_numeric($previousViews) ? (float) $previousViews : 0.0;
+                $declineRate = (($previousViewsFloat - $currentViewsFloat) / $previousViewsFloat) * 100;
                 if ($declineRate > 0) {
                     $product['decline_rate'] = $declineRate;
                     $fallingTrends[] = $product;
@@ -261,6 +283,10 @@ class TrendingProductTest extends TestCase
         return $fallingTrends;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getSeasonalTrends(array $products, string $currentSeason): array
     {
         $seasonalTrends = [];
@@ -279,21 +305,28 @@ class TrendingProductTest extends TestCase
         return $seasonalTrends;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getCategoryTrends(array $products): array
     {
         $categoryStats = [];
 
         foreach ($products as $product) {
             $category = $product['category'] ?? 'Unknown';
-            if (! isset($categoryStats[$category])) {
-                $categoryStats[$category] = [
-                    'category' => $category,
-                    'total_views' => 0,
-                    'product_count' => 0,
-                ];
+            if (is_string($category)) {
+                if (! isset($categoryStats[$category])) {
+                    $categoryStats[$category] = [
+                        'category' => $category,
+                        'total_views' => 0,
+                        'product_count' => 0,
+                    ];
+                }
+                $views = $product['views'] ?? 0;
+                $categoryStats[$category]['total_views'] += is_numeric($views) ? (float) $views : 0.0;
+                $categoryStats[$category]['product_count']++;
             }
-            $categoryStats[$category]['total_views'] += $product['views'] ?? 0;
-            $categoryStats[$category]['product_count']++;
         }
 
         // Sort by total views descending
@@ -301,24 +334,31 @@ class TrendingProductTest extends TestCase
             return $b['total_views'] <=> $a['total_views'];
         });
 
-        return array_values($categoryStats);
+        return $categoryStats;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getBrandTrends(array $products): array
     {
         $brandStats = [];
 
         foreach ($products as $product) {
             $brand = $product['brand'] ?? 'Unknown';
-            if (! isset($brandStats[$brand])) {
-                $brandStats[$brand] = [
-                    'brand' => $brand,
-                    'total_views' => 0,
-                    'product_count' => 0,
-                ];
+            if (is_string($brand)) {
+                if (! isset($brandStats[$brand])) {
+                    $brandStats[$brand] = [
+                        'brand' => $brand,
+                        'total_views' => 0,
+                        'product_count' => 0,
+                    ];
+                }
+                $views = $product['views'] ?? 0;
+                $brandStats[$brand]['total_views'] += is_numeric($views) ? (float) $views : 0.0;
+                $brandStats[$brand]['product_count']++;
             }
-            $brandStats[$brand]['total_views'] += $product['views'] ?? 0;
-            $brandStats[$brand]['product_count']++;
         }
 
         // Sort by total views descending
@@ -326,9 +366,13 @@ class TrendingProductTest extends TestCase
             return $b['total_views'] <=> $a['total_views'];
         });
 
-        return array_values($brandStats);
+        return $brandStats;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getPriceRangeTrends(array $products): array
     {
         $priceRanges = [
@@ -349,8 +393,9 @@ class TrendingProductTest extends TestCase
 
             foreach ($products as $product) {
                 $price = $product['price'] ?? 0;
-                if ($price >= $bounds['min'] && $price <= $bounds['max']) {
-                    $rangeStats[$range]['total_views'] += $product['views'] ?? 0;
+                if (is_numeric($price) && $price >= $bounds['min'] && $price <= $bounds['max']) {
+                    $views = $product['views'] ?? 0;
+                    $rangeStats[$range]['total_views'] += is_numeric($views) ? (float) $views : 0.0;
                     $rangeStats[$range]['product_count']++;
                 }
             }
@@ -361,9 +406,13 @@ class TrendingProductTest extends TestCase
             return $b['total_views'] <=> $a['total_views'];
         });
 
-        return array_values($rangeStats);
+        return $rangeStats;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getTimeBasedTrends(array $products): array
     {
         $timeBasedTrends = [];
@@ -373,7 +422,9 @@ class TrendingProductTest extends TestCase
             $yesterdayViews = $product['views_yesterday'] ?? 0;
 
             if ($yesterdayViews > 0) {
-                $growthRate = (($todayViews - $yesterdayViews) / $yesterdayViews) * 100;
+                $todayViewsFloat = is_numeric($todayViews) ? (float) $todayViews : 0.0;
+                $yesterdayViewsFloat = is_numeric($yesterdayViews) ? (float) $yesterdayViews : 0.0;
+                $growthRate = (($todayViewsFloat - $yesterdayViewsFloat) / $yesterdayViewsFloat) * 100;
                 if ($growthRate > 0) {
                     $product['growth_rate'] = $growthRate;
                     $timeBasedTrends[] = $product;
@@ -389,21 +440,28 @@ class TrendingProductTest extends TestCase
         return $timeBasedTrends;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getGeographicTrends(array $products): array
     {
         $regionStats = [];
 
         foreach ($products as $product) {
             $region = $product['region'] ?? 'Unknown';
-            if (! isset($regionStats[$region])) {
-                $regionStats[$region] = [
-                    'region' => $region,
-                    'total_views' => 0,
-                    'product_count' => 0,
-                ];
+            if (is_string($region)) {
+                if (! isset($regionStats[$region])) {
+                    $regionStats[$region] = [
+                        'region' => $region,
+                        'total_views' => 0,
+                        'product_count' => 0,
+                    ];
+                }
+                $views = $product['views'] ?? 0;
+                $regionStats[$region]['total_views'] += is_numeric($views) ? (float) $views : 0.0;
+                $regionStats[$region]['product_count']++;
             }
-            $regionStats[$region]['total_views'] += $product['views'] ?? 0;
-            $regionStats[$region]['product_count']++;
         }
 
         // Sort by total views descending
@@ -411,24 +469,31 @@ class TrendingProductTest extends TestCase
             return $b['total_views'] <=> $a['total_views'];
         });
 
-        return array_values($regionStats);
+        return $regionStats;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $products
+     * @return array<int, array<string, mixed>>
+     */
     private function getDemographicTrends(array $products): array
     {
         $demographicStats = [];
 
         foreach ($products as $product) {
             $ageGroup = $product['age_group'] ?? 'Unknown';
-            if (! isset($demographicStats[$ageGroup])) {
-                $demographicStats[$ageGroup] = [
-                    'age_group' => $ageGroup,
-                    'total_views' => 0,
-                    'product_count' => 0,
-                ];
+            if (is_string($ageGroup)) {
+                if (! isset($demographicStats[$ageGroup])) {
+                    $demographicStats[$ageGroup] = [
+                        'age_group' => $ageGroup,
+                        'total_views' => 0,
+                        'product_count' => 0,
+                    ];
+                }
+                $views = $product['views'] ?? 0;
+                $demographicStats[$ageGroup]['total_views'] += is_numeric($views) ? (float) $views : 0.0;
+                $demographicStats[$ageGroup]['product_count']++;
             }
-            $demographicStats[$ageGroup]['total_views'] += $product['views'] ?? 0;
-            $demographicStats[$ageGroup]['product_count']++;
         }
 
         // Sort by total views descending
@@ -436,6 +501,6 @@ class TrendingProductTest extends TestCase
             return $b['total_views'] <=> $a['total_views'];
         });
 
-        return array_values($demographicStats);
+        return $demographicStats;
     }
 }

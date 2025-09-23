@@ -178,6 +178,8 @@ class AuditService
      */
     public function cleanOldLogs(int $daysOld = 90): int
     {
-        return AuditLog::where('created_at', '<', now()->subDays($daysOld))->delete();
+        $deleted = AuditLog::where('created_at', '<', now()->subDays($daysOld))->delete();
+
+        return is_numeric($deleted) ? (int) $deleted : 0;
     }
 }

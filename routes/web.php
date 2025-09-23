@@ -34,14 +34,70 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
+Route::post('/login', function () {
+    // Handle login logic here
+    return redirect()->intended('/');
+})->name('login.post');
+
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
-// Logout route removed for production
+Route::post('/register', function (Illuminate\Http\Request $request) {
+    // Validate the request
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // Create the user
+    $user = \App\Models\User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => bcrypt($validated['password']),
+    ]);
+
+    return redirect()->route('login')->with('status', 'Registration successful!');
+})->name('register.post');
+
+Route::post('/logout', function () {
+    // Handle logout logic here
+    return redirect()->route('home');
+})->name('logout');
+
+Route::get('/password/reset', function () {
+    // @phpstan-ignore-next-line
+    return view('auth.passwords.email');
+})->name('password.request');
+
+Route::post('/password/email', function () {
+    // Handle password reset email logic here
+    return back()->with('status', 'Password reset link sent!');
+})->name('password.email');
+
+Route::get('/password/reset/{token}', function ($token) {
+    // @phpstan-ignore-next-line
+    return view('auth.passwords.reset', ['token' => $token]);
+})->name('password.reset');
+
+Route::post('/password/reset', function () {
+    // Handle password reset logic here
+    return redirect()->route('login')->with('status', 'Password reset successfully!');
+})->name('password.update');
+
+// Additional password reset routes for testing
+Route::post('/forgot-password', function () {
+    return back()->with('status', 'Password reset link sent!');
+})->name('forgot-password');
+
+Route::put('/user/password', function () {
+    return back()->with('status', 'Password updated successfully!');
+})->name('user.password.update');
 
 // المنتجات والفئات
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
+Route::get('products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
 Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');

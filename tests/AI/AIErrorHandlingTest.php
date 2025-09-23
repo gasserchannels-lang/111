@@ -2,15 +2,13 @@
 
 namespace Tests\AI;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIErrorHandlingTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_invalid_input_gracefully()
+    public function ai_handles_invalid_input_gracefully(): void
     {
         $response = $this->postJson('/api/ai/analyze', [
             'text' => '',
@@ -18,12 +16,13 @@ class AIErrorHandlingTest extends TestCase
         ]);
 
         $this->assertEquals(422, $response->status());
-        $this->assertArrayHasKey('errors', $response->json());
+        $responseData = $response->json();
+        $this->assertIsArray($responseData);
+        $this->assertArrayHasKey('errors', $responseData);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_malformed_json()
+    public function ai_handles_malformed_json(): void
     {
         $response = $this->postJson('/api/ai/analyze', [
             'text' => null,
@@ -34,8 +33,7 @@ class AIErrorHandlingTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_network_timeout()
+    public function ai_handles_network_timeout(): void
     {
         // اختبار بسيط بدون timeout
         $response = $this->postJson('/api/ai/analyze', [
@@ -48,8 +46,7 @@ class AIErrorHandlingTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_logs_errors_properly()
+    public function ai_logs_errors_properly(): void
     {
         // اختبار بسيط بدون Mockery
         $response = $this->postJson('/api/ai/analyze', [
@@ -61,8 +58,7 @@ class AIErrorHandlingTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_returns_meaningful_error_messages()
+    public function ai_returns_meaningful_error_messages(): void
     {
         $response = $this->postJson('/api/ai/analyze', [
             'text' => 'Test',
@@ -74,8 +70,7 @@ class AIErrorHandlingTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_handles_concurrent_requests()
+    public function ai_handles_concurrent_requests(): void
     {
         $responses = [];
 
@@ -91,5 +86,15 @@ class AIErrorHandlingTest extends TestCase
         foreach ($responses as $response) {
             $this->assertContains($response->status(), [200, 429]); // 429 = Too Many Requests
         }
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

@@ -2,73 +2,66 @@
 
 namespace Tests\AI;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductClassificationTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function can_classify_electronics()
+    public function can_classify_electronics(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_classify_clothing()
+    public function can_classify_clothing(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_classify_books()
+    public function can_classify_books(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_classify_home_garden()
+    public function can_classify_home_garden(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_classify_sports()
+    public function can_classify_sports(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function classification_confidence_is_high()
+    public function classification_confidence_is_high(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_handle_ambiguous_products()
+    public function can_handle_ambiguous_products(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function can_suggest_subcategories()
+    public function can_suggest_subcategories(): void
     {
         // اختبار بسيط
-        $this->assertTrue(true);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

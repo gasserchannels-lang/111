@@ -214,16 +214,22 @@ class ContentBasedFilteringTest extends TestCase
         $this->assertLessThanOrEqual(1, $combinedSimilarity);
     }
 
+    /**
+     * @param  array<string, mixed>  $item
+     * @return array<string, mixed>
+     */
     private function extractItemFeatures(array $item): array
     {
+        $price = $item['price'] ?? 0.0;
+        $title = $item['title'] ?? '';
         $features = [
             'category' => $item['category'] ?? '',
             'brand' => $item['brand'] ?? '',
-            'price_range' => $this->categorizePrice($item['price'] ?? 0),
-            'keywords' => $this->extractKeywords($item['title'] ?? ''),
+            'price_range' => $this->categorizePrice(is_numeric($price) ? (float) $price : 0.0),
+            'keywords' => $this->extractKeywords(is_string($title) ? $title : ''),
         ];
 
-        if (isset($item['features'])) {
+        if (isset($item['features']) && is_array($item['features'])) {
             $features['keywords'] = array_merge($features['keywords'], $item['features']);
         }
 
@@ -245,6 +251,10 @@ class ContentBasedFilteringTest extends TestCase
         return 'premium';
     }
 
+    /**
+     * @param  array<string, mixed>  $item1
+     * @param  array<string, mixed>  $item2
+     */
     private function calculateItemSimilarity(array $item1, array $item2): float
     {
         $weights = [
@@ -264,8 +274,14 @@ class ContentBasedFilteringTest extends TestCase
         // Keyword similarity
         $keywords1 = $item1['keywords'] ?? [];
         $keywords2 = $item2['keywords'] ?? [];
-        $commonKeywords = array_intersect($keywords1, $keywords2);
-        $allKeywords = array_unique(array_merge($keywords1, $keywords2));
+
+        if (is_array($keywords1) && is_array($keywords2)) {
+            $commonKeywords = array_intersect($keywords1, $keywords2);
+            $allKeywords = array_unique(array_merge($keywords1, $keywords2));
+        } else {
+            $commonKeywords = [];
+            $allKeywords = [];
+        }
 
         $similarities['keywords'] = empty($allKeywords) ? 0.0 : count($commonKeywords) / count($allKeywords);
 
@@ -281,6 +297,10 @@ class ContentBasedFilteringTest extends TestCase
         return $totalWeight > 0 ? $totalSimilarity / $totalWeight : 0;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $userInteractions
+     * @return array<string, mixed>
+     */
     private function buildUserProfile(array $userInteractions): array
     {
         $profile = [
@@ -291,38 +311,43 @@ class ContentBasedFilteringTest extends TestCase
         ];
 
         foreach ($userInteractions as $interaction) {
-            $rating = $interaction['rating'];
-            $features = $interaction['features'];
+            $rating = $interaction['rating'] ?? 0;
+            $features = $interaction['features'] ?? [];
 
             // Weight features by rating
-            $weight = $rating / 5.0;
+            $ratingFloat = is_numeric($rating) ? (float) $rating : 0.0;
+            $weight = $ratingFloat / 5.0;
 
             // Update category preferences
-            if (isset($features[0])) {
+            if (is_array($features) && isset($features[0]) && is_string($features[0])) {
                 $category = $features[0];
                 $profile['preferred_categories'][$category] =
                     ($profile['preferred_categories'][$category] ?? 0) + $weight;
             }
 
             // Update brand preferences
-            if (isset($features[1])) {
+            if (is_array($features) && isset($features[1]) && is_string($features[1])) {
                 $brand = $features[1];
                 $profile['preferred_brands'][$brand] =
                     ($profile['preferred_brands'][$brand] ?? 0) + $weight;
             }
 
             // Update price range preferences
-            if (isset($features[2])) {
+            if (is_array($features) && isset($features[2]) && is_string($features[2])) {
                 $priceRange = $features[2];
                 $profile['preferred_price_range'][$priceRange] =
                     ($profile['preferred_price_range'][$priceRange] ?? 0) + $weight;
             }
 
             // Update keyword preferences
-            for ($i = 3; $i < count($features); $i++) {
-                $keyword = $features[$i];
-                $profile['preferred_keywords'][$keyword] =
-                    ($profile['preferred_keywords'][$keyword] ?? 0) + $weight;
+            if (is_array($features)) {
+                for ($i = 3; $i < count($features); $i++) {
+                    $keyword = $features[$i];
+                    if (is_string($keyword)) {
+                        $profile['preferred_keywords'][$keyword] =
+                            ($profile['preferred_keywords'][$keyword] ?? 0) + $weight;
+                    }
+                }
             }
         }
 
@@ -339,6 +364,16 @@ class ContentBasedFilteringTest extends TestCase
         return $profile;
     }
 
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @return array<int, array<string, mixed>>
+     */
+
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @param  array<int, array<string, mixed>>  $candidateItems
+     * @return array<int, array<string, mixed>>
+     */
     private function getContentBasedRecommendations(array $userProfile, array $candidateItems, int $limit): array
     {
         $recommendations = [];
@@ -359,6 +394,10 @@ class ContentBasedFilteringTest extends TestCase
         return array_slice($recommendations, 0, $limit);
     }
 
+    /**
+     * @param  array<string, mixed>  $userProfile
+     * @param  array<string, mixed>  $itemFeatures
+     */
     private function calculateUserItemSimilarity(array $userProfile, array $itemFeatures): float
     {
         $weights = [
@@ -371,25 +410,42 @@ class ContentBasedFilteringTest extends TestCase
         $similarities = [];
 
         // Category similarity
-        $category = $itemFeatures['category'];
-        $similarities['category'] = $userProfile['preferred_categories'][$category] ?? 0;
+        $category = $itemFeatures['category'] ?? '';
+        if (is_string($category) && is_array($userProfile['preferred_categories'])) {
+            $similarities['category'] = $userProfile['preferred_categories'][$category] ?? 0;
+        } else {
+            $similarities['category'] = 0;
+        }
 
         // Brand similarity
-        $brand = $itemFeatures['brand'];
-        $similarities['brand'] = $userProfile['preferred_brands'][$brand] ?? 0;
+        $brand = $itemFeatures['brand'] ?? '';
+        if (is_string($brand) && is_array($userProfile['preferred_brands'])) {
+            $similarities['brand'] = $userProfile['preferred_brands'][$brand] ?? 0;
+        } else {
+            $similarities['brand'] = 0;
+        }
 
         // Price range similarity
-        $priceRange = $itemFeatures['price_range'];
-        $similarities['price_range'] = $userProfile['preferred_price_range'][$priceRange] ?? 0;
+        $priceRange = $itemFeatures['price_range'] ?? '';
+        if (is_string($priceRange) && is_array($userProfile['preferred_price_range'])) {
+            $similarities['price_range'] = $userProfile['preferred_price_range'][$priceRange] ?? 0;
+        } else {
+            $similarities['price_range'] = 0;
+        }
 
         // Keyword similarity
-        $itemKeywords = $itemFeatures['keywords'];
-        $userKeywords = $userProfile['preferred_keywords'];
+        $itemKeywords = $itemFeatures['keywords'] ?? [];
+        $userKeywords = $userProfile['preferred_keywords'] ?? [];
         $keywordSimilarity = 0;
 
-        if (! empty($itemKeywords)) {
+        if (is_array($itemKeywords) && ! empty($itemKeywords)) {
             foreach ($itemKeywords as $keyword) {
-                $keywordSimilarity += $userKeywords[$keyword] ?? 0;
+                if (is_string($keyword) && is_array($userKeywords)) {
+                    $keywordValue = $userKeywords[$keyword] ?? 0;
+                    if (is_numeric($keywordValue)) {
+                        $keywordSimilarity += (float) $keywordValue;
+                    }
+                }
             }
             $keywordSimilarity /= count($itemKeywords);
         }
@@ -401,7 +457,10 @@ class ContentBasedFilteringTest extends TestCase
         $totalWeight = 0;
 
         foreach ($weights as $feature => $weight) {
-            $totalSimilarity += $similarities[$feature] * $weight;
+            $similarity = $similarities[$feature];
+            if (is_numeric($similarity)) {
+                $totalSimilarity += (float) $similarity * $weight;
+            }
             $totalWeight += $weight;
         }
 
@@ -419,10 +478,17 @@ class ContentBasedFilteringTest extends TestCase
         return empty($allKeywords) ? 0.0 : count($commonKeywords) / count($allKeywords);
     }
 
+    /**
+     * @return list<string>
+     */
     private function extractKeywords(string $text): array
     {
         $text = strtolower($text);
         $words = preg_split('/\s+/', $text);
+
+        if ($words === false) {
+            return [];
+        }
 
         // Remove common stop words
         $stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
@@ -433,15 +499,21 @@ class ContentBasedFilteringTest extends TestCase
         return array_values($words);
     }
 
+    /**
+     * @param  array<string, list<string>>  $documents
+     */
     private function calculateTfIdf(array $documents, string $term, string $document): float
     {
         $docTerms = $documents[$document] ?? [];
+        if (! is_array($docTerms)) {
+            return 0.0;
+        }
         $termCount = array_count_values($docTerms);
         $tf = ($termCount[$term] ?? 0) / count($docTerms);
 
         $documentsWithTerm = 0;
         foreach ($documents as $docTerms) {
-            if (in_array($term, $docTerms)) {
+            if (is_array($docTerms) && in_array($term, $docTerms)) {
                 $documentsWithTerm++;
             }
         }
@@ -451,6 +523,10 @@ class ContentBasedFilteringTest extends TestCase
         return $tf * $idf;
     }
 
+    /**
+     * @param  array<string, mixed>  $item1
+     * @param  array<string, mixed>  $item2
+     */
     private function calculateCategoricalSimilarity(array $item1, array $item2): float
     {
         $matches = 0;
@@ -468,6 +544,10 @@ class ContentBasedFilteringTest extends TestCase
         return $total > 0 ? $matches / $total : 0;
     }
 
+    /**
+     * @param  array<string, mixed>  $item1
+     * @param  array<string, mixed>  $item2
+     */
     private function calculateNumericalSimilarity(array $item1, array $item2): float
     {
         $similarities = [];
@@ -487,14 +567,21 @@ class ContentBasedFilteringTest extends TestCase
         return empty($similarities) ? 0 : array_sum($similarities) / count($similarities);
     }
 
+    /**
+     * @param  array<string, mixed>  $item1
+     * @param  array<string, mixed>  $item2
+     * @param  array<string, float>  $weights
+     */
     private function calculateCombinedSimilarity(array $item1, array $item2, array $weights): float
     {
         $categoricalSimilarity = $this->calculateCategoricalSimilarity($item1, $item2);
         $numericalSimilarity = $this->calculateNumericalSimilarity($item1, $item2);
-        $textualSimilarity = $this->calculateTextSimilarity(
-            implode(' ', $item1['keywords'] ?? []),
-            implode(' ', $item2['keywords'] ?? [])
-        );
+        $keywords1 = $item1['keywords'] ?? [];
+        $keywords2 = $item2['keywords'] ?? [];
+        $text1 = is_array($keywords1) ? implode(' ', $keywords1) : '';
+        $text2 = is_array($keywords2) ? implode(' ', $keywords2) : '';
+
+        $textualSimilarity = $this->calculateTextSimilarity($text1, $text2);
 
         return $categoricalSimilarity * $weights['categorical'] +
             $numericalSimilarity * $weights['numerical'] +

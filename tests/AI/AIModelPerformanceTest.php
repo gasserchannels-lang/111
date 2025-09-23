@@ -3,15 +3,13 @@
 namespace Tests\AI;
 
 use App\Services\AIService;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AIModelPerformanceTest extends TestCase
 {
     #[Test]
-    #[CoversNothing]
-    public function ai_model_responds_within_acceptable_time()
+    public function ai_model_responds_within_acceptable_time(): void
     {
         $aiService = new AIService;
 
@@ -21,13 +19,11 @@ class AIModelPerformanceTest extends TestCase
 
         $responseTime = $endTime - $startTime;
 
-        $this->assertIsArray($result);
         $this->assertLessThan(5.0, $responseTime); // يجب أن يستجيب في أقل من 5 ثوان
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_model_handles_large_inputs()
+    public function ai_model_handles_large_inputs(): void
     {
         $aiService = new AIService;
 
@@ -36,13 +32,11 @@ class AIModelPerformanceTest extends TestCase
 
         $result = $aiService->analyzeText($largeText);
 
-        $this->assertIsArray($result);
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('sentiment', $result);
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_model_memory_usage_is_reasonable()
+    public function ai_model_memory_usage_is_reasonable(): void
     {
         $aiService = new AIService;
 
@@ -60,8 +54,7 @@ class AIModelPerformanceTest extends TestCase
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_model_handles_concurrent_requests()
+    public function ai_model_handles_concurrent_requests(): void
     {
         $aiService = new AIService;
 
@@ -73,14 +66,10 @@ class AIModelPerformanceTest extends TestCase
         }
 
         $this->assertCount(5, $results);
-        foreach ($results as $result) {
-            $this->assertIsArray($result);
-        }
     }
 
     #[Test]
-    #[CoversNothing]
-    public function ai_model_accuracy_remains_consistent()
+    public function ai_model_accuracy_remains_consistent(): void
     {
         $aiService = new AIService;
 
@@ -93,8 +82,15 @@ class AIModelPerformanceTest extends TestCase
         }
 
         $this->assertCount(5, $results);
-        foreach ($results as $result) {
-            $this->assertIsArray($result);
-        }
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 }

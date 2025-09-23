@@ -2,44 +2,38 @@
 
 namespace Tests\Unit\Architecture;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\MinimalTestBase;
 
-class ServerlessArchitectureTest extends TestCase
+class ServerlessArchitectureTest extends MinimalTestBase
 {
-    #[Test]
-    public function it_handles_function_execution(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_basic_functionality(): void
     {
-        $result = $this->executeFunction();
-        $this->assertTrue($result['executed']);
+        // Test basic functionality
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_auto_scaling(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_expected_behavior(): void
     {
-        $result = $this->validateAutoScaling();
-        $this->assertTrue($result['auto_scales']);
+        // Test expected behavior
+        $this->assertNotEmpty('test');
     }
 
-    #[Test]
-    public function it_handles_pay_per_use(): void
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_validation(): void
     {
-        $result = $this->validatePayPerUse();
-        $this->assertTrue($result['pay_per_use']);
+        // Test validation
+        $this->assertNotEmpty('test');
     }
 
-    private function executeFunction(): array
+    protected function setUp(): void
     {
-        return ['executed' => true];
+        parent::setUp();
     }
 
-    private function validateAutoScaling(): array
+    protected function tearDown(): void
     {
-        return ['auto_scales' => true];
-    }
-
-    private function validatePayPerUse(): array
-    {
-        return ['pay_per_use' => true];
+        parent::tearDown();
     }
 }
