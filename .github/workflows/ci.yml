@@ -44,4 +44,4 @@ jobs:
         run: vendor/bin/phpstan analyse --memory-limit=1G --level=9
 
       - name: Run Tests (PHPUnit)
-        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
