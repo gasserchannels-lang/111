@@ -37,6 +37,7 @@ _ide_helper_models.php
 !.stylelintrc.json
 *.txt
 *.xml
+!phpunit.xml
 *.md
 !README.md
 !CONTRIBUTING.md
