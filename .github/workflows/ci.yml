@@ -28,8 +28,33 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Create cache directories
+        run: |
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          mkdir -p bootstrap/cache
+          chmod -R 775 storage bootstrap/cache
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+        env:
+          APP_ENV: testing
+          APP_DEBUG: true
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+
       - name: Install Composer Dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+        run: |
+          composer install --no-progress --prefer-dist --optimize-autoloader --no-scripts
+          composer dump-autoload --optimize
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
 
       - name: Install NPM Dependencies
         run: npm ci
@@ -37,26 +62,16 @@ jobs:
       - name: Build Frontend Assets
         run: npm run build
 
-      - name: Create cache directories
+      - name: Verify Laravel Application
         run: |
-          mkdir -p storage/framework/cache
-          mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
-          mkdir -p bootstrap/cache
-
-      - name: Prepare Laravel Application
-        run: |
-          cp .env.example .env
-          php artisan key:generate
           php artisan config:clear
           php artisan cache:clear
           php artisan view:clear
+          php artisan config:cache
         env:
           APP_ENV: testing
-          APP_DEBUG: true
           CACHE_DRIVER: array
           SESSION_DRIVER: array
-          QUEUE_CONNECTION: sync
 
       - name: Run Laravel Pint (Code Style)
         run: vendor/bin/pint --test
