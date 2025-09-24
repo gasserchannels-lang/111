@@ -28,6 +28,9 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader --no-scripts
+
       - name: Create cache directories
         run: |
           mkdir -p storage/framework/cache
@@ -47,10 +50,8 @@ jobs:
           SESSION_DRIVER: array
           QUEUE_CONNECTION: sync
 
-      - name: Install Composer Dependencies
-        run: |
-          composer install --no-progress --prefer-dist --optimize-autoloader --no-scripts
-          composer dump-autoload --optimize
+      - name: Complete Composer Setup
+        run: composer dump-autoload --optimize
         env:
           APP_ENV: testing
           CACHE_DRIVER: array
