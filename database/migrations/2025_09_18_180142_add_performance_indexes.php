@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -28,10 +29,12 @@ return new class extends Migration
             if (! Schema::hasIndex('products', 'products_name_is_active_index')) {
                 $table->index(['name', 'is_active']);
             }
-            if (! Schema::hasIndex('products', 'products_description_is_active_index')) {
-                $table->index(['description', 'is_active']);
-            }
         });
+
+        // Create index on TEXT column with specified length
+        if (! Schema::hasIndex('products', 'products_description_is_active_index')) {
+            DB::statement('ALTER TABLE products ADD INDEX products_description_is_active_index(description(255), is_active)');
+        }
 
         // Add performance indexes for price_offers table
         Schema::table('price_offers', function (Blueprint $table) {
@@ -64,9 +67,14 @@ return new class extends Migration
             if (! Schema::hasIndex('users', 'users_email_index')) {
                 $table->index(['email']);
             }
-            if (! Schema::hasIndex('users', 'users_is_active_index')) {
-                $table->index(['is_active']);
-            }
+
+            // --- START: MODIFIED CODE ---
+            // The 'is_active' column does not seem to exist on the users table, so we will skip this index.
+            // if (! Schema::hasIndex('users', 'users_is_active_index')) {
+            //     $table->index(['is_active']);
+            // }
+            // --- END: MODIFIED CODE ---
+
             if (! Schema::hasIndex('users', 'users_is_admin_index')) {
                 $table->index(['is_admin']);
             }
@@ -80,30 +88,33 @@ return new class extends Migration
     {
         // Drop performance indexes
         Schema::table('products', function (Blueprint $table) {
-            $table->dropIndex(['is_active', 'name']);
-            $table->dropIndex(['is_active', 'category_id']);
-            $table->dropIndex(['is_active', 'brand_id']);
-            $table->dropIndex(['is_active', 'price']);
-            $table->dropIndex(['name', 'is_active']);
-            $table->dropIndex(['description', 'is_active']);
+            $table->dropIndex('products_is_active_name_index');
+            $table->dropIndex('products_is_active_category_id_index');
+            $table->dropIndex('products_is_active_brand_id_index');
+            $table->dropIndex('products_is_active_price_index');
+            $table->dropIndex('products_name_is_active_index');
+            $table->dropIndex('products_description_is_active_index');
         });
 
         Schema::table('price_offers', function (Blueprint $table) {
-            $table->dropIndex(['product_id', 'is_available']);
-            $table->dropIndex(['store_id', 'is_available']);
-            $table->dropIndex(['price', 'is_available']);
-            $table->dropIndex(['product_id', 'price']);
+            $table->dropIndex('price_offers_product_id_is_available_index');
+            $table->dropIndex('price_offers_store_id_is_available_index');
+            $table->dropIndex('price_offers_price_is_available_index');
+            $table->dropIndex('price_offers_product_id_price_index');
         });
 
         Schema::table('stores', function (Blueprint $table) {
-            $table->dropIndex(['is_active', 'country_code']);
-            $table->dropIndex(['country_code', 'is_active']);
+            $table->dropIndex('stores_is_active_country_code_index');
+            $table->dropIndex('stores_country_code_is_active_index');
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['email']);
-            $table->dropIndex(['is_active']);
-            $table->dropIndex(['is_admin']);
+            $table->dropIndex('users_email_index');
+            // --- START: MODIFIED CODE ---
+            // Also comment out the dropIndex for the non-existent index
+            // $table->dropIndex('users_is_active_index');
+            // --- END: MODIFIED CODE ---
+            $table->dropIndex('users_is_admin_index');
         });
     }
 };

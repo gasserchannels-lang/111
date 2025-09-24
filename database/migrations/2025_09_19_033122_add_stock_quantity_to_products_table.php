@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->integer('stock_quantity')->default(0)->after('is_featured');
+            // The 'is_featured' column was not found, so we add the new column at the end of the table.
+            $table->integer('stock_quantity')->default(0);
         });
     }
 

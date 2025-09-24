@@ -252,10 +252,10 @@
 
 .fade-in-out {
     opacity: 0;
-    animation: fadeInOut 3s ease-in-out infinite;
+    animation: fade-in-out 3s ease-in-out infinite;
 }
 
-@keyframes fadeInOut {
+@keyframes fade-in-out {
     0%,
     100% {
         opacity: 0;
@@ -284,10 +284,10 @@
 }
 
 .rotate-continuous {
-    animation: rotateContinuous 10s linear infinite;
+    animation: rotate-continuous 10s linear infinite;
 }
 
-@keyframes rotateContinuous {
+@keyframes rotate-continuous {
     from {
         transform: rotate(0deg);
     }
@@ -411,7 +411,7 @@
 }
 
 .hover-glow:hover {
-    box-shadow: 0 0 20px rgb(0 0 0 / 0.3);
+    box-shadow: 0 0 20px rgb(0 0 0 / 30%);
 }
 
 /* ===== تأثيرات النقر ===== */
@@ -565,7 +565,7 @@
 
 /* Responsive Effects */
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .zoom-on-hover:hover {
         transform: scale(1.05);
     }
@@ -581,7 +581,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .zoom-on-hover:hover {
         transform: scale(1.02);
     }

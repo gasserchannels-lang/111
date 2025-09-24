@@ -1,60 +1,55 @@
-name: Laravel CI
+name: Laravel CI with Docker
 
+# Triggers the workflow on push or pull request events but only for the main branch
+# Also allows manual triggering from the Actions tab
 on:
-    push:
-        branches: ['**']
-    pull_request:
-        branches: ['main']
-    workflow_dispatch:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  workflow_dispatch:
 
 jobs:
-    laravel-tests:
-        runs-on: ubuntu-latest
-        env:
-            APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+  laravel-ci:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+    # 1. Checkout the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.2'
-                  extensions: xdebug
-                  coverage: xdebug
+    # 2. Copy the .env file for the CI environment
+    - name: Setup Laravel environment file
+      run: cp .env.example .env
 
-            - name: Install Composer Dependencies
-              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    # 3. Build and start the Docker containers in the background
+    - name: Build and run Docker containers
+      run: docker-compose -f ./dev-docker/docker-compose.yml up --build -d
 
-            - name: Prepare Laravel Environment
-              run: |
-                  mkdir -p storage/framework/{sessions,views,cache}
-                  mkdir -p bootstrap/cache
-                  chmod -R 777 storage bootstrap/cache
-                  php -r "file_exists('.env') || copy('.env.example', '.env');"
-                  php artisan key:generate
-                  php artisan config:clear
-                  php artisan view:clear
-                  php artisan route:clear
-                  php artisan package:discover --ansi
+    # 4. Display Docker status to confirm containers are running
+    - name: Check Docker container status
+      run: docker-compose -f ./dev-docker/docker-compose.yml ps
 
-            - name: Run Code Style Check with Pint
-              run: vendor/bin/pint --test
+    # 5. Install Composer dependencies inside the 'app' container
+    - name: Install Composer Dependencies
+      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app composer install --no-interaction --no-progress
 
-            - name: Run Static Analysis (PHPStan)
-              run: vendor/bin/phpstan analyse --memory-limit=1G --level=9
+    # 6. Generate application key
+    - name: Generate App Key
+      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app php artisan key:generate
 
-            - name: Run Tests (PHPUnit)
-              run: |
-                  echo "Current directory: $(pwd)"
-                  echo "PHPUnit version: $(vendor/bin/phpunit --version)"
-                  echo "PHPUnit configuration file exists: $(test -f phpunit.xml && echo 'YES' || echo 'NO')"
-                  echo "Bootstrap file exists: $(test -f tests/bootstrap-final-clean.php && echo 'YES' || echo 'NO')"
-                  if php -m | grep -q xdebug; then
-                    echo "Xdebug available, running tests with coverage"
-                    vendor/bin/phpunit --configuration=phpunit.xml --coverage-clover=coverage.xml
-                  else
-                    echo "Xdebug not available, running tests without coverage"
-                    vendor/bin/phpunit --configuration=phpunit.xml
-                  fi
+    # 7. Run database migrations
+    - name: Run Database Migrations
+      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app php artisan migrate --force
+
+    # 8. Run Code Style Check (Pint)
+    - name: Run Code Style Check with Pint
+      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app vendor/bin/pint --test
+
+    # 9. Run Static Analysis (PHPStan)
+    - name: Run Static Analysis with PHPStan
+      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app vendor/bin/phpstan analyse --memory-limit=1G
+
+    # 10. Run Tests (PHPUnit)
+    - name: Run Tests with PHPUnit
+      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app vendor/bin/phpunit
