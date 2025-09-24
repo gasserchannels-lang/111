@@ -1,55 +1,52 @@
-name: Laravel CI with Docker
+name: Laravel CI
 
-# Triggers the workflow on push or pull request events but only for the main branch
-# Also allows manual triggering from the Actions tab
 on:
   push:
-    branches: ['main']
+    branches: ['**']
   pull_request:
     branches: ['main']
   workflow_dispatch:
 
 jobs:
-  laravel-ci:
+  laravel-tests:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout the code from the repository
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 2. Copy the .env file for the CI environment
-    - name: Setup Laravel environment file
-      run: cp .env.example .env
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: bcmath, ctype, fileinfo, json, mbstring, openssl, pdo_mysql, tokenizer, xml, gd, zip
+          coverage: none # We can enable this later if needed
 
-    # 3. Build and start the Docker containers in the background
-    - name: Build and run Docker containers
-      run: docker-compose -f ./dev-docker/docker-compose.yml up --build -d
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-    # 4. Display Docker status to confirm containers are running
-    - name: Check Docker container status
-      run: docker-compose -f ./dev-docker/docker-compose.yml ps
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-    # 5. Install Composer dependencies inside the 'app' container
-    - name: Install Composer Dependencies
-      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app composer install --no-interaction --no-progress
+      - name: Install NPM Dependencies
+        run: npm ci
 
-    # 6. Generate application key
-    - name: Generate App Key
-      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app php artisan key:generate
+      - name: Build Frontend Assets
+        run: npm run build
 
-    # 7. Run database migrations
-    - name: Run Database Migrations
-      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app php artisan migrate --force
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
-    # 8. Run Code Style Check (Pint)
-    - name: Run Code Style Check with Pint
-      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app vendor/bin/pint --test
+      - name: Run Laravel Pint (Code Style)
+        run: vendor/bin/pint --test
 
-    # 9. Run Static Analysis (PHPStan)
-    - name: Run Static Analysis with PHPStan
-      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app vendor/bin/phpstan analyse --memory-limit=1G
+      - name: Run PHPStan (Static Analysis)
+        run: vendor/bin/phpstan analyse --memory-limit=1G
 
-    # 10. Run Tests (PHPUnit)
-    - name: Run Tests with PHPUnit
-      run: docker-compose -f ./dev-docker/docker-compose.yml exec -T app vendor/bin/phpunit
+      - name: Run PHPUnit Tests
+        run: vendor/bin/phpunit
