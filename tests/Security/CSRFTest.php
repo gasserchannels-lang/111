@@ -4,6 +4,9 @@ namespace Tests\Security;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class CSRFTest extends TestCase
 {
     public function test_csrf_protection(): void

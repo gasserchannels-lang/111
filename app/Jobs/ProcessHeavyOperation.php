@@ -30,7 +30,7 @@ class ProcessHeavyOperation implements ShouldQueue
     /**
      * The job instance.
      */
-    public mixed $job;
+    public mixed $jobInstance = null;
 
     /**
      * Create a new job instance.
@@ -292,7 +292,7 @@ class ProcessHeavyOperation implements ShouldQueue
      */
     private function updateJobStatus(string $status, ?array $result = null): void
     {
-        $jobId = (is_object($this->job) && method_exists($this->job, 'getJobId')) ? $this->job->getJobId() : 'unknown';
+        $jobId = (is_object($this->jobInstance) && method_exists($this->jobInstance, 'getJobId')) ? $this->jobInstance->getJobId() : 'unknown';
         $cacheKey = "job_status:{$jobId}";
 
         $statusData = [

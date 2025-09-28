@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class BestDealRecommendationTest extends TestCase
 {
     #[Test]
@@ -29,13 +32,13 @@ class BestDealRecommendationTest extends TestCase
     public function it_calculates_deal_score(): void
     {
         $product = [
-            'id' => 1,
-            'name' => 'iPhone 15',
-            'price' => 999.00,
+            'id'             => 1,
+            'name'           => 'iPhone 15',
+            'price'          => 999.00,
             'original_price' => 1199.00,
-            'discount' => 200.00,
-            'rating' => 4.5,
-            'reviews_count' => 1000,
+            'discount'       => 200.00,
+            'rating'         => 4.5,
+            'reviews_count'  => 1000,
         ];
 
         $dealScore = $this->calculateDealScore($product);
@@ -209,11 +212,13 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getBestDeals(array $products, int $limit): array
@@ -232,7 +237,7 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $product
+     * @param array<string, mixed> $product
      */
     private function calculateDealScore(array $product): float
     {
@@ -256,7 +261,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getPercentageDiscounts(array $products): array
@@ -273,8 +279,8 @@ class BestDealRecommendationTest extends TestCase
             if ($originalPriceFloat > 0) {
                 $discountPercentage = (($originalPriceFloat - $priceFloat) / $originalPriceFloat) * 100;
                 $discounts[] = [
-                    'product_id' => $product['id'],
-                    'name' => $product['name'],
+                    'product_id'          => $product['id'],
+                    'name'                => $product['name'],
                     'discount_percentage' => round($discountPercentage, 2),
                 ];
             }
@@ -289,7 +295,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getAbsoluteDiscounts(array $products): array
@@ -305,8 +312,8 @@ class BestDealRecommendationTest extends TestCase
             $discountAmount = $originalPriceFloat - $priceFloat;
 
             $discounts[] = [
-                'product_id' => $product['id'],
-                'name' => $product['name'],
+                'product_id'      => $product['id'],
+                'name'            => $product['name'],
                 'discount_amount' => $discountAmount,
             ];
         }
@@ -320,7 +327,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getValueForMoneyDeals(array $products): array
@@ -340,9 +348,9 @@ class BestDealRecommendationTest extends TestCase
             $valueScore = $priceFloat > 0 ? (($ratingFloat * $featuresFloat) / $priceFloat) * 100 : 0;
 
             $valueDeals[] = [
-                'id' => $product['id'],
-                'product_id' => $product['id'],
-                'name' => $product['name'],
+                'id'          => $product['id'],
+                'product_id'  => $product['id'],
+                'name'        => $product['name'],
                 'value_score' => $valueScore,
             ];
         }
@@ -356,7 +364,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $deals
+     * @param array<int, array<string, mixed>> $deals
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getLimitedTimeDeals(array $deals, string $currentDate): array
@@ -376,7 +385,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getBulkDeals(array $products): array
@@ -394,7 +404,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $bundles
+     * @param array<int, array<string, mixed>> $bundles
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getBundleDeals(array $bundles): array
@@ -408,7 +419,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getCashbackDeals(array $products): array
@@ -426,7 +438,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getFreeShippingDeals(array $products): array
@@ -444,7 +457,8 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getClearanceDeals(array $products): array
@@ -470,12 +484,14 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getSeasonalDeals(array $products, string $season): array
@@ -501,12 +517,14 @@ class BestDealRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getBestOverallDeals(array $products, int $limit): array

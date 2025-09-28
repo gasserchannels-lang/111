@@ -15,7 +15,7 @@ class BrandController extends Controller
     {
         $brands = Brand::all();
 
-        return response()->json($brands);
+        return response()->json(['data' => $brands]);
     }
 
     public function store(Request $request): JsonResponse
@@ -27,24 +27,24 @@ class BrandController extends Controller
 
         $brand = Brand::create($validated);
 
-        return response()->json($brand, 201);
+        return response()->json(['data' => $brand], 201);
     }
 
     public function show(Brand $brand): JsonResponse
     {
-        return response()->json($brand);
+        return response()->json(['data' => $brand]);
     }
 
     public function update(Request $request, Brand $brand): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
         $brand->update($validated);
 
-        return response()->json($brand);
+        return response()->json(['data' => $brand]);
     }
 
     public function destroy(Brand $brand): JsonResponse

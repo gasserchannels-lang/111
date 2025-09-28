@@ -27,8 +27,8 @@ class AgentProposeFixCommand extends Command
     public function __construct(/**
      * The process service instance.
      */
-        private readonly ProcessService $processService)
-    {
+        private readonly ProcessService $processService
+    ) {
         parent::__construct();
     }
 

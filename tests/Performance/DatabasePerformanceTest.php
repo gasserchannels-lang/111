@@ -4,6 +4,9 @@ namespace Tests\Performance;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class DatabasePerformanceTest extends TestCase
 {
     public function test_database_query_performance(): void

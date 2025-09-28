@@ -42,7 +42,7 @@ class WishlistController extends Controller
 
         if ($existingWishlist) {
             return response()->json([
-                'status' => 'exists',
+                'success' => false,
                 'message' => 'Product is already in your wishlist.',
             ]);
         }
@@ -52,8 +52,8 @@ class WishlistController extends Controller
         ]);
 
         return response()->json([
-            'status' => 'added',
-            'message' => 'Product added to wishlist successfully!',
+            'success' => true,
+            'message' => 'Product added to wishlist successfully.',
         ]);
     }
 
@@ -105,5 +105,46 @@ class WishlistController extends Controller
         ]);
 
         return response()->json(['status' => 'added', 'in_wishlist' => true]);
+    }
+
+    /**
+     * Remove product from wishlist by product_id.
+     */
+    public function remove(Request $request): JsonResponse
+    {
+        $request->validate([
+            'product_id' => self::VALIDATION_RULE_PRODUCT_ID,
+        ]);
+
+        $wishlist = $this->auth->user()?->wishlists()
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        if ($wishlist) {
+            $wishlist->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product removed from wishlist successfully.',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Product not found in wishlist.',
+        ], 404);
+    }
+
+    /**
+     * Clear entire wishlist.
+     */
+    public function clear(): JsonResponse
+    {
+        $this->auth->user()?->wishlists()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Wishlist cleared successfully.',
+        ]);
     }
 }

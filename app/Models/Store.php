@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\ValidatesModel;
 use Database\Factories\StoreFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,9 +31,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
- * @property-read Currency|null $currency
+ * @property \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
+ * @property \Illuminate\Database\Eloquent\Collection<int, Product> $products
+ * @property Currency|null $currency
  *
  * @method static StoreFactory factory(...$parameters)
  *
@@ -43,12 +44,13 @@ class Store extends Model
     /** @phpstan-ignore-next-line */
     use HasFactory;
 
+    use SoftDeletes;
+    use ValidatesModel;
+
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Store>>
      */
     protected static $factory = \Database\Factories\StoreFactory::class;
-
-    use SoftDeletes;
 
     /**
      * @var list<string>
@@ -156,32 +158,6 @@ class Store extends Model
     public function getRules(): array
     {
         return $this->rules;
-    }
-
-    /**
-     * Validate the model attributes.
-     */
-    public function validate(): bool
-    {
-        $validator = validator($this->attributes, $this->getRules());
-
-        if ($validator->fails()) {
-            $this->errors = $validator->errors()->toArray();
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get validation errors.
-     *
-     * @return array<string, mixed>
-     */
-    public function getErrors(): array
-    {
-        return $this->errors ?? [];
     }
 
     /**

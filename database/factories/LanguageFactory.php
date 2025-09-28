@@ -31,20 +31,4 @@ class LanguageFactory extends Factory
             'sort_order' => $this->faker->numberBetween(1, 100),
         ];
     }
-
-    public function english(): static
-    {
-        return $this->state(fn (array $attributes): array => [
-            'code' => 'en',
-            'name' => 'English',
-            'native_name' => 'English',
-        ]);
-    }
-
-    public function default(): static
-    {
-        return $this->state(fn (array $attributes): array => [
-            'is_default' => true,
-        ]);
-    }
 }

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReviewRequest;
+use App\Http\Requests\UpdateReviewRequest;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
@@ -50,15 +51,8 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+    public function store(StoreReviewRequest $request, Guard $auth): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'rating' => 'required|integer|min:1|max:5',
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
-
         // التحقق مرة أخرى من عدم وجود مراجعة مسبقة
         $existingReview = $auth->user()?->reviews()->where('product_id', $request->product_id)->exists();
 
@@ -104,20 +98,14 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
+    public function update(UpdateReviewRequest $request, Review $review, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         // التحقق من أن المستخدم هو صاحب المراجعة
         if ($review->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE); // تم استخدام الثابت هنا
         }
 
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
-
-        $review->update($request->only(['rating', 'title', 'content']));
+        $review->update($request->validated());
 
         return redirect()->route('products.show', $review->product_id)
             ->with('success', 'Review updated successfully!');

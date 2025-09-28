@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class HybridRecommendationTest extends TestCase
 {
     #[Test]
@@ -44,9 +47,9 @@ class HybridRecommendationTest extends TestCase
     public function it_handles_switching_hybrid_approach(): void
     {
         $userProfile = [
-            'interaction_count' => 5,
+            'interaction_count'     => 5,
             'preferences_available' => true,
-            'cold_start' => false,
+            'cold_start'            => false,
         ];
 
         $method = $this->selectRecommendationMethod($userProfile);
@@ -131,7 +134,7 @@ class HybridRecommendationTest extends TestCase
     public function it_handles_dynamic_weight_adjustment(): void
     {
         $userProfile = [
-            'interaction_count' => 100,
+            'interaction_count'    => 100,
             'preference_stability' => 0.8,
             'diversity_preference' => 0.6,
         ];
@@ -196,7 +199,7 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, float>  $weights
+     * @param array<string, float> $weights
      */
     private function calculateHybridScore(float $collaborativeScore, float $contentScore, array $weights): float
     {
@@ -205,13 +208,15 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $recommendations
+     * @param array<int, array<string, mixed>> $recommendations
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<int, array<string, mixed>>  $recommendations
-     * @param  array<string, float>  $weights
+     * @param array<int, array<string, mixed>> $recommendations
+     * @param array<string, float>             $weights
+     *
      * @return array<int, array<string, mixed>>
      */
     private function createWeightedEnsemble(array $recommendations, array $weights): array
@@ -236,7 +241,7 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userProfile
+     * @param array<string, mixed> $userProfile
      */
     private function selectRecommendationMethod(array $userProfile): string
     {
@@ -252,13 +257,15 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $collaborativeRecs
+     * @param array<int, array<string, mixed>> $collaborativeRecs
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<int, array<string, mixed>>  $collaborativeRecs
-     * @param  array<int, array<string, mixed>>  $contentRecs
+     * @param array<int, array<string, mixed>> $collaborativeRecs
+     * @param array<int, array<string, mixed>> $contentRecs
+     *
      * @return array<int, array<string, mixed>>
      */
     private function createMixedHybrid(array $collaborativeRecs, array $contentRecs, int $limit): array
@@ -298,13 +305,15 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $primaryRecs
+     * @param array<int, array<string, mixed>> $primaryRecs
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<int, array<string, mixed>>  $primaryRecs
-     * @param  array<int, array<string, mixed>>  $secondaryRecs
+     * @param array<int, array<string, mixed>> $primaryRecs
+     * @param array<int, array<string, mixed>> $secondaryRecs
+     *
      * @return array<int, array<string, mixed>>
      */
     private function createCascadeHybrid(array $primaryRecs, array $secondaryRecs, int $limit): array
@@ -336,16 +345,16 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $collaborativeFeatures
-     * @param  array<string, mixed>  $contentFeatures
-     * @param  array<string, mixed>  $demographicFeatures
+     * @param array<string, mixed> $collaborativeFeatures
+     * @param array<string, mixed> $contentFeatures
+     * @param array<string, mixed> $demographicFeatures
      */
     private function combineFeatureVectors(array $collaborativeFeatures, array $contentFeatures, array $demographicFeatures): float
     {
         $weights = [
             'collaborative' => 0.4,
-            'content' => 0.4,
-            'demographic' => 0.2,
+            'content'       => 0.4,
+            'demographic'   => 0.2,
         ];
 
         $collaborativeScore = array_sum($collaborativeFeatures) / count($collaborativeFeatures);
@@ -358,7 +367,7 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $userHistory
+     * @param array<int, array<string, mixed>> $userHistory
      */
     private function selectBestMethodByMetaLearning(array $userHistory): string
     {
@@ -397,7 +406,8 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userProfile
+     * @param array<string, mixed> $userProfile
+     *
      * @return array<string, float>
      */
     private function adjustWeightsDynamically(array $userProfile): array
@@ -426,7 +436,8 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $recommendations
+     * @param array<int, array<string, mixed>> $recommendations
+     *
      * @return array<int, array<string, mixed>>
      */
     private function createConfidenceWeightedHybrid(array $recommendations): array
@@ -468,8 +479,8 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $recentRecs
-     * @param  array<int, array<string, mixed>>  $historicalRecs
+     * @param array<int, array<string, mixed>> $recentRecs
+     * @param array<int, array<string, mixed>> $historicalRecs
      */
     private function createTemporalHybrid(array $recentRecs, array $historicalRecs, float $recentWeight): float
     {
@@ -480,7 +491,8 @@ class HybridRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $recommendations
+     * @param array<int, array<string, mixed>> $recommendations
+     *
      * @return array<string, float>
      */
     private function evaluateHybridQuality(array $recommendations): array
@@ -499,8 +511,8 @@ class HybridRecommendationTest extends TestCase
 
         return [
             'precision' => $precision,
-            'recall' => $recall,
-            'f1_score' => $f1Score,
+            'recall'    => $recall,
+            'f1_score'  => $f1Score,
         ];
     }
 }

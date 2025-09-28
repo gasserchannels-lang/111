@@ -28,7 +28,7 @@ class SystemController extends Controller
                 'disk_free_space' => round(disk_free_space('/') / (1024 * 1024 * 1024), 2).' GB',
                 'disk_total_space' => round(disk_total_space('/') / (1024 * 1024 * 1024), 2).' GB',
                 'uptime' => $this->getUptime(),
-                'load_average' => sys_getloadavg(),
+                'load_average' => function_exists('sys_getloadavg') ? sys_getloadavg() : [0, 0, 0],
                 'cpu_count' => $this->getCpuCount(),
             ];
 
@@ -167,7 +167,7 @@ class SystemController extends Controller
                 'memory_usage' => memory_get_usage(true),
                 'memory_peak' => memory_get_peak_usage(true),
                 'memory_limit' => ini_get('memory_limit'),
-                'execution_time' => microtime(true) - (is_numeric($_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0) ? (float) ($_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0) : 0.0),
+                'execution_time' => microtime(true) - (is_numeric($_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0) ? (float) ($_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0) : 0.0), // phpcs:ignore
                 'database_connections' => $this->getDatabaseConnections(),
                 'cache_hits' => $this->getCacheHits(),
                 'response_time' => $this->getResponseTime(),

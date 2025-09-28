@@ -19,7 +19,7 @@
             <div>
                 <label for="target_price">Target Price:</label>
                 {{-- هذا هو الحقل الذي سيحتوي على السعر الذي يبحث عنه الاختبار --}}
-                <input type="text" id="target_price" name="target_price" value="{{ old('target_price', $priceAlert->target_price) }}" required>
+                <input type="text" id="target_price" name="target_price" value="{{ old('target_price', $priceAlert->target_price) }}" required aria-label="Target price for alert">
                 @error('target_price')
                     <div style="color: red;">{{ $message }}</div>
                 @enderror
@@ -27,7 +27,7 @@
 
             <div>
                 <input type="hidden" name="repeat_alert" value="0">
-                <input type="checkbox" id="repeat_alert" name="repeat_alert" value="1" {{ old('repeat_alert', $priceAlert->repeat_alert) ? 'checked' : '' }}>
+                <input type="checkbox" id="repeat_alert" name="repeat_alert" value="1" {{ old('repeat_alert', $priceAlert->repeat_alert) ? 'checked' : '' }} aria-label="Repeat alert when price is reached">
                 <label for="repeat_alert">Repeat Alert</label>
             </div>
 

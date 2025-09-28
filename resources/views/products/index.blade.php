@@ -9,24 +9,33 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>Products</h1>
                 <div class="d-flex gap-2">
-                    <select class="form-select" id="categoryFilter">
-                        <option value="">All Categories</option>
-                        @foreach($categories ?? [] as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    <select class="form-select" id="brandFilter">
-                        <option value="">All Brands</option>
-                        @foreach($brands ?? [] as $brand)
-                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                        @endforeach
-                    </select>
-                    <select class="form-select" id="sortBy">
-                        <option value="name">Sort by Name</option>
-                        <option value="price_low">Price: Low to High</option>
-                        <option value="price_high">Price: High to Low</option>
-                        <option value="newest">Newest First</option>
-                    </select>
+                    <div class="d-flex flex-column">
+                        <label for="categoryFilter" class="form-label small mb-1">Filter by Category</label>
+                        <select class="form-select" id="categoryFilter" aria-label="Filter products by category">
+                            <option value="">All Categories</option>
+                            @foreach($categories ?? [] as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <label for="brandFilter" class="form-label small mb-1">Filter by Brand</label>
+                        <select class="form-select" id="brandFilter" aria-label="Filter products by brand">
+                            <option value="">All Brands</option>
+                            @foreach($brands ?? [] as $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <label for="sortBy" class="form-label small mb-1">Sort by</label>
+                        <select class="form-select" id="sortBy" aria-label="Sort products">
+                            <option value="name">Sort by Name</option>
+                            <option value="price_low">Price: Low to High</option>
+                            <option value="price_high">Price: High to Low</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,21 +43,21 @@
 
     <div class="row" id="productsContainer">
         @forelse($products ?? [] as $product)
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-item" 
-             data-category="{{ $product->category_id }}" 
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-item"
+             data-category="{{ $product->category_id }}"
              data-brand="{{ $product->brand_id }}"
              data-price="{{ $product->price }}">
             <div class="card h-100 product-card">
                 @if($product->image)
-                <img src="{{ $product->image }}" 
-                     class="card-img-top" 
-                     alt="{{ $product->name }} - {{ $product->category->name ?? 'Product' }}" 
+                <img src="{{ $product->image }}"
+                     class="card-img-top"
+                     alt="{{ $product->name }} - {{ $product->category->name ?? 'Product' }}"
                      style="height: 200px; object-fit: cover;"
                      loading="lazy"
                      width="300"
                      height="200">
                 @else
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
                      style="height: 200px;"
                      role="img"
                      aria-label="No image available for {{ $product->name }}">
@@ -67,7 +76,7 @@
                         <strong class="text-primary">${{ number_format($product->price, 2) }}</strong>
                     </p>
                     <div class="mt-auto">
-                        <a href="{{ route('products.show', $product->slug) }}" 
+                        <a href="{{ route('products.show', $product->slug) }}"
                            class="btn btn-primary btn-sm w-100"
                            aria-label="View details for {{ $product->name }}">
                             View Details

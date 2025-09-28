@@ -17,9 +17,6 @@ class PriceSearchService
      *
      * @return array<string, mixed>
      */
-    /**
-     * @return array<string, mixed>
-     */
     public function findBestOffer(string $productName, string $countryCode): array
     {
         $product = Product::where('name', 'like', '%'.$productName.'%')->first();

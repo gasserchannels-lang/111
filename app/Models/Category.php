@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\ValidatesModel;
 use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,9 +24,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read Category|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $children
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
+ * @property Category|null $parent
+ * @property \Illuminate\Database\Eloquent\Collection<int, Category> $children
+ * @property \Illuminate\Database\Eloquent\Collection<int, Product> $products
  *
  * @method static CategoryFactory factory(...$parameters)
  *
@@ -35,6 +36,8 @@ class Category extends Model
 {
     /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    use ValidatesModel;
 
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Category>>
@@ -166,32 +169,6 @@ class Category extends Model
     }
 
     /**
-     * Validate the model attributes.
-     */
-    public function validate(): bool
-    {
-        $validator = validator($this->attributes, $this->getRules());
-
-        if ($validator->fails()) {
-            $this->errors = $validator->errors()->toArray();
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get validation errors.
-     *
-     * @return array<string, string>
-     */
-    public function getErrors(): array
-    {
-        return array_map(fn ($error) => is_string($error) ? $error : 'error', $this->errors ?? []);
-    }
-
-    /**
      * Boot the model.
      */
     protected static function boot()
@@ -214,6 +191,7 @@ class Category extends Model
             }
 
             if ($category->isDirty('parent_id')) {
+                $category->load('parent');
                 $category->level = $category->parent ? $category->parent->level + 1 : 0;
             }
         });

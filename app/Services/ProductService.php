@@ -45,7 +45,7 @@ class ProductService
             );
         }
 
-        return $result; // @phpstan-ignore-line
+        return $result;
     }
 
     /**

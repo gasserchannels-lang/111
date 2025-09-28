@@ -1,0 +1,532 @@
+<?xml version="1.0"?>
+<phpunit xmlns="https://schema.phpunit.de/coverage/1.0">
+  <file name="ProductSchema.php" path="/Schemas">
+    <totals>
+      <lines total="153" comments="133" code="20" executable="0" executed="0" percent="0"/>
+      <methods count="0" tested="0" percent="0"/>
+      <functions count="0" tested="0" percent="0"/>
+      <classes count="0" tested="0" percent="0"/>
+      <traits count="0" tested="0" percent="0"/>
+    </totals>
+    <class name="App\Schemas\ProductSchema" start="31" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <class name="App\Schemas\ProductDetailSchema" start="48" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <class name="App\Schemas\ProductCreateRequestSchema" start="69" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <class name="App\Schemas\ProductUpdateRequestSchema" start="89" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <class name="App\Schemas\BrandSchema" start="107" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <class name="App\Schemas\CategorySchema" start="125" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <class name="App\Schemas\PriceOfferSchema" start="152" executable="0" executed="0" crap="0">
+      <namespace name="App\Schemas"/>
+    </class>
+    <source>
+      <line no="1">
+        <token name="T_OPEN_TAG">&lt;?php</token>
+      </line>
+      <line no="2"/>
+      <line no="3">
+        <token name="T_DECLARE">declare</token>
+        <token name="T_OPEN_BRACKET">(</token>
+        <token name="T_STRING">strict_types</token>
+        <token name="T_EQUAL">=</token>
+        <token name="T_LNUMBER">1</token>
+        <token name="T_CLOSE_BRACKET">)</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="4"/>
+      <line no="5">
+        <token name="T_NAMESPACE">namespace</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_NAME_QUALIFIED">App\Schemas</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="6"/>
+      <line no="7">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="8">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="9">
+        <token name="T_DOC_COMMENT"> *     schema="Product",</token>
+      </line>
+      <line no="10">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="11">
+        <token name="T_DOC_COMMENT"> *     title="Product",</token>
+      </line>
+      <line no="12">
+        <token name="T_DOC_COMMENT"> *     description="Product model",</token>
+      </line>
+      <line no="13">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="14">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="id", type="integer", example=1),</token>
+      </line>
+      <line no="15">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="name", type="string", example="iPhone 15 Pro"),</token>
+      </line>
+      <line no="16">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="slug", type="string", example="iphone-15-pro"),</token>
+      </line>
+      <line no="17">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="description", type="string", example="Latest iPhone with advanced features"),</token>
+      </line>
+      <line no="18">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="price", type="number", format="float", example=999.99),</token>
+      </line>
+      <line no="19">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="image", type="string", nullable=true, example="https://example.com/image.jpg"),</token>
+      </line>
+      <line no="20">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="is_active", type="boolean", example=true),</token>
+      </line>
+      <line no="21">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="category_id", type="integer", example=1),</token>
+      </line>
+      <line no="22">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="brand_id", type="integer", example=1),</token>
+      </line>
+      <line no="23">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="store_id", type="integer", nullable=true, example=1),</token>
+      </line>
+      <line no="24">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="created_at", type="string", format="date-time"),</token>
+      </line>
+      <line no="25">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="updated_at", type="string", format="date-time"),</token>
+      </line>
+      <line no="26">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="brand", ref="#/components/schemas/Brand"),</token>
+      </line>
+      <line no="27">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="category", ref="#/components/schemas/Category"),</token>
+      </line>
+      <line no="28">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="price_offers", type="array", @OA\Items(ref="#/components/schemas/PriceOffer"))</token>
+      </line>
+      <line no="29">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="30">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="31">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">ProductSchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="32"/>
+      <line no="33">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="34">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="35">
+        <token name="T_DOC_COMMENT"> *     schema="ProductDetail",</token>
+      </line>
+      <line no="36">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="37">
+        <token name="T_DOC_COMMENT"> *     title="Product Detail",</token>
+      </line>
+      <line no="38">
+        <token name="T_DOC_COMMENT"> *     description="Detailed product information",</token>
+      </line>
+      <line no="39">
+        <token name="T_DOC_COMMENT"> *     allOf={</token>
+      </line>
+      <line no="40">
+        <token name="T_DOC_COMMENT"> *         @OA\Schema(ref="#/components/schemas/Product"),</token>
+      </line>
+      <line no="41">
+        <token name="T_DOC_COMMENT"> *         @OA\Schema(</token>
+      </line>
+      <line no="42">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="43">
+        <token name="T_DOC_COMMENT"> *             @OA\Property(property="reviews", type="array", @OA\Items(ref="#/components/schemas/Review")),</token>
+      </line>
+      <line no="44">
+        <token name="T_DOC_COMMENT"> *         )</token>
+      </line>
+      <line no="45">
+        <token name="T_DOC_COMMENT"> *     }</token>
+      </line>
+      <line no="46">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="47">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="48">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">ProductDetailSchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="49"/>
+      <line no="50">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="51">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="52">
+        <token name="T_DOC_COMMENT"> *     schema="ProductCreateRequest",</token>
+      </line>
+      <line no="53">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="54">
+        <token name="T_DOC_COMMENT"> *     title="Product Create Request",</token>
+      </line>
+      <line no="55">
+        <token name="T_DOC_COMMENT"> *     description="Request data for creating a product",</token>
+      </line>
+      <line no="56">
+        <token name="T_DOC_COMMENT"> *     required={"name", "slug", "price", "category_id", "brand_id"},</token>
+      </line>
+      <line no="57">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="58">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="name", type="string", example="iPhone 15 Pro"),</token>
+      </line>
+      <line no="59">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="slug", type="string", example="iphone-15-pro"),</token>
+      </line>
+      <line no="60">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="description", type="string", example="Latest iPhone with advanced features"),</token>
+      </line>
+      <line no="61">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="price", type="number", format="float", example=999.99),</token>
+      </line>
+      <line no="62">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="image", type="string", example="https://example.com/image.jpg"),</token>
+      </line>
+      <line no="63">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="is_active", type="boolean", example=true),</token>
+      </line>
+      <line no="64">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="category_id", type="integer", example=1),</token>
+      </line>
+      <line no="65">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="brand_id", type="integer", example=1),</token>
+      </line>
+      <line no="66">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="store_id", type="integer", example=1)</token>
+      </line>
+      <line no="67">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="68">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="69">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">ProductCreateRequestSchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="70"/>
+      <line no="71">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="72">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="73">
+        <token name="T_DOC_COMMENT"> *     schema="ProductUpdateRequest",</token>
+      </line>
+      <line no="74">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="75">
+        <token name="T_DOC_COMMENT"> *     title="Product Update Request",</token>
+      </line>
+      <line no="76">
+        <token name="T_DOC_COMMENT"> *     description="Request data for updating a product",</token>
+      </line>
+      <line no="77">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="78">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="name", type="string", example="iPhone 15 Pro Max"),</token>
+      </line>
+      <line no="79">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="slug", type="string", example="iphone-15-pro-max"),</token>
+      </line>
+      <line no="80">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="description", type="string", example="Updated description"),</token>
+      </line>
+      <line no="81">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="price", type="number", format="float", example=1099.99),</token>
+      </line>
+      <line no="82">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="image", type="string", example="https://example.com/new-image.jpg"),</token>
+      </line>
+      <line no="83">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="is_active", type="boolean", example=false),</token>
+      </line>
+      <line no="84">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="category_id", type="integer", example=2),</token>
+      </line>
+      <line no="85">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="brand_id", type="integer", example=1),</token>
+      </line>
+      <line no="86">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="store_id", type="integer", example=2)</token>
+      </line>
+      <line no="87">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="88">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="89">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">ProductUpdateRequestSchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="90"/>
+      <line no="91">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="92">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="93">
+        <token name="T_DOC_COMMENT"> *     schema="Brand",</token>
+      </line>
+      <line no="94">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="95">
+        <token name="T_DOC_COMMENT"> *     title="Brand",</token>
+      </line>
+      <line no="96">
+        <token name="T_DOC_COMMENT"> *     description="Brand model",</token>
+      </line>
+      <line no="97">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="98">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="id", type="integer", example=1),</token>
+      </line>
+      <line no="99">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="name", type="string", example="Apple"),</token>
+      </line>
+      <line no="100">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="slug", type="string", example="apple"),</token>
+      </line>
+      <line no="101">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="logo", type="string", nullable=true, example="https://example.com/logo.png"),</token>
+      </line>
+      <line no="102">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="is_active", type="boolean", example=true),</token>
+      </line>
+      <line no="103">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="created_at", type="string", format="date-time"),</token>
+      </line>
+      <line no="104">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="updated_at", type="string", format="date-time")</token>
+      </line>
+      <line no="105">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="106">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="107">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">BrandSchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="108"/>
+      <line no="109">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="110">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="111">
+        <token name="T_DOC_COMMENT"> *     schema="Category",</token>
+      </line>
+      <line no="112">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="113">
+        <token name="T_DOC_COMMENT"> *     title="Category",</token>
+      </line>
+      <line no="114">
+        <token name="T_DOC_COMMENT"> *     description="Category model",</token>
+      </line>
+      <line no="115">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="116">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="id", type="integer", example=1),</token>
+      </line>
+      <line no="117">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="name", type="string", example="Smartphones"),</token>
+      </line>
+      <line no="118">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="slug", type="string", example="smartphones"),</token>
+      </line>
+      <line no="119">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="description", type="string", nullable=true, example="Mobile phones and accessories"),</token>
+      </line>
+      <line no="120">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="is_active", type="boolean", example=true),</token>
+      </line>
+      <line no="121">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="created_at", type="string", format="date-time"),</token>
+      </line>
+      <line no="122">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="updated_at", type="string", format="date-time")</token>
+      </line>
+      <line no="123">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="124">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="125">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">CategorySchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="126"/>
+      <line no="127">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="128">
+        <token name="T_DOC_COMMENT"> * @OA\Schema(</token>
+      </line>
+      <line no="129">
+        <token name="T_DOC_COMMENT"> *     schema="PriceOffer",</token>
+      </line>
+      <line no="130">
+        <token name="T_DOC_COMMENT"> *     type="object",</token>
+      </line>
+      <line no="131">
+        <token name="T_DOC_COMMENT"> *     title="Price Offer",</token>
+      </line>
+      <line no="132">
+        <token name="T_DOC_COMMENT"> *     description="Price offer model",</token>
+      </line>
+      <line no="133">
+        <token name="T_DOC_COMMENT"> *</token>
+      </line>
+      <line no="134">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="id", type="integer", example=1),</token>
+      </line>
+      <line no="135">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="product_id", type="integer", example=1),</token>
+      </line>
+      <line no="136">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="store_id", type="integer", example=1),</token>
+      </line>
+      <line no="137">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="price", type="number", format="float", example=899.99),</token>
+      </line>
+      <line no="138">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="currency", type="string", example="USD"),</token>
+      </line>
+      <line no="139">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="product_url", type="string", example="https://store.com/product"),</token>
+      </line>
+      <line no="140">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="affiliate_url", type="string", nullable=true, example="https://affiliate.com/product"),</token>
+      </line>
+      <line no="141">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="in_stock", type="boolean", example=true),</token>
+      </line>
+      <line no="142">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="stock_quantity", type="integer", nullable=true, example=50),</token>
+      </line>
+      <line no="143">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="condition", type="string", example="new"),</token>
+      </line>
+      <line no="144">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="rating", type="number", format="float", nullable=true, example=4.5),</token>
+      </line>
+      <line no="145">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="reviews_count", type="integer", example=120),</token>
+      </line>
+      <line no="146">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="image_url", type="string", nullable=true, example="https://example.com/image.jpg"),</token>
+      </line>
+      <line no="147">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="specifications", type="object", nullable=true),</token>
+      </line>
+      <line no="148">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="created_at", type="string", format="date-time"),</token>
+      </line>
+      <line no="149">
+        <token name="T_DOC_COMMENT"> *     @OA\Property(property="updated_at", type="string", format="date-time")</token>
+      </line>
+      <line no="150">
+        <token name="T_DOC_COMMENT"> * )</token>
+      </line>
+      <line no="151">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="152">
+        <token name="T_FINAL">final</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">PriceOfferSchema</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_OPEN_CURLY">{</token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="153"/>
+    </source>
+  </file>
+</phpunit>

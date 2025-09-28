@@ -25,20 +25,41 @@
     "autoprefixer": "^10.4.21",
     "axios": "^1.6.4",
     "eslint": "^9.35.0",
+    "eslint-plugin-unicorn": "^61.0.2",
     "husky": "^9.1.7",
     "laravel-vite-plugin": "^2.0.1",
+    "license-checker": "^25.0.1",
+    "lint-staged": "^16.2.0",
+    "postcss-scss": "^4.0.9",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^6.0.3",
     "stylelint": "^16.24.0",
     "stylelint-config-standard": "^39.0.0",
+    "stylelint-prettier": "^5.0.3",
     "vite": "^7.1.5",
     "vite-plugin-pwa": "^1.0.3"
   },
   "dependencies": {
-    "gsap": "^3.13.0",
     "@lhci/cli": "^0.12.0",
-    "sonarjs": "^1.0.0",
-    "codecov": "^3.8.0"
+    "codecov": "^3.8.0",
+    "gsap": "^3.13.0"
+  },
+  "lint-staged": {
+    "*.php": [
+      "vendor/bin/pint",
+      "vendor/bin/phpstan analyse --memory-limit=1G --no-progress"
+    ],
+    "resources/js/**/*.{js,vue}": [
+      "npx eslint --fix",
+      "npx prettier --write"
+    ],
+    "resources/**/*.{css,scss,vue}": [
+      "npx stylelint --fix",
+      "npx prettier --write"
+    ],
+    "*.{js,ts,vue,css,scss,json,md}": [
+      "npx prettier --write"
+    ]
   }
 }

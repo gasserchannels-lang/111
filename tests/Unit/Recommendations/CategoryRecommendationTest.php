@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class CategoryRecommendationTest extends TestCase
 {
     #[Test]
@@ -31,10 +34,10 @@ class CategoryRecommendationTest extends TestCase
     {
         $categoryStats = [
             'Electronics' => 1000,
-            'Clothing' => 800,
-            'Books' => 600,
-            'Home' => 400,
-            'Sports' => 200,
+            'Clothing'    => 800,
+            'Books'       => 600,
+            'Home'        => 400,
+            'Sports'      => 200,
         ];
 
         $recommendations = $this->getPopularCategoryRecommendations($categoryStats, 3);
@@ -52,8 +55,8 @@ class CategoryRecommendationTest extends TestCase
         $currentCategory = 'Electronics';
         $categoryRelations = [
             'Electronics' => ['Accessories', 'Gadgets', 'Computers'],
-            'Clothing' => ['Shoes', 'Accessories', 'Jewelry'],
-            'Books' => ['Educational', 'Fiction', 'Non-fiction'],
+            'Clothing'    => ['Shoes', 'Accessories', 'Jewelry'],
+            'Books'       => ['Educational', 'Fiction', 'Non-fiction'],
         ];
 
         $recommendations = $this->getRelatedCategoryRecommendations($currentCategory, $categoryRelations);
@@ -72,7 +75,7 @@ class CategoryRecommendationTest extends TestCase
             'Winter' => ['Winter Clothing', 'Heating', 'Hot Beverages'],
             'Summer' => ['Summer Clothing', 'Cooling', 'Cold Beverages'],
             'Spring' => ['Spring Clothing', 'Gardening', 'Outdoor'],
-            'Fall' => ['Fall Clothing', 'Harvest', 'Indoor'],
+            'Fall'   => ['Fall Clothing', 'Harvest', 'Indoor'],
         ];
 
         $recommendations = $this->getSeasonalCategoryRecommendations($currentSeason, $seasonalCategories);
@@ -88,14 +91,14 @@ class CategoryRecommendationTest extends TestCase
     {
         $userProfile = [
             'age_group' => '25-35',
-            'gender' => 'Female',
-            'location' => 'Urban',
+            'gender'    => 'Female',
+            'location'  => 'Urban',
         ];
 
         $demographicCategories = [
-            '25-35' => ['Electronics', 'Fashion', 'Fitness'],
+            '25-35'  => ['Electronics', 'Fashion', 'Fitness'],
             'Female' => ['Beauty', 'Fashion', 'Home Decor'],
-            'Urban' => ['Tech', 'Fashion', 'Entertainment'],
+            'Urban'  => ['Tech', 'Fashion', 'Entertainment'],
         ];
 
         $recommendations = $this->getDemographicCategoryRecommendations($userProfile, $demographicCategories);
@@ -157,8 +160,8 @@ class CategoryRecommendationTest extends TestCase
     {
         $userPurchases = [
             'Electronics' => 10,
-            'Clothing' => 5,
-            'Books' => 2,
+            'Clothing'    => 5,
+            'Books'       => 2,
         ];
 
         $category = 'Electronics';
@@ -173,9 +176,9 @@ class CategoryRecommendationTest extends TestCase
     {
         $categoryTrends = [
             'Electronics' => ['trend' => 'up', 'growth' => 0.15],
-            'Clothing' => ['trend' => 'stable', 'growth' => 0.02],
-            'Books' => ['trend' => 'down', 'growth' => -0.05],
-            'Fitness' => ['trend' => 'up', 'growth' => 0.25],
+            'Clothing'    => ['trend' => 'stable', 'growth' => 0.02],
+            'Books'       => ['trend' => 'down', 'growth' => -0.05],
+            'Fitness'     => ['trend' => 'up', 'growth' => 0.25],
         ];
 
         $trendingCategories = $this->getTrendingCategoryRecommendations($categoryTrends);
@@ -186,7 +189,8 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $userHistory
+     * @param array<int, array<string, mixed>> $userHistory
+     *
      * @return list<mixed>
      */
     private function getCategoryRecommendations(array $userHistory): array
@@ -204,12 +208,14 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $categoryStats
+     * @param array<string, mixed> $categoryStats
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $categoryStats
+     * @param array<string, mixed> $categoryStats
+     *
      * @return list<string>
      */
     private function getPopularCategoryRecommendations(array $categoryStats, int $limit): array
@@ -220,7 +226,8 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, list<string>>  $categoryRelations
+     * @param array<string, list<string>> $categoryRelations
+     *
      * @return list<string>
      */
     private function getRelatedCategoryRecommendations(string $currentCategory, array $categoryRelations): array
@@ -229,7 +236,8 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, list<string>>  $seasonalCategories
+     * @param array<string, list<string>> $seasonalCategories
+     *
      * @return list<string>
      */
     private function getSeasonalCategoryRecommendations(string $season, array $seasonalCategories): array
@@ -238,13 +246,15 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userProfile
+     * @param array<string, mixed> $userProfile
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $userProfile
-     * @param  array<string, list<string>>  $demographicCategories
+     * @param array<string, mixed>        $userProfile
+     * @param array<string, list<string>> $demographicCategories
+     *
      * @return array<int, string>
      */
     private function getDemographicCategoryRecommendations(array $userProfile, array $demographicCategories): array
@@ -264,13 +274,15 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $allCategories
+     * @param array<int, array<string, mixed>> $allCategories
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  list<string>  $allCategories
-     * @param  list<string>  $availableCategories
+     * @param list<string> $allCategories
+     * @param list<string> $availableCategories
+     *
      * @return array<int, string>
      */
     private function filterCategoriesByAvailability(array $allCategories, array $availableCategories): array
@@ -279,7 +291,8 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  list<array<string, mixed>>  $categories
+     * @param list<array<string, mixed>> $categories
+     *
      * @return list<array<string, mixed>>
      */
     private function rankCategoriesByScore(array $categories): array
@@ -292,7 +305,7 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, int>  $userPurchases
+     * @param array<string, int> $userPurchases
      */
     private function calculateCategoryAffinityScore(array $userPurchases, string $category): float
     {
@@ -303,7 +316,8 @@ class CategoryRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $categoryTrends
+     * @param array<string, array<string, mixed>> $categoryTrends
+     *
      * @return list<string>
      */
     private function getTrendingCategoryRecommendations(array $categoryTrends): array

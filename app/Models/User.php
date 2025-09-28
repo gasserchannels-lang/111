@@ -28,12 +28,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon|null $banned_at
  * @property Carbon|null $ban_expires_at
  * @property string|null $session_id
- * @property-read bool $is_banned
- * @property-read bool $is_ban_expired
- * @property-read Collection<int, Review> $reviews
- * @property-read Collection<int, Wishlist> $wishlists
- * @property-read Collection<int, PriceAlert> $priceAlerts
- * @property-read UserLocaleSetting|null $localeSetting
+ * @property string $role
+
+ * @property Collection<int, Review> $reviews
+ * @property Collection<int, Wishlist> $wishlists
+ * @property Collection<int, PriceAlert> $priceAlerts
+ * @property UserLocaleSetting|null $localeSetting
  *
  * @method static UserFactory factory(...$parameters)
  *
@@ -41,10 +41,12 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens;
 
     /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    use Notifiable;
 
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<User>>
@@ -63,6 +65,8 @@ class User extends Authenticatable
         'banned_at',
         'ban_expires_at',
         'session_id',
+        'role',
+        'password_confirmed_at',
     ];
 
     protected $hidden = [
@@ -80,6 +84,7 @@ class User extends Authenticatable
             'is_blocked' => 'boolean',
             'banned_at' => 'datetime',
             'ban_expires_at' => 'datetime',
+            'password_confirmed_at' => 'datetime',
         ];
     }
 
@@ -104,20 +109,10 @@ class User extends Authenticatable
     }
 
     /**
-     * Intentional PHPMD violation: CamelCaseVariableName.
-     *
      * @return HasMany<PriceAlert, $this>
      */
     public function priceAlerts(): HasMany
     {
-        // snake_case intentionally used to trigger PHPMD rule
-        $user_name = getenv('CI_TEST_USER') ?: 'ci_test_user';
-
-        // use it to avoid "unused variable" static analysis complaints
-        if ($user_name === 'ci_test_user') {
-            // noop
-        }
-
         return $this->hasMany(PriceAlert::class);
     }
 

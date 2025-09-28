@@ -2,38 +2,67 @@
 
 namespace Tests\Feature\Api;
 
-use Tests\Unit\MinimalTestBase;
+use Tests\TestCase;
 
-class ComprehensiveApiTest extends MinimalTestBase
+class ComprehensiveApiTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_basic_functionality(): void
     {
-        // Test basic functionality
-        $this->assertNotEmpty('test');
+        // Test basic API functionality
+        $response = $this->getJson('/api/test');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => ['message' => 'API test route works'],
+            'status' => 'success',
+        ]);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_expected_behavior(): void
     {
-        // Test expected behavior
-        $this->assertNotEmpty('test');
+        // Test expected behavior with health check
+        $response = $this->getJson('/api/health');
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'status',
+            'timestamp',
+            'version',
+        ]);
+        $response->assertJson(['status' => 'ok']);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_validation(): void
     {
-        // Test validation
-        $this->assertNotEmpty('test');
-    }
+        // Test validation with POST /test
+        $response = $this->postJson('/api/test', [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'Validation passed',
+            'data' => [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ],
+        ]);
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
+        // Test validation failure
+        $response = $this->postJson('/api/test', [
+            'name' => '',
+            'email' => 'invalid-email',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonStructure([
+            'message',
+            'errors',
+        ]);
+        $response->assertJsonHasErrors(['name', 'email']);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V2;
 
-use App\Http\Controllers\Api\BaseApiController as V1BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,7 +34,7 @@ use Illuminate\Http\Request;
  *     description="Development Server v2"
  * )
  */
-abstract class BaseApiController extends V1BaseController
+abstract class BaseApiController extends Controller
 {
     protected int $perPage = 20; // Increased default per page
 

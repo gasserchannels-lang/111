@@ -162,7 +162,7 @@ class ReportService
             ],
             'average_price' => array_sum($prices) / count($prices),
             'price_volatility' => count($priceChanges) > 0 ? array_sum($priceChanges) / count($priceChanges) : 0,
-            'price_trend' => $this->calculatePriceTrend(array_map('floatval', $prices)),
+            'price_trend' => $this->calculatePriceTrend(array_map(fn ($price): float => (float) $price, $prices)),
         ];
     }
 
@@ -466,7 +466,7 @@ class ReportService
     /**
      * Get top products.
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
     private function getTopProducts(Carbon $startDate, Carbon $endDate): array
     {
@@ -491,7 +491,7 @@ class ReportService
     /**
      * Get top stores.
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
     private function getTopStores(Carbon $startDate, Carbon $endDate): array
     {
@@ -509,7 +509,7 @@ class ReportService
     /**
      * Get price trends.
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
     private function getPriceTrends(Carbon $startDate, Carbon $endDate): array
     {
@@ -529,7 +529,7 @@ class ReportService
     /**
      * Get most active users.
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
     private function getMostActiveUsers(Carbon $startDate, Carbon $endDate): array
     {
@@ -554,7 +554,7 @@ class ReportService
     /**
      * Get most viewed products.
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
     private function getMostViewedProducts(Carbon $startDate, Carbon $endDate): array
     {

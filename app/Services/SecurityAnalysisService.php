@@ -147,7 +147,7 @@ class SecurityAnalysisService
 
             // Check if middleware is registered in any of the arrays
             return str_contains($kernelContent ?: '', $middlewareClass) ||
-                   str_contains($kernelContent ?: '', $shortClassName);
+                str_contains($kernelContent ?: '', $shortClassName);
         } catch (\Exception) {
             return false;
         }

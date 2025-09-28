@@ -1,52 +1,61 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Models;
 
 use App\Models\Currency;
-use Tests\Unit\MinimalTestBase;
+use App\Models\Language;
+use App\Models\Store;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Tests\TestCase;
 
-class CurrencyTest extends MinimalTestBase
+/**
+ * Unit tests for the Currency model.
+ *
+ * @covers \App\Models\Currency
+ */
+
+/**
+ * @runTestsInSeparateProcesses
+ */
+class CurrencyTest extends TestCase
 {
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_it_can_validate_required_fields(): void
+    /**
+     * Test guarded attributes.
+     */
+    public function test_guarded_attributes(): void
     {
-        // Test that Currency class exists
+        $guarded = [];
+
+        $this->assertEquals($guarded, (new Currency)->getGuarded());
+    }
+
+    /**
+     * Test stores relation is a HasMany instance.
+     */
+    public function test_stores_relation(): void
+    {
         $currency = new Currency;
-        $this->assertInstanceOf(Currency::class, $currency);
 
-        // Test basic functionality
-        $this->assertNotEmpty('test');
+        $relation = $currency->stores();
+
+        $this->assertInstanceOf(HasMany::class, $relation);
+        $this->assertEquals(Store::class, $relation->getRelated()::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_it_can_create_currency(): void
+    /**
+     * Test languages relation is a BelongsToMany instance.
+     */
+    public function test_languages_relation(): void
     {
-        // Test that Currency class exists
         $currency = new Currency;
-        $this->assertInstanceOf(Currency::class, $currency);
 
-        // Test basic functionality
-        $this->assertNotEmpty('test');
-    }
+        $relation = $currency->languages();
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_it_can_save_currency(): void
-    {
-        // Test that Currency class exists
-        $currency = new Currency;
-        $this->assertInstanceOf(Currency::class, $currency);
-
-        // Test basic functionality
-        $this->assertNotEmpty('test');
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
+        $this->assertInstanceOf(BelongsToMany::class, $relation);
+        $this->assertEquals(Language::class, $relation->getRelated()::class);
+        $this->assertEquals('currency_language', $relation->getTable());
     }
 }

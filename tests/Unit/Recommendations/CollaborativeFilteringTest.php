@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class CollaborativeFilteringTest extends TestCase
 {
     #[Test]
@@ -182,12 +185,14 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userRatings
+     * @param array<string, mixed> $userRatings
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, array<string, mixed>>  $userRatings
+     * @param array<string, array<string, mixed>> $userRatings
+     *
      * @return list<string>
      */
     private function findSimilarUsers(array $userRatings, string $targetUser, int $limit): array
@@ -210,8 +215,8 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $user1
-     * @param  array<string, mixed>  $user2
+     * @param array<string, mixed> $user1
+     * @param array<string, mixed> $user2
      */
     private function calculateCosineSimilarity(array $user1, array $user2): float
     {
@@ -242,8 +247,8 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $userRatings
-     * @param  list<string>  $similarUsers
+     * @param array<string, array<string, mixed>> $userRatings
+     * @param list<string>                        $similarUsers
      */
     private function predictRating(array $userRatings, string $targetUser, string $item, array $similarUsers): float
     {
@@ -276,13 +281,15 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $newUser
+     * @param array<string, mixed> $newUser
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $newUser
-     * @param  array<string, int>  $popularItems
+     * @param array<string, mixed> $newUser
+     * @param array<string, int>   $popularItems
+     *
      * @return list<(int|string)>
      */
     private function handleColdStart(array $newUser, array $popularItems, int $limit): array
@@ -293,8 +300,8 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $user1
-     * @param  array<string, mixed>  $user2
+     * @param array<string, mixed> $user1
+     * @param array<string, mixed> $user2
      */
     private function calculatePearsonCorrelation(array $user1, array $user2): float
     {
@@ -338,14 +345,16 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $allItems
+     * @param array<int, array<string, mixed>> $allItems
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  list<string>  $allItems
-     * @param  list<string>  $userPreferences
-     * @param  array<string, mixed>  $userRatings
+     * @param list<string>         $allItems
+     * @param list<string>         $userPreferences
+     * @param array<string, mixed> $userRatings
+     *
      * @return array<int, string>
      */
     private function filterItemsByPreferences(array $allItems, array $userPreferences, array $userRatings): array
@@ -354,7 +363,7 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $itemRatings
+     * @param array<string, array<string, mixed>> $itemRatings
      */
     private function calculateItemBasedSimilarity(array $itemRatings, string $item1, string $item2): float
     {
@@ -373,12 +382,14 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userRatings
+     * @param array<string, mixed> $userRatings
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, array<string, mixed>>  $userRatings
+     * @param array<string, array<string, mixed>> $userRatings
+     *
      * @return list<string>
      */
     private function findSimilarUsersWithMinCommonItems(array $userRatings, string $targetUser, int $minCommonItems): array
@@ -405,8 +416,8 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $userRatings
-     * @param  list<string>  $similarUsers
+     * @param array<string, array<string, mixed>> $userRatings
+     * @param list<string>                        $similarUsers
      */
     private function calculatePredictionConfidence(array $userRatings, string $targetUser, string $item, array $similarUsers): float
     {
@@ -430,12 +441,14 @@ class CollaborativeFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<int, mixed>>  $ratingsMatrix
+     * @param array<int, array<int, mixed>> $ratingsMatrix
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<int, list<int>>  $ratingsMatrix
+     * @param array<int, list<int>> $ratingsMatrix
+     *
      * @return array<string, array<int, array<int, float|int>>>
      */
     private function performMatrixFactorization(array $ratingsMatrix, int $numFactors): array

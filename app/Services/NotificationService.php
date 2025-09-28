@@ -28,7 +28,6 @@ class NotificationService
             // Get users with price alerts for this product
             $priceAlerts = PriceAlert::where('product_id', $product->id)
                 ->where('is_active', true)
-                ->where('target_price', '>=', $newPrice)
                 ->with('user')
                 ->get();
 
@@ -37,7 +36,7 @@ class NotificationService
 
                 if ($user instanceof \App\Models\User && $user->email) {
                     // Send email notification
-                    // $user->notify(new PriceDropNotification($product, $oldPrice, $newPrice, $alert->target_price));
+                    $user->notify(new PriceDropNotification($product, $oldPrice, $newPrice, $alert->target_price));
 
                     // Log the notification
                     $this->auditService->logSensitiveOperation('price_drop_notification', $user, [
@@ -73,7 +72,7 @@ class NotificationService
             $admins = User::where('is_admin', true)->get();
 
             foreach ($admins as $admin) {
-                // $admin->notify(new ProductAddedNotification($product));
+                $admin->notify(new ProductAddedNotification($product));
             }
 
             Log::info('Product added notifications sent to admins', [
@@ -99,13 +98,13 @@ class NotificationService
 
             if ($store && isset($store->contact_email)) {
                 // Send email to store
-                // Mail::to($store->contact_email)->send(new ReviewNotification($product, $reviewer, $rating));
+                Mail::to($store->contact_email)->send(new ReviewNotification($product, $reviewer, $rating));
             }
 
             // Notify admins
             $admins = User::where('is_admin', true)->get();
             foreach ($admins as $admin) {
-                // $admin->notify(new ReviewNotification($product, $reviewer, $rating));
+                $admin->notify(new ReviewNotification($product, $reviewer, $rating));
             }
 
             Log::info('Review notifications sent', [
@@ -132,7 +131,7 @@ class NotificationService
             $users = $userIds === [] ? User::all() : User::whereIn('id', $userIds)->get();
 
             foreach ($users as $user) {
-                // $user->notify(new SystemNotification($title, $message));
+                $user->notify(new SystemNotification($title, $message));
             }
 
             Log::info('System notifications sent', [

@@ -21,20 +21,24 @@
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
     <link rel="preload" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" as="style">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    
+
     <!-- Critical CSS -->
     <style>{!! file_exists(public_path('build/manifest.json')) ? \Illuminate\Support\Facades\File::get(resource_path('css/critical.css')) : \Illuminate\Support\Facades\File::get(resource_path('css/critical.css')) !!}</style>
-    
+
     <!-- Additional CSS -->
     @stack('styles')
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
     <!-- Livewire -->
     @livewireStyles
 </head>
 <body class="font-sans antialiased">
+    <!-- Skip Links for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#navigation" class="skip-link">Skip to navigation</a>
+
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 
@@ -48,17 +52,17 @@
         @endif
 
         <!-- Page Content -->
-        <main>
+        <main id="main-content" role="main">
             @yield('content')
         </main>
-        
+
         <!-- Footer -->
         @include('layouts.footer')
     </div>
-    
+
     <!-- Livewire -->
     @livewireScripts
-    
+
     <!-- Additional JS -->
     @stack('scripts')
 </body>

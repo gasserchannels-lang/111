@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>My Wishlist</h1>
-            
+
             @if($wishlistItems->count() > 0)
                 <div class="row">
                     @foreach($wishlistItems as $item)
@@ -21,12 +21,12 @@
                                     <p class="card-text">{{ Str::limit($item->product->description, 100) }}</p>
                                     <p class="card-text"><strong>${{ $item->product->price }}</strong></p>
                                     <div class="d-flex justify-content-between">
-                                        <a href="#" class="btn btn-primary btn-sm">View Product</a>
+                                        <a href="#" class="btn btn-primary btn-sm" aria-label="View details for {{ $item->product->name }}">View Product</a>
                                         <form method="POST" action="{{ route('wishlist.destroy', $item->id) }}" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="product_id" value="{{ $item->product->id }}">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Remove {{ $item->product->name }} from wishlist">Remove</button>
                                         </form>
                                     </div>
                                 </div>

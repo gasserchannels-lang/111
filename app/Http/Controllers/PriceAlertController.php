@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePriceAlertRequest;
+use App\Http\Requests\UpdatePriceAlertRequest;
 use App\Models\PriceAlert;
 use App\Models\Product;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\Request;
 
 class PriceAlertController extends Controller
 {
@@ -30,14 +31,8 @@ class PriceAlertController extends Controller
         return view('price-alerts.create', ['product' => $product]);
     }
 
-    public function store(Request $request, Guard $auth): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+    public function store(StorePriceAlertRequest $request, Guard $auth): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'target_price' => 'required|numeric|min:0.01',
-            'repeat_alert' => 'nullable|boolean',
-        ]);
-
         $created = $auth->user()?->priceAlerts()->create([
             'product_id' => $request->product_id,
             'target_price' => $request->target_price,
@@ -88,16 +83,11 @@ class PriceAlertController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
+    public function update(UpdatePriceAlertRequest $request, PriceAlert $priceAlert, Guard $auth): \Illuminate\Http\RedirectResponse
     {
         if ($priceAlert->user_id !== $auth->id()) {
             abort(403, self::UNAUTHORIZED_MESSAGE);
         }
-
-        $request->validate([
-            'target_price' => 'required|numeric|min:0.01',
-            'repeat_alert' => 'nullable|boolean',
-        ]);
 
         $priceAlert->update([
             'target_price' => $request->target_price,

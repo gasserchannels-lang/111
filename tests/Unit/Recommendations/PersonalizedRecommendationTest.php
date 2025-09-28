@@ -45,9 +45,9 @@ class PersonalizedRecommendationTest extends BaseTest
     public function it_considers_user_preferences(): void
     {
         $userPreferences = [
-            'preferred_brands' => ['Apple', 'Samsung'],
+            'preferred_brands'     => ['Apple', 'Samsung'],
             'preferred_categories' => ['Smartphones', 'Laptops'],
-            'price_range' => ['min' => 500, 'max' => 2000],
+            'price_range'          => ['min' => 500, 'max' => 2000],
         ];
 
         $recommendations = $this->generateRecommendations([], $userPreferences);
@@ -114,8 +114,8 @@ class PersonalizedRecommendationTest extends BaseTest
     {
         $userDemographics = [
             'age_group' => '25-35',
-            'gender' => 'male',
-            'location' => 'urban',
+            'gender'    => 'male',
+            'location'  => 'urban',
         ];
 
         $recommendations = $this->generateRecommendations([], [], [], null, $userDemographics);
@@ -163,13 +163,29 @@ class PersonalizedRecommendationTest extends BaseTest
 
         $userPreferences = [
             'price_sensitivity' => 'high', // User prefers lower prices
-            'budget' => 800.00,
+            'budget'            => 800.00,
         ];
 
         $recommendations = $this->generateRecommendations($userHistory, $userPreferences);
 
+        // Assert that recommendations are generated
+        $this->assertNotEmpty($recommendations);
+
+        // For price-sensitive users, most recommendations should be within budget
+        $budgetCompliantCount = 0;
         foreach ($recommendations as $recommendation) {
-            // Simplified check
+            if ($recommendation['price'] <= $userPreferences['budget']) {
+                $budgetCompliantCount++;
+            }
+        }
+
+        // At least some recommendations should be within budget for price-sensitive users
+        $this->assertGreaterThan(0, $budgetCompliantCount);
+
+        // Verify that recommendations have price information
+        foreach ($recommendations as $recommendation) {
+            $this->assertArrayHasKey('price', $recommendation);
+            $this->assertIsNumeric($recommendation['price']);
         }
     }
 
@@ -183,9 +199,26 @@ class PersonalizedRecommendationTest extends BaseTest
             ['user_id' => 4, 'purchased_products' => [2, 3, 5]],
         ];
 
-        $recommendations = $this->generateRecommendations([], [], [], null, null, null, $similarUsers);
+        $recommendations = $this->generateRecommendations([], [], [], null, null, 10, $similarUsers);
 
-        // Simplified check
+        // Assert that recommendations are generated based on similar users
+        $this->assertNotEmpty($recommendations);
+
+        // Verify that recommendations have the expected structure
+        foreach ($recommendations as $recommendation) {
+            $this->assertArrayHasKey('product_id', $recommendation);
+            $this->assertArrayHasKey('name', $recommendation);
+            $this->assertArrayHasKey('brand', $recommendation);
+            $this->assertArrayHasKey('category', $recommendation);
+            $this->assertArrayHasKey('price', $recommendation);
+        }
+
+        // Verify that we have multiple recommendations (collaborative filtering should provide variety)
+        $this->assertGreaterThan(1, count($recommendations));
+
+        // Verify that product IDs are unique
+        $productIds = array_column($recommendations, 'product_id');
+        $this->assertEquals(count($productIds), count(array_unique($productIds)));
     }
 
     #[Test]
@@ -233,11 +266,12 @@ class PersonalizedRecommendationTest extends BaseTest
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $userHistory
-     * @param  array<string, mixed>  $userPreferences
-     * @param  array<int, array<string, mixed>>  $userRatings
-     * @param  array<string, mixed>|null  $demographics
-     * @param  array<int, array<string, mixed>>|null  $similarUsers
+     * @param array<int, array<string, mixed>>      $userHistory
+     * @param array<string, mixed>                  $userPreferences
+     * @param array<int, array<string, mixed>>      $userRatings
+     * @param array<string, mixed>|null             $demographics
+     * @param array<int, array<string, mixed>>|null $similarUsers
+     *
      * @return array<int, array<string, mixed>>
      */
     private function generateRecommendations(
@@ -259,26 +293,40 @@ class PersonalizedRecommendationTest extends BaseTest
 
             for ($i = 1; $i <= $maxRecommendations; $i++) {
                 $recommendations[] = [
-                    'product_id' => $i + 100,
-                    'name' => "Recommended Product {$i}",
-                    'brand' => $preferredBrand,
-                    'category' => $preferredCategory,
-                    'price' => 500 + ($i * 100),
-                    'is_available' => true,
+                    'product_id'     => $i + 100,
+                    'name'           => "Recommended Product {$i}",
+                    'brand'          => $preferredBrand,
+                    'category'       => $preferredCategory,
+                    'price'          => 500 + ($i * 100),
+                    'is_available'   => true,
                     'stock_quantity' => 10,
                     'specifications' => ['storage' => '256GB', 'color' => 'Space Black'],
+                ];
+            }
+        } elseif ($similarUsers !== null && ! empty($similarUsers)) {
+            // Return collaborative filtering recommendations
+            for ($i = 1; $i <= $maxRecommendations; $i++) {
+                $recommendations[] = [
+                    'product_id'     => $i + 300,
+                    'name'           => "Collaborative Product {$i}",
+                    'brand'          => 'Samsung',
+                    'category'       => 'Smartphones',
+                    'price'          => 400 + ($i * 75),
+                    'is_available'   => true,
+                    'stock_quantity' => 20,
+                    'specifications' => ['storage' => '128GB', 'color' => 'Blue'],
                 ];
             }
         } else {
             // Return popular products
             for ($i = 1; $i <= $maxRecommendations; $i++) {
                 $recommendations[] = [
-                    'product_id' => $i + 200,
-                    'name' => "Popular Product {$i}",
-                    'brand' => 'Apple',
-                    'category' => 'Smartphones',
-                    'price' => 600 + ($i * 50),
-                    'is_available' => true,
+                    'product_id'     => $i + 200,
+                    'name'           => "Popular Product {$i}",
+                    'brand'          => 'Apple',
+                    'category'       => 'Smartphones',
+                    'price'          => 600 + ($i * 50),
+                    'is_available'   => true,
                     'stock_quantity' => 15,
                     'specifications' => ['storage' => '128GB', 'color' => 'Silver'],
                 ];

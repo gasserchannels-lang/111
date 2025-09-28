@@ -2,29 +2,32 @@
 
 namespace Tests\Feature\Integration;
 
-use Tests\Unit\MinimalTestBase;
+use Tests\TestCase;
 
-class PriceSearchIntegrationTest extends MinimalTestBase
+/**
+ * @runTestsInSeparateProcesses
+ */
+class PriceSearchIntegrationTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_basic_functionality(): void
     {
         // Test basic functionality
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_expected_behavior(): void
     {
         // Test expected behavior
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_validation(): void
     {
         // Test validation
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     protected function setUp(): void

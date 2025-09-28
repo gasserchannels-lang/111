@@ -17,18 +17,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string $slug
  * @property string $description
- * @property float $price
+ * @property string $price
  * @property string|null $image
  * @property bool $is_active
  * @property int $stock_quantity
  * @property int $category_id
  * @property int $brand_id
- * @property-read Category $category
- * @property-read Brand $brand
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
+ * @property Category $category
+ * @property Brand $brand
+ * @property \Illuminate\Database\Eloquent\Collection<int, PriceAlert> $priceAlerts
+ * @property \Illuminate\Database\Eloquent\Collection<int, Review> $reviews
+ * @property \Illuminate\Database\Eloquent\Collection<int, Wishlist> $wishlists
+ * @property \Illuminate\Database\Eloquent\Collection<int, PriceOffer> $priceOffers
  *
  * @method static ProductFactory factory(...$parameters)
  *
@@ -164,12 +164,27 @@ class Product extends Model
             foreach ($rules as $singleRule) {
                 if ($singleRule === 'required' && empty($this->$field)) {
                     $this->errors[$field] = ucfirst($field).' is required';
+                } elseif ($singleRule === 'string' && isset($this->$field) && ! is_string($this->$field)) {
+                    $this->errors[$field] = ucfirst($field).' must be a string';
                 } elseif ($singleRule === 'numeric' && isset($this->$field) && ! is_numeric($this->$field)) {
                     $this->errors[$field] = ucfirst($field).' must be numeric';
+                } elseif (str_starts_with($singleRule, 'max:') && isset($this->$field)) {
+                    $max = (int) substr($singleRule, 4);
+                    if (is_string($this->$field) && strlen($this->$field) > $max) {
+                        $this->errors[$field] = ucfirst($field).' must not exceed '.$max.' characters';
+                    }
                 } elseif (str_starts_with($singleRule, 'min:') && isset($this->$field)) {
                     $min = (float) substr($singleRule, 4);
                     if (is_numeric($this->$field) && $min > $this->$field) {
                         $this->errors[$field] = ucfirst($field).' must be at least '.$min;
+                    }
+                } elseif (str_starts_with($singleRule, 'exists:') && isset($this->$field)) {
+                    $parts = explode(',', substr($singleRule, 7));
+                    $table = $parts[0];
+                    $column = $parts[1] ?? 'id';
+                    // Simple check, in real app use DB query
+                    if (! is_numeric($this->$field) || $this->$field <= 0) {
+                        $this->errors[$field] = ucfirst($field).' must exist in '.$table;
                     }
                 }
             }

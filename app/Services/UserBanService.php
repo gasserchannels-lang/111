@@ -26,8 +26,8 @@ final class UserBanService
      */
     public function banUser(User $user, string $reason, ?string $description = null, ?Carbon $expiresAt = null): bool
     {
-        if (! array_key_exists($reason, self::BAN_REASONS)) {
-            $reason = 'other';
+        if (empty($reason) || ! array_key_exists($reason, self::BAN_REASONS)) {
+            return false;
         }
 
         $user->is_blocked = true;

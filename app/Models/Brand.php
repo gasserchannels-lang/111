@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\ValidatesModel;
 use Database\Factories\BrandFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +24,7 @@ use RuntimeException;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
+ * @property \Illuminate\Database\Eloquent\Collection<int, Product> $products
  *
  * @method static BrandFactory factory(...$parameters)
  *
@@ -34,12 +35,13 @@ class Brand extends Model
     /** @phpstan-ignore-next-line */
     use HasFactory;
 
+    use SoftDeletes;
+    use ValidatesModel;
+
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Brand>>
      */
     protected static $factory = \Database\Factories\BrandFactory::class;
-
-    use SoftDeletes;
 
     /**
      * Create a new factory instance for the model.
@@ -146,35 +148,6 @@ class Brand extends Model
     public function getRules(): array
     {
         return $this->rules;
-    }
-
-    /**
-     * Validate the model attributes.
-     */
-    public function validate(): bool
-    {
-        $validator = validator($this->attributes, $this->getRules());
-
-        if ($validator->fails()) {
-            $this->errors = $validator->errors()->toArray();
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get validation errors.
-     *
-     * @return array<string, string>
-     */
-    /**
-     * @return array<string, string>
-     */
-    public function getErrors(): array
-    {
-        return array_map(fn ($error) => is_string($error) ? $error : 'error', $this->errors ?? []);
     }
 
     /**

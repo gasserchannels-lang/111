@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBrandRequest;
+use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class BrandController extends Controller
@@ -32,18 +33,9 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreBrandRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:brands',
-            'slug' => 'required|string|max:255|unique:brands',
-            'description' => 'nullable|string',
-            'logo_url' => 'nullable|url|max:255',
-            'website_url' => 'nullable|url|max:255',
-            'is_active' => 'boolean',
-        ]);
-
-        Brand::create($request->all());
+        Brand::create($request->validated());
 
         return redirect()->route('brands.index')
             ->with('success', 'Brand created successfully.');
@@ -70,18 +62,9 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand): RedirectResponse
+    public function update(UpdateBrandRequest $request, Brand $brand): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:brands,name,'.$brand->id,
-            'slug' => 'required|string|max:255|unique:brands,slug,'.$brand->id,
-            'description' => 'nullable|string',
-            'logo_url' => 'nullable|url|max:255',
-            'website_url' => 'nullable|url|max:255',
-            'is_active' => 'boolean',
-        ]);
-
-        $brand->update($request->all());
+        $brand->update($request->validated());
 
         return redirect()->route('brands.index')
             ->with('success', 'Brand updated successfully.');

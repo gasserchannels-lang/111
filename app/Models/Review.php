@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_approved
  * @property array<string, mixed> $helpful_votes
  * @property int $helpful_count
- * @property-read User $user
- * @property-read Product $product
+ * @property User $user
+ * @property Product $product
  *
  * @method static ReviewFactory factory(...$parameters)
  *

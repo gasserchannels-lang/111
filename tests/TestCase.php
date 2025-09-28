@@ -4,9 +4,15 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-abstract class TestCase extends BaseTestCase
+/**
+ * @runTestsInSeparateProcesses
+ *
+ * @preserveGlobalState disabled
+ */
+class TestCase extends BaseTestCase
 {
-    use CreatesApplication, DatabaseSetup;
+    use CreatesApplication;
+    use DatabaseSetup;
 
     /**
      * Set up the test environment.
@@ -22,10 +28,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function tearDown(): void
     {
-        // Rollback any remaining transactions
-        while (\DB::transactionLevel() > 0) {
-            \DB::rollBack();
-        }
+        // Clean up database
+        $this->tearDownDatabase();
 
         // Clean up Mockery
         if (class_exists(\Mockery::class)) {

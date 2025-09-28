@@ -2,14 +2,15 @@ name: Laravel CI
 
 on:
   push:
-    branches: ['**']
+    branches: ["**"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -18,15 +19,23 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: bcmath, ctype, fileinfo, json, mbstring, openssl, pdo_mysql, tokenizer, xml, gd, zip
-          coverage: none # We can enable this later if needed
+          php-version: "8.2"
+          extensions: bcmath, ctype, fileinfo, json, mbstring, openssl, pdo_mysql, tokenizer, xml, gd, zip, xdebug
+          coverage: xdebug
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install Composer Dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader --no-scripts
@@ -63,6 +72,19 @@ jobs:
       - name: Build Frontend Assets
         run: npm run build
 
+      - name: Run Frontend Quality Checks
+        run: |
+          echo "Running ESLint..."
+          npx eslint resources/js --ext .js,.vue,.ts --config=eslint.config.js
+          echo "Running Stylelint..."
+          npx stylelint "resources/**/*.{css,scss,vue}" --config=.stylelintrc.json
+          echo "Running Prettier check..."
+          npx prettier --check "resources/**/*.{js,css,scss,vue}"
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
       - name: Verify Laravel Application
         run: |
           php artisan config:clear
@@ -75,22 +97,96 @@ jobs:
           SESSION_DRIVER: array
 
       - name: Run Laravel Pint (Code Style)
-        run: vendor/bin/pint --test
+        run: vendor/bin/pint --test --configuration=pint.json
         env:
           APP_ENV: testing
           CACHE_DRIVER: array
           SESSION_DRIVER: array
 
       - name: Run PHPStan (Static Analysis)
-        run: vendor/bin/phpstan analyse --memory-limit=1G
+        run: vendor/bin/phpstan analyse --memory-limit=1G --configuration=phpstan.neon
         env:
           APP_ENV: testing
           CACHE_DRIVER: array
           SESSION_DRIVER: array
 
-      - name: Run PHPUnit Tests
-        run: vendor/bin/phpunit
+      - name: Run Psalm Static Analysis
+        run: vendor/bin/psalm --config=psalm.xml
         env:
           APP_ENV: testing
           CACHE_DRIVER: array
           SESSION_DRIVER: array
+
+      - name: Run PHPMD Code Smell Detector
+        run: vendor/bin/phpmd app text phpmd.xml
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Run Deptrac Architecture Analysis
+        run: vendor/bin/deptrac analyse --config-file=deptrac.yaml
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Run Composer Audit for Security
+        run: composer audit
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Run Unit Tests with Coverage
+        run: vendor/bin/phpunit tests/Unit --coverage-clover=coverage-unit.xml --coverage-html=coverage-unit --configuration=phpunit.xml
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Run Feature Tests with Coverage
+        run: vendor/bin/phpunit tests/Feature --coverage-clover=coverage-feature.xml --coverage-html=coverage-feature --configuration=phpunit.xml
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Run Integration Tests
+        run: vendor/bin/phpunit tests/Integration --configuration=phpunit.xml
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Run Mutation Testing
+        run: vendor/bin/infection --configuration=infection.json.dist --min-msi=80 --min-covered-msi=80
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Setup Chrome for Browser Tests
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      - name: Run Browser Tests (Dusk)
+        run: php artisan dusk
+        env:
+          APP_ENV: testing
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            coverage-unit.xml
+            coverage-feature.xml
+            coverage-unit/
+            coverage-feature/
+            infection.log
+            infection-summary.log

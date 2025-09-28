@@ -4,6 +4,9 @@ namespace Tests\Security;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class DataEncryptionTest extends TestCase
 {
     public function test_data_encryption(): void

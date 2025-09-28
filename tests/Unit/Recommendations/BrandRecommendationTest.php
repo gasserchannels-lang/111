@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class BrandRecommendationTest extends TestCase
 {
     #[Test]
@@ -13,10 +16,10 @@ class BrandRecommendationTest extends TestCase
     public function it_recommends_brands_based_on_user_preferences(): void
     {
         $userPreferences = [
-            'Apple' => 0.9,
+            'Apple'   => 0.9,
             'Samsung' => 0.7,
-            'Sony' => 0.6,
-            'LG' => 0.4,
+            'Sony'    => 0.6,
+            'LG'      => 0.4,
         ];
 
         $recommendations = $this->getBrandRecommendations($userPreferences, 3);
@@ -34,15 +37,15 @@ class BrandRecommendationTest extends TestCase
         $category = 'Electronics';
         $brandPopularity = [
             'Electronics' => [
-                'Apple' => 1000,
+                'Apple'   => 1000,
                 'Samsung' => 800,
-                'Sony' => 600,
-                'LG' => 400,
+                'Sony'    => 600,
+                'LG'      => 400,
             ],
             'Clothing' => [
-                'Nike' => 1200,
+                'Nike'   => 1200,
                 'Adidas' => 900,
-                'Puma' => 500,
+                'Puma'   => 500,
             ],
         ];
 
@@ -59,8 +62,8 @@ class BrandRecommendationTest extends TestCase
     {
         $currentBrand = 'Apple';
         $brandSimilarity = [
-            'Apple' => ['Samsung', 'Google', 'Microsoft'],
-            'Nike' => ['Adidas', 'Puma', 'Under Armour'],
+            'Apple'     => ['Samsung', 'Google', 'Microsoft'],
+            'Nike'      => ['Adidas', 'Puma', 'Under Armour'],
             'Coca-Cola' => ['Pepsi', 'Sprite', 'Fanta'],
         ];
 
@@ -77,9 +80,9 @@ class BrandRecommendationTest extends TestCase
     {
         $userBudget = 500;
         $brandPriceRanges = [
-            'Apple' => ['min' => 800, 'max' => 2000],
+            'Apple'   => ['min' => 800, 'max' => 2000],
             'Samsung' => ['min' => 300, 'max' => 1500],
-            'Xiaomi' => ['min' => 100, 'max' => 600],
+            'Xiaomi'  => ['min' => 100, 'max' => 600],
             'OnePlus' => ['min' => 400, 'max' => 800],
         ];
 
@@ -95,11 +98,11 @@ class BrandRecommendationTest extends TestCase
     public function it_recommends_brands_based_on_quality_rating(): void
     {
         $brandRatings = [
-            'Apple' => 4.8,
+            'Apple'   => 4.8,
             'Samsung' => 4.5,
-            'Sony' => 4.3,
-            'LG' => 4.0,
-            'Xiaomi' => 3.8,
+            'Sony'    => 4.3,
+            'LG'      => 4.0,
+            'Xiaomi'  => 3.8,
         ];
 
         $minRating = 4.2;
@@ -118,10 +121,10 @@ class BrandRecommendationTest extends TestCase
     {
         $userRegion = 'US';
         $brandAvailability = [
-            'Apple' => ['US', 'EU', 'Asia'],
+            'Apple'   => ['US', 'EU', 'Asia'],
             'Samsung' => ['US', 'EU', 'Asia'],
-            'Xiaomi' => ['Asia', 'EU'],
-            'Huawei' => ['Asia', 'EU'],
+            'Xiaomi'  => ['Asia', 'EU'],
+            'Huawei'  => ['Asia', 'EU'],
         ];
 
         $availableBrands = $this->getAvailableBrandsInRegion($userRegion, $brandAvailability);
@@ -155,9 +158,9 @@ class BrandRecommendationTest extends TestCase
     public function it_calculates_brand_loyalty_score(): void
     {
         $userPurchases = [
-            'Apple' => 5,
+            'Apple'   => 5,
             'Samsung' => 2,
-            'Sony' => 1,
+            'Sony'    => 1,
         ];
 
         $brand = 'Apple';
@@ -171,10 +174,10 @@ class BrandRecommendationTest extends TestCase
     public function it_recommends_trending_brands(): void
     {
         $brandTrends = [
-            'Apple' => ['trend' => 'stable', 'growth' => 0.05],
+            'Apple'   => ['trend' => 'stable', 'growth' => 0.05],
             'Samsung' => ['trend' => 'up', 'growth' => 0.15],
-            'Xiaomi' => ['trend' => 'up', 'growth' => 0.25],
-            'LG' => ['trend' => 'down', 'growth' => -0.10],
+            'Xiaomi'  => ['trend' => 'up', 'growth' => 0.25],
+            'LG'      => ['trend' => 'down', 'growth' => -0.10],
         ];
 
         $trendingBrands = $this->getTrendingBrands($brandTrends);
@@ -189,9 +192,9 @@ class BrandRecommendationTest extends TestCase
     public function it_handles_brand_recommendation_weights(): void
     {
         $brands = [
-            'Apple' => ['preference' => 0.8, 'popularity' => 0.9, 'quality' => 0.95],
+            'Apple'   => ['preference' => 0.8, 'popularity' => 0.9, 'quality' => 0.95],
             'Samsung' => ['preference' => 0.6, 'popularity' => 0.8, 'quality' => 0.85],
-            'Sony' => ['preference' => 0.7, 'popularity' => 0.6, 'quality' => 0.9],
+            'Sony'    => ['preference' => 0.7, 'popularity' => 0.6, 'quality' => 0.9],
         ];
 
         $weights = ['preference' => 0.4, 'popularity' => 0.3, 'quality' => 0.3];
@@ -205,7 +208,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userPreferences
+     * @param array<string, mixed> $userPreferences
+     *
      * @return list<string>
      */
     private function getBrandRecommendations(array $userPreferences, int $limit): array
@@ -216,7 +220,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $brandPopularity
+     * @param array<string, array<string, mixed>> $brandPopularity
+     *
      * @return list<string>
      */
     private function getPopularBrandsInCategory(string $category, array $brandPopularity, int $limit): array
@@ -232,7 +237,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, list<string>>  $brandSimilarity
+     * @param array<string, list<string>> $brandSimilarity
+     *
      * @return list<string>
      */
     private function getSimilarBrandRecommendations(string $currentBrand, array $brandSimilarity): array
@@ -241,7 +247,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $brandPriceRanges
+     * @param array<string, array<string, mixed>> $brandPriceRanges
+     *
      * @return list<string>
      */
     private function getBrandsInPriceRange(float $budget, array $brandPriceRanges): array
@@ -258,7 +265,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $brandRatings
+     * @param array<string, mixed> $brandRatings
+     *
      * @return list<string>
      */
     private function getHighRatedBrands(array $brandRatings, float $minRating): array
@@ -269,7 +277,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, list<string>>  $brandAvailability
+     * @param array<string, list<string>> $brandAvailability
+     *
      * @return list<string>
      */
     private function getAvailableBrandsInRegion(string $region, array $brandAvailability): array
@@ -286,7 +295,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $purchaseHistory
+     * @param array<int, array<string, mixed>> $purchaseHistory
+     *
      * @return list<string>
      */
     private function getBrandsFromPurchaseHistory(array $purchaseHistory, int $limit): array
@@ -306,7 +316,7 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, int>  $userPurchases
+     * @param array<string, int> $userPurchases
      */
     private function calculateBrandLoyaltyScore(array $userPurchases, string $brand): float
     {
@@ -317,7 +327,8 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $brandTrends
+     * @param array<string, array<string, mixed>> $brandTrends
+     *
      * @return list<string>
      */
     private function getTrendingBrands(array $brandTrends): array
@@ -334,13 +345,15 @@ class BrandRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $brands
+     * @param array<int, array<string, mixed>> $brands
+     *
      * @return list<string>
      */
 
     /**
-     * @param  array<string, array<string, float>>  $brands
-     * @param  array<string, float>  $weights
+     * @param array<string, array<string, float>> $brands
+     * @param array<string, float>                $weights
+     *
      * @return list<array{brand: string, score: float}>
      */
     private function rankBrandsByWeightedScore(array $brands, array $weights): array

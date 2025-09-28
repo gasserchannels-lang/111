@@ -35,8 +35,9 @@
                                 <form method="POST" action="{{ route('cart.update') }}" class="d-flex gap-2">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $item->id }}">
-                                    <input name="quantity" type="number" value="{{ $item->quantity }}" min="1" class="form-control form-control-sm" style="width:80px">
-                                    <button class="btn btn-sm btn-outline-primary" type="submit">{{ __('messages.update') }}</button>
+                                    <label for="quantity-{{ $item->id }}" class="sr-only">Quantity for {{ $item->name }}</label>
+                                    <input name="quantity" type="number" id="quantity-{{ $item->id }}" value="{{ $item->quantity }}" min="1" class="form-control form-control-sm" style="width:80px" aria-label="Quantity for {{ $item->name }}">
+                                    <button class="btn btn-sm btn-outline-primary" type="submit" aria-label="Update quantity for {{ $item->name }}">{{ __('messages.update') }}</button>
                                 </form>
                             </td>
                             <td>${{ number_format($item->price * $item->quantity, 2) }}</td>
@@ -66,5 +67,3 @@
     @endif
 </div>
 @endsection
-
-

@@ -18,9 +18,9 @@ use InvalidArgumentException;
  * @property int $currency_id
  * @property string|null $ip_address
  * @property string|null $country_code
- * @property-read User|null $user
- * @property-read Language $language
- * @property-read Currency $currency
+ * @property User|null $user
+ * @property Language $language
+ * @property Currency $currency
  *
  * @method static UserLocaleSettingFactory factory(...$parameters)
  *

@@ -53,7 +53,7 @@ class AdminController extends Controller
      */
     public function products(): View
     {
-        $products = Product::with(['brand', 'category', 'priceOffers'])
+        $products = Product::with(['brand', 'category.parent', 'priceOffers'])
             ->paginate(20);
 
         return view('admin.products', ['products' => $products]);
@@ -92,9 +92,16 @@ class AdminController extends Controller
     /**
      * Toggle user admin status.
      */
-    public function toggleUserAdmin(\App\Models\User $user): \Illuminate\Http\RedirectResponse
+    public function toggleUserAdmin(\App\Models\User $user): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $user->update(['is_admin' => ! $user->is_admin]);
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User admin status updated successfully.',
+            ]);
+        }
 
         return redirect()->back()
             ->with('success', 'User admin status updated successfully.');

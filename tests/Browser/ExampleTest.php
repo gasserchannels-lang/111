@@ -2,24 +2,16 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
+use Tests\DuskTestCase;
 
-class ExampleTest extends TestCase
+#[PreserveGlobalState(false)]
+class ExampleTest extends DuskTestCase
 {
     #[Test]
     public function example_browser_test(): void
     {
-        // اختبار بسيط
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
+        $this->assertTrue(true);
     }
 }

@@ -19,11 +19,11 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $words = $this->faker->unique()->words(2, true);
+        $words = $this->faker->words(2, true);
 
         return [
             'name' => (is_string($words) ? $words : '').' Category',
-            'slug' => $this->faker->unique()->slug(2),
+            'slug' => $this->faker->slug(2),
             'description' => $this->faker->sentence(),
             'parent_id' => null,
             'level' => 0,

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/var/www/html/phpunit.xml" tests="6" assertions="7" errors="3" failures="1" skipped="0" time="20.137204">
+    <testsuite name="Unit" tests="6" assertions="7" errors="3" failures="1" skipped="0" time="20.137204">
+      <testsuite name="Tests\Unit\Services\ExternalStoreServiceTest" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" tests="6" assertions="7" errors="3" failures="1" skipped="0" time="20.137204">
+        <testcase name="it_searches_products_across_all_stores" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" line="33" class="Tests\Unit\Services\ExternalStoreServiceTest" classname="Tests.Unit.Services.ExternalStoreServiceTest" assertions="0" time="14.333035">
+          <error type="Error">Tests\Unit\Services\ExternalStoreServiceTest::it_searches_products_across_all_stores
+Error: Cannot use object of type Closure as array
+
+/var/www/html/app/Services/ExternalStoreService.php:154
+/var/www/html/app/Services/ExternalStoreService.php:42
+/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php:77</error>
+        </testcase>
+        <testcase name="it_handles_api_failure_gracefully" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" line="87" class="Tests\Unit\Services\ExternalStoreServiceTest" classname="Tests.Unit.Services.ExternalStoreServiceTest" assertions="0" time="1.598197">
+          <error type="Error">Tests\Unit\Services\ExternalStoreServiceTest::it_handles_api_failure_gracefully
+Error: Cannot use object of type Closure as array
+
+/var/www/html/app/Services/ExternalStoreService.php:154
+/var/www/html/app/Services/ExternalStoreService.php:42
+/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php:115</error>
+        </testcase>
+        <testcase name="it_gets_product_details_with_cache" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" line="123" class="Tests\Unit\Services\ExternalStoreServiceTest" classname="Tests.Unit.Services.ExternalStoreServiceTest" assertions="1" time="0.813183"/>
+        <testcase name="it_returns_null_for_invalid_store" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" line="143" class="Tests\Unit\Services\ExternalStoreServiceTest" classname="Tests.Unit.Services.ExternalStoreServiceTest" assertions="1" time="0.765044"/>
+        <testcase name="it_syncs_store_products" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" line="157" class="Tests\Unit\Services\ExternalStoreServiceTest" classname="Tests.Unit.Services.ExternalStoreServiceTest" assertions="0" time="1.630370">
+          <error type="BadMethodCallException">Tests\Unit\Services\ExternalStoreServiceTest::it_syncs_store_products
+BadMethodCallException: Call to undefined method App\Models\Store::shouldReceive()
+
+/var/www/html/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php:67
+/var/www/html/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php:36
+/var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php:2540
+/var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php:2556
+/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php:174</error>
+        </testcase>
+        <testcase name="it_gets_store_status" file="/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php" line="187" class="Tests\Unit\Services\ExternalStoreServiceTest" classname="Tests.Unit.Services.ExternalStoreServiceTest" assertions="5" time="0.997374">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Unit\Services\ExternalStoreServiceTest::it_gets_store_status
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'online'
++'error'
+
+/var/www/html/tests/Unit/Services/ExternalStoreServiceTest.php:221</failure>
+        </testcase>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

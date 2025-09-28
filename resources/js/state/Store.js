@@ -22,14 +22,14 @@ class Store {
      * Set state
      */
     setState(newState) {
-        const prevState = { ...this.state };
+        const previousState = { ...this.state };
         this.state = { ...this.state, ...newState };
 
         // Run middleware
-        this.runMiddleware(prevState, this.state);
+        this.runMiddleware(previousState, this.state);
 
         // Notify listeners
-        this.notifyListeners(prevState, this.state);
+        this.notifyListeners(previousState, this.state);
     }
 
     /**
@@ -76,51 +76,51 @@ class Store {
     /**
      * Run middleware
      */
-    runMiddleware(prevState, newState) {
-        this.middleware.forEach(middleware => {
+    runMiddleware(previousState, newState) {
+        for (const middleware of this.middleware) {
             try {
-                middleware(prevState, newState, this);
+                middleware(previousState, newState, this);
             } catch {
                 // console.error('Middleware error:', error);
             }
-        });
+        }
     }
 
     /**
      * Notify listeners
      */
-    notifyListeners(prevState, newState) {
-        this.listeners.forEach((callbacks, key) => {
-            const oldValue = this.getNestedValue(prevState, key);
+    notifyListeners(previousState, newState) {
+        for (const [key, callbacks] of this.listeners.entries()) {
+            const oldValue = this.getNestedValue(previousState, key);
             const newValue = this.getNestedValue(newState, key);
 
             if (oldValue !== newValue) {
-                callbacks.forEach(callback => {
+                for (const callback of callbacks) {
                     try {
                         callback(newValue, oldValue, newState);
                     } catch {
                         // console.error('Listener error:', error);
                     }
-                });
+                }
             }
-        });
+        }
     }
 
     /**
      * Get nested value from object
      */
-    getNestedValue(obj, path) {
+    getNestedValue(object, path) {
         return path.split('.').reduce((current, key) => {
             return current && current[key] !== undefined
                 ? current[key]
                 : undefined;
-        }, obj);
+        }, object);
     }
 
     /**
      * Set nested value in object
      */
-    setNestedValue(obj, path, value) {
+    setNestedValue(object, path, value) {
         const keys = path.split('.');
         const lastKey = keys.pop();
         const target = keys.reduce((current, key) => {
@@ -128,14 +128,14 @@ class Store {
                 current[key] = {};
             }
             return current[key];
-        }, obj);
+        }, object);
         target[lastKey] = value;
     }
 
     /**
      * Cache data
      */
-    cacheData(key, data, ttl = null) {
+    cacheData(key, data, ttl) {
         const timeout = ttl || this.cacheTimeout;
         this.cache.set(key, {
             data,
@@ -149,12 +149,12 @@ class Store {
      */
     getCachedData(key) {
         const cached = this.cache.get(key);
-        if (!cached) return null;
+        if (!cached) return;
 
         const isExpired = Date.now() - cached.timestamp > cached.ttl;
         if (isExpired) {
             this.cache.delete(key);
-            return null;
+            return;
         }
 
         return cached.data;
@@ -163,7 +163,7 @@ class Store {
     /**
      * Clear cache
      */
-    clearCache(key = null) {
+    clearCache(key) {
         if (key) {
             this.cache.delete(key);
         } else {
@@ -188,26 +188,26 @@ class Store {
     restore(key) {
         try {
             const data = localStorage.getItem(`store_${key}`);
-            return data ? JSON.parse(data) : null;
+            return data ? JSON.parse(data) : undefined;
         } catch {
             // console.error('Failed to restore state:', error);
-            return null;
+            return;
         }
     }
 
     /**
      * Clear persisted state
      */
-    clearPersisted(key = null) {
+    clearPersisted(key) {
         if (key) {
             localStorage.removeItem(`store_${key}`);
         } else {
             // Clear all store keys
-            Object.keys(localStorage).forEach(k => {
+            for (const k of Object.keys(localStorage)) {
                 if (k.startsWith('store_')) {
                     localStorage.removeItem(k);
                 }
-            });
+            }
         }
     }
 
@@ -249,13 +249,13 @@ store.addMiddleware(() => {
 });
 
 // Add error handling middleware
-store.addMiddleware((prevState, newState) => {
+store.addMiddleware((previousState, newState) => {
     // Check for error states
-    Object.keys(newState).forEach(key => {
+    for (const key of Object.keys(newState)) {
         if (key.endsWith('Error') && newState[key]) {
             // console.error(`Error in ${key}:`, newState[key]);
         }
-    });
+    }
 });
 
 // Export store

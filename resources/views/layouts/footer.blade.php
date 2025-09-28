@@ -1,4 +1,4 @@
-<footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+<footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700" role="contentinfo">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <!-- Company Info -->
@@ -30,7 +30,7 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Quick Links -->
             <div>
                 <h4 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
@@ -44,7 +44,7 @@
                     <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">{{ __('messages.stores') }}</a></li>
                 </ul>
             </div>
-            
+
             <!-- Support -->
             <div>
                 <h4 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
@@ -58,7 +58,7 @@
                 </ul>
             </div>
         </div>
-        
+
         <!-- Bottom Bar -->
         <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -68,17 +68,21 @@
                 <div class="flex items-center space-x-4 mt-4 md:mt-0">
                     <!-- Language Switcher -->
                     <div class="relative">
-                        <select onchange="window.location.href='{{ url('language') }}/' + this.value" 
-                                class="bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
+                        <label for="language-select" class="sr-only">Select Language</label>
+                        <select id="language-select" onchange="window.location.href='{{ url('language') }}/' + this.value"
+                                class="bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm text-gray-700 dark:text-gray-300"
+                                aria-label="Select language">
                             <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>English</option>
                             <option value="ar" {{ app()->getLocale() === 'ar' ? 'selected' : '' }}>العربية</option>
                         </select>
                     </div>
-                    
+
                     <!-- Currency Switcher -->
                     <div class="relative">
-                        <select onchange="window.location.href='{{ url('currency') }}/' + this.value" 
-                                class="bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
+                        <label for="currency-select" class="sr-only">Select Currency</label>
+                        <select id="currency-select" onchange="window.location.href='{{ url('currency') }}/' + this.value"
+                                class="bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm text-gray-700 dark:text-gray-300"
+                                aria-label="Select currency">
                             <option value="USD" {{ session('currency', 'USD') === 'USD' ? 'selected' : '' }}>USD</option>
                             <option value="EUR" {{ session('currency', 'USD') === 'EUR' ? 'selected' : '' }}>EUR</option>
                             <option value="GBP" {{ session('currency', 'USD') === 'GBP' ? 'selected' : '' }}>GBP</option>

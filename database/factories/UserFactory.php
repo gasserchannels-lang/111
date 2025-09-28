@@ -21,46 +21,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'User '.$this->faker->unique()->numberBetween(1, 1000000),
-            'email' => $this->faker->unique()->email(),
+            'name' => 'Test User',
+            'email' => 'test@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'is_admin' => false,
         ];
-    }
-
-    public function admin(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_admin' => true,
-        ]);
-    }
-
-    public function regular(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_admin' => false,
-        ]);
-    }
-
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
-    }
-
-    public function withName(string $name): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'name' => $name,
-        ]);
-    }
-
-    public function withEmail(string $email): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email' => $email,
-        ]);
     }
 }

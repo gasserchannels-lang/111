@@ -4,6 +4,9 @@ namespace Tests\Security;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class SQLInjectionTest extends TestCase
 {
     public function test_sql_injection_protection(): void

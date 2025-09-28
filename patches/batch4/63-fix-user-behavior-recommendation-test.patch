@@ -1,4 +1,0 @@
---- a/tests/Unit/Recommendations/UserBehaviorRecommendationTest.php
-+++ b/tests/Unit/Recommendations/UserBehaviorRecommendationTest.php
-@@ -1,0 +1,0 @@
-+// No changes needed - test was already working

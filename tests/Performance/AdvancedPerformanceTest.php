@@ -4,6 +4,9 @@ namespace Tests\Performance;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class AdvancedPerformanceTest extends TestCase
 {
     public function test_advanced_performance_metrics(): void

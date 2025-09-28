@@ -35,8 +35,8 @@
             @endif
 
             <div class="mt-4">
-                <button class="btn btn-primary btn-lg">Add to Cart</button>
-                <button class="btn btn-outline-secondary">Add to Wishlist</button>
+                <button class="btn btn-primary btn-lg" aria-label="Add {{ $product->name }} to cart">Add to Cart</button>
+                <button class="btn btn-outline-secondary" aria-label="Add {{ $product->name }} to wishlist">Add to Wishlist</button>
             </div>
 
             @if($product->store)

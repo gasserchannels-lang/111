@@ -2,12 +2,15 @@
 
 namespace Tests\AI;
 
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
 
-class AIErrorHandlingTest extends TestCase
+class AIErrorHandlingTest extends AIBaseTestCase
 {
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_handles_invalid_input_gracefully(): void
     {
         $response = $this->postJson('/api/ai/analyze', [
@@ -22,6 +25,8 @@ class AIErrorHandlingTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_handles_malformed_json(): void
     {
         $response = $this->postJson('/api/ai/analyze', [
@@ -33,6 +38,8 @@ class AIErrorHandlingTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_handles_network_timeout(): void
     {
         // اختبار بسيط بدون timeout
@@ -42,10 +49,12 @@ class AIErrorHandlingTest extends TestCase
         ]);
 
         // اختبار بسيط للتأكد من أن النتيجة صحيحة
-        $this->assertContains($response->status(), [200, 422, 500]);
+        $this->assertContainsEquals($response->status(), [200, 422, 500]);
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_logs_errors_properly(): void
     {
         // اختبار بسيط بدون Mockery
@@ -54,10 +63,12 @@ class AIErrorHandlingTest extends TestCase
             'type' => 'product_analysis',
         ]);
 
-        $this->assertContains($response->status(), [200, 422, 500]);
+        $this->assertContainsEquals($response->status(), [200, 422, 500]);
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_returns_meaningful_error_messages(): void
     {
         $response = $this->postJson('/api/ai/analyze', [
@@ -66,10 +77,12 @@ class AIErrorHandlingTest extends TestCase
         ]);
 
         // اختبار بسيط للتأكد من أن النتيجة صحيحة
-        $this->assertContains($response->status(), [200, 400, 422, 500]);
+        $this->assertContainsEquals($response->status(), [200, 400, 422, 500]);
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_handles_concurrent_requests(): void
     {
         $responses = [];
@@ -84,17 +97,7 @@ class AIErrorHandlingTest extends TestCase
 
         // جميع الطلبات يجب أن تعمل بشكل صحيح
         foreach ($responses as $response) {
-            $this->assertContains($response->status(), [200, 429]); // 429 = Too Many Requests
+            $this->assertContainsEquals($response->status(), [200, 429]); // 429 = Too Many Requests
         }
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 }

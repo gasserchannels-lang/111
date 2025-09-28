@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\PriceOffer;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -104,82 +106,124 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPageInput = $request->get('per_page', 15);
-        $perPage = min(is_numeric($perPageInput) ? (int) $perPageInput : 15, 50); // Limit max per page
+        try {
+            // Validate request parameters
+            $validated = $request->validate([
+                'per_page' => 'sometimes|integer|min:1|max:100',
+                'search' => 'sometimes|string|max:255',
+                'category_id' => 'sometimes|integer|exists:categories,id',
+                'brand_id' => 'sometimes|integer|exists:brands,id',
+                'min_price' => 'sometimes|numeric|min:0',
+                'max_price' => 'sometimes|numeric|min:0',
+                'sort' => 'sometimes|string|in:price_asc,price_desc,name_asc,name_desc,created_at_asc,created_at_desc',
+            ]);
 
-        $query = Product::query()
-            ->select(['id', 'name', 'slug', 'price', 'category_id', 'brand_id', 'description'])
-            ->with([
-                'brand:id,name',
-                'category:id,name',
-                'priceOffers.store:id,name',
-            ])
-            ->where('is_active', true)
-            ->orderBy('id', 'desc');
+            $perPageInput = $validated['per_page'] ?? 15;
+            $perPage = min($perPageInput, 50); // Limit max per page
 
-        // Apply filters
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            if (is_string($searchTerm)) {
-                $query->where('name', 'like', "%{$searchTerm}%");
+            $query = Product::query()
+                ->select(['id', 'name', 'slug', 'price', 'category_id', 'brand_id', 'description', 'created_at', 'updated_at'])
+                ->with([
+                    'brand:id,name',
+                    'category:id,name',
+                    'priceOffers.store:id,name',
+                ])
+                ->where('is_active', true);
+
+            // Apply sorting
+            if (isset($validated['sort'])) {
+                switch ($validated['sort']) {
+                    case 'price_asc':
+                        $query->orderBy('price', 'asc');
+                        break;
+                    case 'price_desc':
+                        $query->orderBy('price', 'desc');
+                        break;
+                    case 'name_asc':
+                        $query->orderBy('name', 'asc');
+                        break;
+                    case 'name_desc':
+                        $query->orderBy('name', 'desc');
+                        break;
+                    case 'created_at_asc':
+                        $query->orderBy('created_at', 'asc');
+                        break;
+                    case 'created_at_desc':
+                        $query->orderBy('created_at', 'desc');
+                        break;
+                }
+            } else {
+                $query->orderBy('id', 'desc');
             }
+
+            // Apply filters
+            if (isset($validated['search'])) {
+                $query->where('name', 'like', "%{$validated['search']}%");
+            }
+
+            if (isset($validated['category_id'])) {
+                $query->where('category_id', $validated['category_id']);
+            }
+
+            if (isset($validated['brand_id'])) {
+                $query->where('brand_id', $validated['brand_id']);
+            }
+
+            if (isset($validated['min_price'])) {
+                $query->where('price', '>=', $validated['min_price']);
+            }
+
+            if (isset($validated['max_price'])) {
+                $query->where('price', '<=', $validated['max_price']);
+            }
+
+            // Use pagination for better performance
+            $products = $query->paginate($perPage);
+
+            // Transform data efficiently
+            $data = $products->getCollection()->map(function (Product $product): array {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description ?? '',
+                    'slug' => $product->slug,
+                    'price' => $product->price,
+                    'created_at' => $product->created_at?->toISOString(),
+                    'updated_at' => $product->updated_at?->toISOString(),
+                    'category' => $product->category ? ['id' => $product->category->id, 'name' => $product->category->name] : null,
+                    'brand' => $product->brand ? ['id' => $product->brand->id, 'name' => $product->brand->name] : null,
+                    'stores' => $product->priceOffers->map(function (PriceOffer $offer): array {
+                        return [
+                            'id' => $offer->store ? $offer->store->id : $offer->id,
+                            'name' => $offer->store ? $offer->store->name : 'Store'.$offer->id,
+                            'price' => $offer->price,
+                            'is_available' => $offer->is_available ?? true,
+                        ];
+                    })->toArray(),
+                ];
+            });
+
+            return response()->json([
+                'data' => $data,
+                'links' => [
+                    'first' => $products->url(1),
+                    'last' => $products->url($products->lastPage()),
+                    'prev' => $products->previousPageUrl(),
+                    'next' => $products->nextPageUrl(),
+                ],
+                'meta' => [
+                    'current_page' => $products->currentPage(),
+                    'last_page' => $products->lastPage(),
+                    'per_page' => $products->perPage(),
+                    'total' => $products->total(),
+                ],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
         }
-
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        if ($request->filled('brand_id')) {
-            $query->where('brand_id', $request->brand_id);
-        }
-
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', $request->min_price);
-        }
-
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        // Use pagination for better performance
-        $products = $query->paginate($perPage);
-
-        // Transform data efficiently
-        $data = $products->getCollection()->map(function (Product $product): array {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'description' => $product->description ?? '',
-                'slug' => $product->slug,
-                'price' => $product->price,
-                'category' => $product->category ? ['id' => $product->category->id, 'name' => $product->category->name] : null,
-                'brand' => $product->brand ? ['id' => $product->brand->id, 'name' => $product->brand->name] : null,
-                'stores' => $product->priceOffers->map(function (PriceOffer $offer): array {
-                    return [
-                        'id' => $offer->store ? $offer->store->id : $offer->id,
-                        'name' => $offer->store ? $offer->store->name : 'Store'.$offer->id,
-                        'price' => $offer->price,
-                        'is_available' => $offer->is_available ?? true,
-                    ];
-                })->toArray(),
-            ];
-        });
-
-        return response()->json([
-            'data' => $data,
-            'links' => [
-                'first' => $products->url(1),
-                'last' => $products->url($products->lastPage()),
-                'prev' => $products->previousPageUrl(),
-                'next' => $products->nextPageUrl(),
-            ],
-            'meta' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-            ],
-        ]);
     }
 
     /**
@@ -310,21 +354,10 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreProductRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'required|numeric|min:0',
-                'image' => 'nullable|string',
-                'is_active' => 'boolean',
-                'category_id' => 'nullable|exists:categories,id',
-                'brand_id' => 'nullable|exists:brands,id',
-                'stock_quantity' => 'nullable|integer|min:0',
-                'stores' => 'nullable|array',
-                'images' => 'nullable|array',
-            ]);
+            $validated = $request->validated();
 
             // If category_id or brand_id not provided, use defaults or create them
             if (empty($validated['category_id'])) {
@@ -471,20 +504,12 @@ class ProductController extends Controller
      *     )
      * )
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateProductRequest $request, int $id): JsonResponse
     {
         try {
             $product = Product::findOrFail($id);
 
-            $validated = $request->validate([
-                'name' => 'sometimes|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'sometimes|numeric|min:0',
-                'image' => 'nullable|string',
-                'is_active' => 'boolean',
-                'category_id' => 'sometimes|exists:categories,id',
-                'brand_id' => 'sometimes|exists:brands,id',
-            ]);
+            $validated = $request->validated();
 
             // Update slug if name is being updated
             if (isset($validated['name'])) {

@@ -15,11 +15,11 @@ class SimilarProductTest extends BaseTest
     public function it_finds_similar_products_by_category(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $products = [
@@ -32,7 +32,7 @@ class SimilarProductTest extends BaseTest
 
         $this->assertNotEmpty($similarProducts);
         foreach ($similarProducts as $product) {
-            $this->assertNotEmpty('test');
+            $this->assertTrue(true);
         }
     }
 
@@ -41,11 +41,11 @@ class SimilarProductTest extends BaseTest
     public function it_finds_similar_products_by_brand(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $products = [
@@ -58,7 +58,7 @@ class SimilarProductTest extends BaseTest
 
         $this->assertNotEmpty($similarProducts);
         foreach ($similarProducts as $product) {
-            $this->assertNotEmpty('test');
+            $this->assertTrue(true);
         }
     }
 
@@ -67,11 +67,11 @@ class SimilarProductTest extends BaseTest
     public function it_finds_similar_products_by_price_range(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $products = [
@@ -85,7 +85,7 @@ class SimilarProductTest extends BaseTest
 
         $this->assertNotEmpty($similarProducts);
         foreach ($similarProducts as $product) {
-            $this->assertNotEmpty('test');
+            $this->assertTrue(true);
         }
     }
 
@@ -94,35 +94,35 @@ class SimilarProductTest extends BaseTest
     public function it_finds_similar_products_by_specifications(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'             => 1,
+            'name'           => 'iPhone 15 Pro',
             'specifications' => [
-                'storage' => '256GB',
-                'color' => 'Space Black',
+                'storage'     => '256GB',
+                'color'       => 'Space Black',
                 'screen_size' => '6.1 inches',
-                'camera' => '48MP',
+                'camera'      => '48MP',
             ],
         ];
 
         $products = [
             [
-                'id' => 2,
-                'name' => 'Samsung Galaxy S24',
+                'id'             => 2,
+                'name'           => 'Samsung Galaxy S24',
                 'specifications' => [
-                    'storage' => '256GB',
-                    'color' => 'Black',
+                    'storage'     => '256GB',
+                    'color'       => 'Black',
                     'screen_size' => '6.2 inches',
-                    'camera' => '50MP',
+                    'camera'      => '50MP',
                 ],
             ],
             [
-                'id' => 3,
-                'name' => 'Google Pixel 8',
+                'id'             => 3,
+                'name'           => 'Google Pixel 8',
                 'specifications' => [
-                    'storage' => '128GB',
-                    'color' => 'Obsidian',
+                    'storage'     => '128GB',
+                    'color'       => 'Obsidian',
                     'screen_size' => '6.2 inches',
-                    'camera' => '50MP',
+                    'camera'      => '50MP',
                 ],
             ],
         ];
@@ -139,17 +139,17 @@ class SimilarProductTest extends BaseTest
     public function it_calculates_similarity_score(): void
     {
         $product1 = [
-            'name' => 'iPhone 15 Pro',
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $product2 = [
-            'name' => 'iPhone 15',
+            'name'     => 'iPhone 15',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 799.99,
+            'brand'    => 'Apple',
+            'price'    => 799.99,
         ];
 
         $similarityScore = $this->calculateSimilarityScore($product1, $product2);
@@ -162,11 +162,11 @@ class SimilarProductTest extends BaseTest
     public function it_handles_empty_product_list(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $similarProducts = $this->findSimilarProducts($targetProduct, []);
@@ -179,11 +179,11 @@ class SimilarProductTest extends BaseTest
     public function it_ranks_similar_products_by_relevance(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $products = [
@@ -204,16 +204,16 @@ class SimilarProductTest extends BaseTest
     public function it_considers_user_preferences(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $userPreferences = [
             'preferred_brands' => ['Apple', 'Samsung'],
-            'price_range' => ['min' => 500, 'max' => 1500],
+            'price_range'      => ['min' => 500, 'max' => 1500],
         ];
 
         $products = [
@@ -226,7 +226,7 @@ class SimilarProductTest extends BaseTest
 
         $this->assertNotEmpty($similarProducts);
         foreach ($similarProducts as $product) {
-            $this->assertNotEmpty('test');
+            $this->assertTrue(true);
         }
     }
 
@@ -235,8 +235,8 @@ class SimilarProductTest extends BaseTest
     public function it_handles_case_insensitive_matching(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
         ];
 
@@ -261,11 +261,11 @@ class SimilarProductTest extends BaseTest
     public function it_limits_number_of_similar_products(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $products = $this->generateTestProducts(100);
@@ -281,11 +281,11 @@ class SimilarProductTest extends BaseTest
     public function it_handles_products_with_missing_attributes(): void
     {
         $targetProduct = [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
+            'id'       => 1,
+            'name'     => 'iPhone 15 Pro',
             'category' => 'Smartphones',
-            'brand' => 'Apple',
-            'price' => 999.99,
+            'brand'    => 'Apple',
+            'price'    => 999.99,
         ];
 
         $products = [
@@ -300,14 +300,16 @@ class SimilarProductTest extends BaseTest
     }
 
     /**
-     * @param  array<string, mixed>  $targetProduct
+     * @param array<string, mixed> $targetProduct
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $targetProduct
-     * @param  array<int, array<string, mixed>>  $products
-     * @param  array<string, mixed>  $userPreferences
+     * @param array<string, mixed>             $targetProduct
+     * @param array<int, array<string, mixed>> $products
+     * @param array<string, mixed>             $userPreferences
+     *
      * @return array<int, array<string, mixed>>
      */
     private function findSimilarProducts(array $targetProduct, array $products, array $userPreferences = [], int $limit = 10): array
@@ -327,7 +329,7 @@ class SimilarProductTest extends BaseTest
             }
 
             $similarities[] = [
-                'product' => $product,
+                'product'          => $product,
                 'similarity_score' => $similarity,
             ];
         }
@@ -342,13 +344,15 @@ class SimilarProductTest extends BaseTest
     }
 
     /**
-     * @param  array<string, mixed>  $targetProduct
+     * @param array<string, mixed> $targetProduct
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $targetProduct
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<string, mixed>             $targetProduct
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function findSimilarProductsBySpecs(array $targetProduct, array $products): array
@@ -362,7 +366,7 @@ class SimilarProductTest extends BaseTest
 
             $similarity = $this->calculateSpecSimilarity($targetProduct, $product);
             $similarities[] = [
-                'product' => $product,
+                'product'          => $product,
                 'similarity_score' => $similarity,
             ];
         }
@@ -373,8 +377,8 @@ class SimilarProductTest extends BaseTest
     }
 
     /**
-     * @param  array<string, mixed>  $product1
-     * @param  array<string, mixed>  $product2
+     * @param array<string, mixed> $product1
+     * @param array<string, mixed> $product2
      */
     private function calculateSimilarityScore(array $product1, array $product2): float
     {
@@ -425,8 +429,8 @@ class SimilarProductTest extends BaseTest
     }
 
     /**
-     * @param  array<string, mixed>  $product1
-     * @param  array<string, mixed>  $product2
+     * @param array<string, mixed> $product1
+     * @param array<string, mixed> $product2
      */
     private function calculateSpecSimilarity(array $product1, array $product2): float
     {
@@ -472,8 +476,8 @@ class SimilarProductTest extends BaseTest
     }
 
     /**
-     * @param  array<string, mixed>  $product
-     * @param  array<string, mixed>  $preferences
+     * @param array<string, mixed> $product
+     * @param array<string, mixed> $preferences
      */
     private function applyUserPreferences(float $similarity, array $product, array $preferences): float
     {
@@ -513,11 +517,11 @@ class SimilarProductTest extends BaseTest
 
         for ($i = 0; $i < $count; $i++) {
             $products[] = [
-                'id' => $i + 2,
-                'name' => 'Product '.($i + 2),
+                'id'       => $i + 2,
+                'name'     => 'Product ' . ($i + 2),
                 'category' => $categories[array_rand($categories)],
-                'brand' => $brands[array_rand($brands)],
-                'price' => rand(100, 2000) + (rand(0, 99) / 100),
+                'brand'    => $brands[array_rand($brands)],
+                'price'    => rand(100, 2000) + (rand(0, 99) / 100),
             ];
         }
 

@@ -18,14 +18,14 @@ trait CreatesApplication
         putenv('APP_KEY=base64:mAkbpuXF7OVTRIDCIMkD8+xw6xVi7pge9CFImeqZaxE=');
 
         // Force the test database connection BEFORE creating the application
-        putenv('DB_CONNECTION=sqlite');
+        putenv('DB_CONNECTION=testing');
         putenv('DB_DATABASE=:memory:');
         putenv('DB_HOST=');
         putenv('DB_PORT=');
         putenv('DB_USERNAME=');
         putenv('DB_PASSWORD=');
 
-        $app = require __DIR__.'/../bootstrap/app.php';
+        $app = require __DIR__ . '/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
 
@@ -53,9 +53,9 @@ trait CreatesApplication
         // Load configuration for testing
         $app->make('config')->set('database.default', 'testing');
         $app->make('config')->set('database.connections.testing', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
+            'driver'                  => 'sqlite',
+            'database'                => ':memory:',
+            'prefix'                  => '',
             'foreign_key_constraints' => true,
         ]);
 
@@ -63,15 +63,15 @@ trait CreatesApplication
         $app->bind(\Symfony\Component\Console\Input\InputInterface::class, function ($app) {
             /** @var \Mockery\MockInterface&\Symfony\Component\Console\Input\InputInterface $mock */
             $mock = \Mockery::mock(\Symfony\Component\Console\Input\InputInterface::class);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('isInteractive')->andReturn(false);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('hasArgument')->andReturn(false);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('getArgument')->andReturn(null);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('hasOption')->andReturn(false);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('getOption')->andReturn(null);
 
             return $mock;
@@ -81,19 +81,19 @@ trait CreatesApplication
         $app->bind(\Symfony\Component\Console\Style\OutputStyle::class, function ($app) {
             /** @var \Mockery\MockInterface&\Symfony\Component\Console\Style\SymfonyStyle $mock */
             $mock = \Mockery::mock(\Symfony\Component\Console\Style\SymfonyStyle::class);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('askQuestion')->andReturn(true);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('confirm')->andReturn(true);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('ask')->andReturn('test');
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('choice')->andReturn('test');
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('writeln')->andReturn(null);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('write')->andReturn(null);
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             $mock->shouldReceive('newLine')->andReturn(null);
 
             return $mock;

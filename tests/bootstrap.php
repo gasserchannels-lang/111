@@ -2,8 +2,10 @@
 
 use Illuminate\Contracts\Console\Kernel;
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
-$app->make(Kernel::class)->bootstrap();
+/** @var Kernel $kernel */
+$kernel = $app->make(Kernel::class);
+$kernel->bootstrap();
 
 return $app;

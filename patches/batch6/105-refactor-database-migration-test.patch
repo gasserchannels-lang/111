@@ -1,4 +1,0 @@
---- a/tests/Feature/DatabaseMigrationTest.php
-+++ b/tests/Feature/DatabaseMigrationTest.php
-@@ -1,0 +1,0 @@
-+// No changes needed - test does not modify error handlers

@@ -4,6 +4,9 @@ namespace Tests\Security;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class XSSTest extends TestCase
 {
     public function test_xss_protection(): void

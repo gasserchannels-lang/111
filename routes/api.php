@@ -17,15 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::middleware(['auth:sanctum', 'throttle:auth'])->get('/user', [AuthController::class, 'user']);
+Route::middleware(['auth:sanctum', 'throttle:auth'])->get('/user', [AuthController::class, 'me']);
 Route::middleware(['auth:sanctum', 'throttle:authenticated'])->get('/me', [AuthController::class, 'me']);
 
 // Public API routes (no authentication required)
 Route::middleware(['throttle:public'])->group(function () {
     // Price search routes
-    Route::get('/price-search', [PriceSearchController::class, 'search']);
-    Route::get('/price-search/best-offer', [PriceSearchController::class, 'bestOffer']);
-    Route::get('/price-search/supported-stores', [PriceSearchController::class, 'supportedStores']);
+    Route::get('/price-search', [\App\Http\Controllers\Api\PriceSearchController::class, 'search']);
+    Route::get('/price-search/best-offer', [\App\Http\Controllers\Api\PriceSearchController::class, 'bestOffer']);
+    Route::get('/price-search/supported-stores', [\App\Http\Controllers\Api\PriceSearchController::class, 'supportedStores']);
 
     // Public product routes
     Route::get('/products', [ProductController::class, 'index']);
@@ -104,7 +104,11 @@ Route::middleware(['auth:sanctum', 'admin', 'throttle:admin'])->group(function (
 });
 
 // API Documentation (no rate limiting for documentation)
+Route::get('/', [DocumentationController::class, 'index']);
 Route::get('/documentation', [DocumentationController::class, 'index']);
+
+// API Health check
+Route::get('/health', [DocumentationController::class, 'health']);
 
 // CSRF token route for testing - REMOVED FOR PRODUCTION
 // Route::get('/csrf-token', function () {
@@ -362,6 +366,74 @@ Route::middleware(['throttle:public'])->group(function () {
             return response()->json(['error' => 'All services unavailable'], 503);
         }
     });
+});
+
+// Payment Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/payment-methods', [\App\Http\Controllers\PaymentController::class, 'getPaymentMethods']);
+    Route::post('/orders/{order}/payments', [\App\Http\Controllers\PaymentController::class, 'processPayment']);
+    Route::post('/orders/{order}/refund', [\App\Http\Controllers\PaymentController::class, 'refundPayment']);
+});
+
+// Order Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index']);
+    Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'create']);
+    Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show']);
+    Route::patch('/orders/{order}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus']);
+    Route::post('/orders/{order}/cancel', [\App\Http\Controllers\OrderController::class, 'cancel']);
+});
+
+// Points & Rewards Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/points', [\App\Http\Controllers\PointsController::class, 'index']);
+    Route::post('/points/redeem', [\App\Http\Controllers\PointsController::class, 'redeem']);
+    Route::get('/rewards', [\App\Http\Controllers\PointsController::class, 'getRewards']);
+    Route::post('/rewards/{reward}/redeem', [\App\Http\Controllers\PointsController::class, 'redeemReward']);
+});
+
+// Settings API routes
+Route::middleware(['throttle:api'])->prefix('settings')->group(function () {
+    Route::get('/', [\App\Http\Controllers\SettingController::class, 'index']);
+    Route::put('/', [\App\Http\Controllers\SettingController::class, 'update']);
+    Route::get('/password-policy', [\App\Http\Controllers\SettingController::class, 'getPasswordPolicySettings']);
+    Route::get('/notifications', [\App\Http\Controllers\SettingController::class, 'getNotificationSettings']);
+    Route::get('/storage', [\App\Http\Controllers\SettingController::class, 'getStorageSettings']);
+    Route::get('/general', [\App\Http\Controllers\SettingController::class, 'getGeneralSettings']);
+    Route::get('/security', [\App\Http\Controllers\SettingController::class, 'getSecuritySettings']);
+    Route::get('/performance', [\App\Http\Controllers\SettingController::class, 'getPerformanceSettings']);
+    Route::post('/reset', [\App\Http\Controllers\SettingController::class, 'resetToDefault']);
+    Route::post('/import', [\App\Http\Controllers\SettingController::class, 'importSettings']);
+    Route::get('/export', [\App\Http\Controllers\SettingController::class, 'exportSettings']);
+    Route::get('/system-health', [\App\Http\Controllers\SettingController::class, 'getSystemHealth']);
+});
+
+// System API routes
+Route::middleware(['throttle:api'])->prefix('system')->group(function () {
+    Route::get('/info', [\App\Http\Controllers\SystemController::class, 'getSystemInfo']);
+    Route::post('/migrations', [\App\Http\Controllers\SystemController::class, 'runMigrations']);
+    Route::post('/cache/clear', [\App\Http\Controllers\SystemController::class, 'clearCache']);
+    Route::post('/optimize', [\App\Http\Controllers\SystemController::class, 'optimizeApp']);
+    Route::post('/composer-update', [\App\Http\Controllers\SystemController::class, 'runComposerUpdate']);
+    Route::get('/performance', [\App\Http\Controllers\SystemController::class, 'getPerformanceMetrics']);
+});
+
+// Report API routes
+Route::middleware(['throttle:api'])->prefix('reports')->group(function () {
+    // POST routes for generating reports
+    Route::post('/product-performance', [\App\Http\Controllers\ReportController::class, 'generateProductPerformanceReport']);
+    Route::post('/user-activity', [\App\Http\Controllers\ReportController::class, 'generateUserActivityReport']);
+    Route::post('/sales', [\App\Http\Controllers\ReportController::class, 'generateSalesReport']);
+    Route::post('/custom', [\App\Http\Controllers\ReportController::class, 'generateCustomReport']);
+    Route::post('/export', [\App\Http\Controllers\ReportController::class, 'exportReport']);
+
+    // GET routes for retrieving reports
+    Route::get('/system-overview', [\App\Http\Controllers\ReportController::class, 'getSystemOverview']);
+    Route::get('/engagement-metrics', [\App\Http\Controllers\ReportController::class, 'getEngagementMetrics']);
+    Route::get('/performance-metrics', [\App\Http\Controllers\ReportController::class, 'getPerformanceMetrics']);
+    Route::get('/top-stores', [\App\Http\Controllers\ReportController::class, 'getTopStores']);
+    Route::get('/price-trends', [\App\Http\Controllers\ReportController::class, 'getPriceTrends']);
+    Route::get('/most-viewed-products', [\App\Http\Controllers\ReportController::class, 'getMostViewedProducts']);
 });
 
 // AI API routes

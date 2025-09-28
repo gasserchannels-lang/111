@@ -3,12 +3,15 @@
 namespace Tests\AI;
 
 use App\Services\AIService;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
 
-class AIModelPerformanceTest extends TestCase
+class AIModelPerformanceTest extends AIBaseTestCase
 {
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_model_responds_within_acceptable_time(): void
     {
         $aiService = new AIService;
@@ -23,9 +26,11 @@ class AIModelPerformanceTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_model_handles_large_inputs(): void
     {
-        $aiService = new AIService;
+        $aiService = $this->getAIService();
 
         // إنشاء نص كبير
         $largeText = str_repeat('منتج ممتاز ورائع ', 1000);
@@ -36,6 +41,8 @@ class AIModelPerformanceTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_model_memory_usage_is_reasonable(): void
     {
         $aiService = new AIService;
@@ -54,6 +61,8 @@ class AIModelPerformanceTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_model_handles_concurrent_requests(): void
     {
         $aiService = new AIService;
@@ -69,6 +78,8 @@ class AIModelPerformanceTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_model_accuracy_remains_consistent(): void
     {
         $aiService = new AIService;
@@ -82,15 +93,5 @@ class AIModelPerformanceTest extends TestCase
         }
 
         $this->assertCount(5, $results);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 }
