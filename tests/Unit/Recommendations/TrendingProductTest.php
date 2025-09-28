@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class TrendingProductTest extends TestCase
 {
     #[Test]
@@ -29,11 +32,11 @@ class TrendingProductTest extends TestCase
     public function it_calculates_trending_score(): void
     {
         $product = [
-            'id' => 1,
-            'name' => 'iPhone 15',
-            'views' => 1000,
-            'purchases' => 50,
-            'recent_views' => 200,
+            'id'               => 1,
+            'name'             => 'iPhone 15',
+            'views'            => 1000,
+            'purchases'        => 50,
+            'recent_views'     => 200,
             'recent_purchases' => 15,
         ];
 
@@ -183,7 +186,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getTrendingProducts(array $products, int $limit = 2): array
@@ -202,7 +206,7 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $product
+     * @param array<string, mixed> $product
      */
     private function calculateTrendingScore(array $product): float
     {
@@ -222,7 +226,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getRisingTrends(array $products): array
@@ -253,7 +258,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getFallingTrends(array $products): array
@@ -284,7 +290,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getSeasonalTrends(array $products, string $currentSeason): array
@@ -306,7 +313,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getCategoryTrends(array $products): array
@@ -318,8 +326,8 @@ class TrendingProductTest extends TestCase
             if (is_string($category)) {
                 if (! isset($categoryStats[$category])) {
                     $categoryStats[$category] = [
-                        'category' => $category,
-                        'total_views' => 0,
+                        'category'      => $category,
+                        'total_views'   => 0,
                         'product_count' => 0,
                     ];
                 }
@@ -338,7 +346,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getBrandTrends(array $products): array
@@ -350,8 +359,8 @@ class TrendingProductTest extends TestCase
             if (is_string($brand)) {
                 if (! isset($brandStats[$brand])) {
                     $brandStats[$brand] = [
-                        'brand' => $brand,
-                        'total_views' => 0,
+                        'brand'         => $brand,
+                        'total_views'   => 0,
                         'product_count' => 0,
                     ];
                 }
@@ -370,24 +379,25 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getPriceRangeTrends(array $products): array
     {
         $priceRanges = [
-            'budget' => ['min' => 0, 'max' => 299],
+            'budget'    => ['min' => 0, 'max' => 299],
             'mid-range' => ['min' => 300, 'max' => 999],
-            'premium' => ['min' => 1000, 'max' => 1999],
-            'luxury' => ['min' => 2000, 'max' => PHP_FLOAT_MAX],
+            'premium'   => ['min' => 1000, 'max' => 1999],
+            'luxury'    => ['min' => 2000, 'max' => PHP_FLOAT_MAX],
         ];
 
         $rangeStats = [];
 
         foreach ($priceRanges as $range => $bounds) {
             $rangeStats[$range] = [
-                'range' => $range,
-                'total_views' => 0,
+                'range'         => $range,
+                'total_views'   => 0,
                 'product_count' => 0,
             ];
 
@@ -410,7 +420,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getTimeBasedTrends(array $products): array
@@ -441,7 +452,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getGeographicTrends(array $products): array
@@ -453,8 +465,8 @@ class TrendingProductTest extends TestCase
             if (is_string($region)) {
                 if (! isset($regionStats[$region])) {
                     $regionStats[$region] = [
-                        'region' => $region,
-                        'total_views' => 0,
+                        'region'        => $region,
+                        'total_views'   => 0,
                         'product_count' => 0,
                     ];
                 }
@@ -473,7 +485,8 @@ class TrendingProductTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $products
+     * @param array<int, array<string, mixed>> $products
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getDemographicTrends(array $products): array
@@ -485,8 +498,8 @@ class TrendingProductTest extends TestCase
             if (is_string($ageGroup)) {
                 if (! isset($demographicStats[$ageGroup])) {
                     $demographicStats[$ageGroup] = [
-                        'age_group' => $ageGroup,
-                        'total_views' => 0,
+                        'age_group'     => $ageGroup,
+                        'total_views'   => 0,
                         'product_count' => 0,
                     ];
                 }

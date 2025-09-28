@@ -33,8 +33,7 @@ class FileCleanupService
 
     /**
      * Clean up temporary files.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public function cleanupTempFiles(): array
@@ -78,8 +77,7 @@ class FileCleanupService
 
     /**
      * Clean up log files.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public function cleanupLogFiles(): array
@@ -126,8 +124,7 @@ class FileCleanupService
 
     /**
      * Clean up cache files.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public function cleanupCacheFiles(): array
@@ -423,7 +420,7 @@ class FileCleanupService
      */
     public function scheduleCleanup(): void
     {
-        $schedule = $this->config['cleanup_schedule'];
+        $schedule = $this->config['cleanup_schedule'] ?? 'daily';
 
         switch ($schedule) {
             case 'hourly':

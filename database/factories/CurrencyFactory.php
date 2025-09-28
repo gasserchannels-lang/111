@@ -29,46 +29,4 @@ class CurrencyFactory extends Factory
             'decimal_places' => 2,
         ];
     }
-
-    public function active(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_active' => true,
-        ]);
-    }
-
-    public function inactive(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_active' => false,
-        ]);
-    }
-
-    public function default(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_default' => true,
-        ]);
-    }
-
-    public function withCode(string $code): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'code' => $code,
-        ]);
-    }
-
-    public function withSymbol(string $symbol): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'symbol' => $symbol,
-        ]);
-    }
-
-    public function withExchangeRate(float $rate): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'exchange_rate' => $rate,
-        ]);
-    }
 }

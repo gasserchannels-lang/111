@@ -2,44 +2,30 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Safe Laravel test base that preserves error handlers
- * to prevent PHPUnit risky test warnings
+ * to prevent PHPUnit risky test warnings.
  */
-abstract class SafeLaravelTest extends TestCase
+
+/**
+ * @runTestsInSeparateProcesses
+ */
+class SafeLaravelTest extends TestCase
 {
     use \Tests\DatabaseSetup;
-
-    /** @var callable|null */
-    private static $safeOriginalErrorHandler;
-
-    /** @var callable|null */
-    private static $safeOriginalExceptionHandler;
-
-    private static int $safeOriginalErrorReporting = 0;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        // Store original handlers before any Laravel bootstrap
-        self::$safeOriginalErrorHandler = set_error_handler(null);
-        self::$safeOriginalExceptionHandler = set_exception_handler(null);
-        self::$safeOriginalErrorReporting = error_reporting();
+        // Don't modify error handlers to avoid PHPUnit warnings
     }
 
     public static function tearDownAfterClass(): void
     {
-        // Restore original handlers
-        if (self::$safeOriginalErrorHandler !== null) {
-            set_error_handler(self::$safeOriginalErrorHandler);
-        }
-        if (self::$safeOriginalExceptionHandler !== null) {
-            set_exception_handler(self::$safeOriginalExceptionHandler);
-        }
-        error_reporting(self::$safeOriginalErrorReporting);
-
         parent::tearDownAfterClass();
+        // Don't modify error handlers to avoid PHPUnit warnings
     }
 
     protected function setUp(): void
@@ -61,5 +47,13 @@ abstract class SafeLaravelTest extends TestCase
         }
 
         parent::tearDown();
+    }
+
+    /**
+     * Test that SafeLaravelTest can be instantiated.
+     */
+    public function test_can_be_instantiated(): void
+    {
+        $this->assertInstanceOf(self::class, $this);
     }
 }

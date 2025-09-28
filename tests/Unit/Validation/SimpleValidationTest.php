@@ -2,29 +2,42 @@
 
 namespace Tests\Unit\Validation;
 
-use Tests\Unit\MinimalTestBase;
+use Illuminate\Support\Facades\Validator;
+use Tests\TestCase;
 
-class SimpleValidationTest extends MinimalTestBase
+/**
+ * @runTestsInSeparateProcesses
+ */
+class SimpleValidationTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_basic_functionality(): void
+    public function test_required_validation_passes_with_value(): void
     {
-        // Test basic functionality
-        $this->assertNotEmpty('test');
+        $data = ['name' => 'John'];
+        $rules = ['name' => 'required'];
+
+        $validator = Validator::make($data, $rules);
+
+        $this->assertTrue($validator->passes());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_expected_behavior(): void
+    public function test_required_validation_fails_without_value(): void
     {
-        // Test expected behavior
-        $this->assertNotEmpty('test');
+        $data = [];
+        $rules = ['name' => 'required'];
+
+        $validator = Validator::make($data, $rules);
+
+        $this->assertFalse($validator->passes());
+        $this->assertArrayHasKey('name', $validator->errors()->toArray());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_validation(): void
     {
         // Test validation
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     protected function setUp(): void

@@ -15,6 +15,14 @@ class HomeController extends Controller
     {
         // جلب المنتجات المميزة
         $featuredProducts = Product::where('is_active', true)
+            ->where('is_featured', true)
+            ->with(['category', 'brand'])
+            ->latest()
+            ->take(8)
+            ->get();
+
+        // جلب أحدث المنتجات
+        $latestProducts = Product::where('is_active', true)
             ->with(['category', 'brand'])
             ->latest()
             ->take(8)
@@ -35,6 +43,11 @@ class HomeController extends Controller
             ->get();
 
         // Tests expect the 'home' view regardless of dataset
-        return view('home', ['featuredProducts' => $featuredProducts, 'categories' => $categories, 'brands' => $brands]);
+        return view('home', [
+            'featuredProducts' => $featuredProducts,
+            'latestProducts' => $latestProducts,
+            'categories' => $categories,
+            'brands' => $brands,
+        ]);
     }
 }

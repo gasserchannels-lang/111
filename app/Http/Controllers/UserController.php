@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BanUserRequest;
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Models\Wishlist;
 use App\Services\PasswordPolicyService;
 use App\Services\UserBanService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -79,25 +79,9 @@ class UserController extends Controller
     /**
      * Update the specified user.
      */
-    public function update(Request $request, User $user): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|string|max:255',
-            'email' => ['sometimes', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role' => 'sometimes|in:user,admin,moderator',
-            'is_blocked' => 'sometimes|boolean',
-            'ban_expires_at' => 'sometimes|nullable|date|after:now',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $user->update($request->only(['name', 'email', 'role', 'is_blocked', 'ban_expires_at']));
+        $user->update($request->validated());
 
         return response()->json([
             'success' => true,
@@ -109,22 +93,8 @@ class UserController extends Controller
     /**
      * Change user password.
      */
-    public function changePassword(Request $request, User $user): JsonResponse
+    public function changePassword(ChangePasswordRequest $request, User $user): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string',
-            'new_password' => 'required|string|min:8',
-            'new_password_confirmation' => 'required|string|same:new_password',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
         // Verify current password
         $currentPassword = $request->current_password;
         if (! Hash::check(is_string($currentPassword) ? $currentPassword : '', $user->password)) {
@@ -162,22 +132,8 @@ class UserController extends Controller
     /**
      * Ban a user.
      */
-    public function ban(Request $request, User $user): JsonResponse
+    public function ban(BanUserRequest $request, User $user): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'reason' => 'required|string|max:500',
-            'duration_hours' => 'sometimes|integer|min:1|max:8760', // Max 1 year
-            'notify_user' => 'sometimes|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
         if (! $this->userBanService->canBanUser($user)) {
             return response()->json([
                 'success' => false,

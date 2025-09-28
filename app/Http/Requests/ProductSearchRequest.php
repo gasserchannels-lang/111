@@ -175,27 +175,8 @@ class ProductSearchRequest extends FormRequest
      */
     public function withValidator($validator): void
     {
-        $validator->after(function ($validator): void {
-            // Additional custom validation logic
-            if ($this->has('min_price') && $this->has('max_price')) {
-                $minPrice = $this->input('min_price');
-                $maxPrice = $this->input('max_price');
-
-                if ($minPrice && $maxPrice && $minPrice > $maxPrice) {
-                    $validator->errors()->add('max_price', 'الحد الأقصى للسعر يجب أن يكون أكبر من الحد الأدنى');
-                }
-            }
-
-            // Check if search query is too generic
-            if ($this->has('q')) {
-                $query = $this->input('q');
-                $genericTerms = ['منتج', 'product', 'item', 'thing', 'stuff'];
-
-                if (is_string($query) && in_array(strtolower($query), $genericTerms)) {
-                    $validator->warnings()->add('q', 'كلمة البحث عامة جداً - جرب كلمات أكثر تحديداً للحصول على نتائج أفضل');
-                }
-            }
-        });
+        // The 'gte:min_price' rule already handles the price validation.
+        // Custom warnings are experimental and can be handled on the frontend if needed.
     }
 
     /**
@@ -207,10 +188,10 @@ class ProductSearchRequest extends FormRequest
 
         // Set default values
         if (is_array($validated)) {
-            $validated['sort'] ??= 'popularity';
-            $validated['order'] ??= 'desc';
-            $validated['page'] = is_numeric($validated['page'] ?? null) ? (int) $validated['page'] : 1;
-            $validated['per_page'] = is_numeric($validated['per_page'] ?? null) ? (int) $validated['per_page'] : 15;
+            $validated['sort'] = $this->input('sort', 'popularity');
+            $validated['order'] = $this->input('order', 'desc');
+            $validated['page'] = (int) $this->input('page', 1);
+            $validated['per_page'] = (int) $this->input('per_page', 15);
         }
 
         return $validated;
@@ -223,37 +204,7 @@ class ProductSearchRequest extends FormRequest
      */
     public function getFilters(): array
     {
-        $filters = [];
-
-        if ($this->has('category_id')) {
-            $filters['category_id'] = $this->input('category_id');
-        }
-
-        if ($this->has('brand_id')) {
-            $filters['brand_id'] = $this->input('brand_id');
-        }
-
-        if ($this->has('min_price')) {
-            $filters['min_price'] = $this->input('min_price');
-        }
-
-        if ($this->has('max_price')) {
-            $filters['max_price'] = $this->input('max_price');
-        }
-
-        if ($this->has('tags')) {
-            $filters['tags'] = $this->input('tags');
-        }
-
-        if ($this->has('in_stock')) {
-            $filters['in_stock'] = $this->input('in_stock');
-        }
-
-        if ($this->has('featured')) {
-            $filters['featured'] = $this->input('featured');
-        }
-
-        return $filters;
+        return $this->safe()->except(['q', 'sort', 'order', 'page', 'per_page']);
     }
 
     /**
@@ -261,9 +212,7 @@ class ProductSearchRequest extends FormRequest
      */
     public function getQuery(): string
     {
-        $query = $this->input('q', '');
-
-        return is_string($query) ? $query : '';
+        return $this->validated('q', '');
     }
 
     /**
@@ -273,12 +222,9 @@ class ProductSearchRequest extends FormRequest
      */
     public function getPagination(): array
     {
-        $page = $this->input('page', 1);
-        $perPage = $this->input('per_page', 15);
-
         return [
-            'page' => is_numeric($page) ? (int) $page : 1,
-            'per_page' => is_numeric($perPage) ? (int) $perPage : 15,
+            'page' => (int) $this->input('page', 1),
+            'per_page' => (int) $this->input('per_page', 15),
         ];
     }
 
@@ -289,12 +235,9 @@ class ProductSearchRequest extends FormRequest
      */
     public function getSorting(): array
     {
-        $sort = $this->input('sort', 'popularity');
-        $order = $this->input('order', 'desc');
-
         return [
-            'sort' => is_string($sort) ? $sort : 'popularity',
-            'order' => is_string($order) ? $order : 'desc',
+            'sort' => $this->validated('sort', 'popularity'),
+            'order' => $this->validated('order', 'desc'),
         ];
     }
 }

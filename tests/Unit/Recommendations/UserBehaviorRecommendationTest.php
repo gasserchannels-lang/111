@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class UserBehaviorRecommendationTest extends TestCase
 {
     #[Test]
@@ -49,9 +52,9 @@ class UserBehaviorRecommendationTest extends TestCase
     {
         $userBehavior = [
             'browsed_categories' => ['Electronics', 'Electronics', 'Clothing', 'Electronics'],
-            'clicked_products' => ['iPhone', 'Samsung', 'Nike', 'iPhone'],
-            'time_on_pages' => [300, 600, 120, 900],
-            'searches' => ['smartphone', 'iPhone', 'shoes', 'iPhone case'],
+            'clicked_products'   => ['iPhone', 'Samsung', 'Nike', 'iPhone'],
+            'time_on_pages'      => [300, 600, 120, 900],
+            'searches'           => ['smartphone', 'iPhone', 'shoes', 'iPhone case'],
         ];
 
         $preferences = $this->identifyUserPreferences($userBehavior);
@@ -67,10 +70,10 @@ class UserBehaviorRecommendationTest extends TestCase
     public function it_predicts_user_intent(): void
     {
         $recentBehavior = [
-            'searches' => ['iPhone 15', 'iPhone accessories', 'iPhone case'],
+            'searches'         => ['iPhone 15', 'iPhone accessories', 'iPhone case'],
             'browsed_products' => ['iPhone 15 Pro', 'iPhone 15 Pro Max'],
-            'time_spent' => 1800, // 30 minutes
-            'pages_viewed' => 8,
+            'time_spent'       => 1800, // 30 minutes
+            'pages_viewed'     => 8,
         ];
 
         $intent = $this->predictUserIntent($recentBehavior);
@@ -86,11 +89,11 @@ class UserBehaviorRecommendationTest extends TestCase
     public function it_analyzes_user_engagement_level(): void
     {
         $userMetrics = [
-            'sessions_per_week' => 5,
+            'sessions_per_week'        => 5,
             'average_session_duration' => 600, // 10 minutes
-            'pages_per_session' => 8,
-            'bounce_rate' => 0.2,
-            'return_visits' => 3,
+            'pages_per_session'        => 8,
+            'bounce_rate'              => 0.2,
+            'return_visits'            => 3,
         ];
 
         $engagementLevel = $this->calculateEngagementLevel($userMetrics);
@@ -111,7 +114,7 @@ class UserBehaviorRecommendationTest extends TestCase
                 ['price' => 150, 'purchased' => true],
                 ['price' => 300, 'purchased' => false],
             ],
-            'price_alerts_set' => 2,
+            'price_alerts_set'  => 2,
             'discount_searches' => 5,
         ];
 
@@ -127,9 +130,9 @@ class UserBehaviorRecommendationTest extends TestCase
     public function it_analyzes_user_device_preferences(): void
     {
         $deviceUsage = [
-            'mobile' => ['sessions' => 15, 'purchases' => 3, 'time_spent' => 1800],
+            'mobile'  => ['sessions' => 15, 'purchases' => 3, 'time_spent' => 1800],
             'desktop' => ['sessions' => 8, 'purchases' => 5, 'time_spent' => 2400],
-            'tablet' => ['sessions' => 3, 'purchases' => 1, 'time_spent' => 600],
+            'tablet'  => ['sessions' => 3, 'purchases' => 1, 'time_spent' => 600],
         ];
 
         $preferences = $this->analyzeDevicePreferences($deviceUsage);
@@ -148,7 +151,7 @@ class UserBehaviorRecommendationTest extends TestCase
             'Winter' => ['purchases' => 10, 'categories' => ['Winter Clothing', 'Heating']],
             'Spring' => ['purchases' => 8, 'categories' => ['Spring Clothing', 'Gardening']],
             'Summer' => ['purchases' => 12, 'categories' => ['Summer Clothing', 'Outdoor']],
-            'Fall' => ['purchases' => 6, 'categories' => ['Fall Clothing', 'Indoor']],
+            'Fall'   => ['purchases' => 6, 'categories' => ['Fall Clothing', 'Indoor']],
         ];
 
         $patterns = $this->analyzeSeasonalPatterns($seasonalData);
@@ -164,10 +167,10 @@ class UserBehaviorRecommendationTest extends TestCase
     {
         $userMetrics = [
             'days_since_last_visit' => 30,
-            'sessions_last_month' => 2,
-            'purchases_last_month' => 0,
-            'engagement_score' => 0.3,
-            'support_tickets' => 2,
+            'sessions_last_month'   => 2,
+            'purchases_last_month'  => 0,
+            'engagement_score'      => 0.3,
+            'support_tickets'       => 2,
         ];
 
         $churnRisk = $this->predictChurnRisk($userMetrics);
@@ -182,9 +185,9 @@ class UserBehaviorRecommendationTest extends TestCase
     public function it_generates_personalized_recommendations(): void
     {
         $userProfile = [
-            'preferences' => ['Electronics', 'Apple'],
-            'price_range' => [100, 500],
-            'engagement_level' => 'high',
+            'preferences'        => ['Electronics', 'Apple'],
+            'price_range'        => [100, 500],
+            'engagement_level'   => 'high',
             'purchase_frequency' => 0.5,
         ];
 
@@ -201,7 +204,8 @@ class UserBehaviorRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $browsingHistory
+     * @param array<int, array<string, mixed>> $browsingHistory
+     *
      * @return array<string, mixed>
      */
     private function analyzeBrowsingPatterns(array $browsingHistory): array
@@ -222,14 +226,14 @@ class UserBehaviorRecommendationTest extends TestCase
         $averageSessionTime = $totalTime / count($browsingHistory);
 
         return [
-            'most_viewed_category' => $mostViewedCategory,
-            'average_session_time' => $averageSessionTime,
+            'most_viewed_category'       => $mostViewedCategory,
+            'average_session_time'       => $averageSessionTime,
             'category_time_distribution' => $categoryTime,
         ];
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $purchaseHistory
+     * @param array<int, array<string, mixed>> $purchaseHistory
      */
     private function calculatePurchaseFrequency(array $purchaseHistory): float
     {
@@ -248,7 +252,8 @@ class UserBehaviorRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userBehavior
+     * @param array<string, mixed> $userBehavior
+     *
      * @return array<string, mixed>
      */
     private function identifyUserPreferences(array $userBehavior): array
@@ -266,15 +271,16 @@ class UserBehaviorRecommendationTest extends TestCase
         $preferredBrand = $maxBrandCount > 0 ? array_keys($brandCounts, $maxBrandCount)[0] : '';
 
         return [
-            'preferred_category' => $preferredCategory,
-            'preferred_brand' => $preferredBrand,
+            'preferred_category'  => $preferredCategory,
+            'preferred_brand'     => $preferredBrand,
             'category_confidence' => $maxCategoryCount > 0 ? $maxCategoryCount / array_sum($categoryCounts) : 0,
-            'brand_confidence' => $maxBrandCount > 0 ? $maxBrandCount / array_sum($brandCounts) : 0,
+            'brand_confidence'    => $maxBrandCount > 0 ? $maxBrandCount / array_sum($brandCounts) : 0,
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $recentBehavior
+     * @param array<string, mixed> $recentBehavior
+     *
      * @return array<string, mixed>
      */
     private function predictUserIntent(array $recentBehavior): array
@@ -300,12 +306,13 @@ class UserBehaviorRecommendationTest extends TestCase
 
         return [
             'intent_type' => $intentType,
-            'confidence' => min($intentScore, 1.0),
+            'confidence'  => min($intentScore, 1.0),
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $userMetrics
+     * @param array<string, mixed> $userMetrics
+     *
      * @return array<string, mixed>
      */
     private function calculateEngagementLevel(array $userMetrics): array
@@ -341,7 +348,8 @@ class UserBehaviorRecommendationTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $priceBehavior
+     * @param array<string, mixed> $priceBehavior
+     *
      * @return array<string, mixed>
      */
     private function calculatePriceSensitivity(array $priceBehavior): array
@@ -369,14 +377,15 @@ class UserBehaviorRecommendationTest extends TestCase
         $level = $sensitivityScore > 0.5 ? 'high' : ($sensitivityScore > 0.2 ? 'medium' : 'low');
 
         return [
-            'level' => $level,
+            'level'     => $level,
             'threshold' => $threshold,
-            'score' => $sensitivityScore,
+            'score'     => $sensitivityScore,
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $deviceUsage
+     * @param array<string, mixed> $deviceUsage
+     *
      * @return array<string, mixed>
      */
     private function analyzeDevicePreferences(array $deviceUsage): array
@@ -404,14 +413,15 @@ class UserBehaviorRecommendationTest extends TestCase
         }
 
         return [
-            'primary_device' => $primaryDevice,
+            'primary_device'  => $primaryDevice,
             'purchase_device' => $purchaseDevice,
-            'device_usage' => $deviceUsage,
+            'device_usage'    => $deviceUsage,
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $seasonalData
+     * @param array<string, mixed> $seasonalData
+     *
      * @return array<string, mixed>
      */
     private function analyzeSeasonalPatterns(array $seasonalData): array
@@ -437,13 +447,14 @@ class UserBehaviorRecommendationTest extends TestCase
         arsort($preferredCategories);
 
         return [
-            'peak_season' => $peakSeason,
+            'peak_season'          => $peakSeason,
             'preferred_categories' => array_keys(array_slice($preferredCategories, 0, 3, true)),
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $userMetrics
+     * @param array<string, mixed> $userMetrics
+     *
      * @return array<string, mixed>
      */
     private function predictChurnRisk(array $userMetrics): array
@@ -474,19 +485,21 @@ class UserBehaviorRecommendationTest extends TestCase
         $riskLevel = $probability > 0.7 ? 'high' : ($probability > 0.4 ? 'medium' : 'low');
 
         return [
-            'risk_level' => $riskLevel,
+            'risk_level'  => $riskLevel,
             'probability' => $probability,
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $userProfile
+     * @param array<string, mixed> $userProfile
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $userProfile
-     * @param  array<int, array<string, mixed>>  $availableProducts
+     * @param array<string, mixed>             $userProfile
+     * @param array<int, array<string, mixed>> $availableProducts
+     *
      * @return array<int, array<string, mixed>>
      */
     private function generatePersonalizedRecommendations(array $userProfile, array $availableProducts): array

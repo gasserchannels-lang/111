@@ -2,29 +2,32 @@
 
 namespace Tests\Unit\DataAccuracy;
 
-use Tests\Unit\MinimalTestBase;
+use Tests\TestCase;
 
-class ShippingAccuracyTest extends MinimalTestBase
+/**
+ * @runTestsInSeparateProcesses
+ */
+class ShippingAccuracyTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_basic_functionality(): void
     {
         // Test basic functionality
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_expected_behavior(): void
     {
         // Test expected behavior
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_validation(): void
     {
         // Test validation
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     protected function setUp(): void

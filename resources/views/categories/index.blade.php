@@ -9,12 +9,18 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>Product Categories</h1>
                 <div class="d-flex gap-2">
-                    <input type="text" class="form-control" id="searchInput" placeholder="Search categories..." style="max-width: 300px;">
-                    <select class="form-select" id="sortBy" style="max-width: 200px;">
-                        <option value="name">Sort by Name</option>
-                        <option value="products_count">Most Products</option>
-                        <option value="newest">Newest First</option>
-                    </select>
+                    <div class="d-flex flex-column">
+                        <label for="searchInput" class="form-label small mb-1">Search Categories</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search categories..." style="max-width: 300px;" aria-label="Search categories">
+                    </div>
+                    <div class="d-flex flex-column">
+                        <label for="sortBy" class="form-label small mb-1">Sort by</label>
+                        <select class="form-select" id="sortBy" style="max-width: 200px;" aria-label="Sort categories">
+                            <option value="name">Sort by Name</option>
+                            <option value="products_count">Most Products</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -22,7 +28,7 @@
 
     <div class="row" id="categoriesContainer">
         @forelse($categories ?? [] as $category)
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 category-item" 
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 category-item"
              data-name="{{ strtolower($category->name) }}"
              data-products-count="{{ $category->products_count ?? 0 }}">
             <div class="card h-100 category-card">

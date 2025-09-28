@@ -1,5 +1,6 @@
 includes:
     - ./vendor/larastan/larastan/extension.neon
+    - ./vendor/shipmonk/dead-code-detector/rules.neon
 
 parameters:
     paths:
@@ -14,10 +15,16 @@ parameters:
         - storage
         - vendor
 
-    level: 9
+    level: max
 
     reportUnmatchedIgnoredErrors: true
 
     tmpDir: storage/framework/phpstan
 
-    treatPhpDocTypesAsCertain: false
+    treatPhpDocTypesAsCertain: true
+    ignoreErrors: []
+
+    # Memory optimization
+    parallel:
+        processTimeout: 300.0
+        maximumNumberOfProcesses: 4

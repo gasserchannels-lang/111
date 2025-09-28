@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $store_id
  * @property float $price
  * @property bool $in_stock
- * @property-read Product $product
- * @property-read Store $store
+ * @property Product $product
+ * @property Store $store
  *
  * @method static PriceOfferFactory factory(...$parameters)
  *

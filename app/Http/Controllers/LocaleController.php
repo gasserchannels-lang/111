@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SwitchLanguageRequest;
 use App\Models\Currency;
 use App\Models\Language;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Session\Session;
-use Illuminate\Http\Request;
 
 class LocaleController extends Controller
 {
     public function __construct(private readonly Guard $auth, private readonly Session $session, private readonly Application $app) {}
 
-    public function switchLanguage(Request $request): \Illuminate\Http\RedirectResponse
+    public function switchLanguage(SwitchLanguageRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $request->validate([
-            'language' => 'required|string|in:en,ar,fr,es,de', // Add supported locales
-        ]);
-
         $locale = $request->input('language');
 
         // Set the locale in session
@@ -51,7 +47,7 @@ class LocaleController extends Controller
                         if (! $userLocale->currency_id) {
                             $defaultCurrency = $language->currencies()->wherePivot('is_default', true)->first();
                             if ($defaultCurrency) {
-                                /** @var \App\Models\Currency $defaultCurrency */
+                                /* @var \App\Models\Currency $defaultCurrency */
                                 $userLocale->currency_id = $defaultCurrency->id;
                                 $this->session->put('locale_currency', $defaultCurrency->code);
                             }

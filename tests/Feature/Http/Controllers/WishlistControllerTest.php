@@ -1,39 +1,197 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Http\Controllers;
 
-use Tests\Unit\MinimalTestBase;
+use App\Models\Product;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-class WishlistControllerTest extends MinimalTestBase
+/**
+ * @runTestsInSeparateProcesses
+ */
+class WishlistControllerTest extends TestCase
 {
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_basic_functionality(): void
-    {
-        // Test basic functionality
-        $this->assertNotEmpty('test');
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_expected_behavior(): void
-    {
-        // Test expected behavior
-        $this->assertNotEmpty('test');
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_validation(): void
-    {
-        // Test validation
-        $this->assertNotEmpty('test');
-    }
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setUpDatabase();
     }
 
     protected function tearDown(): void
     {
+        $this->tearDownDatabase();
         parent::tearDown();
+    }
+
+    /** @test */
+    public function it_can_display_wishlist()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->get('/wishlist');
+
+        $response->assertStatus(200)
+            ->assertViewIs('wishlist.index');
+    }
+
+    /** @test */
+    public function it_requires_authentication_to_view_wishlist()
+    {
+        $response = $this->get('/wishlist');
+
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function it_can_add_product_to_wishlist()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product = Product::factory()->create();
+
+        $response = $this->post('/wishlist/add', [
+            'product_id' => $product->id,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Product added to wishlist successfully.',
+            ]);
+
+        // Verify the item was added to the database
+        $this->assertDatabaseHas('wishlists', [
+            'user_id'    => $user->id,
+            'product_id' => $product->id,
+        ]);
+    }
+
+    /** @test */
+    public function it_validates_add_to_wishlist_request()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->postJson('/wishlist/add', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['product_id']);
+    }
+
+    /** @test */
+    public function it_requires_authentication_to_add_to_wishlist()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->post('/wishlist/add', [
+            'product_id' => $product->id,
+        ]);
+
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function it_can_remove_product_from_wishlist()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product = Product::factory()->create();
+
+        // First add product to wishlist
+        $this->post('/wishlist/add', [
+            'product_id' => $product->id,
+        ]);
+
+        // Verify the item was added
+        $this->assertDatabaseHas('wishlists', [
+            'user_id'    => $user->id,
+            'product_id' => $product->id,
+        ]);
+
+        $response = $this->delete('/wishlist/remove', [
+            'product_id' => $product->id,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Product removed from wishlist successfully.',
+            ]);
+
+        // Verify the item was removed from the database
+        $this->assertDatabaseMissing('wishlists', [
+            'user_id'    => $user->id,
+            'product_id' => $product->id,
+        ]);
+    }
+
+    /** @test */
+    public function it_validates_remove_from_wishlist_request()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->deleteJson('/wishlist/remove', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['product_id']);
+    }
+
+    /** @test */
+    public function it_requires_authentication_to_remove_from_wishlist()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->delete('/wishlist/remove', [
+            'product_id' => $product->id,
+        ]);
+
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function it_can_clear_entire_wishlist()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product1 = Product::factory()->create();
+        $product2 = Product::factory()->create();
+
+        // Add products to wishlist
+        $this->post('/wishlist/add', [
+            'product_id' => $product1->id,
+        ]);
+        $this->post('/wishlist/add', [
+            'product_id' => $product2->id,
+        ]);
+
+        $response = $this->delete('/wishlist/clear');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Wishlist cleared successfully.',
+            ]);
+    }
+
+    /** @test */
+    public function it_requires_authentication_to_clear_wishlist()
+    {
+        $response = $this->delete('/wishlist/clear');
+
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
     }
 }

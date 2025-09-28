@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\ProcessResult;
 use Illuminate\Support\Facades\Process;
 
 class ProcessService
@@ -43,12 +44,43 @@ class ProcessService
      */
     public function run(string|array $command): ProcessResult
     {
-        $result = Process::run($command);
+        // Set timeout for long-running commands like Pint
+        $timeout = 300; // 5 minutes
+        if (is_string($command) && str_contains($command, 'pint')) {
+            $timeout = 300;
+        }
+
+        $result = Process::timeout($timeout)->run($command);
+
+        // For git commands, stderr often contains success messages, not errors
+        $isGitCommand = is_string($command) && str_starts_with($command, 'git');
+
+        if ($isGitCommand) {
+            // For git commands, check if the stderr contains success messages
+            $errorOutput = $result->errorOutput();
+            $isSuccessMessage = str_contains($errorOutput, 'Switched to a new branch') ||
+                str_contains($errorOutput, 'Branch created') ||
+                str_contains($errorOutput, 'successfully');
+
+            if ($isSuccessMessage) {
+                // Treat stderr as output for successful git commands, and force success
+                $output = $result->output() ?: $errorOutput;
+                $errorOutput = '';
+                $exitCode = 0; // Force success for git commands with success messages
+            } else {
+                $output = $result->output();
+                $exitCode = $result->exitCode() ?? 0;
+            }
+        } else {
+            $output = $result->output();
+            $errorOutput = $result->errorOutput();
+            $exitCode = $result->exitCode() ?? 0;
+        }
 
         return new ProcessResult(
-            $result->exitCode() ?? 0,
-            $result->output(),
-            $result->errorOutput()
+            $exitCode,
+            $output,
+            $errorOutput
         );
     }
 

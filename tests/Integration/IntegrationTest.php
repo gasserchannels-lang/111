@@ -7,6 +7,10 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 #[CoversNothing]
+
+/**
+ * @runTestsInSeparateProcesses
+ */
 class IntegrationTest extends TestCase
 {
     #[Test]
@@ -39,7 +43,7 @@ class IntegrationTest extends TestCase
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 500]));
 
         $response = $this->post('/login', [
-            'email' => 'test@example.com',
+            'email'    => 'test@example.com',
             'password' => 'password',
         ]);
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 422, 500, 405]));

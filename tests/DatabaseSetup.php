@@ -24,6 +24,11 @@ trait DatabaseSetup
 
         // Create tables manually without migrations
         $this->createTablesManually();
+
+        // Only start a transaction if there isn't already one active
+        if (\DB::transactionLevel() === 0) {
+            \DB::beginTransaction();
+        }
     }
 
     /**
@@ -48,7 +53,7 @@ trait DatabaseSetup
         // Get all table names and drop them (excluding sqlite_sequence)
         $tables = \DB::connection($connection)->select("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence';");
         foreach ($tables as $table) {
-            \DB::connection($connection)->statement('DROP TABLE IF EXISTS '.$table->name);
+            \DB::connection($connection)->statement('DROP TABLE IF EXISTS ' . $table->name);
         }
 
         \DB::connection($connection)->statement('PRAGMA foreign_keys=ON;');
@@ -67,7 +72,11 @@ trait DatabaseSetup
         $this->createStoresTable($connection);
         $this->createUserLocaleSettingsTable($connection);
         $this->createReviewsTable($connection);
+        $this->createUsersTable($connection);
+        $this->createAuditLogsTable($connection);
+        $this->createCustomNotificationsTable($connection);
         $this->createMigrationsTable($connection);
+        $this->createPersonalAccessTokensTable($connection);
     }
 
     /**
@@ -75,19 +84,31 @@ trait DatabaseSetup
      */
     protected function createUsersTable(string $connection = 'testing'): void
     {
-        \DB::connection($connection)->statement('
-            CREATE TABLE users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                email_verified_at DATETIME,
-                password VARCHAR(255) NOT NULL,
-                is_admin BOOLEAN DEFAULT 0,
-                remember_token VARCHAR(100),
-                created_at DATETIME,
-                updated_at DATETIME
-            )
-        ');
+        // Check if table already exists
+        $exists = \DB::connection($connection)->select("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
+        if (empty($exists)) {
+            \DB::connection($connection)->statement('
+                CREATE TABLE users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name VARCHAR(255) NOT NULL,
+                    email VARCHAR(255) UNIQUE NOT NULL,
+                    email_verified_at DATETIME,
+                    password VARCHAR(255) NOT NULL,
+                    is_admin BOOLEAN DEFAULT 0,
+                    role VARCHAR(255) DEFAULT "user",
+                    is_blocked BOOLEAN DEFAULT 0,
+                    ban_reason VARCHAR(255),
+                    ban_description TEXT,
+                    banned_at DATETIME,
+                    ban_expires_at DATETIME,
+                    is_active BOOLEAN DEFAULT 1,
+                    session_id VARCHAR(255),
+                    remember_token VARCHAR(100),
+                    created_at DATETIME,
+                    updated_at DATETIME
+                )
+            ');
+        }
     }
 
     /**
@@ -108,6 +129,8 @@ trait DatabaseSetup
                 brand_id INTEGER,
                 store_id INTEGER,
                 is_active BOOLEAN DEFAULT 1,
+                is_featured BOOLEAN DEFAULT 0,
+                stock_quantity INTEGER DEFAULT 0,
                 created_at DATETIME,
                 updated_at DATETIME,
                 deleted_at DATETIME
@@ -368,6 +391,61 @@ trait DatabaseSetup
     }
 
     /**
+     * Create audit_logs table.
+     */
+    protected function createAuditLogsTable(string $connection = 'testing'): void
+    {
+        \DB::connection($connection)->statement('
+            CREATE TABLE audit_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                event VARCHAR(255) NOT NULL,
+                auditable_type VARCHAR(255) NOT NULL,
+                auditable_id INTEGER NOT NULL,
+                user_id INTEGER,
+                ip_address VARCHAR(45),
+                user_agent TEXT,
+                old_values TEXT,
+                new_values TEXT,
+                metadata TEXT,
+                url VARCHAR(255),
+                method VARCHAR(10),
+                created_at DATETIME,
+                updated_at DATETIME
+            )
+        ');
+    }
+
+    /**
+     * Create custom_notifications table.
+     */
+    protected function createCustomNotificationsTable(string $connection = 'testing'): void
+    {
+        // Check if table already exists
+        $exists = \DB::connection($connection)->select("SELECT name FROM sqlite_master WHERE type='table' AND name='custom_notifications'");
+        if (empty($exists)) {
+            \DB::connection($connection)->statement('
+                CREATE TABLE custom_notifications (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    type VARCHAR(255) NOT NULL,
+                    title VARCHAR(255) NOT NULL,
+                    message TEXT NOT NULL,
+                    data TEXT,
+                    read_at DATETIME,
+                    sent_at DATETIME,
+                    priority INTEGER DEFAULT 2,
+                    channel VARCHAR(255) DEFAULT "email",
+                    status VARCHAR(255) DEFAULT "pending",
+                    metadata TEXT,
+                    tags TEXT,
+                    created_at DATETIME,
+                    updated_at DATETIME
+                )
+            ');
+        }
+    }
+
+    /**
      * Create personal_access_tokens table for Sanctum.
      */
     protected function createPersonalAccessTokensTable(string $connection = 'testing'): void
@@ -386,5 +464,20 @@ trait DatabaseSetup
                 updated_at DATETIME
             )
         ');
+    }
+
+    /**
+     * Clean up database after each test.
+     */
+    protected function tearDownDatabase(): void
+    {
+        // Rollback the transaction to clean up
+        try {
+            if (\DB::transactionLevel() > 0) {
+                \DB::rollBack();
+            }
+        } catch (\Exception $e) {
+            // Ignore rollback errors during teardown
+        }
     }
 }

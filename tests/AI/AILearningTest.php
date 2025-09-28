@@ -3,15 +3,18 @@
 namespace Tests\AI;
 
 use App\Services\AIService;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
 
-class AILearningTest extends TestCase
+class AILearningTest extends AIBaseTestCase
 {
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_can_learn_from_user_feedback(): void
     {
-        $aiService = new AIService;
+        $aiService = $this->getAIService();
 
         $text = 'منتج ممتاز';
         $initialResult = $aiService->analyzeText($text);
@@ -21,9 +24,11 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_improves_accuracy_over_time(): void
     {
-        $aiService = new AIService;
+        $aiService = $this->getAIService();
 
         /** @var array<int, array{text: string, sentiment: string}> $testCases */
         $testCases = [
@@ -34,6 +39,7 @@ class AILearningTest extends TestCase
 
         foreach ($testCases as $case) {
             $result = $aiService->analyzeText($case['text']);
+
             $this->assertArrayHasKey('sentiment', $result);
         }
 
@@ -41,15 +47,17 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_adapts_to_user_preferences(): void
     {
         $aiService = new AIService;
 
         /** @var array{categories: array<int, string>, price_range: array<int, int>, brands: array<int, string>} $userPreferences */
         $userPreferences = [
-            'categories' => ['إلكترونيات'],
+            'categories'  => ['إلكترونيات'],
             'price_range' => [1000, 5000],
-            'brands' => ['سامسونج', 'أبل'],
+            'brands'      => ['سامسونج', 'أبل'],
         ];
 
         /** @var array<int, array<string, mixed>> $products */
@@ -60,12 +68,14 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_learns_from_product_classification_feedback(): void
     {
         $aiService = new AIService;
 
         $productData = [
-            'name' => 'هاتف ذكي',
+            'name'        => 'هاتف ذكي',
             'description' => 'هاتف ذكي متطور',
         ];
 
@@ -77,13 +87,15 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_learns_from_recommendation_feedback(): void
     {
         $aiService = new AIService;
 
         /** @var array{categories: array<int, string>, price_range: array<int, int>} $userPreferences */
         $userPreferences = [
-            'categories' => ['إلكترونيات'],
+            'categories'  => ['إلكترونيات'],
             'price_range' => [1000, 5000],
         ];
 
@@ -95,6 +107,8 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_learns_from_image_analysis_feedback(): void
     {
         $aiService = new AIService;
@@ -107,9 +121,11 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_learning_persists_across_sessions(): void
     {
-        $aiService = new AIService;
+        $aiService = $this->getAIService();
 
         $text = 'منتج ممتاز';
 
@@ -120,9 +136,11 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_learning_rate_is_appropriate(): void
     {
-        $aiService = new AIService;
+        $aiService = $this->getAIService();
 
         $text = 'منتج جيد';
 
@@ -133,9 +151,11 @@ class AILearningTest extends TestCase
     }
 
     #[Test]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function ai_handles_contradictory_feedback(): void
     {
-        $aiService = new AIService;
+        $aiService = $this->getAIService();
 
         $text = 'منتج متوسط';
 
@@ -143,15 +163,5 @@ class AILearningTest extends TestCase
         $result = $aiService->analyzeText($text);
 
         $this->assertArrayHasKey('sentiment', $result);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 }

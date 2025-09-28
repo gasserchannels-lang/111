@@ -7,6 +7,10 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 #[CoversNothing]
+
+/**
+ * @runTestsInSeparateProcesses
+ */
 class AdvancedIntegrationTest extends TestCase
 {
     #[Test]

@@ -11,11 +11,17 @@ final readonly class TestAnalysisService
 {
     public function __construct(private bool $coverageEnabled = false) {}
 
+    /**
+     * Create instance without coverage.
+     */
     public static function withoutCoverage(): self
     {
         return new self(false);
     }
 
+    /**
+     * Create instance with coverage.
+     */
     public static function withCoverage(): self
     {
         return new self(true);

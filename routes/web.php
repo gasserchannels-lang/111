@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AIControlPanelController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
@@ -86,6 +87,21 @@ Route::post('/password/reset', function () {
     return redirect()->route('login')->with('status', 'Password reset successfully!');
 })->name('password.update');
 
+// Email verification routes
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function () {
+    // Handle email verification logic here
+    return redirect()->route('home')->with('status', 'Email verified successfully!');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Password confirmation route
+Route::get('/user/confirm-password', function () {
+    return view('auth.confirm-password');
+})->middleware('auth')->name('password.confirm');
+
 // Additional password reset routes for testing
 Route::post('/forgot-password', function () {
     return back()->with('status', 'Password reset link sent!');
@@ -125,11 +141,14 @@ Route::middleware('auth')->group(function (): void {
     ]);
 
     // Wishlist Routes
-    Route::resource('wishlist', WishlistController::class)->only(['index', 'store', 'destroy']);
+    Route::post('wishlist/add', [WishlistController::class, 'store'])->name('wishlist.add');
+    Route::delete('wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::delete('wishlist/clear', [WishlistController::class, 'clear'])->name('wishlist.clear');
     Route::post('wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::resource('wishlist', WishlistController::class)->only(['index', 'destroy']);
 
     // Review Routes
-    Route::resource('reviews', ReviewController::class)->only(['store', 'destroy']);
+    Route::resource('reviews', ReviewController::class)->only(['store', 'update', 'destroy']);
 
     // Cart Routes
     Route::get('cart', [CartController::class, 'index'])->name('cart.index');
@@ -149,6 +168,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('stores', [AdminController::class, 'stores'])->name('stores');
     Route::post('users/{user}/toggle-admin', [AdminController::class, 'toggleUserAdmin'])->name('users.toggle-admin');
+
+    // AI Control Panel Routes
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::get('/', [AIControlPanelController::class, 'index'])->name('index');
+        Route::post('/analyze-text', [AIControlPanelController::class, 'analyzeText'])->name('analyze-text');
+        Route::post('/classify-product', [AIControlPanelController::class, 'classifyProduct'])->name('classify-product');
+        Route::post('/recommendations', [AIControlPanelController::class, 'generateRecommendations'])->name('recommendations');
+        Route::post('/analyze-image', [AIControlPanelController::class, 'analyzeImage'])->name('analyze-image');
+        Route::get('/status', [AIControlPanelController::class, 'getStatus'])->name('status');
+    });
 });
 
 // --- Brand Routes (تتطلب تسجيل الدخول) ---

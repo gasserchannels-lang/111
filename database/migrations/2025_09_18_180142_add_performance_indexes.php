@@ -31,8 +31,8 @@ return new class extends Migration
             }
         });
 
-        // Create index on TEXT column with specified length
-        if (! Schema::hasIndex('products', 'products_description_is_active_index')) {
+        // Create index on TEXT column with specified length (MySQL only)
+        if (DB::getDriverName() === 'mysql' && ! Schema::hasIndex('products', 'products_description_is_active_index')) {
             DB::statement('ALTER TABLE products ADD INDEX products_description_is_active_index(description(255), is_active)');
         }
 

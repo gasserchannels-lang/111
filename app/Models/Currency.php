@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $code
  * @property string $name
  * @property string $symbol
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Store> $stores
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Language> $languages
+ * @property \Illuminate\Database\Eloquent\Collection<int, Store> $stores
+ * @property \Illuminate\Database\Eloquent\Collection<int, Language> $languages
  *
  * @method static CurrencyFactory factory(...$parameters)
  *

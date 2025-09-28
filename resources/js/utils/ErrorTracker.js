@@ -10,7 +10,7 @@ class ErrorTracker {
         this.isEnabled = true;
         this.rateLimit = {
             max: 10,
-            window: 60000, // 1 minute
+            window: 60_000, // 1 minute
             requests: [],
         };
 
@@ -22,7 +22,7 @@ class ErrorTracker {
      */
     init() {
         // Global error handler
-        window.addEventListener('error', event => {
+        globalThis.addEventListener('error', event => {
             this.trackError({
                 type: 'javascript',
                 message: event.message,
@@ -32,27 +32,27 @@ class ErrorTracker {
                 stack: event.error?.stack,
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent,
-                url: window.location.href,
+                url: globalThis.location.href,
             });
         });
 
         // Unhandled promise rejection handler
-        window.addEventListener('unhandledrejection', event => {
+        globalThis.addEventListener('unhandledrejection', event => {
             this.trackError({
                 type: 'promise',
                 message: event.reason?.message || 'Unhandled Promise Rejection',
                 stack: event.reason?.stack,
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent,
-                url: window.location.href,
+                url: globalThis.location.href,
             });
         });
 
         // Resource loading error handler
-        window.addEventListener(
+        globalThis.addEventListener(
             'error',
             event => {
-                if (event.target !== window) {
+                if (event.target !== globalThis) {
                     this.trackError({
                         type: 'resource',
                         message: `Failed to load resource: ${event.target.src || event.target.href}`,
@@ -60,7 +60,7 @@ class ErrorTracker {
                         src: event.target.src || event.target.href,
                         timestamp: new Date().toISOString(),
                         userAgent: navigator.userAgent,
-                        url: window.location.href,
+                        url: globalThis.location.href,
                     });
                 }
             },
@@ -154,7 +154,7 @@ class ErrorTracker {
      */
     generateId() {
         return (
-            Math.random().toString(36).substr(2, 9) + Date.now().toString(36)
+            Math.random().toString(36).slice(2, 11) + Date.now().toString(36)
         );
     }
 
@@ -175,7 +175,7 @@ class ErrorTracker {
      */
     getUserId() {
         // This would be set by your authentication system
-        return window.userId || null;
+        return globalThis.userId || undefined;
     }
 
     /**
@@ -219,7 +219,7 @@ class ErrorTracker {
      * Get performance info
      */
     getPerformanceInfo() {
-        if (!window.performance) return null;
+        if (!globalThis.performance) return;
 
         const navigation = performance.getEntriesByType('navigation')[0];
         const memory = performance.memory;
@@ -227,18 +227,18 @@ class ErrorTracker {
         return {
             loadTime: navigation
                 ? navigation.loadEventEnd - navigation.loadEventStart
-                : null,
+                : undefined,
             domContentLoaded: navigation
                 ? navigation.domContentLoadedEventEnd -
                   navigation.domContentLoadedEventStart
-                : null,
+                : undefined,
             memory: memory
                 ? {
                     used: memory.usedJSHeapSize,
                     total: memory.totalJSHeapSize,
                     limit: memory.jsHeapSizeLimit,
                 }
-                : null,
+                : undefined,
         };
     }
 
@@ -285,9 +285,9 @@ class ErrorTracker {
      */
     getStats() {
         const types = {};
-        this.errors.forEach(error => {
+        for (const error of this.errors) {
             types[error.type] = (types[error.type] || 0) + 1;
-        });
+        }
 
         return {
             total: this.errors.length,
@@ -305,7 +305,7 @@ class ErrorTracker {
      * Export errors as JSON
      */
     exportErrors() {
-        return JSON.stringify(this.errors, null, 2);
+        return JSON.stringify(this.errors, undefined, 2);
     }
 
     /**
@@ -332,4 +332,4 @@ const errorTracker = new ErrorTracker();
 export default errorTracker;
 
 // Also make available globally for debugging
-window.errorTracker = errorTracker;
+globalThis.errorTracker = errorTracker;

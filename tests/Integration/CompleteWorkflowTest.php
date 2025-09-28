@@ -7,6 +7,10 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 #[CoversNothing]
+
+/**
+ * @runTestsInSeparateProcesses
+ */
 class CompleteWorkflowTest extends TestCase
 {
     #[Test]
@@ -17,9 +21,9 @@ class CompleteWorkflowTest extends TestCase
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 500]));
 
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
         ]);
         $this->assertTrue(in_array($response->status(), [200, 302, 404, 422, 500, 405]));

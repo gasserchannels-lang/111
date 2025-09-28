@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-class ErrorHandlerManager
+use PHPUnit\Framework\TestCase;
+
+class ErrorHandlerManager extends TestCase
 {
     /** @var mixed */
     private static $originalErrorHandler;
@@ -22,8 +24,8 @@ class ErrorHandlerManager
             return;
         }
 
-        // Store original error reporting only (don't modify handlers to avoid PHPUnit warnings)
-        self::$originalErrorReporting = error_reporting();
+        // Don't modify error reporting to avoid PHPUnit warnings
+        self::$originalErrorReporting = 0;
         self::$originalErrorHandler = null;
         self::$originalExceptionHandler = null;
 
@@ -36,8 +38,8 @@ class ErrorHandlerManager
             return;
         }
 
-        // Restore original error reporting only (don't modify handlers to avoid PHPUnit warnings)
-        error_reporting(self::$originalErrorReporting);
+        // Don't modify error reporting to avoid PHPUnit warnings
+        // error_reporting(self::$originalErrorReporting);
 
         self::$initialized = false;
     }

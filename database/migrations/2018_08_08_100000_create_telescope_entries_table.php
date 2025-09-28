@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function getConnection(): ?string
     {
+        if (app()->environment('testing')) {
+            return 'testing';
+        }
+
         $connection = config('telescope.storage.database.connection');
 
         return is_string($connection) ? $connection : null;

@@ -1,22 +1,4 @@
 <?php return array (
-  'barryvdh/laravel-debugbar' => 
-  array (
-    'aliases' => 
-    array (
-      'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
-    ),
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    ),
-  ),
-  'barryvdh/laravel-ide-helper' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
-    ),
-  ),
   'blade-ui-kit/blade-heroicons' => 
   array (
     'providers' => 
@@ -53,22 +35,11 @@
       0 => 'Darryldecode\\Cart\\CartServiceProvider',
     ),
   ),
-  'itsgoingd/clockwork' => 
-  array (
-    'aliases' => 
-    array (
-      'Clockwork' => 'Clockwork\\Support\\Laravel\\Facade',
-    ),
-    'providers' => 
-    array (
-      0 => 'Clockwork\\Support\\Laravel\\ClockworkServiceProvider',
-    ),
-  ),
-  'laravel/dusk' => 
+  'laravel/cashier' => 
   array (
     'providers' => 
     array (
-      0 => 'Laravel\\Dusk\\DuskServiceProvider',
+      0 => 'Laravel\\Cashier\\CashierServiceProvider',
     ),
   ),
   'laravel/sanctum' => 
@@ -76,13 +47,6 @@
     'providers' => 
     array (
       0 => 'Laravel\\Sanctum\\SanctumServiceProvider',
-    ),
-  ),
-  'laravel/telescope' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Telescope\\TelescopeServiceProvider',
     ),
   ),
   'laravel/tinker' => 
@@ -110,13 +74,6 @@
       0 => 'Carbon\\Laravel\\ServiceProvider',
     ),
   ),
-  'nunomaduro/collision' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    ),
-  ),
   'nunomaduro/termwind' => 
   array (
     'providers' => 
@@ -131,43 +88,15 @@
       0 => 'Phiki\\Adapters\\Laravel\\PhikiServiceProvider',
     ),
   ),
-  'spatie/laravel-activitylog' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\Activitylog\\ActivitylogServiceProvider',
-    ),
-  ),
-  'spatie/laravel-backup' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\Backup\\BackupServiceProvider',
-    ),
-  ),
-  'spatie/laravel-permission' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\Permission\\PermissionServiceProvider',
-    ),
-  ),
-  'spatie/laravel-query-builder' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\QueryBuilder\\QueryBuilderServiceProvider',
-    ),
-  ),
-  'spatie/laravel-signal-aware-command' => 
+  'srmklive/paypal' => 
   array (
     'aliases' => 
     array (
-      'Signal' => 'Spatie\\SignalAwareCommand\\Facades\\Signal',
+      'PayPal' => 'Srmklive\\PayPal\\Facades\\PayPal',
     ),
     'providers' => 
     array (
-      0 => 'Spatie\\SignalAwareCommand\\SignalAwareCommandServiceProvider',
+      0 => 'Srmklive\\PayPal\\Providers\\PayPalServiceProvider',
     ),
   ),
 );

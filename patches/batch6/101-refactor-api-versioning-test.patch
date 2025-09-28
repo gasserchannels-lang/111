@@ -1,4 +1,0 @@
---- a/tests/Feature/ApiVersioningTest.php
-+++ b/tests/Feature/ApiVersioningTest.php
-@@ -1,0 +1,0 @@
-+// No changes needed - test does not modify error handlers

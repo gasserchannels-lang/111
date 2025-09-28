@@ -4,6 +4,9 @@ namespace Tests\Security;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class AuthenticationSecurityTest extends TestCase
 {
     public function test_authentication_security(): void

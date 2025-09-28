@@ -24,7 +24,7 @@ class PasswordHistoryService
     }
 
     /**
-     * التحقق من وجود كلمة المرور في التاريخ
+     * التحقق من وجود كلمة المرور في التاريخ.
      */
     public function isPasswordInHistory(string $password, int $userId): bool
     {
@@ -46,7 +46,7 @@ class PasswordHistoryService
     }
 
     /**
-     * حفظ كلمة المرور في التاريخ
+     * حفظ كلمة المرور في التاريخ.
      */
     public function savePasswordToHistory(string $password, int $userId): void
     {
@@ -71,7 +71,7 @@ class PasswordHistoryService
     }
 
     /**
-     * الحصول على تاريخ كلمات المرور
+     * الحصول على تاريخ كلمات المرور.
      *
      * @return array<string, mixed>
      */
@@ -83,7 +83,7 @@ class PasswordHistoryService
     }
 
     /**
-     * مسح تاريخ كلمات المرور
+     * مسح تاريخ كلمات المرور.
      */
     public function clearPasswordHistory(int $userId): void
     {

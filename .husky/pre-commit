@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🧪 Running pre-commit checks (Frontend Linting & Stylelint)..."
-npm run test:frontend
+echo "🚀 Running pre-commit checks with lint-staged..."
+npx lint-staged

@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return response()->json($categories);
+        return response()->json(['data' => $categories]);
     }
 
     public function store(Request $request): JsonResponse
@@ -27,24 +27,24 @@ class CategoryController extends Controller
 
         $category = Category::create($validated);
 
-        return response()->json($category, 201);
+        return response()->json(['data' => $category], 201);
     }
 
     public function show(Category $category): JsonResponse
     {
-        return response()->json($category);
+        return response()->json(['data' => $category]);
     }
 
     public function update(Request $request, Category $category): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
         $category->update($validated);
 
-        return response()->json($category);
+        return response()->json(['data' => $category]);
     }
 
     public function destroy(Category $category): JsonResponse

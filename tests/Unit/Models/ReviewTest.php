@@ -1,52 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Models;
 
+use App\Models\Product;
 use App\Models\Review;
-use Tests\Unit\MinimalTestBase;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tests\TestCase;
 
-class ReviewTest extends MinimalTestBase
+/**
+ * Unit tests for the Review model.
+ *
+ * @covers \App\Models\Review
+ */
+
+/**
+ * @runTestsInSeparateProcesses
+ */
+class ReviewTest extends TestCase
 {
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_it_can_create_a_review(): void
+    /**
+     * Test that user relation is a BelongsTo instance.
+     */
+    public function test_user_relation(): void
     {
-        // Test that Review class exists
-        $model = new Review;
-        $this->assertInstanceOf(Review::class, $model);
+        $review = new Review;
 
-        // Test basic functionality
-        $this->assertNotEmpty('test');
+        $relation = $review->user();
+
+        $this->assertInstanceOf(BelongsTo::class, $relation);
+        $this->assertEquals(User::class, $relation->getRelated()::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_it_has_expected_properties(): void
+    /**
+     * Test that product relation is a BelongsTo instance.
+     */
+    public function test_product_relation(): void
     {
-        // Test that Review class exists
-        $model = new Review;
-        $this->assertInstanceOf(Review::class, $model);
+        $review = new Review;
 
-        // Test basic functionality
-        $this->assertNotEmpty('test');
+        $relation = $review->product();
+
+        $this->assertInstanceOf(BelongsTo::class, $relation);
+        $this->assertEquals(Product::class, $relation->getRelated()::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function test_it_can_be_instantiated(): void
+    /**
+     * Test getReviewTextAttribute returns content.
+     */
+    public function test_get_review_text_attribute(): void
     {
-        // Test that Review class exists
-        $model = new Review;
-        $this->assertInstanceOf(Review::class, $model);
+        $content = 'This is a review';
+        $review = new Review(['content' => $content]);
 
-        // Test basic functionality
-        $this->assertNotEmpty('test');
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
+        $this->assertEquals($content, $review->getReviewTextAttribute());
     }
 }

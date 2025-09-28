@@ -9,7 +9,7 @@
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold">Brands Management</h1>
-                    <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" aria-label="Add new brand">
                         Add New Brand
                     </a>
                 </div>
@@ -47,12 +47,12 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">View</a>
-                                    <a href="#" class="text-yellow-600 hover:text-yellow-900 mr-3">Edit</a>
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3" aria-label="View {{ $brand->name }}">View</a>
+                                    <a href="#" class="text-yellow-600 hover:text-yellow-900 mr-3" aria-label="Edit {{ $brand->name }}">Edit</a>
                                     <form action="#" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure?')">Delete</button>
+                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure?')" aria-label="Delete {{ $brand->name }}">Delete</button>
                                     </form>
                                 </td>
                             </tr>

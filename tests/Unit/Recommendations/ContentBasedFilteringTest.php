@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ContentBasedFilteringTest extends TestCase
 {
     #[Test]
@@ -14,19 +17,19 @@ class ContentBasedFilteringTest extends TestCase
     {
         $items = [
             [
-                'id' => 'item1',
-                'title' => 'iPhone 15 Pro Max',
+                'id'       => 'item1',
+                'title'    => 'iPhone 15 Pro Max',
                 'category' => 'Electronics',
-                'brand' => 'Apple',
-                'price' => 1199,
+                'brand'    => 'Apple',
+                'price'    => 1199,
                 'features' => ['camera', 'battery', 'display'],
             ],
             [
-                'id' => 'item2',
-                'title' => 'Samsung Galaxy S24',
+                'id'       => 'item2',
+                'title'    => 'Samsung Galaxy S24',
                 'category' => 'Electronics',
-                'brand' => 'Samsung',
-                'price' => 999,
+                'brand'    => 'Samsung',
+                'price'    => 999,
                 'features' => ['camera', 'battery', 'display'],
             ],
         ];
@@ -44,17 +47,17 @@ class ContentBasedFilteringTest extends TestCase
     public function it_calculates_item_similarity(): void
     {
         $item1 = [
-            'category' => 'Electronics',
-            'brand' => 'Apple',
+            'category'    => 'Electronics',
+            'brand'       => 'Apple',
             'price_range' => 'high',
-            'keywords' => ['smartphone', 'camera', 'battery'],
+            'keywords'    => ['smartphone', 'camera', 'battery'],
         ];
 
         $item2 = [
-            'category' => 'Electronics',
-            'brand' => 'Samsung',
+            'category'    => 'Electronics',
+            'brand'       => 'Samsung',
             'price_range' => 'high',
-            'keywords' => ['smartphone', 'camera', 'display'],
+            'keywords'    => ['smartphone', 'camera', 'display'],
         ];
 
         $similarity = $this->calculateItemSimilarity($item1, $item2);
@@ -85,26 +88,26 @@ class ContentBasedFilteringTest extends TestCase
     public function it_recommends_items_based_on_content(): void
     {
         $userProfile = [
-            'preferred_categories' => ['Electronics' => 0.8],
-            'preferred_brands' => ['Apple' => 0.9, 'Samsung' => 0.6],
+            'preferred_categories'  => ['Electronics' => 0.8],
+            'preferred_brands'      => ['Apple' => 0.9, 'Samsung' => 0.6],
             'preferred_price_range' => ['high' => 0.7, 'medium' => 0.3],
-            'preferred_keywords' => ['smartphone' => 0.8, 'camera' => 0.6],
+            'preferred_keywords'    => ['smartphone' => 0.8, 'camera' => 0.6],
         ];
 
         $candidateItems = [
             [
-                'id' => 'item1',
-                'category' => 'Electronics',
-                'brand' => 'Apple',
+                'id'          => 'item1',
+                'category'    => 'Electronics',
+                'brand'       => 'Apple',
                 'price_range' => 'high',
-                'keywords' => ['smartphone', 'camera'],
+                'keywords'    => ['smartphone', 'camera'],
             ],
             [
-                'id' => 'item2',
-                'category' => 'Clothing',
-                'brand' => 'Nike',
+                'id'          => 'item2',
+                'category'    => 'Clothing',
+                'brand'       => 'Nike',
                 'price_range' => 'medium',
-                'keywords' => ['shoes', 'sports'],
+                'keywords'    => ['shoes', 'sports'],
             ],
         ];
 
@@ -190,22 +193,22 @@ class ContentBasedFilteringTest extends TestCase
     {
         $item1 = [
             'category' => 'Electronics',
-            'brand' => 'Apple',
-            'price' => 1000,
+            'brand'    => 'Apple',
+            'price'    => 1000,
             'keywords' => ['smartphone', 'camera'],
         ];
 
         $item2 = [
             'category' => 'Electronics',
-            'brand' => 'Samsung',
-            'price' => 1200,
+            'brand'    => 'Samsung',
+            'price'    => 1200,
             'keywords' => ['smartphone', 'display'],
         ];
 
         $weights = [
             'categorical' => 0.3,
-            'numerical' => 0.2,
-            'textual' => 0.5,
+            'numerical'   => 0.2,
+            'textual'     => 0.5,
         ];
 
         $combinedSimilarity = $this->calculateCombinedSimilarity($item1, $item2, $weights);
@@ -215,7 +218,8 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $item
+     * @param array<string, mixed> $item
+     *
      * @return array<string, mixed>
      */
     private function extractItemFeatures(array $item): array
@@ -223,10 +227,10 @@ class ContentBasedFilteringTest extends TestCase
         $price = $item['price'] ?? 0.0;
         $title = $item['title'] ?? '';
         $features = [
-            'category' => $item['category'] ?? '',
-            'brand' => $item['brand'] ?? '',
+            'category'    => $item['category'] ?? '',
+            'brand'       => $item['brand'] ?? '',
             'price_range' => $this->categorizePrice(is_numeric($price) ? (float) $price : 0.0),
-            'keywords' => $this->extractKeywords(is_string($title) ? $title : ''),
+            'keywords'    => $this->extractKeywords(is_string($title) ? $title : ''),
         ];
 
         if (isset($item['features']) && is_array($item['features'])) {
@@ -252,16 +256,16 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $item1
-     * @param  array<string, mixed>  $item2
+     * @param array<string, mixed> $item1
+     * @param array<string, mixed> $item2
      */
     private function calculateItemSimilarity(array $item1, array $item2): float
     {
         $weights = [
-            'category' => 0.3,
-            'brand' => 0.2,
+            'category'    => 0.3,
+            'brand'       => 0.2,
             'price_range' => 0.2,
-            'keywords' => 0.3,
+            'keywords'    => 0.3,
         ];
 
         $similarities = [];
@@ -298,16 +302,17 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $userInteractions
+     * @param array<int, array<string, mixed>> $userInteractions
+     *
      * @return array<string, mixed>
      */
     private function buildUserProfile(array $userInteractions): array
     {
         $profile = [
-            'preferred_categories' => [],
-            'preferred_brands' => [],
+            'preferred_categories'  => [],
+            'preferred_brands'      => [],
             'preferred_price_range' => [],
-            'preferred_keywords' => [],
+            'preferred_keywords'    => [],
         ];
 
         foreach ($userInteractions as $interaction) {
@@ -365,13 +370,15 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userProfile
+     * @param array<string, mixed> $userProfile
+     *
      * @return array<int, array<string, mixed>>
      */
 
     /**
-     * @param  array<string, mixed>  $userProfile
-     * @param  array<int, array<string, mixed>>  $candidateItems
+     * @param array<string, mixed>             $userProfile
+     * @param array<int, array<string, mixed>> $candidateItems
+     *
      * @return array<int, array<string, mixed>>
      */
     private function getContentBasedRecommendations(array $userProfile, array $candidateItems, int $limit): array
@@ -395,16 +402,16 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $userProfile
-     * @param  array<string, mixed>  $itemFeatures
+     * @param array<string, mixed> $userProfile
+     * @param array<string, mixed> $itemFeatures
      */
     private function calculateUserItemSimilarity(array $userProfile, array $itemFeatures): float
     {
         $weights = [
-            'category' => 0.3,
-            'brand' => 0.2,
+            'category'    => 0.3,
+            'brand'       => 0.2,
             'price_range' => 0.2,
-            'keywords' => 0.3,
+            'keywords'    => 0.3,
         ];
 
         $similarities = [];
@@ -500,7 +507,7 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, list<string>>  $documents
+     * @param array<string, list<string>> $documents
      */
     private function calculateTfIdf(array $documents, string $term, string $document): float
     {
@@ -524,8 +531,8 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $item1
-     * @param  array<string, mixed>  $item2
+     * @param array<string, mixed> $item1
+     * @param array<string, mixed> $item2
      */
     private function calculateCategoricalSimilarity(array $item1, array $item2): float
     {
@@ -545,8 +552,8 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $item1
-     * @param  array<string, mixed>  $item2
+     * @param array<string, mixed> $item1
+     * @param array<string, mixed> $item2
      */
     private function calculateNumericalSimilarity(array $item1, array $item2): float
     {
@@ -568,9 +575,9 @@ class ContentBasedFilteringTest extends TestCase
     }
 
     /**
-     * @param  array<string, mixed>  $item1
-     * @param  array<string, mixed>  $item2
-     * @param  array<string, float>  $weights
+     * @param array<string, mixed> $item1
+     * @param array<string, mixed> $item2
+     * @param array<string, float> $weights
      */
     private function calculateCombinedSimilarity(array $item1, array $item2, array $weights): float
     {

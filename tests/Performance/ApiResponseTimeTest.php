@@ -4,6 +4,9 @@ namespace Tests\Performance;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ApiResponseTimeTest extends TestCase
 {
     public function test_api_response_time_is_acceptable(): void

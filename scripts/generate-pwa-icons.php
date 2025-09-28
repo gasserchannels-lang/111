@@ -2,7 +2,7 @@
 
 /**
  * Generate PWA Icons Script
- * This script creates placeholder PWA icons for the COPRRA project
+ * This script creates placeholder PWA icons for the COPRRA project.
  */
 $sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 $screenshots = [

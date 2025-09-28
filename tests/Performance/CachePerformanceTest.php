@@ -4,6 +4,9 @@ namespace Tests\Performance;
 
 use Tests\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class CachePerformanceTest extends TestCase
 {
     public function test_cache_performance(): void

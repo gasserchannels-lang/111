@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string|null $method
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\User|null $user
- * @property-read \Illuminate\Database\Eloquent\Model|null $auditable
+ * @property \App\Models\User|null $user
+ * @property \Illuminate\Database\Eloquent\Model|null $auditable
  */
 class AuditLog extends Model
 {
@@ -131,20 +131,27 @@ class AuditLog extends Model
      */
     public function getChangesSummaryAttribute(): string
     {
+        if (! $this->old_values && ! $this->new_values) {
+            return 'No changes recorded';
+        }
+
+        // If only one of old_values or new_values exists, return "No changes recorded"
         if (! $this->old_values || ! $this->new_values) {
             return 'No changes recorded';
         }
 
         $changes = [];
+
+        // Handle case where both exist
         foreach ($this->new_values as $key => $newValue) {
             $oldValue = $this->old_values[$key] ?? null;
             if ($oldValue !== $newValue) {
-                $oldValueStr = is_string($oldValue) ? $oldValue : (is_scalar($oldValue) ? (string) $oldValue : 'null');
-                $newValueStr = is_string($newValue) ? $newValue : (is_scalar($newValue) ? (string) $newValue : 'null');
+                $oldValueStr = is_bool($oldValue) ? ($oldValue ? '1' : '0') : (is_string($oldValue) ? $oldValue : (is_scalar($oldValue) ? (string) $oldValue : 'null'));
+                $newValueStr = is_bool($newValue) ? ($newValue ? '1' : '0') : (is_string($newValue) ? $newValue : (is_scalar($newValue) ? (string) $newValue : 'null'));
                 $changes[] = "{$key}: {$oldValueStr} → {$newValueStr}";
             }
         }
 
-        return implode(', ', $changes);
+        return empty($changes) ? '' : implode(', ', $changes);
     }
 }

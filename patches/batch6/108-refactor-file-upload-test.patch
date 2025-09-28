@@ -1,4 +1,0 @@
---- a/tests/Feature/FileUploadTest.php
-+++ b/tests/Feature/FileUploadTest.php
-@@ -1,0 +1,0 @@
-+// No changes needed - test does not modify error handlers

@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Laravel\Dusk\TestCase as BaseTestCase;
 use PHPUnit\Framework\Attributes\BeforeClass;
 
-abstract class DuskTestCase extends BaseTestCase
+class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
 

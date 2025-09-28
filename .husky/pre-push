@@ -21,9 +21,17 @@ ANY_CHECK_FAILED=0
 
 # 1. Run PHPStan and log output
 echo "📊 Running PHPStan static analysis... (logs to reports/phpstan.txt)"
-./vendor/bin/phpstan analyse --memory-limit=2G > reports/phpstan.txt 2>&1
+./vendor/bin/phpstan analyse --memory-limit=1G --no-progress > reports/phpstan.txt 2>&1
 if [ $? -ne 0 ]; then
     echo "❌ PHPStan failed. See reports/phpstan.txt for details."
+    ANY_CHECK_FAILED=1
+fi
+
+# 1.1 Run Psalm static analysis
+echo "📊 Running Psalm static analysis... (logs to reports/psalm.txt)"
+./vendor/bin/psalm --no-progress > reports/psalm.txt 2>&1
+if [ $? -ne 0 ]; then
+    echo "❌ Psalm failed. See reports/psalm.txt for details."
     ANY_CHECK_FAILED=1
 fi
 
@@ -51,7 +59,30 @@ if [ $? -ne 0 ]; then
     ANY_CHECK_FAILED=1
 fi
 
-# 5. Run Composer Audit and log output
+# 5. Run Deptrac architecture analysis
+echo "🏗️ Running Deptrac architecture analysis... (logs to reports/deptrac.txt)"
+./vendor/bin/deptrac analyse > reports/deptrac.txt 2>&1
+if [ $? -ne 0 ]; then
+    echo "❌ Architecture issues found. See reports/deptrac.txt for details."
+    ANY_CHECK_FAILED=1
+fi
+
+# 6. Run Frontend quality checks
+echo "🎨 Running Frontend quality checks... (logs to reports/frontend.txt)"
+{
+    echo "Running ESLint..."
+    npx eslint resources/js --ext .js,.vue,.ts
+    echo "Running Stylelint..."
+    npx stylelint "resources/**/*.{css,scss,vue}"
+    echo "Running Prettier check..."
+    npx prettier --check "resources/**/*.{js,css,scss,vue}"
+} > reports/frontend.txt 2>&1
+if [ $? -ne 0 ]; then
+    echo "❌ Frontend quality issues found. See reports/frontend.txt for details."
+    ANY_CHECK_FAILED=1
+fi
+
+# 7. Run Composer Audit and log output
 echo "🔒 Running Composer security audit... (logs to reports/composer-audit.txt)"
 composer audit > reports/composer-audit.txt 2>&1
 if [ $? -ne 0 ]; then

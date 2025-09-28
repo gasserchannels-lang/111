@@ -14,7 +14,7 @@ final class SuspiciousActivityService
     /**
      * @var array<string, mixed>
      */
-    private array $config;
+    private array $config = [];
 
     public function __construct()
     {
@@ -156,7 +156,7 @@ final class SuspiciousActivityService
     /**
      * Check for unusual login location.
      *
-     * @param  array<mixed, mixed>  $location
+     * @param  array<string, mixed>  $location
      * @return list<array<string, mixed>>
      */
     private function checkUnusualLoginLocation(int $userId, array $location, string $ipAddress): array

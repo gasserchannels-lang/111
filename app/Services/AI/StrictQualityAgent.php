@@ -355,7 +355,7 @@ class StrictQualityAgent
     {
         $result = $this->results[$stageId] ?? null;
         if (is_array($result)) {
-            /** @var array<string, mixed> $result */
+            /* @var array<string, mixed> $result */
             return $result;
         }
 

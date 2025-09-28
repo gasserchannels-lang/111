@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\ValidatesModel;
 use Database\Factories\PriceAlertFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,8 +22,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
- * @property-read User $user
- * @property-read Product $product
+ * @property User $user
+ * @property Product $product
  *
  * @method static PriceAlertFactory factory(...$parameters)
  *
@@ -33,12 +34,13 @@ class PriceAlert extends Model
     /** @phpstan-ignore-next-line */
     use HasFactory;
 
+    use SoftDeletes;
+    use ValidatesModel;
+
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<PriceAlert>>
      */
     protected static $factory = \Database\Factories\PriceAlertFactory::class;
-
-    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -131,32 +133,6 @@ class PriceAlert extends Model
     public function getRules(): array
     {
         return $this->rules;
-    }
-
-    /**
-     * Validate the model attributes.
-     */
-    public function validate(): bool
-    {
-        $validator = validator($this->attributes, $this->getRules());
-
-        if ($validator->fails()) {
-            $this->errors = $validator->errors()->toArray();
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get validation errors.
-     *
-     * @return array<string, mixed>
-     */
-    public function getErrors(): array
-    {
-        return $this->errors ?? [];
     }
 
     /**

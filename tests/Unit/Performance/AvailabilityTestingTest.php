@@ -2,29 +2,32 @@
 
 namespace Tests\Unit\Performance;
 
-use Tests\Unit\MinimalTestBase;
+use Tests\TestCase;
 
-class AvailabilityTestingTest extends MinimalTestBase
+/**
+ * @runTestsInSeparateProcesses
+ */
+class AvailabilityTestingTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_performance_basic_functionality(): void
     {
         // Test basic performance functionality
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_performance_metrics(): void
     {
         // Test performance metrics
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function test_performance_optimization(): void
     {
         // Test performance optimization
-        $this->assertNotEmpty('test');
+        $this->assertTrue(true);
     }
 
     protected function setUp(): void

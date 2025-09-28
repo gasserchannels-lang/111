@@ -10,37 +10,27 @@
     "require": {
         "php": "^8.2",
         "blade-ui-kit/blade-heroicons": "^2.0",
+        "darkaonline/l5-swagger": "^9.0",
         "darryldecode/cart": "^4.2",
         "doctrine/dbal": "^4.3",
         "guzzlehttp/guzzle": "^7.2",
+        "laravel/cashier": "*",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^3.3|^4.0",
         "laravel/tinker": "^2.8",
-        "livewire/livewire": "^3.0"
+        "livewire/livewire": "^3.0",
+        "srmklive/paypal": "*",
+        "stripe/stripe-php": "*"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.16",
-        "barryvdh/laravel-ide-helper": "^3.6",
-        "darkaonline/l5-swagger": "^9.0",
         "enlightn/security-checker": "^2.0",
-        "fakerphp/faker": "^1.9.1",
-        "infection/infection": "^0.31.2",
-        "itsgoingd/clockwork": "^5.3",
+        "fakerphp/faker": "*",
+        "laravel/pint": "^1.25",
+        "mockery/mockery": "*",
         "larastan/larastan": "^3.7",
-        "laravel/dusk": "^8.0",
-        "laravel/pint": "^1.0",
-        "laravel/telescope": "^5.11",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0|^8.0",
         "phpmd/phpmd": "^2.15",
-        "phpmetrics/phpmetrics": "^2.9",
-        "phpunit/phpunit": "^11.5",
-        "deptrac/deptrac": "^2.0",
-        "roave/security-advisories": "dev-latest",
-        "spatie/laravel-activitylog": "^4.10",
-        "spatie/laravel-backup": "^9.3",
-        "spatie/laravel-permission": "^6.21",
-        "spatie/laravel-query-builder": "^6.3",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.0",
         "vimeo/psalm": "^6.13"
     },
     "autoload": {
@@ -53,7 +43,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "classmap": [
+            "tests/",
+            "tests/AI"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [
@@ -79,7 +73,7 @@
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "pre-commit": [
-            "@php artisan test",
+            "vendor/bin/phpunit",
             "@php ./vendor/bin/phpstan analyse",
             "@php ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode",
             "@php ./vendor/bin/pint --test"
@@ -90,7 +84,7 @@
         "analyse": [
             "@php ./vendor/bin/phpstan analyse",
             "@php ./vendor/bin/phpmd app text cleancode,codesize,controversial,design,naming,unusedcode",
-            "@php artisan test --parallel"
+            "vendor/bin/phpunit --parallel"
         ],
         "clear-all": [
             "@php artisan cache:clear",
@@ -112,10 +106,10 @@
         ],
         "test": [
             "@php artisan config:clear",
-            "@php artisan test"
+            "vendor/bin/phpunit"
         ],
         "test:coverage": [
-            "@php artisan test --coverage"
+            "vendor/bin/phpunit --coverage-html storage/logs/coverage"
         ],
         "test:dusk": [
             "@php artisan dusk"
@@ -124,7 +118,7 @@
             "infection --threads=max"
         ],
         "test:all": [
-            "@test",
+            "vendor/bin/phpunit",
             "@test:dusk",
             "@test:infection"
         ],
@@ -166,19 +160,19 @@
             "@test:all"
         ],
         "test:ai": [
-            "@php artisan test tests/AI/ --configuration=phpunit.testing.xml"
+            "vendor/bin/phpunit --testsuite AI"
         ],
         "test:security": [
-            "@php artisan test tests/Security/ --configuration=phpunit.testing.xml"
+            "vendor/bin/phpunit --testsuite Security"
         ],
         "test:performance": [
-            "@php artisan test tests/Performance/ --configuration=phpunit.testing.xml"
+            "vendor/bin/phpunit --testsuite Performance"
         ],
         "test:integration": [
-            "@php artisan test tests/Integration/ --configuration=phpunit.testing.xml"
+            "vendor/bin/phpunit --testsuite Integration"
         ],
         "test:comprehensive": [
-            "@php artisan test --configuration=phpunit.testing.xml --log-junit=storage/logs/junit.xml --coverage-html=storage/logs/coverage"
+            "vendor/bin/phpunit --configuration=phpunit.xml --log-junit=storage/logs/junit.xml --coverage-html=storage/logs/coverage"
         ],
         "test:30": [
             "@test:ai",
@@ -214,7 +208,8 @@
             "infection/extension-installer": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+        "process-timeout": 600
     },
     "minimum-stability": "stable",
     "prefer-stable": true

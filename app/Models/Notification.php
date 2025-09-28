@@ -25,12 +25,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array<string> $tags
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read \App\Models\User $user
+ * @property \App\Models\User $user
  */
 class Notification extends Model
 {
     /** @phpstan-ignore-next-line */
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'custom_notifications';
 
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory<Notification>>
@@ -360,7 +367,7 @@ class Notification extends Model
             'slack' => 'Slack',
             'discord' => 'Discord',
             'webhook' => 'Webhook',
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             default => ucfirst((string) ($this->attributes['channel'] ?? 'database')),
         };
     }
@@ -375,7 +382,7 @@ class Notification extends Model
             'sent' => 'Sent',
             'failed' => 'Failed',
             'cancelled' => 'Cancelled',
-            /** @phpstan-ignore-next-line */
+            /* @phpstan-ignore-next-line */
             default => ucfirst((string) ($this->attributes['status'] ?? 'pending')),
         };
     }

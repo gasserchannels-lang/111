@@ -16,7 +16,7 @@ final class StorageManagementService
     /**
      * @var array<string, mixed>
      */
-    private array $config;
+    private array $config = [];
 
     public function __construct(private readonly FileCleanupService $cleanupService)
     {
